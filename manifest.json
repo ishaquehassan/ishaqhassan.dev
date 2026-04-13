@@ -1,0 +1,21 @@
+{
+  "name": "Ishaq Hassan | Portfolio",
+  "short_name": "Ishaq Hassan",
+  "description": "Flutter Framework Contributor, Engineering Manager, Open Source Author. 13+ years full stack development.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a1a",
+  "theme_color": "#0a0a1a",
+  "icons": [
+    {
+      "src": "/assets/profile-photo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/profile-photo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
