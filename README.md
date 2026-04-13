@@ -2,26 +2,34 @@
 
 Personal portfolio website with a macOS-inspired desktop UI on larger screens and a native mobile app experience on phones.
 
+<p align="center">
+  <img src="assets/desktop-preview.png" alt="ishaqhassan.dev Desktop Preview" width="100%">
+</p>
+
 ## Features
 
 **Desktop (macOS Style)**
 - Draggable, resizable windows with traffic light controls
-- Interactive dock with magnification effect
+- Interactive dock with magnification effect and colored glow
 - Live desktop widgets (clock, GitHub activity, stats)
 - Terminal-style About window with typing animation
 - Animated aurora borealis wallpaper with particle system
-- 3D tilt effect on cards
+- Cursor spotlight that follows mouse movement
+- 3D tilt effect and shine sweep on cards
+- Noise texture overlay for depth
 - Menu bar with dropdown navigation
 
 **Mobile (App Style)**
-- Scroll-based hero with animated gradient background
-- Glass morphism section cards with scroll reveal animations
+- Staggered hero entrance animation
+- Glass morphism section cards with rotating gradient borders
+- Scroll reveal animations with staggered timing
 - Expandable detail views for each section
+- Glowing stat pills with colored shadows
 - Bottom social bar with quick links
 - Animated number counters
 
 **Content**
-- Flutter framework contributions (3 merged, 2 approved PRs)
+- Flutter framework contributions (3 merged, 2 approved PRs into flutter/flutter)
 - 10+ speaking events at GDG, universities, conferences
 - 16 professional roles across 13+ years
 - 6 Medium articles on Flutter and Dart
@@ -29,12 +37,20 @@ Personal portfolio website with a macOS-inspired desktop UI on larger screens an
 - Full tech stack showcase
 - LinkedIn profile replica with tabbed navigation
 
+**SEO**
+- JSON-LD structured data (Person, WebSite, Events, Projects, Articles)
+- Open Graph and Twitter Card meta tags
+- sitemap.xml, robots.txt, manifest.json
+- Hidden semantic HTML for search engine crawlers
+- Keyword-optimized title, description, and meta tags
+
 ## Stack
 
 - Pure HTML, CSS, JavaScript (no frameworks, no build step)
 - Hosted on DigitalOcean (nginx + Let's Encrypt SSL)
 - Cloudflare CDN, DDoS protection, email routing
 - Domain: ishaqhassan.dev (Name.com + Cloudflare DNS)
+- CI/CD: GitHub Actions auto-deploy on push to main
 
 ## Deploy
 
