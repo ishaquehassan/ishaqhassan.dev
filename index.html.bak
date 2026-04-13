@@ -1,0 +1,3362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ishaq Hassan | Full Stack Developer</title>
+<meta name="description" content="Flutter Framework Contributor, Engineering Manager, Open Source Author, 13+ years experience">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --dock-size: 56px;
+  --dock-padding: 8px;
+  --win-radius: 12px;
+  --toolbar-h: 40px;
+  --accent: #007AFF;
+  --accent2: #5856D6;
+  --green: #30D158;
+  --red: #FF453A;
+  --orange: #FF9F0A;
+  --yellow: #FFD60A;
+  --bg: #1a1a2e;
+  --surface: rgba(30,30,46,0.85);
+  --glass: rgba(255,255,255,0.08);
+  --text: #e4e4e7;
+  --text2: #a1a1aa;
+  --border: rgba(255,255,255,0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ===== WALLPAPER ===== */
+#wallpaper {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 25% 20%, #1a3a5c 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 80%, #2d1b4e 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, #1e3a5f 0%, transparent 70%),
+    linear-gradient(180deg, #0a1628 0%, #1b2838 30%, #2d1f3d 60%, #1a0e2e 100%);
+  z-index: 0;
+}
+
+.floating-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: float 25s ease-in-out infinite;
+  opacity: 0.25;
+}
+
+.floating-orb:nth-child(1) { width: 500px; height: 500px; background: #3b82f6; top: -10%; left: 10%; animation-delay: 0s; }
+.floating-orb:nth-child(2) { width: 400px; height: 400px; background: #8b5cf6; top: 50%; right: -5%; animation-delay: -8s; }
+.floating-orb:nth-child(3) { width: 350px; height: 350px; background: #ec4899; bottom: -5%; left: 30%; animation-delay: -16s; }
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.1); }
+  66% { transform: translate(-30px, 20px) scale(0.9); }
+}
+
+/* ===== MENU BAR ===== */
+#menubar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 28px;
+  background: linear-gradient(180deg, rgba(60,60,70,0.85) 0%, rgba(30,30,40,0.9) 100%);
+  backdrop-filter: saturate(200%) blur(30px);
+  -webkit-backdrop-filter: saturate(200%) blur(30px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  z-index: 9999;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+#menubar .left { display: flex; align-items: center; gap: 0; }
+#menubar .logo { font-size: 16px; padding: 0 12px 0 4px; cursor: default; filter: brightness(1.2); }
+#menubar .menu-parent { position: relative; }
+#menubar .menu-item {
+  color: rgba(255,255,255,0.9);
+  cursor: default;
+  padding: 0 11px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: background 0.1s;
+}
+#menubar .menu-item:hover, #menubar .menu-item.open { background: rgba(255,255,255,0.15); color: #fff; }
+#menubar .menu-item.bold { font-weight: 600; }
+#menubar .right { display: flex; align-items: center; gap: 14px; color: rgba(255,255,255,0.65); font-size: 12.5px; font-weight: 400; }
+
+/* Menu Dropdowns */
+.menu-dropdown {
+  display: none;
+  position: absolute;
+  top: 25px;
+  left: 0;
+  min-width: 220px;
+  background: rgba(30,30,40,0.95);
+  backdrop-filter: saturate(180%) blur(30px);
+  -webkit-backdrop-filter: saturate(180%) blur(30px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  padding: 4px 0;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  z-index: 99999;
+  animation: menuDrop 0.15s ease;
+}
+
+.menu-dropdown.show { display: block; }
+
+@keyframes menuDrop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-dd-item {
+  padding: 4px 16px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 4px;
+  margin: 0 4px;
+}
+
+.menu-dd-item:hover:not(.disabled) { background: var(--accent); color: #fff; }
+.menu-dd-item.bold { font-weight: 700; }
+.menu-dd-item .shortcut { font-size: 12px; color: var(--text2); margin-left: 24px; }
+.menu-dd-item:hover .shortcut { color: rgba(255,255,255,0.7); }
+.menu-dd-sep { height: 1px; background: rgba(255,255,255,0.08); margin: 4px 12px; }
+.menu-dd-item.disabled { color: var(--text2); pointer-events: none; }
+
+/* ===== DESKTOP WIDGETS ===== */
+#desktop {
+  position: fixed;
+  inset: 25px 0 80px 0;
+  z-index: 1;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  pointer-events: none;
+}
+
+.widget-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.widget {
+  background: rgba(30,30,46,0.65);
+  backdrop-filter: saturate(150%) blur(30px);
+  -webkit-backdrop-filter: saturate(150%) blur(30px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 16px;
+  cursor: grab;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.widget:active { cursor: grabbing; }
+
+.widget:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+  border-color: rgba(255,255,255,0.12);
+}
+
+.widget.dragging {
+  position: fixed !important;
+  z-index: 9000;
+  transform: scale(1.05);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  transition: box-shadow 0.2s, transform 0.1s;
+  pointer-events: auto;
+}
+
+.widget-title {
+  font-size: 11px;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.widget-value {
+  font-size: 32px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.widget-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+#w-clock .widget-value { font-size: 42px; font-variant-numeric: tabular-nums; }
+#w-clock .widget-sub { font-size: 14px; }
+
+.status-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 6px;
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes barGrow {
+  from { opacity: 0; transform: scaleY(0); transform-origin: bottom; }
+  to { opacity: 0.8; transform: scaleY(1); transform-origin: bottom; }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(48,209,88,0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(48,209,88,0); }
+}
+
+/* ===== DOCK ===== */
+#dock-container {
+  position: fixed;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9998;
+}
+
+#dock {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 6px 10px;
+  background: rgba(30,30,46,0.7);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px;
+}
+
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.dock-icon {
+  width: var(--dock-size);
+  height: var(--dock-size);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+  position: relative;
+  will-change: transform;
+}
+
+.dock-item:hover .dock-icon {
+  transform: translateY(-10px) scale(1.25);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.dock-item:hover .dock-tooltip {
+  opacity: 1;
+  transform: translateY(-8px);
+}
+
+.dock-item.active::after {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.6);
+  position: absolute;
+  bottom: -2px;
+}
+
+.dock-tooltip {
+  position: absolute;
+  top: -36px;
+  background: rgba(30,30,46,0.9);
+  backdrop-filter: blur(10px);
+  color: var(--text);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s;
+  border: 1px solid var(--border);
+}
+
+.dock-icon.about { background: linear-gradient(135deg, #1a1a2e, #2d2d44); }
+.dock-icon.flutter { background: linear-gradient(135deg, #0553B1, #02569B); }
+.dock-icon.speaking { background: linear-gradient(135deg, #FF6B35, #F7C948); }
+.dock-icon.exp { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.dock-icon.oss { background: linear-gradient(135deg, #238636, #2ea043); }
+.dock-icon.tech { background: linear-gradient(135deg, #58595b, #86888a); }
+.dock-icon.articles { background: linear-gradient(135deg, #1a8917, #0d7a0d); }
+.dock-icon.contact { background: linear-gradient(135deg, #007AFF, #5856D6); }
+.dock-icon.github { background: linear-gradient(135deg, #24292e, #40464d); }
+.dock-icon.linkedin { background: linear-gradient(135deg, #0077B5, #00a0dc); }
+
+.dock-bounce {
+  animation: dock-bounce 0.5s ease;
+}
+
+@keyframes dock-bounce {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-16px); }
+  50% { transform: translateY(-4px); }
+  75% { transform: translateY(-10px); }
+}
+
+/* ===== WINDOWS ===== */
+.window {
+  position: absolute;
+  background: rgba(30,30,46,0.92);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--win-radius);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+  overflow: hidden;
+  display: none;
+  z-index: 100;
+  min-width: 400px;
+  min-height: 300px;
+}
+
+.window.open {
+  display: block;
+  animation: windowOpen 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.window.closing {
+  animation: windowClose 0.25s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+}
+
+.window.minimizing {
+  animation: windowMinimize 0.4s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+}
+
+.window.maximized {
+  top: 32px !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: calc(100vh - 112px) !important;
+  border-radius: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes windowOpen {
+  0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes windowClose {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.8) translateY(20px); }
+}
+
+@keyframes windowMinimize {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.4) translateY(60vh); }
+}
+
+.window-toolbar {
+  height: var(--toolbar-h);
+  background: rgba(20,20,30,0.6);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  cursor: grab;
+  position: relative;
+}
+
+.window-toolbar:active { cursor: grabbing; }
+
+.traffic-lights {
+  display: flex;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.traffic-light {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: filter 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: transparent;
+}
+
+.traffic-light:hover { color: rgba(0,0,0,0.6); }
+.tl-close { background: #FF5F57; }
+.tl-minimize { background: #FEBC2E; }
+.tl-maximize { background: #28C840; }
+
+.window-title {
+  position: absolute;
+  left: 0; right: 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  pointer-events: none;
+}
+
+.window-body {
+  height: calc(100% - var(--toolbar-h));
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+.window-body.has-footer {
+  height: calc(100% - var(--toolbar-h) - 56px);
+}
+
+.window-footer {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid var(--border);
+  background: rgba(20,20,30,0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.window-body::-webkit-scrollbar { width: 6px; }
+.window-body::-webkit-scrollbar-track { background: transparent; }
+.window-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+/* Window loading */
+.window-loader {
+  position: absolute;
+  inset: var(--toolbar-h) 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20,20,30,0.95);
+  z-index: 5;
+  transition: opacity 0.3s;
+}
+
+.window-loader.hidden { opacity: 0; pointer-events: none; }
+
+.loader-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* iframe windows */
+.window-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #fff;
+}
+
+.window-body.iframe-body {
+  padding: 0;
+  height: calc(100% - var(--toolbar-h));
+}
+
+/* ===== TERMINAL WINDOW (About) ===== */
+.terminal {
+  font-family: 'JetBrains Mono', 'Menlo', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #c9d1d9;
+}
+
+.terminal .prompt { color: var(--green); }
+.terminal .cmd { color: #79c0ff; }
+.terminal .flag { color: #d2a8ff; }
+.terminal .str { color: #a5d6ff; }
+.terminal .comment { color: #6e7681; }
+.terminal .output { color: #c9d1d9; margin-left: 0; }
+.terminal .cursor {
+  display: inline-block;
+  width: 8px; height: 16px;
+  background: var(--green);
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+.terminal-line {
+  opacity: 0;
+  animation: typeLine 0.3s forwards;
+}
+
+/* ===== CONTENT STYLES ===== */
+.section-header {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #e4e4e7, #a1a1aa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pr-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.pr-card:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateX(4px);
+  border-color: rgba(99,102,241,0.3);
+}
+
+.pr-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+
+.pr-merged { background: rgba(139,92,246,0.2); color: #a78bfa; }
+.pr-approved { background: rgba(48,209,88,0.2); color: var(--green); }
+
+.pr-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.pr-repo { font-size: 12px; color: var(--text2); }
+
+.event-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.event-row:hover { padding-left: 8px; }
+.event-row:last-child { border-bottom: none; }
+
+.event-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.event-info { flex: 1; }
+.event-name { font-size: 14px; font-weight: 600; }
+.event-venue { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.event-role {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(99,102,241,0.15);
+  color: #a5b4fc;
+  flex-shrink: 0;
+}
+
+.exp-item {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 28px;
+}
+
+.exp-item::before {
+  content: '';
+  position: absolute;
+  left: 6px; top: 8px;
+  width: 2px;
+  height: calc(100% + 12px);
+  background: var(--border);
+}
+
+.exp-item:last-child::before { display: none; }
+
+.exp-item::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 6px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+}
+
+.exp-company { font-size: 16px; font-weight: 700; color: var(--text); }
+.exp-role { font-size: 14px; color: var(--accent); margin-top: 2px; }
+.exp-date { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.exp-desc { font-size: 13px; color: var(--text2); margin-top: 8px; line-height: 1.6; }
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.tech-item {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 8px;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.tech-item:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.tech-icon { font-size: 28px; margin-bottom: 6px; }
+.tech-name { font-size: 11px; font-weight: 600; color: var(--text2); }
+
+.article-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.article-card:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateX(4px);
+}
+
+.article-title { font-size: 14px; font-weight: 600; }
+.article-meta { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.contact-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.contact-card:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.contact-icon { font-size: 32px; margin-bottom: 8px; }
+.contact-label { font-size: 13px; font-weight: 600; }
+.contact-value { font-size: 11px; color: var(--text2); margin-top: 4px; }
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-num {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label { font-size: 11px; color: var(--text2); margin-top: 4px; }
+
+/* ===== LINKEDIN TABS ===== */
+.li-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  padding: 0 16px;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.li-tabs::-webkit-scrollbar { display: none; }
+
+.li-tab {
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.li-tab:hover { color: var(--text); }
+.li-tab.active { color: #0077B5; border-bottom-color: #0077B5; border-bottom-width: 4px; padding-bottom: 11px; }
+
+.li-panel {
+  animation: fadeTab 0.3s ease;
+}
+
+@keyframes fadeTab {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== WINDOW RESIZE ===== */
+.window-resize {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 16px; height: 16px;
+  cursor: nwse-resize;
+  z-index: 10;
+}
+
+.window-resize::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; right: 4px;
+  width: 8px; height: 8px;
+  border-right: 2px solid rgba(255,255,255,0.15);
+  border-bottom: 2px solid rgba(255,255,255,0.15);
+}
+
+.window { transition: box-shadow 0.2s; }
+.window.resizing { transition: none; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  /* ===== MENUBAR ===== */
+  #menubar {
+    height: 24px;
+    font-size: 11px;
+    padding: 0 8px;
+    gap: 0;
+  }
+  #menubar .left {
+    gap: 0;
+  }
+  #menubar .menu-parent {
+    display: none;
+  }
+  #menubar .menu-parent:first-child {
+    display: block;
+  }
+  #menubar .menu-item {
+    padding: 0 6px;
+    height: 22px;
+    line-height: 22px;
+    font-size: 11px;
+  }
+  #menubar .logo {
+    padding: 0 6px 0 2px;
+    font-size: 12px;
+  }
+  #menubar .menu-item.hide-mobile {
+    display: none;
+  }
+  #menubar .right {
+    gap: 8px;
+    font-size: 10px;
+  }
+  .menu-dropdown {
+    display: none;
+  }
+
+  /* ===== DESKTOP WIDGETS ===== */
+  .widget {
+    display: none !important;
+  }
+  #desktop {
+    display: none;
+  }
+
+  /* ===== DOCK (Bottom Tab Bar) ===== */
+  #dock-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    transform: none;
+    z-index: 9998;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  #dock {
+    position: relative;
+    border-radius: 0;
+    width: 100%;
+    height: 60px;
+    padding: 8px 0 env(safe-area-inset-bottom, 8px) 0;
+    gap: 0;
+    justify-content: space-around;
+    background: rgba(30,30,46,0.92);
+    backdrop-filter: blur(40px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+  }
+  .dock-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    flex: 1;
+    height: 44px;
+    position: relative;
+  }
+  .dock-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .dock-item:active .dock-icon {
+    background: rgba(99,102,241,0.3);
+  }
+  .dock-tooltip {
+    display: none;
+  }
+  .dock-item:hover .dock-icon {
+    transform: none;
+  }
+
+  /* ===== WINDOWS (Full Screen Overlay) ===== */
+  .window {
+    position: fixed;
+    top: 24px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 60px !important;
+    width: 100vw !important;
+    height: calc(100vh - 84px) !important;
+    min-width: unset;
+    min-height: unset;
+    border-radius: 0;
+    box-shadow: none;
+    display: none;
+  }
+  .window.open {
+    display: block;
+    animation: mobileWindowOpen 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .window.closing {
+    animation: mobileWindowClose 0.25s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+  }
+
+  @keyframes mobileWindowOpen {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes mobileWindowClose {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+
+  /* ===== WINDOW TOOLBAR ===== */
+  .window-toolbar {
+    height: 36px;
+    background: rgba(20,20,30,0.6);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+    cursor: default;
+  }
+  .traffic-lights {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    min-width: 30px;
+  }
+  .traffic-light {
+    display: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .traffic-light.tl-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.6);
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .traffic-light.tl-close:active {
+    background: rgba(255,255,255,0.15);
+  }
+  .tl-minimize,
+  .tl-maximize {
+    display: none !important;
+  }
+  .window-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ===== WINDOW BODY ===== */
+  .window-body {
+    height: calc(100% - 36px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px;
+    font-size: 14px;
+  }
+  .window-body.has-footer {
+    height: calc(100% - 36px - 56px);
+  }
+
+  /* ===== CONTENT GRIDS ===== */
+  .stat-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .stat-card {
+    padding: 12px 8px;
+  }
+  .stat-num {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .stat-label {
+    font-size: 11px;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .contact-item {
+    padding: 12px;
+  }
+
+  .tech-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .tech-item {
+    padding: 10px 4px;
+    text-align: center;
+    font-size: 12px;
+  }
+  .tech-icon {
+    font-size: 32px;
+    margin-bottom: 4px;
+  }
+
+  /* ===== EXPERIENCE ITEMS ===== */
+  .exp-item {
+    padding: 12px;
+    border-left: 3px solid rgba(99,102,241,0.3);
+  }
+  .exp-company {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .exp-title {
+    font-size: 12px;
+  }
+  .exp-date {
+    font-size: 11px;
+  }
+  .exp-desc {
+    font-size: 12px;
+  }
+
+  /* ===== ARTICLES ===== */
+  .article-item {
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+  .article-title {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .article-meta {
+    font-size: 11px;
+  }
+
+  /* ===== LINKEDIN TABS ===== */
+  .linkedin-tabs {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    scroll-behavior: smooth;
+  }
+  .linkedin-tab {
+    font-size: 12px;
+    padding: 8px 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .linkedin-tab.active {
+    border-bottom: 2px solid rgba(99,102,241,0.8);
+    color: rgba(99,102,241,0.9);
+  }
+
+  /* ===== GENERAL MOBILE ADJUSTMENTS ===== */
+  .window-body p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .window-body h2 {
+    font-size: 16px;
+    margin: 12px 0 8px 0;
+  }
+  .window-body h3 {
+    font-size: 14px;
+    margin: 10px 0 6px 0;
+  }
+
+  /* Disable window resize handle on mobile */
+  .window-resize {
+    display: none;
+  }
+
+  /* Boot screen adjustments */
+  #boot-logo {
+    font-size: 56px;
+    margin-bottom: 24px;
+  }
+  #boot-bar-container {
+    width: 160px;
+  }
+}
+
+/* ===== BOOT SCREEN ===== */
+#boot-screen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s;
+}
+
+#boot-screen.fade-out { opacity: 0; }
+
+#boot-logo {
+  font-size: 64px;
+  margin-bottom: 30px;
+  animation: boot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes boot-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+#boot-bar-container {
+  width: 200px;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 24px;
+}
+
+#boot-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #6366f1, #06b6d4);
+  border-radius: 2px;
+  transition: width 0.3s;
+  box-shadow: 0 0 10px rgba(99,102,241,0.5);
+}
+</style>
+</head>
+<body>
+
+<!-- BOOT SCREEN -->
+<div id="boot-screen">
+  <div id="boot-logo" style="font-size:0;"><img src="assets/profile-photo.png" style="width:80px;height:80px;border-radius:50%;box-shadow:0 0 40px rgba(99,102,241,0.4), 0 0 80px rgba(6,182,212,0.2);"></div>
+  <div style="margin-top:20px;font-size:14px;color:rgba(255,255,255,0.5);font-weight:300;letter-spacing:2px;">ishaqhassan.dev</div>
+  <div id="boot-bar-container"><div id="boot-bar"></div></div>
+</div>
+
+<!-- WALLPAPER -->
+<div id="wallpaper">
+  <div class="floating-orb"></div>
+  <div class="floating-orb"></div>
+  <div class="floating-orb"></div>
+</div>
+
+<!-- MENU BAR -->
+<div id="menubar">
+  <div class="left">
+    <div class="menu-parent">
+      <span class="logo" onclick="toggleMenu('apple')"></span>
+      <div class="menu-dropdown" id="menu-apple">
+        <div class="menu-dd-item bold">About Ishaq Hassan</div>
+        <div class="menu-dd-sep"></div>
+        <div class="menu-dd-item" onclick="openWindow('about')">Terminal<span class="shortcut">⌘T</span></div>
+        <div class="menu-dd-item" onclick="openWindow('contact')">Contact<span class="shortcut">⌘K</span></div>
+        <div class="menu-dd-sep"></div>
+        <div class="menu-dd-item" onclick="window.open('mailto:hello@ishaqhassan.dev')">Send Email...</div>
+      </div>
+    </div>
+    <div class="menu-parent">
+      <span class="menu-item bold" onclick="toggleMenu('name')">Ishaq Hassan</span>
+      <div class="menu-dropdown" id="menu-name">
+        <div class="menu-dd-item disabled">Flutter Framework Contributor</div>
+        <div class="menu-dd-item disabled">Engineering Manager @ DigitalHire</div>
+        <div class="menu-dd-sep"></div>
+        <div class="menu-dd-item" onclick="window.open('https://github.com/ishaquehassan')">GitHub Profile</div>
+        <div class="menu-dd-item" onclick="window.open('https://linkedin.com/in/ishaquehassan')">LinkedIn Profile</div>
+        <div class="menu-dd-item" onclick="window.open('https://medium.com/@ishaqhassan')">Medium Blog</div>
+      </div>
+    </div>
+    <div class="menu-parent hide-mobile">
+      <span class="menu-item" onclick="toggleMenu('portfolio')">Portfolio</span>
+      <div class="menu-dropdown" id="menu-portfolio">
+        <div class="menu-dd-item" onclick="openWindow('flutter')">Flutter Contributions<span class="shortcut">⌘1</span></div>
+        <div class="menu-dd-item" onclick="openWindow('oss')">Open Source Projects<span class="shortcut">⌘2</span></div>
+        <div class="menu-dd-item" onclick="openWindow('articles')">Articles & Writing<span class="shortcut">⌘3</span></div>
+        <div class="menu-dd-sep"></div>
+        <div class="menu-dd-item" onclick="openWindow('tech')">Tech Stack</div>
+        <div class="menu-dd-item" onclick="openWindow('speaking')">Speaking Events</div>
+      </div>
+    </div>
+    <div class="menu-parent hide-mobile">
+      <span class="menu-item" onclick="toggleMenu('view')">View</span>
+      <div class="menu-dropdown" id="menu-view">
+        <div class="menu-dd-item" onclick="openAllWindows()">Open All Windows</div>
+        <div class="menu-dd-item" onclick="closeAllWindows()">Close All Windows<span class="shortcut">⌘W</span></div>
+        <div class="menu-dd-sep"></div>
+        <div class="menu-dd-item" onclick="openWindow('about')">About (Terminal)</div>
+        <div class="menu-dd-item" onclick="openWindow('experience')">Experience</div>
+        <div class="menu-dd-item" onclick="openWindow('linkedin')">LinkedIn</div>
+        <div class="menu-dd-item" onclick="openWindow('github')">GitHub</div>
+      </div>
+    </div>
+    <div class="menu-parent hide-mobile">
+      <span class="menu-item" onclick="toggleMenu('go')">Go</span>
+      <div class="menu-dropdown" id="menu-go">
+        <div class="menu-dd-item" onclick="window.open('https://github.com/ishaquehassan')">GitHub<span class="shortcut">⇧⌘G</span></div>
+        <div class="menu-dd-item" onclick="window.open('https://linkedin.com/in/ishaquehassan')">LinkedIn<span class="shortcut">⇧⌘L</span></div>
+        <div class="menu-dd-item" onclick="window.open('https://medium.com/@ishaqhassan')">Medium<span class="shortcut">⇧⌘M</span></div>
+        <div class="menu-dd-item" onclick="window.open('https://stackoverflow.com/users/2094696/ishaq-hassan')">Stack Overflow</div>
+        <div class="menu-dd-sep"></div>
+        <div class="menu-dd-item" onclick="window.open('mailto:hello@ishaqhassan.dev')">Email (hello@ishaqhassan.dev)</div>
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <span>🔋</span>
+    <span>📶</span>
+    <span id="menubar-time"></span>
+  </div>
+</div>
+
+<!-- DESKTOP WIDGETS -->
+<div id="desktop">
+  <div class="widget-col">
+    <div class="widget" id="w-clock">
+      <div class="widget-title">📍 Karachi, PK</div>
+      <div class="widget-value" id="clock-time">00:00</div>
+      <div class="widget-sub" id="clock-date">Loading...</div>
+    </div>
+    <div class="widget" id="w-status">
+      <div class="widget-title">Status</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+        <span class="status-dot"></span>
+        <span style="font-size:13px;">Available for opportunities</span>
+      </div>
+      <div style="margin-top:10px;font-size:12px;color:var(--text2);">hello@ishaqhassan.dev</div>
+    </div>
+    <div class="widget" onclick="openWindow('github')">
+      <div class="widget-title">GitHub Activity</div>
+      <div style="display:flex;gap:3px;margin-top:8px;align-items:flex-end;height:32px;" id="gh-bars"></div>
+      <div class="widget-sub">9,800+ contributions</div>
+    </div>
+  </div>
+  <div class="widget-col">
+    <div class="widget" onclick="openWindow('flutter')" style="min-width:160px;">
+      <div class="widget-title">Flutter Framework</div>
+      <div style="display:flex;gap:16px;margin-top:6px;">
+        <div><div class="widget-value" style="font-size:28px;">3</div><div class="widget-sub">Merged</div></div>
+        <div><div class="widget-value" style="font-size:28px;">2</div><div class="widget-sub">Approved</div></div>
+      </div>
+    </div>
+    <div class="widget" onclick="openWindow('about')">
+      <div class="widget-title">Experience</div>
+      <div class="widget-value">13+</div>
+      <div class="widget-sub">Years building software</div>
+    </div>
+    <div class="widget" onclick="openWindow('speaking')">
+      <div class="widget-title">Community</div>
+      <div style="display:flex;gap:16px;margin-top:6px;">
+        <div><div class="widget-value" style="font-size:28px;">10+</div><div class="widget-sub">Events</div></div>
+        <div><div class="widget-value" style="font-size:28px;">🎓</div><div class="widget-sub">GDG Mentor</div></div>
+      </div>
+    </div>
+    <div class="widget" onclick="openWindow('oss')">
+      <div class="widget-title">Open Source</div>
+      <div style="display:flex;gap:12px;margin-top:6px;">
+        <div><div style="font-size:18px;font-weight:700;color:#FFD60A;">⭐ 64</div><div class="widget-sub">Stars</div></div>
+        <div><div style="font-size:18px;font-weight:700;color:#30D158;">🍴 135</div><div class="widget-sub">Forks</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DOCK -->
+<div id="dock-container">
+  <div id="dock">
+    <div class="dock-item" onclick="openWindow('about')">
+      <div class="dock-tooltip">About Me</div>
+      <div class="dock-icon about"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M7 20h10M12 17v3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><text x="6" y="13" fill="#4ade80" font-size="7" font-family="monospace">&gt;_</text></svg></div>
+    </div>
+    <div class="dock-item" onclick="openWindow('flutter')">
+      <div class="dock-tooltip">Flutter PRs</div>
+      <div class="dock-icon flutter"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M14.314 0L2.3 12 6 15.7 21.684 0h-7.37zm0 11.066l-3.418 3.418 3.418 3.418 3.418-3.418-3.418-3.418z" fill="#54C5F8" transform="scale(0.8) translate(3,3)"/><path d="M14.314 11.066L10.896 14.484 14.314 17.902 17.732 14.484z" fill="#01579B" transform="scale(0.8) translate(3,3)"/></svg></div>
+    </div>
+    <div class="dock-item" onclick="openWindow('speaking')">
+      <div class="dock-tooltip">Speaking</div>
+      <div class="dock-icon speaking"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3z" fill="#fff"/><path d="M19 10v1a7 7 0 01-14 0v-1M12 18v4m-4 0h8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="dock-item" onclick="openWindow('experience')">
+      <div class="dock-tooltip">Experience</div>
+      <div class="dock-icon exp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#fff" stroke-width="1.5"/><path d="M12 12v2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></div>
+    </div>
+    <div class="dock-item" onclick="openWindow('oss')">
+      <div class="dock-tooltip">Open Source</div>
+      <div class="dock-icon oss"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7l9 5 9-5-9-5z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M3 17l9 5 9-5M3 12l9 5 9-5" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+    </div>
+    <div class="dock-item" onclick="openWindow('tech')">
+      <div class="dock-tooltip">Tech Stack</div>
+      <div class="dock-icon tech"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#fff" stroke-width="1.5"/><path d="M12 1v2m0 18v2m11-11h-2M3 12H1m18.07-7.07l-1.41 1.41M6.34 17.66l-1.41 1.41m0-14.14l1.41 1.41m11.32 11.32l1.41 1.41" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="dock-item" onclick="openWindow('articles')">
+      <div class="dock-tooltip">Articles</div>
+      <div class="dock-icon articles"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z" stroke="#fff" stroke-width="1.5"/><path d="M7 8h10M7 12h6" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="dock-item" onclick="openWindow('contact')">
+      <div class="dock-tooltip">Contact</div>
+      <div class="dock-icon contact"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+    <div class="dock-item" onclick="openWindow('github')">
+      <div class="dock-tooltip">GitHub</div>
+      <div class="dock-icon github"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></div>
+    </div>
+    <div class="dock-item" onclick="openWindow('linkedin')">
+      <div class="dock-tooltip">LinkedIn</div>
+      <div class="dock-icon linkedin"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
+    </div>
+  </div>
+</div>
+
+<!-- WINDOWS -->
+<div class="window" id="win-about" style="width:720px;height:540px;top:60px;left:calc(50% - 360px);">
+  <div class="window-toolbar" onmousedown="startDrag(event,'win-about')">
+    <div class="traffic-lights">
+      <div class="traffic-light tl-close" onclick="closeWindow('about')">✕</div>
+      <div class="traffic-light tl-minimize" onclick="minimizeWindow('about')">−</div>
+      <div class="traffic-light tl-maximize" onclick="maximizeWindow('about')">+</div>
+    </div>
+    <div class="window-title">Terminal — ishaq@dev: ~</div>
+  </div>
+  <div class="window-loader" id="loader-about"><div class="loader-spinner"></div></div>
+  <div class="window-body" style="background:#0d1117;padding:20px;">
+    <div class="terminal" id="terminal-content"></div>
+  </div>
+</div>
+
+<div class="window" id="win-flutter" style="width:700px;height:580px;top:50px;left:calc(50% - 350px);">
+  <div class="window-toolbar" onmousedown="startDrag(event,'win-flutter')">
+    <div class="traffic-lights">
+      <div class="traffic-light tl-close" onclick="closeWindow('flutter')">✕</div>
+      <div class="traffic-light tl-minimize" onclick="minimizeWindow('flutter')">−</div>
+      <div class="traffic-light tl-maximize" onclick="maximizeWindow('flutter')">+</div>
+    </div>
+    <div class="window-title">Flutter Framework Contributions</div>
+  </div>
+  <div class="window-loader" id="loader-flutter"><div class="loader-spinner"></div></div>
+  <div class="window-body">
+    <div style="background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(168,85,247,0.1));padding:16px;border-radius:10px;margin-bottom:16px;border:1px solid rgba(168,85,247,0.2);">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:20px;">💙</span><span style="font-size:14px;font-weight:600;">Flutter Contributions</span></div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">PRs Merged</div></div>
+        <div class="stat-card"><div class="stat-num">2</div><div class="stat-label">PRs Approved</div></div>
+        <div class="stat-card"><div class="stat-num">5</div><div class="stat-label">Total PRs</div></div>
+      </div>
+    </div>
+    <div class="section-header">Pull Requests</div>
+    <a href="https://github.com/flutter/flutter/pull/183081" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="pr-card" style="border-left:4px solid #30D158;transition:all 0.3s;hover:box-shadow(0 8px 20px rgba(48,209,88,0.3));">
+        <div class="pr-status pr-merged">✓ Merged</div>
+        <div class="pr-title">Fix AnimatedCrossFade clipBehavior forwarding</div>
+        <div class="pr-repo">flutter/flutter #183081</div>
+      </div>
+    </a>
+    <a href="https://github.com/flutter/flutter/pull/183097" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="pr-card" style="border-left:4px solid #30D158;transition:all 0.3s;">
+        <div class="pr-status pr-merged">✓ Merged</div>
+        <div class="pr-title">Forward clipBehavior in AnimatedSize widget</div>
+        <div class="pr-repo">flutter/flutter #183097</div>
+      </div>
+    </a>
+    <a href="https://github.com/flutter/flutter/pull/183109" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="pr-card" style="border-left:4px solid #30D158;transition:all 0.3s;">
+        <div class="pr-status pr-merged">✓ Merged</div>
+        <div class="pr-title">Add clipBehavior to SizeTransition widget</div>
+        <div class="pr-repo">flutter/flutter #183109</div>
+      </div>
+    </a>
+    <a href="https://github.com/flutter/flutter/pull/184545" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="pr-card" style="border-left:4px solid #007AFF;transition:all 0.3s;">
+        <div class="pr-status pr-approved">✓ Approved</div>
+        <div class="pr-title">Expose decoration properties in CupertinoTextField</div>
+        <div class="pr-repo">flutter/flutter #184545</div>
+      </div>
+    </a>
+    <a href="https://github.com/flutter/flutter/pull/184569" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="pr-card" style="border-left:4px solid #007AFF;transition:all 0.3s;">
+        <div class="pr-status pr-approved">✓ Approved</div>
+        <div class="pr-title">Add missing property forwarding in Material widgets</div>
+        <div class="pr-repo">flutter/flutter #184569</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="window" id="win-speaking" style="width:720px;height:600px;top:40px;left:calc(50% - 360px);">
+  <div class="window-toolbar" onmousedown="startDrag(event,'win-speaking')">
+    <div class="traffic-lights">
+      <div class="traffic-light tl-close" onclick="closeWindow('speaking')">✕</div>
+      <div class="traffic-light tl-minimize" onclick="minimizeWindow('speaking')">−</div>
+      <div class="traffic-light tl-maximize" onclick="maximizeWindow('speaking')">+</div>
+    </div>
+    <div class="window-title">Speaking & Community</div>
+  </div>
+  <div class="window-loader" id="loader-speaking"><div class="loader-spinner"></div></div>
+  <div class="window-body">
+    <div style="background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(6,182,212,0.1));padding:16px;border-radius:10px;margin-bottom:16px;border:1px solid rgba(6,182,212,0.2);">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:20px;">🎤</span><span style="font-size:14px;font-weight:600;">Speaking & Community</span></div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">10+</div><div class="stat-label">Events</div></div>
+        <div class="stat-card"><div class="stat-num">GDG</div><div class="stat-label">Mentor</div></div>
+        <div class="stat-card"><div class="stat-num">🎯</div><div class="stat-label">Speaker</div></div>
+      </div>
+    </div>
+    <div class="section-header">Speaking Events</div>
+    <a href="https://x.com/GDGKolachi" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="border-left:3px solid #6366f1;padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(99,102,241,0.3),rgba(139,92,246,0.3));">🎯</div><div class="event-info"><div class="event-name">DevFest Karachi: Scaling Products with Flutter 🔗</div><div class="event-venue">GDG Kolachi | Panel with Waleed Arshad & Sakina Abbas</div></div><div class="event-role">Panel Speaker</div></div></a>
+    <a href="https://www.facebook.com/GDGKolachi/posts/720743396758626/" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="border-left:3px solid #06b6d4;padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(6,182,212,0.3),rgba(34,197,94,0.3));">🌐</div><div class="event-info"><div class="event-name">Google I/O Extended Karachi 🔗</div><div class="event-venue">GDG Kolachi</div></div><div class="event-role">Speaker</div></div></a>
+    <a href="https://gdg.community.dev/events/details/google-gdg-kolachi-presents-flutter-bootcamp/" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="border-left:3px solid #30D158;padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(48,209,88,0.3),rgba(34,197,94,0.3));">🎓</div><div class="event-info"><div class="event-name">Flutter Bootcamp (Aug 2021) 🔗</div><div class="event-venue">GDG Kolachi</div></div><div class="event-role">Instructor</div></div></a>
+    <a href="https://www.facebook.com/GDGKolachi/posts/722626283237004/" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="border-left:3px solid #FF9F0A;padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(255,159,10,0.3),rgba(255,193,7,0.3));">🚀</div><div class="event-info"><div class="event-name">Facebook Developer Circle (Inaugural) 🔗</div><div class="event-venue">The Nest I/O</div></div><div class="event-role">Inaugural Speaker</div></div></a>
+    <a href="https://www.linkedin.com/posts/gdgkolachi_codetocreate-roadtodevfest2025-gdgkolachi-activity-7400908378081767424-EB-7" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="border-left:3px solid #8b5cf6;padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.3),rgba(168,85,247,0.3));">💻</div><div class="event-info"><div class="event-name">Code to Create 🔗</div><div class="event-venue">NIC Karachi | with Waleed Arshad</div></div><div class="event-role">Speaker</div></div></a>
+    <a href="https://www.linkedin.com/posts/itrathussainzaidi_flutter-iqrauniversity-seminar-activity-7192627199412232192-8t2X" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="border-left:3px solid #FF453A;padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(255,69,58,0.3),rgba(244,63,94,0.3));">🏫</div><div class="event-info"><div class="event-name">Flutter Seminar 🔗</div><div class="event-venue">Iqra University</div></div><div class="event-role">Speaker</div></div></a>
+    <a href="https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="border-left:3px solid #FFD60A;padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(255,214,10,0.3),rgba(255,193,7,0.3));">🤖</div><div class="event-info"><div class="event-name">DevNCode Meetup IV: AI 🔗</div><div class="event-venue">The Nest I/O</div></div><div class="event-role">Speaker</div></div></a>
+    <a href="https://www.linkedin.com/company/31333300/" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="border-left:3px solid #ec4899;padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(236,72,153,0.3),rgba(244,63,94,0.3));">👩‍💻</div><div class="event-info"><div class="event-name">Women Tech Makers (DHA Suffa University) 🔗</div><div class="event-venue">Karachi | "Building Basic Apps with Flutter"</div></div><div class="event-role">Speaker</div></div></a>
+    <div class="event-row" style="border-left:3px solid #6366f1;padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(99,102,241,0.3),rgba(139,92,246,0.3));">🏆</div><div class="event-info"><div class="event-name">Pakistan's First Flutter Meetup (2018)</div><div class="event-venue">Karachi</div></div><div class="event-role">Speaker</div></div>
+    <div class="event-row" style="border-left:3px solid #06b6d4;padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(6,182,212,0.3),rgba(34,197,94,0.3));">🌐</div><div class="event-info"><div class="event-name">GDG Live Pakistan</div><div class="event-venue">Online</div></div><div class="event-role">Speaker</div></div>
+  </div>
+</div>
+
+<div class="window" id="win-experience" style="width:700px;height:600px;top:40px;left:calc(50% - 350px);">
+  <div class="window-toolbar" onmousedown="startDrag(event,'win-experience')">
+    <div class="traffic-lights">
+      <div class="traffic-light tl-close" onclick="closeWindow('experience')">✕</div>
+      <div class="traffic-light tl-minimize" onclick="minimizeWindow('experience')">−</div>
+      <div class="traffic-light tl-maximize" onclick="maximizeWindow('experience')">+</div>
+    </div>
+    <div class="window-title">Experience</div>
+  </div>
+  <div class="window-loader" id="loader-experience"><div class="loader-spinner"></div></div>
+  <div class="window-body">
+    <div style="background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(99,102,241,0.1));padding:16px;border-radius:10px;margin-bottom:16px;border:1px solid rgba(99,102,241,0.2);">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:20px;">📈</span><span style="font-size:14px;font-weight:600;">Career Timeline</span></div>
+        <div style="font-size:12px;color:var(--text2);">16 roles across 13+ years</div>
+      </div>
+    </div>
+    <div style="border-left:2px solid rgba(99,102,241,0.5);padding-left:16px;margin-left:8px;">
+      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);box-shadow:0 0 12px rgba(99,102,241,0.5);">
+</div><a href="https://www.linkedin.com/company/35951080/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;transition:all 0.3s;cursor:pointer;">🏢 DigitalHire</a><div class="exp-role">Engineering Manager → Technical Lead → Staff Engineer</div><div class="exp-date">Feb 2023 - Present · 3 yrs 3 mos | McLean, Virginia</div><div class="exp-desc">AI-based video job board. Flutter, Dart, Kotlin, Python, PostgreSQL, Next.js, React Native.</div></div>
+      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#06b6d4,#34d399);box-shadow:0 0 12px rgba(6,182,212,0.5);">
+</div><div class="exp-company" style="font-weight:600;">🎓 Tech Idara</div><div class="exp-role">Senior Instructor</div><div class="exp-date">Dec 2021 - Sep 2024 · 2 yrs 10 mos</div><div class="exp-desc">Flutter course on official Flutter docs.</div></div>
+      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#FF9F0A,#FFD60A);box-shadow:0 0 12px rgba(255,159,10,0.5);">
+</div><a href="https://www.linkedin.com/company/83530314/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;transition:all 0.3s;cursor:pointer;">✈️ AeroGlobe</a><div class="exp-role">Technical Lead</div><div class="exp-date">Jun 2022 - May 2024 · 2 yrs</div><div class="exp-desc">React Native, Python, front-end.</div></div>
+      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#0077B6,#00B4D8);box-shadow:0 0 12px rgba(0,119,182,0.5);">
+</div><a href="https://www.linkedin.com/company/7969190/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;transition:all 0.3s;cursor:pointer;">🎫 Sastaticket.pk</a><div class="exp-role">Engineering Consultant</div><div class="exp-date">Jan 2022 - Mar 2024</div><div class="exp-desc">Architecture, Flutter, CI/CD, GitHub Actions.</div></div>
+      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#f43f5e);box-shadow:0 0 12px rgba(236,72,153,0.5);">
+</div><div class="exp-company" style="font-weight:600;">📱 Pocket Systems</div><div class="exp-role">Co-Founder</div><div class="exp-date">Jan 2020 - Dec 2022 · 3 yrs</div><div class="exp-desc">International market, React Native, Socket Programming.</div></div>
+      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#30D158,#34d399);box-shadow:0 0 12px rgba(48,209,88,0.5);">
+</div><a href="https://www.linkedin.com/company/11753853/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;">🌍 Optimyse</a><div class="exp-role">Lead Software Engineer</div><div class="exp-date">Feb 2019 - Dec 2021 · 2 yrs 11 mos | Estonia</div><div class="exp-desc">Full stack teams, cross-platform mobile.</div></div>
+      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#FF453A,#FF6B6B);box-shadow:0 0 12px rgba(255,69,58,0.5);">
+</div><div class="exp-company" style="font-weight:600;">🚀 Cyber Avanza</div><div class="exp-role">Co-Founder</div><div class="exp-date">Sep 2016 - Dec 2018 · 2 yrs 4 mos</div><div class="exp-desc">Android/iOS native development.</div></div>
+      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#5856D6,#7c3aed);box-shadow:0 0 12px rgba(88,86,214,0.5);">
+</div><div class="exp-company" style="font-weight:600;">💻 VividVisionz</div><div class="exp-role">Mobile + Web Developer</div><div class="exp-date">Feb 2013 - Feb 2019 · 6 yrs</div><div class="exp-desc">Android, iOS, PHP, MySQL, JavaScript.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="window" id="win-oss" style="width:700px;height:580px;top:40px;left:calc(50% - 350px);">
+  <div class="window-toolbar" onmousedown="startDrag(event,'win-oss')">
+    <div class="traffic-lights">
+      <div class="traffic-light tl-close" onclick="closeWindow('oss')">✕</div>
+      <div class="traffic-light tl-minimize" onclick="minimizeWindow('oss')">−</div>
+      <div class="traffic-light tl-maximize" onclick="maximizeWindow('oss')">+</div>
+    </div>
+    <div class="window-title">Open Source Projects</div>
+  </div>
+  <div class="window-loader" id="loader-oss"><div class="loader-spinner"></div></div>
+  <div class="window-body">
+    <div style="background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(48,209,88,0.1));padding:16px;border-radius:10px;margin-bottom:16px;border:1px solid rgba(48,209,88,0.2);">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:20px;">🚀</span><span style="font-size:14px;font-weight:600;">Open Source Impact</span></div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">9.8K+</div><div class="stat-label">Contributions</div></div>
+        <div class="stat-card"><div class="stat-num">64</div><div class="stat-label">Stars</div></div>
+        <div class="stat-card"><div class="stat-num">135+</div><div class="stat-label">Forks</div></div>
+      </div>
+    </div>
+    <div class="section-header">Featured Repos</div>
+    <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="pr-card" style="position:relative;">
+        <div style="position:absolute;right:12px;top:12px;display:flex;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#199881;box-shadow:0 0 8px rgba(25,152,129,0.6);">
+</span></div>
+        <div class="pr-title">📸 document_scanner_flutter</div>
+        <div class="pr-repo">Flutter plugin for document scanning | ⭐ 63 | 🍴 135</div>
+      </div>
+    </a>
+    <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="pr-card" style="position:relative;">
+        <div style="position:absolute;right:12px;top:12px;display:flex;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#F7DF1E;box-shadow:0 0 8px rgba(247,223,30,0.6);">
+</span></div>
+        <div class="pr-title">⏰ flutter_alarm_background_trigger</div>
+        <div class="pr-repo">Native Kotlin alarm plugin for Flutter | ⭐ 13</div>
+      </div>
+    </a>
+    <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="pr-card" style="position:relative;">
+        <div style="position:absolute;right:12px;top:12px;display:flex;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#FF6B35;box-shadow:0 0 8px rgba(255,107,53,0.6);">
+</span></div>
+        <div class="pr-title">📁 assets_indexer</div>
+        <div class="pr-repo">Auto-generate asset references for Flutter | ⭐ 9</div>
+      </div>
+    </a>
+    <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="pr-card" style="position:relative;">
+        <div style="position:absolute;right:12px;top:12px;display:flex;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#199881;box-shadow:0 0 8px rgba(25,152,129,0.6);">
+</span></div>
+        <div class="pr-title">🪪 nadra_verisys_flutter</div>
+        <div class="pr-repo">NADRA CNIC KYC verification for Flutter | ⭐ 3</div>
+      </div>
+    </a>
+    <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="pr-card" style="position:relative;">
+        <div style="position:absolute;right:12px;top:12px;display:flex;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#6366f1;box-shadow:0 0 8px rgba(99,102,241,0.6);">
+</span></div>
+        <div class="pr-title">🎯 goal-agent</div>
+        <div class="pr-repo">Career goal tracking agent for Claude Code</div>
+      </div>
+    </a>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+      <span style="padding:3px 8px;border-radius:12px;background:rgba(99,102,241,0.15);font-size:10px;color:#a5b4fc;">🏆 Creator</span>
+      <span style="padding:3px 8px;border-radius:12px;background:rgba(48,209,88,0.15);font-size:10px;color:var(--green);">🤝 Collaborator</span>
+      <span style="padding:3px 8px;border-radius:12px;background:rgba(6,182,212,0.15);font-size:10px;color:#67e8f9;">⭐ Popular</span>
+    </div>
+  </div>
+</div>
+
+<div class="window" id="win-tech" style="width:680px;height:600px;top:40px;left:calc(50% - 340px);">
+  <div class="window-toolbar" onmousedown="startDrag(event,'win-tech')">
+    <div class="traffic-lights">
+      <div class="traffic-light tl-close" onclick="closeWindow('tech')">✕</div>
+      <div class="traffic-light tl-minimize" onclick="minimizeWindow('tech')">−</div>
+      <div class="traffic-light tl-maximize" onclick="maximizeWindow('tech')">+</div>
+    </div>
+    <div class="window-title">Tech Stack</div>
+  </div>
+  <div class="window-loader" id="loader-tech"><div class="loader-spinner"></div></div>
+  <div class="window-body">
+    <div style="background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(168,85,247,0.2));padding:12px;border-radius:8px;margin-bottom:16px;border-left:3px solid rgba(99,102,241,0.5);font-size:13px;font-weight:600;">Mobile</div>
+    <div class="tech-grid" style="margin-bottom:24px;">
+      <a href="https://flutter.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">💙</div><div class="tech-name">Flutter</div></div></a>
+      <a href="https://dart.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(6,182,212,0.15),rgba(34,197,94,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🎯</div><div class="tech-name">Dart</div></div></a>
+      <a href="https://developer.android.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(52,168,83,0.15),rgba(76,175,80,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🤖</div><div class="tech-name">Android</div></div></a>
+      <a href="https://developer.apple.com/ios/" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(100,100,100,0.15),rgba(150,150,150,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🍎</div><div class="tech-name">iOS</div></div></a>
+      <a href="https://kotlinlang.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(139,92,246,0.15),rgba(168,85,247,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🟣</div><div class="tech-name">Kotlin</div></div></a>
+      <a href="https://swift.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(255,165,0,0.15),rgba(255,192,0,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🦅</div><div class="tech-name">Swift</div></div></a>
+      <a href="https://reactnative.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(97,194,247,0.15),rgba(100,150,200,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">⚛️</div><div class="tech-name">React Native</div></div></a>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(48,209,88,0.2),rgba(34,197,94,0.2));padding:12px;border-radius:8px;margin-bottom:16px;border-left:3px solid rgba(48,209,88,0.5);font-size:13px;font-weight:600;">Backend & Cloud</div>
+    <div class="tech-grid" style="margin-bottom:24px;">
+      <a href="https://firebase.google.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(255,159,10,0.15),rgba(255,193,7,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🔥</div><div class="tech-name">Firebase</div></div></a>
+      <a href="https://nodejs.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(51,153,51,0.15),rgba(102,204,0,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🟢</div><div class="tech-name">Node.js</div></div></a>
+      <a href="https://nestjs.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(226,39,39,0.15),rgba(229,57,53,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🔧</div><div class="tech-name">NestJS</div></div></a>
+      <a href="https://nextjs.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(255,255,255,0.15),rgba(220,220,220,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">▲</div><div class="tech-name">Next.js</div></div></a>
+      <a href="https://python.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(51,102,204,0.15),rgba(255,192,0,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🐍</div><div class="tech-name">Python</div></div></a>
+      <a href="https://php.net" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(119,123,180,0.15),rgba(107,142,195,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🐘</div><div class="tech-name">PHP</div></div></a>
+      <a href="https://spring.io/projects/spring-boot" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(102,204,0,0.15),rgba(51,153,51,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🍃</div><div class="tech-name">Spring Boot</div></div></a>
+      <a href="https://go.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,173,239,0.15),rgba(70,180,230,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🐹</div><div class="tech-name">Go</div></div></a>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,159,10,0.2),rgba(255,193,7,0.2));padding:12px;border-radius:8px;margin-bottom:16px;border-left:3px solid rgba(255,159,10,0.5);font-size:13px;font-weight:600;">Database</div>
+    <div class="tech-grid" style="margin-bottom:24px;">
+      <a href="https://postgresql.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(51,102,204,0.15),rgba(0,102,204,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🐘</div><div class="tech-name">PostgreSQL</div></div></a>
+      <a href="https://mysql.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,102,153,0.15),rgba(51,153,204,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🐬</div><div class="tech-name">MySQL</div></div></a>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(6,182,212,0.2));padding:12px;border-radius:8px;margin-bottom:16px;border-left:3px solid rgba(99,102,241,0.5);font-size:13px;font-weight:600;">Tools & DevOps</div>
+    <div class="tech-grid">
+      <a href="https://git-scm.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(244,77,33,0.15),rgba(240,80,35,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">📦</div><div class="tech-name">Git</div></div></a>
+      <a href="https://github.com/features/actions" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(36,41,46,0.15),rgba(64,70,77,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">⚡</div><div class="tech-name">GitHub Actions</div></div></a>
+      <a href="https://docker.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,153,204,0.15),rgba(0,102,204,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🐳</div><div class="tech-name">Docker</div></div></a>
+      <a href="https://kernel.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(255,165,0,0.15),rgba(255,192,0,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🐧</div><div class="tech-name">Linux</div></div></a>
+      <a href="https://claude.ai" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon">🤖</div><div class="tech-name">Claude AI</div></div></a>
+    </div>
+  </div>
+</div>
+
+<div class="window" id="win-articles" style="width:680px;height:580px;top:40px;left:calc(50% - 340px);">
+  <div class="window-toolbar" onmousedown="startDrag(event,'win-articles')">
+    <div class="traffic-lights">
+      <div class="traffic-light tl-close" onclick="closeWindow('articles')">✕</div>
+      <div class="traffic-light tl-minimize" onclick="minimizeWindow('articles')">−</div>
+      <div class="traffic-light tl-maximize" onclick="maximizeWindow('articles')">+</div>
+    </div>
+    <div class="window-title">Articles & Writing</div>
+  </div>
+  <div class="window-loader" id="loader-articles"><div class="loader-spinner"></div></div>
+  <div class="window-body has-footer">
+    <div style="background:linear-gradient(135deg,rgba(248,113,113,0.1),rgba(236,72,153,0.1));padding:16px;border-radius:10px;margin-bottom:16px;border:1px solid rgba(236,72,153,0.2);">
+      <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:20px;">📚</span><span style="font-size:14px;font-weight:600;">Latest Articles</span></div>
+    </div>
+    <a href="https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="article-card" style="border-left:4px solid #6366f1;padding-left:12px;transition:all 0.3s;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div class="article-title">🧩 Dart Isolates: The Missing Guide</div>
+          <span style="padding:2px 6px;border-radius:6px;background:rgba(99,102,241,0.2);font-size:10px;color:#a5b4fc;font-weight:600;">5 min</span>
+        </div>
+        <div class="article-meta">Concurrency, Performance</div>
+      </div>
+    </a>
+    <a href="https://medium.com/@ishaqhassan/how-flutters-three-tree-architecture-actually-works-953c8cc17226" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="article-card" style="border-left:4px solid #06b6d4;padding-left:12px;transition:all 0.3s;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div class="article-title">🌳 How Flutter's Three-Tree Architecture Works</div>
+          <span style="padding:2px 6px;border-radius:6px;background:rgba(6,182,212,0.2);font-size:10px;color:#67e8f9;font-weight:600;">4 min</span>
+        </div>
+        <div class="article-meta">Flutter Internals</div>
+      </div>
+    </a>
+    <a href="https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="article-card" style="border-left:4px solid #30D158;padding-left:12px;transition:all 0.3s;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div class="article-title">🔀 PRs Merged Into Flutter's Repository</div>
+          <span style="padding:2px 6px;border-radius:6px;background:rgba(48,209,88,0.2);font-size:10px;color:var(--green);font-weight:600;">5 min</span>
+        </div>
+        <div class="article-meta">52 claps | Open Source</div>
+      </div>
+    </a>
+    <a href="https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="article-card" style="border-left:4px solid #FF9F0A;padding-left:12px;transition:all 0.3s;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div class="article-title">📱 Flutter Native Plugin Development</div>
+          <span style="padding:2px 6px;border-radius:6px;background:rgba(255,159,10,0.2);font-size:10px;color:#fbbf24;font-weight:600;">3 min</span>
+        </div>
+        <div class="article-meta">67 claps | Nerd For Tech</div>
+      </div>
+    </a>
+    <a href="https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="article-card" style="border-left:4px solid #8b5cf6;padding-left:12px;transition:all 0.3s;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div class="article-title">📁 Indexing Assets in a Dart Class</div>
+          <span style="padding:2px 6px;border-radius:6px;background:rgba(139,92,246,0.2);font-size:10px;color:#d8b4fe;font-weight:600;">4 min</span>
+        </div>
+        <div class="article-meta">Nerd For Tech</div>
+      </div>
+    </a>
+    <a href="https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="article-card" style="border-left:4px solid #FF453A;padding-left:12px;transition:all 0.3s;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div class="article-title">🔥 Firebase Cloud Functions Using Kotlin</div>
+          <span style="padding:2px 6px;border-radius:6px;background:rgba(255,69,58,0.2);font-size:10px;color:#fca5a5;font-weight:600;">3 min</span>
+        </div>
+        <div class="article-meta">Firebase, Kotlin</div>
+      </div>
+    </a>
+  </div>
+  <div class="window-footer"><a href="https://medium.com/@ishaqhassan" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#1a8917,#0d7a0d);color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;">View all on Medium →</a></div>
+</div>
+
+<div class="window" id="win-contact" style="width:600px;height:520px;top:60px;left:calc(50% - 300px);">
+  <div class="window-toolbar" onmousedown="startDrag(event,'win-contact')">
+    <div class="traffic-lights">
+      <div class="traffic-light tl-close" onclick="closeWindow('contact')">✕</div>
+      <div class="traffic-light tl-minimize" onclick="minimizeWindow('contact')">−</div>
+      <div class="traffic-light tl-maximize" onclick="maximizeWindow('contact')">+</div>
+    </div>
+    <div class="window-title">Contact</div>
+  </div>
+  <div class="window-loader" id="loader-contact"><div class="loader-spinner"></div></div>
+  <div class="window-body" style="padding:0;">
+    <!-- Profile header -->
+    <div style="text-align:center;padding:24px 24px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(6,182,212,0.08));border-bottom:1px solid var(--border);">
+      <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:0 auto 12px;border:3px solid rgba(99,102,241,0.3);box-shadow:0 8px 24px rgba(99,102,241,0.2);"><img src="assets/profile-photo.png" style="width:100%;height:100%;object-fit:cover;"></div>
+      <div style="font-size:18px;font-weight:700;">Let's Build Something Together</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:4px;">Available for collaborations, speaking, and open source</div>
+    </div>
+    <!-- Contact cards -->
+    <div style="padding:20px;">
+      <div class="contact-grid">
+        <a class="contact-card" href="mailto:hello@ishaqhassan.dev" style="transition:all 0.3s;border-left:3px solid #30D158;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="#fff" stroke-width="1.5"/></svg></div>
+            <div style="text-align:left;"><div class="contact-label">Email</div><div class="contact-value">hello@ishaqhassan.dev</div></div>
+          </div>
+        </a>
+        <a class="contact-card" href="https://github.com/ishaquehassan" target="_blank" style="transition:all 0.3s;border-left:3px solid #6e7681;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#24292e,#40464d);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></div>
+            <div style="text-align:left;"><div class="contact-label">GitHub</div><div class="contact-value">@ishaquehassan</div></div>
+          </div>
+        </a>
+        <a class="contact-card" href="https://linkedin.com/in/ishaquehassan" target="_blank" style="transition:all 0.3s;border-left:3px solid #0077B5;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0077B5,#00a0dc);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
+            <div style="text-align:left;"><div class="contact-label">LinkedIn</div><div class="contact-value">@ishaquehassan</div></div>
+          </div>
+        </a>
+        <a class="contact-card" href="https://medium.com/@ishaqhassan" target="_blank" style="transition:all 0.3s;border-left:3px solid #1a8917;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#1a8917,#0d7a0d);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg></div>
+            <div style="text-align:left;"><div class="contact-label">Medium</div><div class="contact-value">@ishaqhassan</div></div>
+          </div>
+        </a>
+        <a class="contact-card" href="https://stackoverflow.com/users/2094696/ishaq-hassan" target="_blank" style="transition:all 0.3s;border-left:3px solid #F48024;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#F48024,#e7700d);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M15.725 0l-1.72 1.277 6.39 8.588 1.716-1.277L15.725 0zm-3.94 3.418l-1.369 1.644 8.225 6.85 1.369-1.644-8.225-6.85zm-3.15 4.465l-.905 1.94 9.702 4.517.904-1.94-9.701-4.517zm-1.85 4.86l-.44 2.093 10.473 2.201.44-2.092-10.473-2.203zM1.89 15.47V24h19.19v-8.53h-2.133v6.397H4.021v-6.396H1.89zm4.265 2.133v2.13h10.66v-2.13H6.154z"/></svg></div>
+            <div style="text-align:left;"><div class="contact-label">Stack Overflow</div><div class="contact-value">ishaq-hassan</div></div>
+          </div>
+        </a>
+        <a class="contact-card" href="https://ishaqhassan.dev" target="_blank" style="transition:all 0.3s;border-left:3px solid #6366f1;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="#fff" stroke-width="1.5"/></svg></div>
+            <div style="text-align:left;"><div class="contact-label">Website</div><div class="contact-value">ishaqhassan.dev</div></div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="window" id="win-github" style="width:680px;height:600px;top:40px;left:calc(50% - 340px);">
+  <div class="window-toolbar" onmousedown="startDrag(event,'win-github')">
+    <div class="traffic-lights">
+      <div class="traffic-light tl-close" onclick="closeWindow('github')">✕</div>
+      <div class="traffic-light tl-minimize" onclick="minimizeWindow('github')">−</div>
+      <div class="traffic-light tl-maximize" onclick="maximizeWindow('github')">+</div>
+    </div>
+    <div class="window-title">GitHub — ishaquehassan</div>
+  </div>
+  <div class="window-loader" id="loader-github"><div class="loader-spinner"></div></div>
+  <div class="window-body has-footer">
+    <div style="text-align:center;padding:16px 0 12px;">
+      <div style="width:80px;height:80px;border-radius:50%;overflow:hidden;margin:0 auto 12px;border:3px solid rgba(99,102,241,0.5);box-shadow:0 8px 24px rgba(99,102,241,0.3);"><img src="assets/github-avatar.png" style="width:100%;height:100%;object-fit:cover;" alt="Ishaq Hassan"></div>
+      <div style="font-size:20px;font-weight:700;">ishaquehassan</div>
+      <div style="color:var(--text2);font-size:12px;margin-top:4px;">Flutter Framework Contributor | Engineering Manager</div>
+      <div style="display:flex;justify-content:center;gap:16px;margin-top:8px;font-size:12px;color:var(--text2);">
+        <span>👥 213 followers</span><span>📍 Karachi, PK</span><span>📦 170 repos</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:10px;">
+        <span style="padding:3px 8px;border-radius:12px;background:rgba(99,102,241,0.15);font-size:10px;color:#a5b4fc;">🏆 Pull Shark x4</span>
+        <span style="padding:3px 8px;border-radius:12px;background:rgba(48,209,88,0.15);font-size:10px;color:var(--green);">🤝 Pair Extraordinaire x3</span>
+        <span style="padding:3px 8px;border-radius:12px;background:rgba(6,182,212,0.15);font-size:10px;color:#67e8f9;">🧊 Arctic Code Vault</span>
+        <span style="padding:3px 8px;border-radius:12px;background:rgba(255,159,10,0.15);font-size:10px;color:var(--orange);">⭐ Starstruck</span>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num">9.8K+</div><div class="stat-label">Contributions</div></div>
+      <div class="stat-card"><div class="stat-num">64</div><div class="stat-label">Stars</div></div>
+      <div class="stat-card"><div class="stat-num">135+</div><div class="stat-label">Forks</div></div>
+    </div>
+    <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px;">📌 Pinned Repos</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">📸</span><span class="pr-title" style="font-size:12px;margin:0;">document_scanner_flutter</span></div><div class="pr-repo" style="margin-top:4px;">Dart | ⭐ 64 🍴 135</div></div></a>
+      <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">⏰</span><span class="pr-title" style="font-size:12px;margin:0;">alarm_background_trigger</span></div><div class="pr-repo" style="margin-top:4px;">Kotlin | ⭐ 13 🍴 3</div></div></a>
+      <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">📁</span><span class="pr-title" style="font-size:12px;margin:0;">assets_indexer</span></div><div class="pr-repo" style="margin-top:4px;">C++ | ⭐ 9 🍴 2</div></div></a>
+      <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">🪪</span><span class="pr-title" style="font-size:12px;margin:0;">nadra_verisys_flutter</span></div><div class="pr-repo" style="margin-top:4px;">Dart | ⭐ 3</div></div></a>
+      <a href="https://github.com/ishaquehassan/claude-remote-terminal" target="_blank" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">📱</span><span class="pr-title" style="font-size:12px;margin:0;">claude-remote-terminal</span></div><div class="pr-repo" style="margin-top:4px;">Dart | ⭐ 1</div></div></a>
+      <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">🎯</span><span class="pr-title" style="font-size:12px;margin:0;">goal-agent</span></div><div class="pr-repo" style="margin-top:4px;">JS | Claude Code Plugin</div></div></a>
+    </div>
+  </div>
+  <div class="window-footer"><a href="https://github.com/ishaquehassan" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#24292e,#40464d);color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.1);">Open GitHub Profile →</a></div>
+</div>
+
+<div class="window" id="win-linkedin" style="width:700px;height:620px;top:35px;left:calc(50% - 350px);">
+  <div class="window-toolbar" onmousedown="startDrag(event,'win-linkedin')">
+    <div class="traffic-lights">
+      <div class="traffic-light tl-close" onclick="closeWindow('linkedin')">✕</div>
+      <div class="traffic-light tl-minimize" onclick="minimizeWindow('linkedin')">−</div>
+      <div class="traffic-light tl-maximize" onclick="maximizeWindow('linkedin')">+</div>
+    </div>
+    <div class="window-title">LinkedIn — Ishaq Hassan</div>
+  </div>
+  <div class="window-loader" id="loader-linkedin"><div class="loader-spinner"></div></div>
+  <div class="window-body has-footer" style="padding:0;">
+    <!-- Profile Header -->
+    <div style="position:relative;border-bottom:1px solid var(--border);">
+      <div style="height:120px;background:url('assets/linkedin-banner.png') center 30%/cover no-repeat;opacity:0.7;"></div>
+      <div style="text-align:center;padding:0 24px 16px;">
+      <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:-32px auto 10px;border:3px solid rgba(30,30,46,0.95);box-shadow:0 4px 12px rgba(0,0,0,0.5);position:relative;z-index:2;"><img src="assets/profile-photo.png" style="width:100%;height:100%;object-fit:cover;" alt="Ishaq Hassan"></div>
+      <div style="font-size:20px;font-weight:700;background:linear-gradient(135deg,#0077B5,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Ishaq Hassan</div>
+      <div style="color:var(--accent);font-size:13px;margin-top:4px;font-weight:500;">Flutter Framework Contributor | Engineering Manager @ DigitalHire | Open Source Author | Public Tech Speaker</div>
+      <div style="color:var(--text2);font-size:12px;margin-top:6px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">
+        <span>Karachi, Pakistan 🇵🇰</span>
+        <span>•</span>
+        <span>3,051 followers</span>
+        <span>•</span>
+        <span>500+ connections</span>
+      </div>
+      </div>
+    </div>
+    <!-- Tabs -->
+    <div class="li-tabs">
+      <div class="li-tab active" onclick="switchLiTab('experience')">Experience</div>
+      <div class="li-tab" onclick="switchLiTab('opensource')">Open Source</div>
+      <div class="li-tab" onclick="switchLiTab('education')">Education</div>
+      <div class="li-tab" onclick="switchLiTab('skills')">Skills</div>
+    </div>
+    <!-- Tab Content -->
+    <div class="li-tab-content" style="padding:20px;">
+      <!-- Experience Tab -->
+      <div class="li-panel" id="li-experience">
+        <div class="exp-item"><a href="https://www.linkedin.com/company/35951080/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🏢 DigitalHire</a><div class="exp-role">Engineering Manager</div><div class="exp-date">May 2024 - Present · 2 yrs | McLean, Virginia | Hybrid</div><div class="exp-desc">Leading AI-based video job board development. Managing engineering team. Flutter, Dart, Kotlin, Python, PostgreSQL, Next.js.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/35951080/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🏢 DigitalHire</a><div class="exp-role">Technical Lead</div><div class="exp-date">Oct 2023 - May 2024 · 8 mos | On-site</div><div class="exp-desc">Leading frontend team with NextJS for SSR, Flutter for web, desktop, and mobile apps.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/35951080/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🏢 DigitalHire</a><div class="exp-role">Staff Engineer</div><div class="exp-date">Feb 2023 - Oct 2023 · 9 mos | On-site</div><div class="exp-desc">Leading mobile team. React Native, Python, front-end development.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/76976404/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🎓 Tech Idara</a><div class="exp-role">Senior Instructor</div><div class="exp-date">Dec 2021 - Sep 2024 · 2 yrs 10 mos | Karachi</div><div class="exp-desc">Flutter course instructor. Course listed on official Flutter documentation.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/83530314/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">✈️ AeroGlobe</a><div class="exp-role">Technical Lead</div><div class="exp-date">Jun 2022 - May 2024 · 2 yrs | Karachi | Hybrid</div><div class="exp-desc">Leading engineering team. React Native, Python, JavaScript, front-end development.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/7969190/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🎫 Sastaticket.pk</a><div class="exp-role">Software Dev Consultant</div><div class="exp-date">Mar 2023 - Mar 2024 · 1 yr 1 mo | Remote</div><div class="exp-desc">Code quality, refactoring, architecture consultancy. Flutter, CI/CD, GitHub Actions.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/7969190/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🎫 Sastaticket.pk</a><div class="exp-role">Senior Engineering Consultant</div><div class="exp-date">Jan 2022 - Mar 2022 · 3 mos | Karachi</div><div class="exp-desc">App architecture and Flutter/Dart automation setup consulting.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/31333300/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">👩‍💻 Women Techmakers Kolachi</a><div class="exp-role">Speaker</div><div class="exp-date">Jun 2022 | DHA Suffa University, Karachi</div><div class="exp-desc">"Building Basic Apps with Flutter" workshop.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/53264096/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">📱 Pocket Systems</a><div class="exp-role">Co-Founder</div><div class="exp-date">Jan 2020 - Dec 2022 · 3 yrs | Karachi</div><div class="exp-desc">Founded software company. Technical engagements, international market. JavaScript, React Native, Socket Programming.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/11753853/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🌍 Optimyse (Mikaels Labs)</a><div class="exp-role">Lead Software Engineer</div><div class="exp-date">Feb 2019 - Dec 2021 · 2 yrs 11 mos | Tallinn, Estonia</div><div class="exp-desc">Managing full stack teams. Native and cross-platform mobile, web backend and frontend.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/1948911/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🎓 MAJU</a><div class="exp-role">Course Instructor</div><div class="exp-date">Mar 2019 - May 2019 · 3 mos | Karachi</div><div class="exp-desc">24 hours React Native Development training.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/3160421/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🎓 Habib University</a><div class="exp-role">Instructor</div><div class="exp-date">Nov 2018 | Karachi</div><div class="exp-desc">PhoneGap with Framework7 for hybrid mobile development.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/10205642/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🚀 Cyber Avanza</a><div class="exp-role">Co-Founder</div><div class="exp-date">Sep 2016 - Dec 2018 · 2 yrs 4 mos</div><div class="exp-desc">Native mobile development on Android/iOS and systems connectivity.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/13179768/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🎓 Sir Syed University (SSUET)</a><div class="exp-role">Course Instructor</div><div class="exp-date">Jan 2017 - 2018 · 1 yr 1 mo | Karachi</div><div class="exp-desc">Android Development with Kotlin, Jetpack, ARCore. PanaCloud collaboration.</div></div>
+        <div class="exp-item"><div class="exp-company">💻 VividVisionz</div><div class="exp-role">Mobile Developer</div><div class="exp-date">Jun 2013 - Feb 2019 · 5 yrs 9 mos | Karachi</div><div class="exp-desc">Android/iOS development and systems connectivity.</div></div>
+        <div class="exp-item"><div class="exp-company">💻 VividVisionz</div><div class="exp-role">Web Developer</div><div class="exp-date">Feb 2013 - Jan 2019 · 6 yrs | Karachi</div><div class="exp-desc">Web applications with PHP, MySQL, JavaScript.</div></div>
+      </div>
+      <!-- Open Source Tab -->
+      <div class="li-panel" id="li-opensource" style="display:none;">
+        <div class="section-header" style="font-size:16px;margin-bottom:16px;">Flutter Framework (flutter/flutter)</div>
+        <a href="https://github.com/flutter/flutter/pull/183081" target="_blank" style="text-decoration:none;color:inherit;">
+          <div class="pr-card">
+            <div class="pr-status pr-merged">✓ Merged</div>
+            <div class="pr-title">Fix AnimatedCrossFade clipBehavior forwarding</div>
+            <div class="pr-repo">flutter/flutter #183081</div>
+          </div>
+        </a>
+        <a href="https://github.com/flutter/flutter/pull/183097" target="_blank" style="text-decoration:none;color:inherit;">
+          <div class="pr-card">
+            <div class="pr-status pr-merged">✓ Merged</div>
+            <div class="pr-title">Forward clipBehavior in AnimatedSize widget</div>
+            <div class="pr-repo">flutter/flutter #183097</div>
+          </div>
+        </a>
+        <a href="https://github.com/flutter/flutter/pull/183109" target="_blank" style="text-decoration:none;color:inherit;">
+          <div class="pr-card">
+            <div class="pr-status pr-merged">✓ Merged</div>
+            <div class="pr-title">Add clipBehavior to SizeTransition widget</div>
+            <div class="pr-repo">flutter/flutter #183109</div>
+          </div>
+        </a>
+        <a href="https://github.com/flutter/flutter/pull/184545" target="_blank" style="text-decoration:none;color:inherit;">
+          <div class="pr-card">
+            <div class="pr-status pr-approved">✓ Approved</div>
+            <div class="pr-title">Expose decoration properties in CupertinoTextField</div>
+            <div class="pr-repo">flutter/flutter #184545</div>
+          </div>
+        </a>
+        <div class="section-header" style="font-size:16px;margin:20px 0 16px;">Published Packages & Plugins</div>
+        <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" style="text-decoration:none;color:inherit;">
+          <div class="pr-card">
+            <div class="pr-title">📸 document_scanner_flutter</div>
+            <div class="pr-repo">Flutter document scanning plugin | ⭐ 63 | 🍴 135</div>
+          </div>
+        </a>
+        <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" style="text-decoration:none;color:inherit;">
+          <div class="pr-card">
+            <div class="pr-title">⏰ flutter_alarm_background_trigger</div>
+            <div class="pr-repo">Native Kotlin alarm plugin | ⭐ 13</div>
+          </div>
+        </a>
+        <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" style="text-decoration:none;color:inherit;">
+          <div class="pr-card">
+            <div class="pr-title">📁 assets_indexer</div>
+            <div class="pr-repo">Auto-generate asset references | ⭐ 9</div>
+          </div>
+        </a>
+        <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" style="text-decoration:none;color:inherit;">
+          <div class="pr-card">
+            <div class="pr-title">🪪 nadra_verisys_flutter</div>
+            <div class="pr-repo">NADRA CNIC KYC verification | ⭐ 3</div>
+          </div>
+        </a>
+        <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" style="text-decoration:none;color:inherit;">
+          <div class="pr-card">
+            <div class="pr-title">🎯 goal-agent</div>
+            <div class="pr-repo">Career goal tracking agent for Claude Code</div>
+          </div>
+        </a>
+        <div class="section-header" style="font-size:16px;margin:20px 0 16px;">Flutter Course</div>
+        <div class="pr-card">
+          <div class="pr-title">🎓 Complete Flutter Development Course</div>
+          <div class="pr-repo">Listed on official Flutter documentation | Tech Idara | YouTube Playlist</div>
+        </div>
+      </div>
+      <!-- Education Tab -->
+      <div class="li-panel" id="li-education" style="display:none;">
+        <div class="exp-item">
+          <div class="exp-company">Board of Intermediate Education, Karachi</div>
+          <div class="exp-role">ICS, Business/Commerce, General</div>
+          <div class="exp-date">2012 - 2014</div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-company">Bahadurabad Foundation School</div>
+          <div class="exp-role">Matriculation, Computer Science</div>
+          <div class="exp-date">2011 - 2013</div>
+          <div class="exp-desc">Programming, Application Development, Research</div>
+        </div>
+        <div class="section-header" style="font-size:16px;margin:20px 0 12px;">Certifications & Courses</div>
+        <div class="pr-card"><div class="pr-title">🎓 Flutter Development Course (Official Docs Listed)</div><div class="pr-repo">Tech Idara | Instructor</div></div>
+        <div class="pr-card"><div class="pr-title">🏅 GDG Kolachi Official Mentor</div><div class="pr-repo">Google Developers Group</div></div>
+        <div class="pr-card"><div class="pr-title">📱 Android Development Course</div><div class="pr-repo">Sir Syed University (SSUET) | Instructor</div></div>
+      </div>
+      <!-- Skills Tab -->
+      <div class="li-panel" id="li-skills" style="display:none;">
+        <div class="section-header" style="font-size:16px;margin-bottom:12px;">Top Skills (LinkedIn Verified)</div>
+        <div class="tech-grid" style="margin-bottom:20px;">
+          <a href="https://flutter.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">💙</div><div class="tech-name">Flutter (4)</div></div></a>
+          <a href="https://kotlinlang.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🟣</div><div class="tech-name">Kotlin</div></div></a>
+          <a href="https://developer.mozilla.org/en-US/docs/Learn/Front-end_web_developer" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🌐</div><div class="tech-name">Front-End</div></div></a>
+          <a href="https://flutter.dev/multi-platform" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">📱</div><div class="tech-name">Mobile Apps</div></div></a>
+          <a href="https://github.com/features/actions" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">⚡</div><div class="tech-name">CI/CD</div></div></a>
+        </div>
+        <div class="section-header" style="font-size:16px;margin-bottom:12px;">Languages & Frameworks</div>
+        <div class="tech-grid" style="margin-bottom:20px;">
+          <a href="https://dart.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🎯</div><div class="tech-name">Dart</div></div></a>
+          <a href="https://reactnative.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">⚛️</div><div class="tech-name">React Native</div></div></a>
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">📜</div><div class="tech-name">JavaScript</div></div></a>
+          <a href="https://python.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🐍</div><div class="tech-name">Python</div></div></a>
+          <a href="https://php.net" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🐘</div><div class="tech-name">PHP (13)</div></div></a>
+          <a href="https://dev.java" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">☕</div><div class="tech-name">Java (7)</div></div></a>
+          <a href="https://nextjs.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">▲</div><div class="tech-name">Next.js</div></div></a>
+          <a href="https://postgresql.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🐘</div><div class="tech-name">PostgreSQL</div></div></a>
+          <a href="https://mysql.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🐬</div><div class="tech-name">MySQL</div></div></a>
+        </div>
+        <div class="section-header" style="font-size:16px;margin-bottom:12px;">Platform & Tools</div>
+        <div class="tech-grid">
+          <a href="https://developer.android.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🤖</div><div class="tech-name">Android (4)</div></div></a>
+          <a href="https://developer.apple.com/ios/" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🍎</div><div class="tech-name">iOS</div></div></a>
+          <a href="https://git-scm.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">📦</div><div class="tech-name">Git (16)</div></div></a>
+          <a href="https://github.com/features/actions" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">⚡</div><div class="tech-name">GitHub Actions</div></div></a>
+          <a href="https://en.wikipedia.org/wiki/Network_socket" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🔌</div><div class="tech-name">Socket Prog</div></div></a>
+          <a href="https://developer.mozilla.org/en-US/docs/Web" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🌐</div><div class="tech-name">Web Dev (11)</div></div></a>
+          <a href="https://en.wikipedia.org/wiki/Software_engineering" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">⚙️</div><div class="tech-name">Software Eng (7)</div></div></a>
+          <a href="https://en.wikipedia.org/wiki/Object-oriented_programming" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🎯</div><div class="tech-name">OOP ✓</div></div></a>
+        </div>
+        <div style="margin-top:12px;font-size:11px;color:var(--text2);">Numbers in parentheses = LinkedIn endorsements. ✓ = LinkedIn Skill Assessment passed.</div>
+      </div>
+    </div>
+  </div>
+  <div class="window-footer"><a href="https://linkedin.com/in/ishaquehassan" target="_blank" style="display:inline-block;background:#0077B5;color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;">Open LinkedIn Profile →</a></div>
+</div>
+
+<script>
+// ===== MENUBAR DROPDOWNS =====
+let activeMenu = null;
+
+function toggleMenu(id) {
+  const menu = document.getElementById('menu-' + id);
+  const item = menu.previousElementSibling;
+  if (activeMenu && activeMenu !== menu) {
+    activeMenu.classList.remove('show');
+    activeMenu.previousElementSibling.classList.remove('open');
+  }
+  if (menu.classList.contains('show')) {
+    menu.classList.remove('show');
+    item.classList.remove('open');
+    activeMenu = null;
+  } else {
+    menu.classList.add('show');
+    item.classList.add('open');
+    activeMenu = menu;
+  }
+}
+
+// Hover to switch menus when one is open
+document.querySelectorAll('.menu-parent').forEach(parent => {
+  parent.addEventListener('mouseenter', () => {
+    if (!activeMenu) return;
+    const menu = parent.querySelector('.menu-dropdown');
+    const item = parent.querySelector('.menu-item, .logo');
+    if (menu && menu !== activeMenu) {
+      activeMenu.classList.remove('show');
+      activeMenu.previousElementSibling.classList.remove('open');
+      menu.classList.add('show');
+      if (item) item.classList.add('open');
+      activeMenu = menu;
+    }
+  });
+});
+
+// Click outside to close
+document.addEventListener('mousedown', (e) => {
+  if (activeMenu && !e.target.closest('.menu-parent')) {
+    activeMenu.classList.remove('show');
+    activeMenu.previousElementSibling.classList.remove('open');
+    activeMenu = null;
+  }
+});
+
+// Close menu after clicking an item
+document.querySelectorAll('.menu-dd-item:not(.disabled)').forEach(item => {
+  item.addEventListener('click', () => {
+    if (activeMenu) {
+      activeMenu.classList.remove('show');
+      activeMenu.previousElementSibling.classList.remove('open');
+      activeMenu = null;
+    }
+  });
+});
+
+function openAllWindows() {
+  ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin'].forEach((id, i) => {
+    setTimeout(() => openWindow(id), i * 150);
+  });
+}
+
+function closeAllWindows() {
+  Object.keys(openWindows).forEach(id => closeWindow(id));
+}
+
+// ===== CLOCK =====
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2,'0');
+  const m = now.getMinutes().toString().padStart(2,'0');
+  document.getElementById('clock-time').textContent = `${h}:${m}`;
+  document.getElementById('clock-date').textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+  document.getElementById('menubar-time').textContent = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }) + ' ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ===== WINDOW MANAGEMENT =====
+let activeZ = 100;
+const openWindows = {};
+const windowStates = {};
+
+function openWindow(id) {
+  const win = document.getElementById('win-' + id);
+  if (!win) return;
+
+  // Bounce dock icon
+  const dockItems = document.querySelectorAll('.dock-item');
+  const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin'];
+  const idx = names.indexOf(id);
+  if (idx >= 0 && dockItems[idx]) {
+    dockItems[idx].classList.add('active');
+    dockItems[idx].querySelector('.dock-icon').classList.add('dock-bounce');
+    setTimeout(() => dockItems[idx].querySelector('.dock-icon').classList.remove('dock-bounce'), 500);
+  }
+
+  if (openWindows[id]) {
+    // Bring to front
+    win.style.zIndex = ++activeZ;
+    if (win.classList.contains('minimizing')) {
+      win.classList.remove('minimizing');
+      win.classList.add('open');
+    }
+    return;
+  }
+
+  win.classList.remove('closing','minimizing');
+  win.classList.add('open');
+  win.style.zIndex = ++activeZ;
+  openWindows[id] = true;
+
+  // Show loader then hide
+  const loader = document.getElementById('loader-' + id);
+  if (loader) {
+    loader.classList.remove('hidden');
+    setTimeout(() => loader.classList.add('hidden'), 600 + Math.random() * 400);
+  }
+
+  // Special: terminal typing
+  if (id === 'about') startTerminal();
+
+  // GitHub and LinkedIn open as styled cards (iframes blocked by X-Frame-Options)
+
+  win.addEventListener('mousedown', () => { win.style.zIndex = ++activeZ; });
+}
+
+function closeWindow(id) {
+  const win = document.getElementById('win-' + id);
+  if (!win) return;
+  win.classList.add('closing');
+  setTimeout(() => {
+    win.classList.remove('open','closing');
+    delete openWindows[id];
+    const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin'];
+    const idx = names.indexOf(id);
+    const dockItems = document.querySelectorAll('.dock-item');
+    if (idx >= 0 && dockItems[idx]) dockItems[idx].classList.remove('active');
+  }, 250);
+}
+
+function minimizeWindow(id) {
+  const win = document.getElementById('win-' + id);
+  if (!win) return;
+  win.classList.add('minimizing');
+  setTimeout(() => { win.classList.remove('open'); }, 400);
+}
+
+function maximizeWindow(id) {
+  const win = document.getElementById('win-' + id);
+  if (!win) return;
+  if (win.classList.contains('maximized')) {
+    win.classList.remove('maximized');
+    if (windowStates[id]) {
+      Object.assign(win.style, windowStates[id]);
+    }
+  } else {
+    windowStates[id] = {
+      top: win.style.top, left: win.style.left,
+      width: win.style.width, height: win.style.height
+    };
+    win.classList.add('maximized');
+  }
+}
+
+// ===== DRAG =====
+let dragEl = null, dragOffX = 0, dragOffY = 0;
+
+function startDrag(e, winId) {
+  if (e.target.classList.contains('traffic-light')) return;
+  const win = document.getElementById(winId);
+  if (win.classList.contains('maximized')) return;
+  dragEl = win;
+  const rect = win.getBoundingClientRect();
+  dragOffX = e.clientX - rect.left;
+  dragOffY = e.clientY - rect.top;
+  win.style.zIndex = ++activeZ;
+  e.preventDefault();
+}
+
+document.addEventListener('mousemove', (e) => {
+  if (!dragEl) return;
+  dragEl.style.left = (e.clientX - dragOffX) + 'px';
+  dragEl.style.top = (e.clientY - dragOffY) + 'px';
+});
+
+document.addEventListener('mouseup', () => { dragEl = null; });
+
+// Touch drag for mobile
+document.addEventListener('touchmove', (e) => {
+  if (!dragEl) return;
+  const t = e.touches[0];
+  dragEl.style.left = (t.clientX - dragOffX) + 'px';
+  dragEl.style.top = (t.clientY - dragOffY) + 'px';
+});
+
+document.addEventListener('touchend', () => { dragEl = null; });
+
+// ===== TERMINAL =====
+function startTerminal() {
+  const term = document.getElementById('terminal-content');
+  if (term.children.length > 0) return;
+
+  const lines = [
+    { type: 'cmd', text: '<span class="prompt">ishaq@dev</span> <span class="cmd">~</span> $ <span class="cmd">whoami</span>' },
+    { type: 'out', text: '' },
+    { type: 'out', text: '  <span class="str">name</span>      : Ishaq Hassan' },
+    { type: 'out', text: '  <span class="str">role</span>      : Full Stack Developer & Engineering Manager' },
+    { type: 'out', text: '  <span class="str">focus</span>     : Flutter Framework | Mobile Development' },
+    { type: 'out', text: '  <span class="str">company</span>   : DigitalHire (world\'s first integrated talent engine)' },
+    { type: 'out', text: '  <span class="str">experience</span>: 13+ years in software development' },
+    { type: 'out', text: '  <span class="str">location</span>  : Karachi, Pakistan 🇵🇰' },
+    { type: 'out', text: '' },
+    { type: 'cmd', text: '<span class="prompt">ishaq@dev</span> <span class="cmd">~</span> $ <span class="cmd">cat</span> <span class="flag">achievements.md</span>' },
+    { type: 'out', text: '' },
+    { type: 'out', text: '  ✅ <span class="str">3 PRs merged</span> into flutter/flutter (official framework)' },
+    { type: 'out', text: '  ✅ <span class="str">Flutter course</span> listed on official Flutter docs' },
+    { type: 'out', text: '  ✅ <span class="str">10+ speaking events</span> at GDG, Nest I/O, universities' },
+    { type: 'out', text: '  ✅ <span class="str">GDG Kolachi Mentor</span> & community leader' },
+    { type: 'out', text: '  ✅ <span class="str">9,800+ contributions</span> on GitHub' },
+    { type: 'out', text: '  ✅ <span class="str">document_scanner_flutter</span> 63 stars, 135 forks' },
+    { type: 'out', text: '' },
+    { type: 'cmd', text: '<span class="prompt">ishaq@dev</span> <span class="cmd">~</span> $ <span class="cmd">echo</span> <span class="str">"Building Flutter from the inside out."</span>' },
+    { type: 'out', text: '  Building Flutter from the inside out.' },
+    { type: 'out', text: '' },
+    { type: 'cmd', text: '<span class="prompt">ishaq@dev</span> <span class="cmd">~</span> $ <span class="cursor"></span>' },
+  ];
+
+  let i = 0;
+  function addLine() {
+    if (i >= lines.length) return;
+    const div = document.createElement('div');
+    div.className = 'terminal-line';
+    div.innerHTML = lines[i].text;
+    div.style.animationDelay = '0s';
+    div.style.opacity = '1';
+    term.appendChild(div);
+    term.parentElement.scrollTop = term.parentElement.scrollHeight;
+    i++;
+    setTimeout(addLine, lines[i-1].type === 'cmd' ? 400 : 80);
+  }
+  setTimeout(addLine, 300);
+}
+
+// ===== LINKEDIN TABS =====
+function switchLiTab(tab) {
+  document.querySelectorAll('.li-panel').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.li-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('li-' + tab).style.display = 'block';
+  event.target.classList.add('active');
+}
+
+// ===== WINDOW RESIZE =====
+let resizeEl = null, resizeStartX = 0, resizeStartY = 0, resizeStartW = 0, resizeStartH = 0;
+
+function initResize() {
+  document.querySelectorAll('.window').forEach(win => {
+    const handle = document.createElement('div');
+    handle.className = 'window-resize';
+    handle.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      resizeEl = win;
+      resizeStartX = e.clientX;
+      resizeStartY = e.clientY;
+      resizeStartW = win.offsetWidth;
+      resizeStartH = win.offsetHeight;
+      win.classList.add('resizing');
+    });
+    win.appendChild(handle);
+  });
+}
+
+document.addEventListener('mousemove', (e) => {
+  if (!resizeEl) return;
+  const w = Math.max(380, resizeStartW + (e.clientX - resizeStartX));
+  const h = Math.max(280, resizeStartH + (e.clientY - resizeStartY));
+  resizeEl.style.width = w + 'px';
+  resizeEl.style.height = h + 'px';
+});
+
+document.addEventListener('mouseup', () => {
+  if (resizeEl) resizeEl.classList.remove('resizing');
+  resizeEl = null;
+});
+
+// ===== BOOT SEQUENCE =====
+window.addEventListener('load', () => {
+  const bar = document.getElementById('boot-bar');
+  const screen = document.getElementById('boot-screen');
+
+  let progress = 0;
+  const bootInterval = setInterval(() => {
+    progress += Math.random() * 15 + 5;
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(bootInterval);
+      setTimeout(() => {
+        screen.classList.add('fade-out');
+        setTimeout(() => {
+          screen.style.display = 'none';
+          initResize();
+          // GitHub activity bars
+          const bars = document.getElementById('gh-bars');
+          if (bars) {
+            const heights = [12,18,8,22,15,28,10,20,14,24,16,30,12,20,18,26,8,22,14,28];
+            heights.forEach((h,i) => {
+              const b = document.createElement('div');
+              b.style.cssText = `width:6px;height:${h}px;border-radius:2px;background:linear-gradient(180deg,#6366f1,#06b6d4);opacity:0;animation:barGrow 0.4s ${i*0.05}s forwards;`;
+              bars.appendChild(b);
+            });
+          }
+        }, 800);
+      }, 300);
+    }
+    bar.style.width = progress + '%';
+  }, 200);
+});
+
+// ===== WIDGET DRAG =====
+let widgetDrag = null, wdOffX = 0, wdOffY = 0, wdMoved = false, wdStartX = 0, wdStartY = 0;
+
+document.querySelectorAll('.widget').forEach(w => {
+  w.addEventListener('mousedown', (e) => {
+    if (e.target.closest('a')) return;
+    wdStartX = e.clientX;
+    wdStartY = e.clientY;
+    wdMoved = false;
+    const rect = w.getBoundingClientRect();
+    wdOffX = e.clientX - rect.left;
+    wdOffY = e.clientY - rect.top;
+    widgetDrag = w;
+    widgetDrag._rect = rect;
+    e.preventDefault();
+  });
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!widgetDrag) return;
+  const dx = Math.abs(e.clientX - wdStartX);
+  const dy = Math.abs(e.clientY - wdStartY);
+  // Only start drag after 8px movement
+  if (!wdMoved && dx < 8 && dy < 8) return;
+  if (!wdMoved) {
+    wdMoved = true;
+    const rect = widgetDrag._rect;
+    widgetDrag.style.position = 'fixed';
+    widgetDrag.style.left = rect.left + 'px';
+    widgetDrag.style.top = rect.top + 'px';
+    widgetDrag.style.width = rect.width + 'px';
+    widgetDrag.classList.add('dragging');
+  }
+  widgetDrag.style.left = (e.clientX - wdOffX) + 'px';
+  widgetDrag.style.top = (e.clientY - wdOffY) + 'px';
+});
+
+document.addEventListener('mouseup', () => {
+  if (widgetDrag) {
+    widgetDrag.classList.remove('dragging');
+    widgetDrag = null;
+  }
+});
+
+// ===== DOCK MAGNIFICATION (Desktop only) =====
+if (window.innerWidth > 768) {
+  const dock = document.getElementById('dock');
+  const icons = dock.querySelectorAll('.dock-icon');
+  const maxScale = 1.5;
+  const maxDist = 120;
+
+  dock.addEventListener('mousemove', (e) => {
+    icons.forEach(icon => {
+      const rect = icon.getBoundingClientRect();
+      const center = rect.left + rect.width / 2;
+      const dist = Math.abs(e.clientX - center);
+      const ratio = Math.max(0, 1 - dist / maxDist);
+      const scale = 1 + (maxScale - 1) * ratio * ratio;
+      const ty = -(scale - 1) * 28;
+      icon.style.transform = `scale(${scale}) translateY(${ty}px)`;
+      icon.style.transition = 'transform 0.08s ease-out, box-shadow 0.15s';
+      icon.style.boxShadow = ratio > 0.3 ? `0 ${8 * ratio}px ${20 * ratio}px rgba(0,0,0,${0.3 * ratio})` : '';
+    });
+  });
+
+  dock.addEventListener('mouseleave', () => {
+    icons.forEach(icon => {
+      icon.style.transform = '';
+      icon.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s';
+      icon.style.boxShadow = '';
+    });
+  });
+}
+
+/* ===== MOBILE APP STYLES ===== */
+@media (max-width: 768px) {
+  #menubar, #desktop, #dock-container, .window { display: none !important; }
+  #mobile-app { display: block !important; }
+}
+
+#mobile-app {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  overflow: hidden;
+  z-index: 10000;
+}
+
+#mobile-app-scroll {
+  height: 100%;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  padding-bottom: 60px;
+}
+
+.mobile-status-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  color: var(--text2);
+}
+
+.mobile-hero {
+  padding: 60px 24px 40px;
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+  position: relative;
+}
+
+.mobile-profile-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.3), inset 0 0 30px rgba(99, 102, 241, 0.1);
+  margin-bottom: 20px;
+  object-fit: cover;
+  animation: glow 3s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 30px rgba(99, 102, 241, 0.3), inset 0 0 30px rgba(99, 102, 241, 0.1); }
+  50% { box-shadow: 0 0 50px rgba(99, 102, 241, 0.5), inset 0 0 30px rgba(99, 102, 241, 0.2); }
+}
+
+.mobile-hero h1 {
+  font-size: 32px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #007AFF, #5856D6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+}
+
+.mobile-hero .subtitle {
+  font-size: 16px;
+  color: var(--text2);
+  margin-bottom: 24px;
+}
+
+.mobile-hero .location {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text2);
+  margin-bottom: 12px;
+}
+
+.mobile-scroll-down {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bounce 2s infinite;
+  font-size: 20px;
+  opacity: 0.6;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+.mobile-quick-stats {
+  display: flex;
+  gap: 12px;
+  margin: 40px 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 0 16px;
+  margin: 40px 0;
+}
+
+.mobile-quick-stats::-webkit-scrollbar { height: 4px; }
+.mobile-quick-stats::-webkit-scrollbar-track { background: transparent; }
+.mobile-quick-stats::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 2px; }
+
+.stat-pill {
+  flex-shrink: 0;
+  padding: 16px 20px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  text-align: center;
+  min-width: 120px;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.stat-pill:nth-child(2) { background: linear-gradient(135deg, #06b6d4, #34d399); }
+.stat-pill:nth-child(3) { background: linear-gradient(135deg, #FF9F0A, #FFD60A); }
+.stat-pill:nth-child(4) { background: linear-gradient(135deg, #ec4899, #f43f5e); }
+
+.stat-pill-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+}
+
+.stat-pill-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 4px;
+}
+
+.mobile-sections {
+  padding: 0 16px 20px;
+}
+
+.mobile-section-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.mobile-section-card:active {
+  transform: scale(0.98);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mobile-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.mobile-section-icon {
+  font-size: 24px;
+}
+
+.mobile-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.mobile-section-subtitle {
+  font-size: 12px;
+  color: var(--text2);
+  margin-left: 36px;
+}
+
+.mobile-expanded {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 1001;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease-out;
+  padding-top: 60px;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.mobile-expanded-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 102;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mobile-back-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.mobile-back-btn:active { background: rgba(255, 255, 255, 0.2); }
+
+.mobile-expanded-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+  text-align: center;
+}
+
+.mobile-expanded-content {
+  padding: 20px 16px 40px;
+}
+
+.mobile-exp-item {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mobile-exp-item:last-child { border-bottom: none; }
+
+.mobile-exp-company {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.mobile-exp-role {
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.mobile-exp-date {
+  font-size: 12px;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+
+.mobile-exp-desc {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.mobile-pr-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.mobile-pr-title {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.mobile-pr-repo {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.mobile-tech-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.mobile-tech-item {
+  text-align: center;
+  padding: 12px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.mobile-tech-item:active { background: rgba(255, 255, 255, 0.1); transform: scale(0.95); }
+
+.mobile-tech-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.mobile-tech-name {
+  font-size: 11px;
+  color: var(--text2);
+  word-break: break-word;
+}
+
+.mobile-article-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.mobile-article-title {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.mobile-article-meta {
+  font-size: 12px;
+  color: var(--text2);
+}
+
+.mobile-event-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid rgba(99, 102, 241, 0.4);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.mobile-event-name {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.mobile-event-venue {
+  font-size: 12px;
+  color: var(--text2);
+  margin-bottom: 4px;
+}
+
+.mobile-event-role {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.mobile-social-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 16px;
+  z-index: 100;
+}
+
+.mobile-social-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.mobile-social-icon:active { transform: scale(0.9); }
+
+.mobile-section-header-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+  margin-left: auto;
+}
+</style>
+
+<!-- MOBILE APP -->
+<div id="mobile-app">
+  <div class="mobile-status-bar">
+    <span id="mobile-time">9:41</span>
+    <span>📶</span>
+  </div>
+
+  <div id="mobile-app-scroll">
+    <!-- HERO SECTION -->
+    <div class="mobile-hero">
+      <img src="assets/profile-photo.png" alt="Profile" class="mobile-profile-photo">
+      <h1>Ishaq Hassan</h1>
+      <div class="subtitle">Full Stack Developer & Flutter Expert</div>
+      <div class="location">📍 Pakistan</div>
+      <div style="font-size: 13px; color: var(--text2);">1.2K followers</div>
+      <div class="mobile-scroll-down">👇</div>
+    </div>
+
+    <!-- QUICK STATS -->
+    <div class="mobile-quick-stats">
+      <div class="stat-pill">
+        <div class="stat-pill-value">13+</div>
+        <div class="stat-pill-label">Years</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-pill-value">3</div>
+        <div class="stat-pill-label">PRs Merged</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-pill-value">10+</div>
+        <div class="stat-pill-label">Events</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-pill-value">64</div>
+        <div class="stat-pill-label">Stars</div>
+      </div>
+    </div>
+
+    <!-- SECTIONS -->
+    <div class="mobile-sections">
+      <!-- Experience -->
+      <div class="mobile-section-card" onclick="expandMobileSection('experience')">
+        <div class="mobile-section-header">
+          <span class="mobile-section-icon">💼</span>
+          <div>
+            <div class="mobile-section-title">Experience</div>
+            <div class="mobile-section-subtitle">8 roles</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flutter PRs -->
+      <div class="mobile-section-card" onclick="expandMobileSection('prs')">
+        <div class="mobile-section-header">
+          <span class="mobile-section-icon">💙</span>
+          <div>
+            <div class="mobile-section-title">Flutter PRs</div>
+            <div class="mobile-section-subtitle">3 merged, 2 approved</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Speaking -->
+      <div class="mobile-section-card" onclick="expandMobileSection('speaking')">
+        <div class="mobile-section-header">
+          <span class="mobile-section-icon">🎤</span>
+          <div>
+            <div class="mobile-section-title">Speaking</div>
+            <div class="mobile-section-subtitle">10+ events</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Open Source -->
+      <div class="mobile-section-card" onclick="expandMobileSection('oss')">
+        <div class="mobile-section-header">
+          <span class="mobile-section-icon">🚀</span>
+          <div>
+            <div class="mobile-section-title">Open Source</div>
+            <div class="mobile-section-subtitle">6 featured repos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tech Stack -->
+      <div class="mobile-section-card" onclick="expandMobileSection('tech')">
+        <div class="mobile-section-header">
+          <span class="mobile-section-icon">⚙️</span>
+          <div>
+            <div class="mobile-section-title">Tech Stack</div>
+            <div class="mobile-section-subtitle">20+ technologies</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Articles -->
+      <div class="mobile-section-card" onclick="expandMobileSection('articles')">
+        <div class="mobile-section-header">
+          <span class="mobile-section-icon">📝</span>
+          <div>
+            <div class="mobile-section-title">Articles</div>
+            <div class="mobile-section-subtitle">6 on Medium</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connect -->
+      <div class="mobile-section-card" onclick="expandMobileSection('connect')">
+        <div class="mobile-section-header">
+          <span class="mobile-section-icon">🔗</span>
+          <div>
+            <div class="mobile-section-title">Connect</div>
+            <div class="mobile-section-subtitle">All social links</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPANDED SECTIONS -->
+
+  <!-- EXPERIENCE EXPANDED -->
+  <div id="mobile-experience-expanded" class="mobile-expanded" style="display: none;">
+    <div class="mobile-expanded-header">
+      <button class="mobile-back-btn" onclick="closeMobileSection('experience')">&larr;</button>
+      <div class="mobile-expanded-title">Experience</div>
+      <div style="width: 40px;"></div>
+    </div>
+    <div class="mobile-expanded-content">
+      <div class="mobile-exp-item">
+        <a href="https://www.linkedin.com/company/35951080/" target="_blank" style="text-decoration: none; color: inherit;">
+          <div class="mobile-exp-company">🏢 DigitalHire</div>
+        </a>
+        <div class="mobile-exp-role">Engineering Manager → Technical Lead → Staff Engineer</div>
+        <div class="mobile-exp-date">Feb 2023 - Present · 3 yrs 3 mos | McLean, Virginia</div>
+        <div class="mobile-exp-desc">AI-based video job board. Flutter, Dart, Kotlin, Python, PostgreSQL, Next.js, React Native.</div>
+      </div>
+      <div class="mobile-exp-item">
+        <div class="mobile-exp-company">🎓 Tech Idara</div>
+        <div class="mobile-exp-role">Senior Instructor</div>
+        <div class="mobile-exp-date">Dec 2021 - Sep 2024 · 2 yrs 10 mos</div>
+        <div class="mobile-exp-desc">Flutter course on official Flutter docs.</div>
+      </div>
+      <div class="mobile-exp-item">
+        <a href="https://www.linkedin.com/company/83530314/" target="_blank" style="text-decoration: none; color: inherit;">
+          <div class="mobile-exp-company">✈️ AeroGlobe</div>
+        </a>
+        <div class="mobile-exp-role">Technical Lead</div>
+        <div class="mobile-exp-date">Jun 2022 - May 2024 · 2 yrs</div>
+        <div class="mobile-exp-desc">React Native, Python, front-end.</div>
+      </div>
+      <div class="mobile-exp-item">
+        <a href="https://www.linkedin.com/company/7969190/" target="_blank" style="text-decoration: none; color: inherit;">
+          <div class="mobile-exp-company">🎫 Sastaticket.pk</div>
+        </a>
+        <div class="mobile-exp-role">Engineering Consultant</div>
+        <div class="mobile-exp-date">Jan 2022 - Mar 2024</div>
+        <div class="mobile-exp-desc">Architecture, Flutter, CI/CD, GitHub Actions.</div>
+      </div>
+      <div class="mobile-exp-item">
+        <div class="mobile-exp-company">📱 Pocket Systems</div>
+        <div class="mobile-exp-role">Co-Founder</div>
+        <div class="mobile-exp-date">Jan 2020 - Dec 2022 · 3 yrs</div>
+        <div class="mobile-exp-desc">International market, React Native, Socket Programming.</div>
+      </div>
+      <div class="mobile-exp-item">
+        <a href="https://www.linkedin.com/company/11753853/" target="_blank" style="text-decoration: none; color: inherit;">
+          <div class="mobile-exp-company">🌍 Optimyse</div>
+        </a>
+        <div class="mobile-exp-role">Lead Software Engineer</div>
+        <div class="mobile-exp-date">Feb 2019 - Dec 2021 · 2 yrs 11 mos | Estonia</div>
+        <div class="mobile-exp-desc">Full stack teams, cross-platform mobile.</div>
+      </div>
+      <div class="mobile-exp-item">
+        <div class="mobile-exp-company">🚀 Cyber Avanza</div>
+        <div class="mobile-exp-role">Co-Founder</div>
+        <div class="mobile-exp-date">Sep 2016 - Dec 2018 · 2 yrs 4 mos</div>
+        <div class="mobile-exp-desc">Android/iOS native development.</div>
+      </div>
+      <div class="mobile-exp-item">
+        <div class="mobile-exp-company">💻 VividVisionz</div>
+        <div class="mobile-exp-role">Mobile + Web Developer</div>
+        <div class="mobile-exp-date">Feb 2013 - Feb 2019 · 6 yrs</div>
+        <div class="mobile-exp-desc">Android, iOS, PHP, MySQL, JavaScript.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLUTTER PRs EXPANDED -->
+  <div id="mobile-prs-expanded" class="mobile-expanded" style="display: none;">
+    <div class="mobile-expanded-header">
+      <button class="mobile-back-btn" onclick="closeMobileSection('prs')">&larr;</button>
+      <div class="mobile-expanded-title">Flutter PRs</div>
+      <div style="width: 40px;"></div>
+    </div>
+    <div class="mobile-expanded-content">
+      <div style="font-size: 12px; color: var(--text2); margin-bottom: 20px;">
+        <strong>3 PRs Merged into flutter/flutter</strong><br>
+        #183081, #183097, #183109<br>
+        <strong>2 PRs Approved</strong><br>
+        #184545, #184569
+      </div>
+      <a href="https://github.com/ishaquehassan/oss-auto-contributor" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">🤖 OSS Auto-Contributor</div>
+        <div class="mobile-pr-repo">Automated Flutter PR generator running 24/7</div>
+      </a>
+      <a href="https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">📖 How I Got PRs Merged</div>
+        <div class="mobile-pr-repo">Read the full story on Medium</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- SPEAKING EXPANDED -->
+  <div id="mobile-speaking-expanded" class="mobile-expanded" style="display: none;">
+    <div class="mobile-expanded-header">
+      <button class="mobile-back-btn" onclick="closeMobileSection('speaking')">&larr;</button>
+      <div class="mobile-expanded-title">Speaking Events</div>
+      <div style="width: 40px;"></div>
+    </div>
+    <div class="mobile-expanded-content">
+      <a href="https://x.com/GDGKolachi" target="_blank" class="mobile-event-card">
+        <div class="mobile-event-name">🎯 DevFest Karachi: Scaling Products with Flutter</div>
+        <div class="mobile-event-venue">GDG Kolachi | Panel with Waleed Arshad & Sakina Abbas</div>
+        <div class="mobile-event-role">Panel Speaker</div>
+      </a>
+      <a href="https://www.facebook.com/GDGKolachi/posts/720743396758626/" target="_blank" class="mobile-event-card">
+        <div class="mobile-event-name">🌐 Google I/O Extended Karachi</div>
+        <div class="mobile-event-venue">GDG Kolachi</div>
+        <div class="mobile-event-role">Speaker</div>
+      </a>
+      <a href="https://gdg.community.dev/events/details/google-gdg-kolachi-presents-flutter-bootcamp/" target="_blank" class="mobile-event-card">
+        <div class="mobile-event-name">🎓 Flutter Bootcamp (Aug 2021)</div>
+        <div class="mobile-event-venue">GDG Kolachi</div>
+        <div class="mobile-event-role">Instructor</div>
+      </a>
+      <a href="https://www.facebook.com/GDGKolachi/posts/722626283237004/" target="_blank" class="mobile-event-card">
+        <div class="mobile-event-name">🚀 Facebook Developer Circle (Inaugural)</div>
+        <div class="mobile-event-venue">The Nest I/O</div>
+        <div class="mobile-event-role">Inaugural Speaker</div>
+      </a>
+      <a href="https://www.linkedin.com/posts/gdgkolachi_codetocreate-roadtodevfest2025-gdgkolachi-activity-7400908378081767424-EB-7" target="_blank" class="mobile-event-card">
+        <div class="mobile-event-name">💻 Code to Create</div>
+        <div class="mobile-event-venue">NIC Karachi | with Waleed Arshad</div>
+        <div class="mobile-event-role">Speaker</div>
+      </a>
+      <a href="https://www.linkedin.com/posts/itrathussainzaidi_flutter-iqrauniversity-seminar-activity-7192627199412232192-8t2X" target="_blank" class="mobile-event-card">
+        <div class="mobile-event-name">🏫 Flutter Seminar</div>
+        <div class="mobile-event-venue">Iqra University</div>
+        <div class="mobile-event-role">Speaker</div>
+      </a>
+      <a href="https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5" target="_blank" class="mobile-event-card">
+        <div class="mobile-event-name">🤖 DevNCode Meetup IV: AI</div>
+        <div class="mobile-event-venue">The Nest I/O</div>
+        <div class="mobile-event-role">Speaker</div>
+      </a>
+      <a href="https://www.linkedin.com/company/31333300/" target="_blank" class="mobile-event-card">
+        <div class="mobile-event-name">👩‍💻 Women Tech Makers (DHA Suffa)</div>
+        <div class="mobile-event-venue">Karachi | "Building Basic Apps with Flutter"</div>
+        <div class="mobile-event-role">Speaker</div>
+      </a>
+      <div class="mobile-event-card">
+        <div class="mobile-event-name">🏆 Pakistan's First Flutter Meetup (2018)</div>
+        <div class="mobile-event-venue">Karachi</div>
+        <div class="mobile-event-role">Speaker</div>
+      </div>
+      <div class="mobile-event-card">
+        <div class="mobile-event-name">🌐 GDG Live Pakistan</div>
+        <div class="mobile-event-venue">Online</div>
+        <div class="mobile-event-role">Speaker</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPEN SOURCE EXPANDED -->
+  <div id="mobile-oss-expanded" class="mobile-expanded" style="display: none;">
+    <div class="mobile-expanded-header">
+      <button class="mobile-back-btn" onclick="closeMobileSection('oss')">&larr;</button>
+      <div class="mobile-expanded-title">Open Source</div>
+      <div style="width: 40px;"></div>
+    </div>
+    <div class="mobile-expanded-content">
+      <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">📸 document_scanner_flutter</div>
+        <div class="mobile-pr-repo">Flutter plugin for document scanning | 63 stars | 135 forks</div>
+      </a>
+      <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">⏰ flutter_alarm_background_trigger</div>
+        <div class="mobile-pr-repo">Native Kotlin alarm plugin for Flutter | 13 stars</div>
+      </a>
+      <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">📁 assets_indexer</div>
+        <div class="mobile-pr-repo">Auto-generate asset references for Flutter | 9 stars</div>
+      </a>
+      <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">🪪 nadra_verisys_flutter</div>
+        <div class="mobile-pr-repo">NADRA CNIC KYC verification for Flutter | 3 stars</div>
+      </a>
+      <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">🎯 goal-agent</div>
+        <div class="mobile-pr-repo">Career goal tracking agent for Claude Code</div>
+      </a>
+      <a href="https://github.com/ishaquehassan/oss-auto-contributor" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">🤖 oss-auto-contributor</div>
+        <div class="mobile-pr-repo">Automated open source contributor running 24/7</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- TECH STACK EXPANDED -->
+  <div id="mobile-tech-expanded" class="mobile-expanded" style="display: none;">
+    <div class="mobile-expanded-header">
+      <button class="mobile-back-btn" onclick="closeMobileSection('tech')">&larr;</button>
+      <div class="mobile-expanded-title">Tech Stack</div>
+      <div style="width: 40px;"></div>
+    </div>
+    <div class="mobile-expanded-content">
+      <h3 style="font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text);">Mobile</h3>
+      <div class="mobile-tech-grid">
+        <a href="https://flutter.dev" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">💙</div>
+          <div class="mobile-tech-name">Flutter</div>
+        </a>
+        <a href="https://dart.dev" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🎯</div>
+          <div class="mobile-tech-name">Dart</div>
+        </a>
+        <a href="https://developer.android.com" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🤖</div>
+          <div class="mobile-tech-name">Android</div>
+        </a>
+        <a href="https://developer.apple.com/ios/" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🍎</div>
+          <div class="mobile-tech-name">iOS</div>
+        </a>
+        <a href="https://kotlinlang.org" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🟣</div>
+          <div class="mobile-tech-name">Kotlin</div>
+        </a>
+        <a href="https://swift.org" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🦅</div>
+          <div class="mobile-tech-name">Swift</div>
+        </a>
+        <a href="https://reactnative.dev" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">⚛️</div>
+          <div class="mobile-tech-name">React Native</div>
+        </a>
+      </div>
+      <h3 style="font-size: 13px; font-weight: 600; margin: 20px 0 12px; color: var(--text);">Backend & Cloud</h3>
+      <div class="mobile-tech-grid">
+        <a href="https://firebase.google.com" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🔥</div>
+          <div class="mobile-tech-name">Firebase</div>
+        </a>
+        <a href="https://nodejs.org" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🟢</div>
+          <div class="mobile-tech-name">Node.js</div>
+        </a>
+        <a href="https://nestjs.com" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🔧</div>
+          <div class="mobile-tech-name">NestJS</div>
+        </a>
+        <a href="https://nextjs.org" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">▲</div>
+          <div class="mobile-tech-name">Next.js</div>
+        </a>
+        <a href="https://python.org" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🐍</div>
+          <div class="mobile-tech-name">Python</div>
+        </a>
+        <a href="https://php.net" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🐘</div>
+          <div class="mobile-tech-name">PHP</div>
+        </a>
+        <a href="https://spring.io/projects/spring-boot" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🍃</div>
+          <div class="mobile-tech-name">Spring Boot</div>
+        </a>
+        <a href="https://go.dev" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🐹</div>
+          <div class="mobile-tech-name">Go</div>
+        </a>
+      </div>
+      <h3 style="font-size: 13px; font-weight: 600; margin: 20px 0 12px; color: var(--text);">Database</h3>
+      <div class="mobile-tech-grid">
+        <a href="https://postgresql.org" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🐘</div>
+          <div class="mobile-tech-name">PostgreSQL</div>
+        </a>
+        <a href="https://mysql.com" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🐬</div>
+          <div class="mobile-tech-name">MySQL</div>
+        </a>
+      </div>
+      <h3 style="font-size: 13px; font-weight: 600; margin: 20px 0 12px; color: var(--text);">Tools & DevOps</h3>
+      <div class="mobile-tech-grid">
+        <a href="https://git-scm.com" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">📦</div>
+          <div class="mobile-tech-name">Git</div>
+        </a>
+        <a href="https://github.com/features/actions" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">⚡</div>
+          <div class="mobile-tech-name">GitHub Actions</div>
+        </a>
+        <a href="https://docker.com" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🐳</div>
+          <div class="mobile-tech-name">Docker</div>
+        </a>
+        <a href="https://kernel.org" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🐧</div>
+          <div class="mobile-tech-name">Linux</div>
+        </a>
+        <a href="https://claude.ai" target="_blank" class="mobile-tech-item">
+          <div class="mobile-tech-icon">🤖</div>
+          <div class="mobile-tech-name">Claude AI</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARTICLES EXPANDED -->
+  <div id="mobile-articles-expanded" class="mobile-expanded" style="display: none;">
+    <div class="mobile-expanded-header">
+      <button class="mobile-back-btn" onclick="closeMobileSection('articles')">&larr;</button>
+      <div class="mobile-expanded-title">Articles</div>
+      <div style="width: 40px;"></div>
+    </div>
+    <div class="mobile-expanded-content">
+      <a href="https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e" target="_blank" class="mobile-article-card">
+        <div class="mobile-article-title">🧩 Dart Isolates: The Missing Guide</div>
+        <div class="mobile-article-meta">5 min | Concurrency, Performance</div>
+      </a>
+      <a href="https://medium.com/@ishaqhassan/how-flutters-three-tree-architecture-actually-works-953c8cc17226" target="_blank" class="mobile-article-card">
+        <div class="mobile-article-title">🌳 How Flutter's Three-Tree Architecture Works</div>
+        <div class="mobile-article-meta">4 min | Flutter Internals</div>
+      </a>
+      <a href="https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e" target="_blank" class="mobile-article-card">
+        <div class="mobile-article-title">🔀 PRs Merged Into Flutter's Repository</div>
+        <div class="mobile-article-meta">5 min | 52 claps | Open Source</div>
+      </a>
+      <a href="https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061" target="_blank" class="mobile-article-card">
+        <div class="mobile-article-title">📱 Flutter Native Plugin Development</div>
+        <div class="mobile-article-meta">3 min | 67 claps | Nerd For Tech</div>
+      </a>
+      <a href="https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb" target="_blank" class="mobile-article-card">
+        <div class="mobile-article-title">📁 Indexing Assets in a Dart Class</div>
+        <div class="mobile-article-meta">4 min | Nerd For Tech</div>
+      </a>
+      <a href="https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67" target="_blank" class="mobile-article-card">
+        <div class="mobile-article-title">🔥 Firebase Cloud Functions Using Kotlin</div>
+        <div class="mobile-article-meta">3 min | Firebase, Kotlin</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- CONNECT EXPANDED -->
+  <div id="mobile-connect-expanded" class="mobile-expanded" style="display: none;">
+    <div class="mobile-expanded-header">
+      <button class="mobile-back-btn" onclick="closeMobileSection('connect')">&larr;</button>
+      <div class="mobile-expanded-title">Connect</div>
+      <div style="width: 40px;"></div>
+    </div>
+    <div class="mobile-expanded-content">
+      <a href="mailto:hello@ishaqhassan.dev" class="mobile-pr-card">
+        <div class="mobile-pr-title">📧 Email</div>
+        <div class="mobile-pr-repo">hello@ishaqhassan.dev</div>
+      </a>
+      <a href="https://github.com/ishaquehassan" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">🐙 GitHub</div>
+        <div class="mobile-pr-repo">@ishaquehassan</div>
+      </a>
+      <a href="https://linkedin.com/in/ishaquehassan" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">💼 LinkedIn</div>
+        <div class="mobile-pr-repo">@ishaquehassan</div>
+      </a>
+      <a href="https://medium.com/@ishaqhassan" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">📰 Medium</div>
+        <div class="mobile-pr-repo">@ishaqhassan</div>
+      </a>
+      <a href="https://stackoverflow.com/users/2094696/ishaq-hassan" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">❓ Stack Overflow</div>
+        <div class="mobile-pr-repo">ishaq-hassan</div>
+      </a>
+      <a href="https://ishaqhassan.dev" target="_blank" class="mobile-pr-card">
+        <div class="mobile-pr-title">🌐 Website</div>
+        <div class="mobile-pr-repo">ishaqhassan.dev</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- BOTTOM SOCIAL BAR -->
+  <div class="mobile-social-bottom">
+    <a href="https://github.com/ishaquehassan" target="_blank" class="mobile-social-icon" style="background: linear-gradient(135deg, #24292e, #40464d);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825.255.825.57 0 .285.015 1.23.015 2.235 3.015.555 3.795.735 4.035 1.41.135.345.72 1.41 1.23 1.695.42.225 1.02.78.015.795.945.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105.78.42 1.305.765 1.605 2.67.3 5.46 1.335 5.46 5.925 0 1.305.465 2.385 1.23 3.225.12.3.54 1.53.12 3.18 0 0 1.005.315 3.3 1.23.96.27 1.98.405 3 .405s2.04.135 3 .405c2.295 1.56 3.3 1.23 3.3 1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605 2.805 5.625 5.475 5.925.435.375.81 1.095.81 2.22 0 1.605.015 2.895.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0 6.63 5.37 12 12 12z"/></svg>
+    </a>
+    <a href="https://linkedin.com/in/ishaquehassan" target="_blank" class="mobile-social-icon" style="background: linear-gradient(135deg, #0077B5, #00a0dc);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h3.554v5.569c0 1.328.027 3.037 1.852 3.037 1.853 0 2.136 1.445 2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477.9 1.637 1.85 3.37 1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01 2.063 2.065 2.064 2.064 0 01 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <a href="https://medium.com/@ishaqhassan" target="_blank" class="mobile-social-icon" style="background: linear-gradient(135deg, #1a8917, #0d7a0d);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M13.54 12a6.8 6.8 0 01 6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77 6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54 1.51 6.42 3.38 6.42 1.87 0 3.39 2.88 3.39 6.42s1.52 6.42 3.39 6.42 3.38 2.88 3.38 6.42M24 12c0 3.17.53 5.75 1.19 5.75.66 0 1.19 2.58 1.19 5.75s.53 5.75 1.19 5.75C23.47 6.25 24 8.83 24 12z"/></svg>
+    </a>
+    <a href="https://stackoverflow.com/users/2094696/ishaq-hassan" target="_blank" class="mobile-social-icon" style="background: linear-gradient(135deg, #F48024, #e7700d);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15.725 0l1.72 1.277 6.39 8.588 1.716 1.277L15.725 0zm 3.94 3.418l1.369 1.644 8.225 6.85 1.369 1.644 8.225 6.85zm 3.15 4.465l.905 1.94 9.702 4.517.904 1.94 9.701 4.517zm 1.85 4.86l.44 2.093 10.473 2.201.44 2.092 10.473 2.203zM1.89 15.47V24h19.19v 8.53h 2.133v6.397H4.021v 6.396H1.89zm4.265 2.133v2.13h10.66v 2.13H6.154z"/></svg>
+    </a>
+    <a href="mailto:hello@ishaqhassan.dev" class="mobile-social-icon" style="background: linear-gradient(135deg, #30D158, #34d399);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M22 6l 10 7L2 6" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+    </a>
+  </div>
+</div>
+
+<script>
+function expandMobileSection(section) {
+  const map = {
+    'experience': 'mobile-experience-expanded',
+    'prs': 'mobile-prs-expanded',
+    'speaking': 'mobile-speaking-expanded',
+    'oss': 'mobile-oss-expanded',
+    'tech': 'mobile-tech-expanded',
+    'articles': 'mobile-articles-expanded',
+    'connect': 'mobile-connect-expanded'
+  };
+  const elem = document.getElementById(map[section]);
+  if (elem) elem.style.display = 'block';
+}
+
+function closeMobileSection(section) {
+  const map = {
+    'experience': 'mobile-experience-expanded',
+    'prs': 'mobile-prs-expanded',
+    'speaking': 'mobile-speaking-expanded',
+    'oss': 'mobile-oss-expanded',
+    'tech': 'mobile-tech-expanded',
+    'articles': 'mobile-articles-expanded',
+    'connect': 'mobile-connect-expanded'
+  };
+  const elem = document.getElementById(map[section]);
+  if (elem) elem.style.display = 'none';
+}
+
+// Update time on mobile status bar
+function updateMobileTime() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const mins = String(now.getMinutes()).padStart(2, '0');
+  const elem = document.getElementById('mobile-time');
+  if (elem) elem.textContent = hours + ':' + mins;
+}
+setInterval(updateMobileTime, 60000);
+updateMobileTime();
+</script>
+</body>
+</html>
+
