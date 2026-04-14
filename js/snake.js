@@ -6,6 +6,7 @@ let snakeBody = [{x:12,y:12}];
 let snakePrevBody = [{x:12,y:12}];
 let snakeDir = {x:1,y:0};
 let snakeNextDir = {x:1,y:0};
+let snakeDirQueue = [];
 let snakeFood = {x:18,y:12};
 let snakeScore = 0;
 let snakeHighScore = parseInt(localStorage.getItem('snakeHigh') || '0');
@@ -273,8 +274,14 @@ function snakeSetDir(dx, dy) {
   if (snakeLocked) return;
   if (snakeGameOver) { snakeReset(); return; }
   if (!snakeRunning) { snakeStart(); }
-  if (snakeDir.x === -dx && snakeDir.y === -dy) return;
-  if (dx !== 0 || dy !== 0) snakeNextDir = {x:dx, y:dy};
+  // Use queue to buffer up to 2 moves for quick turns
+  const ref = snakeDirQueue.length > 0 ? snakeDirQueue[snakeDirQueue.length - 1] : snakeDir;
+  if (ref.x === -dx && ref.y === -dy) return;
+  if (ref.x === dx && ref.y === dy) return;
+  if (dx !== 0 || dy !== 0) {
+    snakeDirQueue.push({x:dx, y:dy});
+    if (snakeDirQueue.length > 2) snakeDirQueue.shift();
+  }
 }
 
 function snakeTogglePause() {
@@ -298,10 +305,10 @@ document.addEventListener('keydown', (e) => {
   if (!win || !win.classList.contains('open')) return;
   if (e.key === 'Escape') { e.preventDefault(); snakeTogglePause(); return; }
   if (snakePaused) return;
-  if (e.key === 'ArrowUp') { e.preventDefault(); snakeSetDir(0,-1); }
-  if (e.key === 'ArrowDown') { e.preventDefault(); snakeSetDir(0,1); }
-  if (e.key === 'ArrowLeft') { e.preventDefault(); snakeSetDir(-1,0); }
-  if (e.key === 'ArrowRight') { e.preventDefault(); snakeSetDir(1,0); }
+  if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') { e.preventDefault(); snakeSetDir(0,-1); }
+  if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') { e.preventDefault(); snakeSetDir(0,1); }
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { e.preventDefault(); snakeSetDir(-1,0); }
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { e.preventDefault(); snakeSetDir(1,0); }
 });
 
 function snakeStartSfx(note) {
@@ -398,6 +405,7 @@ function snakeReset() {
   snakePrevBody = [{x:12,y:12}];
   snakeDir = {x:1,y:0};
   snakeNextDir = {x:1,y:0};
+  snakeDirQueue = [];
   snakeScore = 0;
   snakeGameOver = false;
   snakeRunning = false;
@@ -420,7 +428,7 @@ function snakeReset() {
   const wrap = document.getElementById('snake-canvas-wrap');
   wrap.classList.remove('death-flash', 'shake');
   const overlay = document.getElementById('snake-overlay');
-  if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:28px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div><div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any arrow key to start</div>'; }
+  if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:28px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div><div style="margin-top:14px;display:flex;align-items:center;gap:20px;justify-content:center;"><div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><div><kbd class="snake-key">▲</kbd></div><div style="display:flex;gap:4px;"><kbd class="snake-key">◀</kbd><kbd class="snake-key">▼</kbd><kbd class="snake-key">▶</kbd></div></div><div style="font-size:11px;color:rgba(255,255,255,0.2);">or</div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><div><kbd class="snake-key">W</kbd></div><div style="display:flex;gap:4px;"><kbd class="snake-key">A</kbd><kbd class="snake-key">S</kbd><kbd class="snake-key">D</kbd></div></div></div>'; }
   snakeResizeCanvas();
 }
 
@@ -434,7 +442,8 @@ function snakePlaceFood() {
 
 function snakeTick() {
   snakePrevBody = JSON.parse(JSON.stringify(snakeBody));
-  snakeDir = snakeNextDir;
+  if (snakeDirQueue.length > 0) { snakeDir = snakeDirQueue.shift(); snakeNextDir = snakeDir; }
+  else snakeDir = snakeNextDir;
   const head = { x: snakeBody[0].x + snakeDir.x, y: snakeBody[0].y + snakeDir.y };
 
   // Wrap around edges

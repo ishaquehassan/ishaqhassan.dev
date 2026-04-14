@@ -434,6 +434,12 @@ body {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
   text-align: center; pointer-events: none; z-index: 2;
 }
+.snake-key {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 6px; font-size: 12px; font-style: normal;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.5); box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
 .snake-canvas-wrap.death-flash { box-shadow: inset 0 0 60px rgba(255,69,58,0.4); }
 .snake-canvas-wrap.shake { animation: snakeShake 0.4s ease; }
 @keyframes snakeShake {

@@ -1273,7 +1273,17 @@
       <canvas id="snake-canvas"></canvas>
       <div id="snake-overlay">
         <div style="font-size:28px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any arrow key to start</div>
+        <div style="margin-top:14px;display:flex;align-items:center;gap:20px;justify-content:center;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div><kbd class="snake-key">▲</kbd></div>
+            <div style="display:flex;gap:4px;"><kbd class="snake-key">◀</kbd><kbd class="snake-key">▼</kbd><kbd class="snake-key">▶</kbd></div>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.2);">or</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div><kbd class="snake-key">W</kbd></div>
+            <div style="display:flex;gap:4px;"><kbd class="snake-key">A</kbd><kbd class="snake-key">S</kbd><kbd class="snake-key">D</kbd></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
