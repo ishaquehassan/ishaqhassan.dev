@@ -5177,18 +5177,15 @@ let mobSnake = { body: [{x:12,y:12}], prevBody: [{x:12,y:12}], dir: {x:1,y:0}, n
 function initMobSnake() {
   const canvas = document.getElementById('mob-snake-canvas');
   if (!canvas) return;
-  const container = canvas.parentElement;
-  const w = container.clientWidth;
-  const h = container.clientHeight;
-  // Use screen width as cell size basis for bigger game
-  mobSnake.cellSize = Math.floor(w / SNAKE_COLS);
+  // Use full screen width for cell size
+  const screenW = window.innerWidth;
+  mobSnake.cellSize = Math.floor(screenW / SNAKE_COLS);
   const pxW = mobSnake.cellSize * SNAKE_COLS;
   const pxH = mobSnake.cellSize * SNAKE_ROWS;
   canvas.width = pxW;
   canvas.height = pxH;
-  // Keep aspect ratio, no stretch
-  canvas.style.width = pxW + 'px';
-  canvas.style.height = pxH + 'px';
+  canvas.style.width = '100%';
+  canvas.style.height = 'auto';
   mobSnakeReset();
 
   // Swipe controls
