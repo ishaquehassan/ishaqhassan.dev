@@ -4011,7 +4011,7 @@ document.addEventListener('mousedown', (e) => {
 
 // Click dropdown item to close menu and execute
 document.querySelectorAll('.menu-dd-item:not(.disabled)').forEach(item => {
-  item.addEventListener('mousedown', (e) => {
+  item.addEventListener('click', (e) => {
     e.stopPropagation();
     closeActiveMenu();
   });
