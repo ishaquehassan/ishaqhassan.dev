@@ -5655,10 +5655,12 @@ window.addEventListener('load', () => {
               const mobGraph = document.getElementById('mob-gh-graph');
               const mobTotal = document.getElementById('mob-gh-total');
               if (mobGraph) {
-                const graphW = mobGraph.clientWidth;
-                const cellSize = 7;
+                mobGraph.innerHTML = '';
+                const graphW = mobGraph.parentElement.clientWidth - 24;
+                const cellSize = 6;
                 const gap = 2;
-                const maxWeeks = Math.floor(graphW / (cellSize + gap));
+                const colW = cellSize + gap;
+                const maxWeeks = Math.floor(graphW / colW);
                 const mobWeeks = data.weeks.slice(-maxWeeks);
                 mobWeeks.forEach(week => {
                   const col = document.createElement('div');
