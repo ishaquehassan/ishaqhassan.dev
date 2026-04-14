@@ -2482,7 +2482,7 @@ body {
 <!-- MENU BAR -->
 <div id="menubar">
   <div class="left">
-    <div class="menu-parent" onclick="toggleMenu('apple')">
+    <div class="menu-parent" data-menu="apple">
       <span class="logo"><svg width="14" height="17" viewBox="0 0 14 17" fill="rgba(255,255,255,0.95)"><path d="M13.2 12.45c-.3.67-.44.97-.82 1.56-.53.82-1.28 1.84-2.2 1.85-.83.01-1.04-.54-2.17-.53-1.12.01-1.36.54-2.18.53-.93-.01-1.63-.93-2.16-1.75C2.15 11.76 1.97 9.15 2.98 7.76c.72-1 1.83-1.58 2.87-1.58.95 0 1.55.54 2.33.54.76 0 1.22-.54 2.31-.54.93 0 1.91.5 2.63 1.37-2.31 1.27-1.94 4.57.38 5.45zM9.65 4.9c.41-.53.72-1.27.61-2.03-.67.04-1.45.47-1.91 1.02-.42.49-.76 1.24-.63 1.96.73.02 1.49-.41 1.93-0.95z"/></svg></span>
       <div class="menu-dropdown" id="menu-apple">
         <div class="menu-dd-item bold">About This Portfolio</div>
@@ -2493,7 +2493,7 @@ body {
         <div class="menu-dd-item" onclick="window.open('mailto:hello@ishaqhassan.dev')">Send Email...</div>
       </div>
     </div>
-    <div class="menu-parent" onclick="toggleMenu('name')">
+    <div class="menu-parent" data-menu="name">
       <span class="menu-item bold">Ishaq Hassan</span>
       <div class="menu-dropdown" id="menu-name">
         <div class="menu-dd-item disabled">Flutter Framework Contributor</div>
@@ -2504,7 +2504,7 @@ body {
         <div class="menu-dd-item" onclick="window.open('https://medium.com/@ishaqhassan')">Medium Blog</div>
       </div>
     </div>
-    <div class="menu-parent hide-mobile" onclick="toggleMenu('file')">
+    <div class="menu-parent hide-mobile" data-menu="file">
       <span class="menu-item">File</span>
       <div class="menu-dropdown" id="menu-file">
         <div class="menu-dd-item" onclick="openWindow('flutter')">Flutter Contributions<span class="shortcut">⌘1</span></div>
@@ -2518,7 +2518,7 @@ body {
         <div class="menu-dd-item" onclick="closeAllWindows()">Close All Windows<span class="shortcut">⌘W</span></div>
       </div>
     </div>
-    <div class="menu-parent hide-mobile" onclick="toggleMenu('edit')">
+    <div class="menu-parent hide-mobile" data-menu="edit">
       <span class="menu-item">Edit</span>
       <div class="menu-dropdown" id="menu-edit">
         <div class="menu-dd-item disabled">Undo<span class="shortcut">⌘Z</span></div>
@@ -2530,7 +2530,7 @@ body {
         <div class="menu-dd-item disabled">Select All<span class="shortcut">⌘A</span></div>
       </div>
     </div>
-    <div class="menu-parent hide-mobile" onclick="toggleMenu('view')">
+    <div class="menu-parent hide-mobile" data-menu="view">
       <span class="menu-item">View</span>
       <div class="menu-dropdown" id="menu-view">
         <div class="menu-dd-item" onclick="openAllWindows()">Open All Windows</div>
@@ -2541,7 +2541,7 @@ body {
         <div class="menu-dd-item" onclick="openWindow('github')">GitHub</div>
       </div>
     </div>
-    <div class="menu-parent hide-mobile" onclick="toggleMenu('go')">
+    <div class="menu-parent hide-mobile" data-menu="go">
       <span class="menu-item">Go</span>
       <div class="menu-dropdown" id="menu-go">
         <div class="menu-dd-item" onclick="window.open('https://github.com/ishaquehassan')">GitHub<span class="shortcut">⇧⌘G</span></div>
@@ -3882,58 +3882,60 @@ body {
 <script>
 // ===== MENUBAR DROPDOWNS =====
 let activeMenu = null;
+let activeMenuItem = null;
 
-function toggleMenu(id) {
-  const menu = document.getElementById('menu-' + id);
-  const item = menu.previousElementSibling;
-  if (activeMenu && activeMenu !== menu) {
+function closeActiveMenu() {
+  if (activeMenu) {
     activeMenu.classList.remove('show');
-    activeMenu.previousElementSibling.classList.remove('open');
-  }
-  if (menu.classList.contains('show')) {
-    menu.classList.remove('show');
-    item.classList.remove('open');
+    if (activeMenuItem) activeMenuItem.classList.remove('open');
     activeMenu = null;
-  } else {
-    menu.classList.add('show');
-    item.classList.add('open');
-    activeMenu = menu;
+    activeMenuItem = null;
   }
 }
 
+function openMenu(parent) {
+  const menu = parent.querySelector('.menu-dropdown');
+  const item = parent.querySelector('.menu-item, .logo');
+  if (!menu) return;
+  if (activeMenu === menu) { closeActiveMenu(); return; }
+  closeActiveMenu();
+  menu.classList.add('show');
+  if (item) item.classList.add('open');
+  activeMenu = menu;
+  activeMenuItem = item;
+}
+
+// Click handler on each menu-parent using mousedown (fires before any other)
+document.querySelectorAll('.menu-parent[data-menu]').forEach(parent => {
+  parent.addEventListener('mousedown', (e) => {
+    // Only trigger on the parent/item itself, not on dropdown items inside
+    if (e.target.closest('.menu-dropdown')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    openMenu(parent);
+  });
+});
+
 // Hover to switch menus when one is open
-document.querySelectorAll('.menu-parent').forEach(parent => {
+document.querySelectorAll('.menu-parent[data-menu]').forEach(parent => {
   parent.addEventListener('mouseenter', () => {
     if (!activeMenu) return;
-    const menu = parent.querySelector('.menu-dropdown');
-    const item = parent.querySelector('.menu-item, .logo');
-    if (menu && menu !== activeMenu) {
-      activeMenu.classList.remove('show');
-      activeMenu.previousElementSibling.classList.remove('open');
-      menu.classList.add('show');
-      if (item) item.classList.add('open');
-      activeMenu = menu;
-    }
+    openMenu(parent);
   });
 });
 
 // Click outside to close
 document.addEventListener('mousedown', (e) => {
   if (activeMenu && !e.target.closest('.menu-parent')) {
-    activeMenu.classList.remove('show');
-    activeMenu.previousElementSibling.classList.remove('open');
-    activeMenu = null;
+    closeActiveMenu();
   }
 });
 
-// Close menu after clicking an item
+// Close menu after clicking a dropdown item
 document.querySelectorAll('.menu-dd-item:not(.disabled)').forEach(item => {
-  item.addEventListener('click', () => {
-    if (activeMenu) {
-      activeMenu.classList.remove('show');
-      activeMenu.previousElementSibling.classList.remove('open');
-      activeMenu = null;
-    }
+  item.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeActiveMenu();
   });
 });
 
