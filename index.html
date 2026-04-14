@@ -401,7 +401,7 @@ body {
 .music-progress-fill { height: 100%; background: rgba(255,255,255,0.4); border-radius: 2px; width: 0%; transition: width 0.3s linear; }
 .music-time { font-size: 9px; color: rgba(255,255,255,0.3); }
 .music-vol { width: 40px; height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; cursor: pointer; position: relative; }
-.music-vol-fill { height: 100%; background: rgba(255,255,255,0.3); border-radius: 2px; width: 70%; }
+.music-vol-fill { height: 100%; background: rgba(255,255,255,0.3); border-radius: 2px; width: 10%; }
 
 /* ===== WEATHER WIDGET ===== */
 #w-weather { min-width: 160px; }
@@ -2789,7 +2789,7 @@ body {
     </div>
   </div>
   <div class="right">
-    <span>🔋</span>
+    <span id="menubar-battery">🔋 --%</span>
     <span>📶</span>
     <span id="menubar-time"></span>
   </div>
@@ -4377,6 +4377,20 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
+// Battery percentage
+if (navigator.getBattery) {
+  navigator.getBattery().then(bat => {
+    function updateBat() {
+      const pct = Math.round(bat.level * 100);
+      const icon = bat.charging ? '⚡' : (pct > 20 ? '🔋' : '🪫');
+      document.getElementById('menubar-battery').textContent = icon + ' ' + pct + '%';
+    }
+    updateBat();
+    bat.addEventListener('levelchange', updateBat);
+    bat.addEventListener('chargingchange', updateBat);
+  });
+}
+
 // ===== WINDOW MANAGEMENT =====
 let activeZ = 100;
 const openWindows = {};
@@ -4663,7 +4677,7 @@ let musicPlaying = false;
 
 function initMusicPlayer() {
   musicAudio = new Audio(musicTracks[0].file);
-  musicAudio.volume = 0.4;
+  musicAudio.volume = 0.1;
   musicAudio.addEventListener('ended', () => nextTrack());
   musicAudio.addEventListener('timeupdate', updateMusicProgress);
 
