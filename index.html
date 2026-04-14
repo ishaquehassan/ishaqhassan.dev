@@ -5221,18 +5221,20 @@ document.getElementById('snake-high').textContent = snakeHighScore;
 snakeResizeCanvas();
 
 // ===== MOBILE SNAKE =====
+let MOB_SNAKE_COLS = 25;
+let MOB_SNAKE_ROWS = 25;
 let mobSnake = { body: [{x:12,y:12}], prevBody: [{x:12,y:12}], dir: {x:1,y:0}, nextDir: {x:1,y:0}, food: {x:18,y:12}, score: 0, running: false, over: false, interval: null, particles: [], cellSize: 14, lastTick: 0, animFrame: null, eatCount: 0, bonus: null, bonusTimer: null };
 
 function initMobSnake() {
   const canvas = document.getElementById('mob-snake-canvas');
   if (!canvas) return;
-  // Use available height (minus header 56px, score 36px, buttons 90px)
+  // Calculate cell size from screen width, then fill height with more rows
   const availW = window.innerWidth;
   const availH = window.innerHeight - 56 - 36 - 90;
-  // Pick bigger cell size that fits both dimensions
-  mobSnake.cellSize = Math.floor(Math.min(availW / SNAKE_COLS, availH / SNAKE_ROWS));
-  const pxW = mobSnake.cellSize * SNAKE_COLS;
-  const pxH = mobSnake.cellSize * SNAKE_ROWS;
+  mobSnake.cellSize = Math.floor(availW / MOB_SNAKE_COLS);
+  MOB_SNAKE_ROWS = Math.floor(availH / mobSnake.cellSize);
+  const pxW = mobSnake.cellSize * MOB_SNAKE_COLS;
+  const pxH = mobSnake.cellSize * MOB_SNAKE_ROWS;
   canvas.width = pxW;
   canvas.height = pxH;
   canvas.style.width = pxW + 'px';
@@ -5288,7 +5290,7 @@ function mobSnakeReset() {
   cancelAnimationFrame(mobSnake.animFrame);
   mobSnake.body = [{x:12,y:12}]; mobSnake.prevBody = [{x:12,y:12}]; mobSnake.dir = {x:1,y:0}; mobSnake.nextDir = {x:1,y:0};
   mobSnake.score = 0; mobSnake.over = false; mobSnake.running = false; mobSnake.particles = []; mobSnake.eatCount = 0; mobSnake.bonus = null; clearTimeout(mobSnake.bonusTimer);
-  mobSnake.food = {x: Math.floor(Math.random()*SNAKE_COLS), y: Math.floor(Math.random()*SNAKE_ROWS)};
+  mobSnake.food = {x: Math.floor(Math.random()*MOB_SNAKE_COLS), y: Math.floor(Math.random()*MOB_SNAKE_ROWS)};
   document.getElementById('mob-snake-score').textContent = '0';
   document.getElementById('mob-snake-speed').textContent = 'Speed: 1x';
   const ov = document.getElementById('mob-snake-overlay');
@@ -5302,7 +5304,7 @@ function mobSnakeTick() {
   S.dir = S.nextDir;
   S.lastTick = performance.now();
   const head = { x: S.body[0].x + S.dir.x, y: S.body[0].y + S.dir.y };
-  if (head.x < 0 || head.x >= SNAKE_COLS || head.y < 0 || head.y >= SNAKE_ROWS || S.body.some(s => s.x === head.x && s.y === head.y)) {
+  if (head.x < 0 || head.x >= MOB_SNAKE_COLS || head.y < 0 || head.y >= MOB_SNAKE_ROWS || S.body.some(s => s.x === head.x && s.y === head.y)) {
     clearTimeout(S.interval); cancelAnimationFrame(S.animFrame); S.over = true; S.running = false;
     if (S.score > snakeHighScore) { snakeHighScore = S.score; localStorage.setItem('snakeHigh', snakeHighScore); document.getElementById('mob-snake-high').textContent = snakeHighScore; document.getElementById('snake-high').textContent = snakeHighScore; }
     localStorage.setItem('snakeLastScore', S.score);
@@ -5326,9 +5328,9 @@ function mobSnakeTick() {
   if (head.x === S.food.x && head.y === S.food.y) {
     S.score++; S.eatCount++;
     for(let i=0;i<6;i++) S.particles.push({x:S.food.x*S.cellSize+S.cellSize/2,y:S.food.y*S.cellSize+S.cellSize/2,vx:(Math.random()-0.5)*5,vy:(Math.random()-0.5)*5,life:12});
-    let np; do{np={x:Math.floor(Math.random()*SNAKE_COLS),y:Math.floor(Math.random()*SNAKE_ROWS)};}while(S.body.some(s=>s.x===np.x&&s.y===np.y)); S.food=np;
+    let np; do{np={x:Math.floor(Math.random()*MOB_SNAKE_COLS),y:Math.floor(Math.random()*MOB_SNAKE_ROWS)};}while(S.body.some(s=>s.x===np.x&&s.y===np.y)); S.food=np;
     playSfx(sfxClick); mobAte = true;
-    if(S.eatCount%3===0&&!S.bonus){let bp;do{bp={x:Math.floor(Math.random()*SNAKE_COLS),y:Math.floor(Math.random()*SNAKE_ROWS)};}while(S.body.some(s=>s.x===bp.x&&s.y===bp.y)||(bp.x===S.food.x&&bp.y===S.food.y));S.bonus=bp;S.bonusTimer=setTimeout(()=>{S.bonus=null;},5000);}
+    if(S.eatCount%3===0&&!S.bonus){let bp;do{bp={x:Math.floor(Math.random()*MOB_SNAKE_COLS),y:Math.floor(Math.random()*MOB_SNAKE_ROWS)};}while(S.body.some(s=>s.x===bp.x&&s.y===bp.y)||(bp.x===S.food.x&&bp.y===S.food.y));S.bonus=bp;S.bonusTimer=setTimeout(()=>{S.bonus=null;},5000);}
   }
 
   if (mobAte) {
@@ -5352,7 +5354,7 @@ function mobSnakeDraw(t) {
 
   // Dotted grid
   ctx.fillStyle='rgba(255,255,255,0.12)';
-  for(let gx=0;gx<SNAKE_COLS;gx++)for(let gy=0;gy<SNAKE_ROWS;gy++){ctx.beginPath();ctx.arc(gx*C+C/2,gy*C+C/2,1.5,0,Math.PI*2);ctx.fill();}
+  for(let gx=0;gx<MOB_SNAKE_COLS;gx++)for(let gy=0;gy<MOB_SNAKE_ROWS;gy++){ctx.beginPath();ctx.arc(gx*C+C/2,gy*C+C/2,1.5,0,Math.PI*2);ctx.fill();}
 
   const pulse = 0.85+Math.sin(Date.now()/200)*0.15;
   ctx.shadowColor='#FF5F57';ctx.shadowBlur=14*pulse;ctx.fillStyle='#FF5F57';
