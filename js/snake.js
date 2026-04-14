@@ -50,13 +50,13 @@ let snakePopups = [];
 let snakeComboBanner = null; // { combo, mult, life, maxLife }
 
 function snakeGetSpeed() {
-  const speedup = Math.floor(snakeScore / 3) * 10;
-  return Math.max(55, snakeBaseSpeed - speedup);
+  const speedup = Math.floor(snakeScore / 3) * 2.65;
+  return Math.max(20, snakeBaseSpeed - speedup);
 }
 
 function snakeGetSpeedLevel() {
   const speed = snakeGetSpeed();
-  return Math.min(Math.round((snakeBaseSpeed - speed) / ((snakeBaseSpeed - 55) / 10)) + 1, 10);
+  return Math.min(Math.round((snakeBaseSpeed - speed) / ((snakeBaseSpeed - 20) / 50)) + 1, 50);
 }
 
 function snakeGetSpeedLabel() {
@@ -78,7 +78,7 @@ function snakeUpdateHUD() {
   const level = snakeGetSpeedLevel();
   document.getElementById('snake-speed-label').textContent = level + 'x';
   const fill = document.getElementById('snake-speed-fill');
-  const pct = ((level - 1) / 9) * 100;
+  const pct = ((level - 1) / 49) * 100;
   fill.style.width = pct + '%';
   // Speed bar color: green > yellow > orange > red
   if (pct < 30) fill.style.background = '#39d353';
@@ -1088,8 +1088,8 @@ function mobSnakeRenderLoop() {
 
 function mobSnakeSchedule() {
   clearTimeout(mobSnake.interval);
-  const speedup = Math.floor(mobSnake.score / 3) * 8;
-  const speed = Math.max(55, snakeBaseSpeed - speedup);
+  const speedup = Math.floor(mobSnake.score / 3) * 2.65;
+  const speed = Math.max(20, snakeBaseSpeed - speedup);
   mobSnake.interval = setTimeout(() => { mobSnakeTick(); if (mobSnake.running) mobSnakeSchedule(); }, speed);
 }
 
@@ -1186,7 +1186,7 @@ function mobSnakeTick() {
     localStorage.setItem('snakeLastScore', S.score);
     const mScEl = document.getElementById('mob-snake-score');
     mScEl.textContent = S.score; mScEl.style.transform='scale(1.3)'; setTimeout(()=>mScEl.style.transform='',150);
-    const lvl=Math.min(Math.round(Math.floor(S.score/3)*8/((snakeBaseSpeed-55)/10))+1,10);
+    const lvl=Math.min(Math.round(Math.floor(S.score/3)*2.65/((snakeBaseSpeed-20)/50))+1,50);
     document.getElementById('mob-snake-speed').textContent=lvl+'x';
     S.prevBody.unshift(S.prevBody[0]);
   } else { S.body.pop(); }
