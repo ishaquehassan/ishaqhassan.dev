@@ -141,15 +141,36 @@ body {
 #about-dialog .about-version {
   font-size: 11px;
   color: rgba(255,255,255,0.4);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
-#about-dialog .about-info {
-  font-size: 12px;
-  color: rgba(255,255,255,0.6);
-  line-height: 1.8;
+.about-specs {
+  text-align: left;
+  width: 100%;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 14px;
 }
-#about-dialog .about-info strong {
-  color: rgba(255,255,255,0.85);
+.about-spec-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 11px;
+}
+.about-spec-label {
+  color: rgba(255,255,255,0.45);
+  flex-shrink: 0;
+  width: 75px;
+}
+.about-spec-value {
+  color: rgba(255,255,255,0.8);
+  text-align: right;
+  flex: 1;
+}
+.about-footer-text {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  margin-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 12px;
 }
 #about-dialog .about-close {
   margin-top: 20px;
@@ -2546,12 +2567,33 @@ body {
     <img src="assets/profile-photo.png" alt="Ishaq Hassan">
     <h2>Ishaq Hassan's Portfolio</h2>
     <div class="about-version">Version 2.0 (macOS Edition)</div>
-    <div class="about-info">
-      <strong>Built with</strong> HTML, CSS, JavaScript<br>
-      <strong>Designed as</strong> macOS Desktop Experience<br>
-      <strong>Features</strong> Window Management, Multiple Desktops,<br>Mission Control, Terminal Emulator<br>
-      <strong>Made by</strong> Ishaq Hassan
+    <div class="about-specs">
+      <div class="about-spec-row">
+        <span class="about-spec-label">Processor</span>
+        <span class="about-spec-value" id="about-cpu">Detecting...</span>
+      </div>
+      <div class="about-spec-row">
+        <span class="about-spec-label">Memory</span>
+        <span class="about-spec-value" id="about-ram">Detecting...</span>
+      </div>
+      <div class="about-spec-row">
+        <span class="about-spec-label">Graphics</span>
+        <span class="about-spec-value" id="about-gpu">Detecting...</span>
+      </div>
+      <div class="about-spec-row">
+        <span class="about-spec-label">Disk</span>
+        <span class="about-spec-value" id="about-disk">Detecting...</span>
+      </div>
+      <div class="about-spec-row">
+        <span class="about-spec-label">Display</span>
+        <span class="about-spec-value" id="about-display">Detecting...</span>
+      </div>
+      <div class="about-spec-row">
+        <span class="about-spec-label">Browser</span>
+        <span class="about-spec-value" id="about-browser">Detecting...</span>
+      </div>
     </div>
+    <div class="about-footer-text">Made by Ishaq Hassan</div>
     <button class="about-close" onclick="closeAboutDialog()">OK</button>
   </div>
 </div>
@@ -3976,7 +4018,56 @@ body {
 
 <script>
 // ===== ABOUT DIALOG =====
+function detectSystemSpecs() {
+  const cores = navigator.hardwareConcurrency || 4;
+  document.getElementById('about-cpu').textContent = cores + '-Core Processor';
+
+  const ram = navigator.deviceMemory;
+  document.getElementById('about-ram').textContent = ram ? ram + ' GB' : 'Unknown';
+
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (gl) {
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      if (ext) {
+        const gpu = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);
+        const short = gpu.replace(/ANGLE \(|,.*?\)$/g, '').replace(/\)$/, '').trim();
+        document.getElementById('about-gpu').textContent = short || gpu;
+      } else {
+        document.getElementById('about-gpu').textContent = 'WebGL Supported';
+      }
+    }
+  } catch(e) {
+    document.getElementById('about-gpu').textContent = 'Not Available';
+  }
+
+  if (navigator.storage && navigator.storage.estimate) {
+    navigator.storage.estimate().then(est => {
+      const totalGB = (est.quota / (1024 * 1024 * 1024)).toFixed(0);
+      const usedGB = (est.usage / (1024 * 1024 * 1024)).toFixed(1);
+      document.getElementById('about-disk').textContent = usedGB + ' GB / ' + totalGB + ' GB available';
+    });
+  } else {
+    document.getElementById('about-disk').textContent = 'Not Available';
+  }
+
+  const w = screen.width * (window.devicePixelRatio || 1);
+  const h = screen.height * (window.devicePixelRatio || 1);
+  const dpr = window.devicePixelRatio || 1;
+  document.getElementById('about-display').textContent = w + ' x ' + h + ' (' + dpr + 'x Retina)';
+
+  const ua = navigator.userAgent;
+  let browser = 'Unknown';
+  if (ua.includes('Chrome') && !ua.includes('Edg')) browser = 'Chrome ' + (ua.match(/Chrome\/(\d+)/) || [])[1];
+  else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari ' + (ua.match(/Version\/(\d+\.\d+)/) || [])[1];
+  else if (ua.includes('Firefox')) browser = 'Firefox ' + (ua.match(/Firefox\/(\d+)/) || [])[1];
+  else if (ua.includes('Edg')) browser = 'Edge ' + (ua.match(/Edg\/(\d+)/) || [])[1];
+  document.getElementById('about-browser').textContent = browser;
+}
+
 function openAboutDialog() {
+  detectSystemSpecs();
   document.getElementById('about-dialog-overlay').classList.add('show');
 }
 function closeAboutDialog() {
