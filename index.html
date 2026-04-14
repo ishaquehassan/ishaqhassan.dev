@@ -128,34 +128,32 @@ body {
   letter-spacing: 0.01em;
 }
 
-#menubar .left { display: flex; align-items: center; gap: 0; height: 100%; }
-#menubar .logo {
-  font-size: 15px;
-  padding: 0 12px 0 2px;
-  cursor: default;
-  height: 28px;
+#menubar .left { display: flex; align-items: stretch; gap: 0; height: 28px; }
+#menubar .menu-parent {
+  position: relative;
   display: flex;
   align-items: center;
-  border-radius: 4px;
-  transition: background 0.1s;
-  color: rgba(255,255,255,0.95);
-}
-#menubar .logo:hover { background: rgba(255,255,255,0.15); }
-#menubar .menu-parent { position: relative; height: 100%; display: flex; align-items: center; }
-#menubar .menu-item {
-  color: rgba(255,255,255,0.9);
+  height: 28px;
   cursor: default;
   padding: 0 11px;
-  height: 28px;
-  display: flex;
-  align-items: center;
   border-radius: 4px;
   transition: background 0.1s;
-  font-size: 13.5px;
+  color: rgba(255,255,255,0.9);
+  font-size: 13px;
 }
-#menubar .menu-item:hover, #menubar .menu-item.open { background: rgba(255,255,255,0.15); color: #fff; }
+#menubar .menu-parent:hover { background: rgba(255,255,255,0.1); }
+#menubar .menu-parent.open { background: rgba(255,255,255,0.15); color: #fff; }
+#menubar .menu-parent .logo {
+  display: flex;
+  align-items: center;
+  padding: 0 2px 0 0;
+}
+#menubar .menu-parent .menu-item {
+  font-size: 13px;
+  pointer-events: none;
+}
 #menubar .menu-item.bold { font-weight: 600; }
-#menubar .right { display: flex; align-items: center; gap: 14px; color: rgba(255,255,255,0.65); font-size: 12.5px; font-weight: 400; }
+#menubar .right { display: flex; align-items: center; gap: 14px; color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 400; }
 
 /* Menu Dropdowns */
 .menu-dropdown {
@@ -3882,58 +3880,51 @@ body {
 <script>
 // ===== MENUBAR DROPDOWNS =====
 let activeMenu = null;
-let activeMenuItem = null;
+let activeParent = null;
 
 function closeActiveMenu() {
-  if (activeMenu) {
-    activeMenu.classList.remove('show');
-    if (activeMenuItem) activeMenuItem.classList.remove('open');
-    activeMenu = null;
-    activeMenuItem = null;
-  }
+  if (activeMenu) activeMenu.classList.remove('show');
+  if (activeParent) activeParent.classList.remove('open');
+  activeMenu = null;
+  activeParent = null;
 }
 
 function openMenu(parent) {
   const menu = parent.querySelector('.menu-dropdown');
-  const item = parent.querySelector('.menu-item, .logo');
   if (!menu) return;
   if (activeMenu === menu) { closeActiveMenu(); return; }
   closeActiveMenu();
   menu.classList.add('show');
-  if (item) item.classList.add('open');
+  parent.classList.add('open');
   activeMenu = menu;
-  activeMenuItem = item;
+  activeParent = parent;
 }
 
-// Click handler on each menu-parent using mousedown (fires before any other)
+// Mousedown on menu parents
 document.querySelectorAll('.menu-parent[data-menu]').forEach(parent => {
   parent.addEventListener('mousedown', (e) => {
-    // Only trigger on the parent/item itself, not on dropdown items inside
     if (e.target.closest('.menu-dropdown')) return;
     e.preventDefault();
     e.stopPropagation();
     openMenu(parent);
   });
-});
 
-// Hover to switch menus when one is open
-document.querySelectorAll('.menu-parent[data-menu]').forEach(parent => {
+  // Hover switch when a menu is already open
   parent.addEventListener('mouseenter', () => {
     if (!activeMenu) return;
-    openMenu(parent);
+    const menu = parent.querySelector('.menu-dropdown');
+    if (menu && menu !== activeMenu) openMenu(parent);
   });
 });
 
 // Click outside to close
 document.addEventListener('mousedown', (e) => {
-  if (activeMenu && !e.target.closest('.menu-parent')) {
-    closeActiveMenu();
-  }
+  if (activeMenu && !e.target.closest('.menu-parent')) closeActiveMenu();
 });
 
-// Close menu after clicking a dropdown item
+// Click dropdown item to close menu and execute
 document.querySelectorAll('.menu-dd-item:not(.disabled)').forEach(item => {
-  item.addEventListener('click', (e) => {
+  item.addEventListener('mousedown', (e) => {
     e.stopPropagation();
     closeActiveMenu();
   });
