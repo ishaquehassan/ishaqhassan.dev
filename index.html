@@ -4132,14 +4132,6 @@ body {
           <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Swipe or tap arrows to play</div>
         </div>
       </div>
-      <div style="display:flex;justify-content:center;gap:6px;padding:6px 0 2px;">
-        <button class="snake-dir-btn" onclick="mobSnakeDir(0,-1)">↑</button>
-      </div>
-      <div style="display:flex;justify-content:center;gap:6px;padding:0 0 10px;">
-        <button class="snake-dir-btn" onclick="mobSnakeDir(-1,0)">←</button>
-        <button class="snake-dir-btn" onclick="mobSnakeDir(0,1)">↓</button>
-        <button class="snake-dir-btn" onclick="mobSnakeDir(1,0)">→</button>
-      </div>
     </div>
   </div>
 
@@ -5230,7 +5222,7 @@ function initMobSnake() {
   if (!canvas) return;
   // Calculate cell size from screen width, then fill height with more rows
   const availW = window.innerWidth;
-  const availH = window.innerHeight - 56 - 36 - 90;
+  const availH = window.innerHeight - 56 - 36 - 10;
   mobSnake.cellSize = Math.floor(availW / MOB_SNAKE_COLS);
   MOB_SNAKE_ROWS = Math.floor(availH / mobSnake.cellSize);
   const pxW = mobSnake.cellSize * MOB_SNAKE_COLS;
