@@ -14,7 +14,7 @@ let snakeRunning = false;
 let snakeGameOver = false;
 let snakeInterval = null;
 let snakeParticles = [];
-let snakeBaseSpeed = 200;
+let snakeBaseSpeed = 150;
 let snakeEatCount = 0;
 let snakeBonus = null; // {x, y, colorIdx, spawnTime}
 let snakeBonusTimer = null;
@@ -51,12 +51,12 @@ let snakeComboBanner = null; // { combo, mult, life, maxLife }
 
 function snakeGetSpeed() {
   const speedup = Math.floor(snakeScore / 3) * 10;
-  return Math.max(70, snakeBaseSpeed - speedup);
+  return Math.max(55, snakeBaseSpeed - speedup);
 }
 
 function snakeGetSpeedLevel() {
   const speed = snakeGetSpeed();
-  return Math.min(Math.round((snakeBaseSpeed - speed) / ((snakeBaseSpeed - 70) / 10)) + 1, 10);
+  return Math.min(Math.round((snakeBaseSpeed - speed) / ((snakeBaseSpeed - 55) / 10)) + 1, 10);
 }
 
 function snakeGetSpeedLabel() {
@@ -281,9 +281,9 @@ function snakeSetDir(dx, dy) {
   if (dx !== 0 || dy !== 0) {
     snakeDirQueue.push({x:dx, y:dy});
     if (snakeDirQueue.length > 2) snakeDirQueue.shift();
-    // Instant tick if 40%+ of interval passed, feels snappier
+    // Instant tick if 25%+ of interval passed, snappy response
     const elapsed = performance.now() - snakeLastTick;
-    if (elapsed > snakeGetSpeed() * 0.4) {
+    if (elapsed > snakeGetSpeed() * 0.25) {
       clearTimeout(snakeInterval);
       snakeLastTick = performance.now();
       snakeTick();
