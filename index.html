@@ -176,9 +176,20 @@ body {
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
-#menubar .left { display: flex; align-items: center; gap: 0; }
-#menubar .logo { font-size: 16px; padding: 0 12px 0 4px; cursor: default; filter: brightness(1.2); }
-#menubar .menu-parent { position: relative; }
+#menubar .left { display: flex; align-items: center; gap: 0; height: 100%; }
+#menubar .logo {
+  font-size: 15px;
+  padding: 0 12px 0 2px;
+  cursor: default;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: background 0.1s;
+  color: rgba(255,255,255,0.95);
+}
+#menubar .logo:hover { background: rgba(255,255,255,0.15); }
+#menubar .menu-parent { position: relative; height: 100%; display: flex; align-items: center; }
 #menubar .menu-item {
   color: rgba(255,255,255,0.9);
   cursor: default;
@@ -188,6 +199,7 @@ body {
   align-items: center;
   border-radius: 4px;
   transition: background 0.1s;
+  font-size: 13.5px;
 }
 #menubar .menu-item:hover, #menubar .menu-item.open { background: rgba(255,255,255,0.15); color: #fff; }
 #menubar .menu-item.bold { font-weight: 600; }
@@ -219,7 +231,7 @@ body {
 }
 
 .menu-dd-item {
-  padding: 4px 16px;
+  padding: 5px 12px;
   font-size: 13px;
   color: var(--text);
   cursor: default;
@@ -227,7 +239,8 @@ body {
   align-items: center;
   justify-content: space-between;
   border-radius: 4px;
-  margin: 0 4px;
+  margin: 1px 4px;
+  min-height: 22px;
 }
 
 .menu-dd-item:hover:not(.disabled) { background: var(--accent); color: #fff; }
@@ -386,6 +399,10 @@ body {
   cursor: pointer;
   transition: transform 0.2s ease;
   position: relative;
+  z-index: 1;
+}
+.dock-item:hover {
+  z-index: 20;
 }
 
 .dock-icon {
@@ -434,6 +451,7 @@ body {
   pointer-events: none;
   transition: all 0.2s;
   border: 1px solid var(--border);
+  z-index: 10;
 }
 
 .dock-icon.about { background: linear-gradient(135deg, #1a1a2e, #2d2d44); }
@@ -2069,6 +2087,274 @@ body {
 .window.open .tl-minimize { box-shadow: 0 0 6px rgba(254,188,46,0.4); }
 .window.open .tl-maximize { box-shadow: 0 0 6px rgba(40,200,64,0.4); }
 
+/* ===== WINDOW SNAPPING ===== */
+.snap-preview {
+  position: fixed;
+  border: 2px solid var(--accent);
+  background: rgba(0, 122, 255, 0.08);
+  pointer-events: none;
+  z-index: 9998;
+  border-radius: var(--win-radius);
+  opacity: 0;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.snap-preview.active { opacity: 1; }
+
+.snap-menu {
+  position: absolute;
+  top: 20px;
+  left: -4px;
+  background: rgba(30, 30, 46, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 4px 0;
+  min-width: 160px;
+  display: none;
+  z-index: 10001;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+}
+.snap-menu.show { display: block; }
+.snap-menu-item {
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--text);
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  transition: background 0.15s;
+}
+.snap-menu-item:hover { background: rgba(0, 122, 255, 0.2); }
+.snap-menu-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 4px 0; }
+
+/* ===== MULTIPLE DESKTOPS ===== */
+#desktop-strip {
+  position: fixed;
+  top: 28px;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: rgba(10, 10, 26, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  z-index: 9500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  transition: height 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s;
+}
+#desktop-strip.visible {
+  height: 80px;
+  padding: 10px 20px;
+}
+.desktop-thumb {
+  flex-shrink: 0;
+  width: 120px;
+  height: 60px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(20, 20, 30, 0.6);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+}
+.desktop-thumb:hover { border-color: rgba(255,255,255,0.2); }
+.desktop-thumb.active { border-color: var(--accent); background: rgba(0, 122, 255, 0.12); }
+.desktop-thumb-label {
+  font-size: 10px;
+  color: var(--text2);
+  font-weight: 600;
+}
+.desktop-thumb-windows {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 4px;
+}
+.desktop-thumb-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.2);
+}
+.desktop-thumb.active .desktop-thumb-dot { background: rgba(0,122,255,0.5); }
+.desktop-thumb-close {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 10px;
+  color: var(--text2);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.desktop-thumb:hover .desktop-thumb-close { opacity: 1; }
+.add-desktop-btn {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px dashed rgba(255,255,255,0.15);
+  color: var(--text2);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.add-desktop-btn:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+
+.window.hidden-desktop {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.25s ease !important;
+}
+
+.desktop-slide-left { animation: slideLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+.desktop-slide-right { animation: slideRight 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes slideLeft {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideRight {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* ===== MISSION CONTROL ===== */
+#mission-control {
+  position: fixed;
+  top: 28px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(30px);
+}
+#mission-control.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+#mc-desktop-strip {
+  display: flex;
+  gap: 16px;
+  padding: 20px 20px;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(0,0,0,0.2);
+  min-height: 100px;
+}
+.mc-thumb {
+  width: 140px;
+  height: 70px;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  background: rgba(20,20,30,0.7);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+}
+.mc-thumb:hover { border-color: rgba(255,255,255,0.25); transform: scale(1.05); }
+.mc-thumb.active { border-color: var(--accent); background: rgba(0,122,255,0.15); }
+.mc-thumb-label { font-size: 10px; color: var(--text2); font-weight: 600; }
+.mc-add-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px dashed rgba(255,255,255,0.15);
+  color: var(--text2);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.mc-add-btn:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+
+#mc-window-grid {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  padding: 40px 60px;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  overflow-y: auto;
+}
+.mc-win-preview {
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  background: rgba(20,20,30,0.85);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.mc-win-preview:hover {
+  border-color: rgba(255,255,255,0.25);
+  transform: scale(1.06);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.mc-win-toolbar {
+  height: 24px;
+  background: rgba(20,20,30,0.8);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 4px;
+}
+.mc-win-dot { width: 6px; height: 6px; border-radius: 50%; }
+.mc-win-dot.r { background: #FF5F57; }
+.mc-win-dot.y { background: #FEBC2E; }
+.mc-win-dot.g { background: #28C840; }
+.mc-win-title {
+  font-size: 9px;
+  color: var(--text2);
+  margin-left: auto;
+  font-weight: 600;
+}
+.mc-win-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  opacity: 0.2;
+}
+
+@media (max-width: 768px) {
+  #desktop-strip, #mission-control, .snap-preview, .snap-menu { display: none !important; }
+}
+
 </style>
 
 <!-- JSON-LD Structured Data -->
@@ -2316,9 +2602,9 @@ body {
 <div id="menubar">
   <div class="left">
     <div class="menu-parent">
-      <span class="logo" onclick="toggleMenu('apple')"></span>
+      <span class="logo" onclick="toggleMenu('apple')"><svg width="14" height="17" viewBox="0 0 14 17" fill="rgba(255,255,255,0.95)"><path d="M13.2 12.45c-.3.67-.44.97-.82 1.56-.53.82-1.28 1.84-2.2 1.85-.83.01-1.04-.54-2.17-.53-1.12.01-1.36.54-2.18.53-.93-.01-1.63-.93-2.16-1.75C2.15 11.76 1.97 9.15 2.98 7.76c.72-1 1.83-1.58 2.87-1.58.95 0 1.55.54 2.33.54.76 0 1.22-.54 2.31-.54.93 0 1.91.5 2.63 1.37-2.31 1.27-1.94 4.57.38 5.45zM9.65 4.9c.41-.53.72-1.27.61-2.03-.67.04-1.45.47-1.91 1.02-.42.49-.76 1.24-.63 1.96.73.02 1.49-.41 1.93-0.95z"/></svg></span>
       <div class="menu-dropdown" id="menu-apple">
-        <div class="menu-dd-item bold">About Ishaq Hassan</div>
+        <div class="menu-dd-item bold">About This Portfolio</div>
         <div class="menu-dd-sep"></div>
         <div class="menu-dd-item" onclick="openWindow('about')">Terminal<span class="shortcut">⌘T</span></div>
         <div class="menu-dd-item" onclick="openWindow('contact')">Contact<span class="shortcut">⌘K</span></div>
@@ -2338,24 +2624,38 @@ body {
       </div>
     </div>
     <div class="menu-parent hide-mobile">
-      <span class="menu-item" onclick="toggleMenu('portfolio')">Portfolio</span>
-      <div class="menu-dropdown" id="menu-portfolio">
+      <span class="menu-item" onclick="toggleMenu('file')">File</span>
+      <div class="menu-dropdown" id="menu-file">
         <div class="menu-dd-item" onclick="openWindow('flutter')">Flutter Contributions<span class="shortcut">⌘1</span></div>
         <div class="menu-dd-item" onclick="openWindow('oss')">Open Source Projects<span class="shortcut">⌘2</span></div>
         <div class="menu-dd-item" onclick="openWindow('articles')">Articles & Writing<span class="shortcut">⌘3</span></div>
         <div class="menu-dd-sep"></div>
         <div class="menu-dd-item" onclick="openWindow('tech')">Tech Stack</div>
         <div class="menu-dd-item" onclick="openWindow('speaking')">Speaking Events</div>
+        <div class="menu-dd-item" onclick="openWindow('experience')">Experience</div>
+        <div class="menu-dd-sep"></div>
+        <div class="menu-dd-item" onclick="closeAllWindows()">Close All Windows<span class="shortcut">⌘W</span></div>
+      </div>
+    </div>
+    <div class="menu-parent hide-mobile">
+      <span class="menu-item" onclick="toggleMenu('edit')">Edit</span>
+      <div class="menu-dropdown" id="menu-edit">
+        <div class="menu-dd-item disabled">Undo<span class="shortcut">⌘Z</span></div>
+        <div class="menu-dd-item disabled">Redo<span class="shortcut">⇧⌘Z</span></div>
+        <div class="menu-dd-sep"></div>
+        <div class="menu-dd-item disabled">Cut<span class="shortcut">⌘X</span></div>
+        <div class="menu-dd-item disabled">Copy<span class="shortcut">⌘C</span></div>
+        <div class="menu-dd-item disabled">Paste<span class="shortcut">⌘V</span></div>
+        <div class="menu-dd-item disabled">Select All<span class="shortcut">⌘A</span></div>
       </div>
     </div>
     <div class="menu-parent hide-mobile">
       <span class="menu-item" onclick="toggleMenu('view')">View</span>
       <div class="menu-dropdown" id="menu-view">
         <div class="menu-dd-item" onclick="openAllWindows()">Open All Windows</div>
-        <div class="menu-dd-item" onclick="closeAllWindows()">Close All Windows<span class="shortcut">⌘W</span></div>
+        <div class="menu-dd-item" onclick="toggleMissionControl()">Mission Control<span class="shortcut">F3</span></div>
         <div class="menu-dd-sep"></div>
-        <div class="menu-dd-item" onclick="openWindow('about')">About (Terminal)</div>
-        <div class="menu-dd-item" onclick="openWindow('experience')">Experience</div>
+        <div class="menu-dd-item" onclick="openWindow('about')">Terminal</div>
         <div class="menu-dd-item" onclick="openWindow('linkedin')">LinkedIn</div>
         <div class="menu-dd-item" onclick="openWindow('github')">GitHub</div>
       </div>
@@ -2377,6 +2677,15 @@ body {
     <span>📶</span>
     <span id="menubar-time"></span>
   </div>
+</div>
+
+<!-- SNAP PREVIEW -->
+<div id="snap-preview" class="snap-preview"></div>
+
+<!-- MISSION CONTROL -->
+<div id="mission-control">
+  <div id="mc-desktop-strip"></div>
+  <div id="mc-window-grid"></div>
 </div>
 
 <!-- DESKTOP WIDGETS -->
@@ -2474,6 +2783,10 @@ body {
       <div class="dock-tooltip">LinkedIn</div>
       <div class="dock-icon linkedin"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
     </div>
+    <div class="dock-item" onclick="toggleMissionControl()">
+      <div class="dock-tooltip">Mission Control</div>
+      <div class="dock-icon" style="background:linear-gradient(135deg,#2d2d44,#1a1a2e);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="8" height="7" rx="1.5" stroke="#fff" stroke-width="1.5"/><rect x="14" y="3" width="8" height="7" rx="1.5" stroke="#fff" stroke-width="1.5"/><rect x="2" y="14" width="8" height="7" rx="1.5" stroke="#fff" stroke-width="1.5"/><rect x="14" y="14" width="8" height="7" rx="1.5" stroke="#fff" stroke-width="1.5"/></svg></div>
+    </div>
   </div>
 </div>
 
@@ -2483,7 +2796,7 @@ body {
     <div class="traffic-lights">
       <div class="traffic-light tl-close" onclick="closeWindow('about')">✕</div>
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('about')">−</div>
-      <div class="traffic-light tl-maximize" onclick="maximizeWindow('about')">+</div>
+      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'about')">+<div class="snap-menu" id="sm-about"><div class="snap-menu-item" onclick="snapWindow('about','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('about','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('about','top-full',event)">⬆ Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('about','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('about','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('about','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('about','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
     <div class="window-title">Terminal — ishaq@dev: ~</div>
   </div>
@@ -2498,7 +2811,7 @@ body {
     <div class="traffic-lights">
       <div class="traffic-light tl-close" onclick="closeWindow('flutter')">✕</div>
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('flutter')">−</div>
-      <div class="traffic-light tl-maximize" onclick="maximizeWindow('flutter')">+</div>
+      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'flutter')">+<div class="snap-menu" id="sm-flutter"><div class="snap-menu-item" onclick="snapWindow('flutter','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('flutter','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('flutter','top-full',event)">⬆ Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('flutter','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('flutter','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('flutter','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('flutter','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
     <div class="window-title">Flutter Framework Contributions</div>
   </div>
@@ -2556,7 +2869,7 @@ body {
     <div class="traffic-lights">
       <div class="traffic-light tl-close" onclick="closeWindow('speaking')">✕</div>
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('speaking')">−</div>
-      <div class="traffic-light tl-maximize" onclick="maximizeWindow('speaking')">+</div>
+      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'speaking')">+<div class="snap-menu" id="sm-speaking"><div class="snap-menu-item" onclick="snapWindow('speaking','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('speaking','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('speaking','top-full',event)">⬆ Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('speaking','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('speaking','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('speaking','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('speaking','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
     <div class="window-title">Speaking & Community</div>
   </div>
@@ -2589,7 +2902,7 @@ body {
     <div class="traffic-lights">
       <div class="traffic-light tl-close" onclick="closeWindow('experience')">✕</div>
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('experience')">−</div>
-      <div class="traffic-light tl-maximize" onclick="maximizeWindow('experience')">+</div>
+      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'experience')">+<div class="snap-menu" id="sm-experience"><div class="snap-menu-item" onclick="snapWindow('experience','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('experience','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('experience','top-full',event)">⬆ Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('experience','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('experience','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('experience','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('experience','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
     <div class="window-title">Experience</div>
   </div>
@@ -2627,7 +2940,7 @@ body {
     <div class="traffic-lights">
       <div class="traffic-light tl-close" onclick="closeWindow('oss')">✕</div>
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('oss')">−</div>
-      <div class="traffic-light tl-maximize" onclick="maximizeWindow('oss')">+</div>
+      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'oss')">+<div class="snap-menu" id="sm-oss"><div class="snap-menu-item" onclick="snapWindow('oss','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('oss','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('oss','top-full',event)">⬆ Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('oss','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('oss','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('oss','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('oss','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
     <div class="window-title">Open Source Projects</div>
   </div>
@@ -2695,7 +3008,7 @@ body {
     <div class="traffic-lights">
       <div class="traffic-light tl-close" onclick="closeWindow('tech')">✕</div>
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('tech')">−</div>
-      <div class="traffic-light tl-maximize" onclick="maximizeWindow('tech')">+</div>
+      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'tech')">+<div class="snap-menu" id="sm-tech"><div class="snap-menu-item" onclick="snapWindow('tech','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('tech','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('tech','top-full',event)">⬆ Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('tech','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('tech','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('tech','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('tech','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
     <div class="window-title">Tech Stack</div>
   </div>
@@ -2743,7 +3056,7 @@ body {
     <div class="traffic-lights">
       <div class="traffic-light tl-close" onclick="closeWindow('articles')">✕</div>
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('articles')">−</div>
-      <div class="traffic-light tl-maximize" onclick="maximizeWindow('articles')">+</div>
+      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'articles')">+<div class="snap-menu" id="sm-articles"><div class="snap-menu-item" onclick="snapWindow('articles','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('articles','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('articles','top-full',event)">⬆ Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('articles','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('articles','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('articles','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('articles','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
     <div class="window-title">Articles & Writing</div>
   </div>
@@ -2815,7 +3128,7 @@ body {
     <div class="traffic-lights">
       <div class="traffic-light tl-close" onclick="closeWindow('contact')">✕</div>
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('contact')">−</div>
-      <div class="traffic-light tl-maximize" onclick="maximizeWindow('contact')">+</div>
+      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'contact')">+<div class="snap-menu" id="sm-contact"><div class="snap-menu-item" onclick="snapWindow('contact','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('contact','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('contact','top-full',event)">⬆ Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('contact','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('contact','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('contact','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('contact','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
     <div class="window-title">Contact</div>
   </div>
@@ -2876,7 +3189,7 @@ body {
     <div class="traffic-lights">
       <div class="traffic-light tl-close" onclick="closeWindow('github')">✕</div>
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('github')">−</div>
-      <div class="traffic-light tl-maximize" onclick="maximizeWindow('github')">+</div>
+      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'github')">+<div class="snap-menu" id="sm-github"><div class="snap-menu-item" onclick="snapWindow('github','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('github','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('github','top-full',event)">⬆ Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('github','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('github','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('github','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('github','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
     <div class="window-title">GitHub — ishaquehassan</div>
   </div>
@@ -2919,7 +3232,7 @@ body {
     <div class="traffic-lights">
       <div class="traffic-light tl-close" onclick="closeWindow('linkedin')">✕</div>
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('linkedin')">−</div>
-      <div class="traffic-light tl-maximize" onclick="maximizeWindow('linkedin')">+</div>
+      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'linkedin')">+<div class="snap-menu" id="sm-linkedin"><div class="snap-menu-item" onclick="snapWindow('linkedin','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('linkedin','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('linkedin','top-full',event)">⬆ Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('linkedin','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('linkedin','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('linkedin','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('linkedin','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
     <div class="window-title">LinkedIn — Ishaq Hassan</div>
   </div>
@@ -3844,13 +4157,12 @@ function openWindow(id) {
   const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin'];
   const idx = names.indexOf(id);
   if (idx >= 0 && dockItems[idx]) {
-    dockItems[idx].classList.add('active');
     dockItems[idx].querySelector('.dock-icon').classList.add('dock-bounce');
     setTimeout(() => dockItems[idx].querySelector('.dock-icon').classList.remove('dock-bounce'), 500);
   }
 
   if (openWindows[id]) {
-    // Bring to front
+    // Already open on THIS desktop, just bring to front
     win.style.zIndex = ++activeZ;
     if (win.classList.contains('minimizing')) {
       win.classList.remove('minimizing');
@@ -3864,7 +4176,7 @@ function openWindow(id) {
   win.style.top = pos.top + 'px';
   win.style.left = pos.left + 'px';
 
-  win.classList.remove('closing','minimizing');
+  win.classList.remove('closing','minimizing','hidden-desktop');
   win.classList.add('open');
   win.style.zIndex = ++activeZ;
   openWindows[id] = true;
@@ -3879,9 +4191,10 @@ function openWindow(id) {
   // Special: terminal typing
   if (id === 'about') startTerminal();
 
-  // GitHub and LinkedIn open as styled cards (iframes blocked by X-Frame-Options)
-
   win.addEventListener('mousedown', () => { win.style.zIndex = ++activeZ; });
+
+  // Sync dock indicators
+  if (typeof syncDockIndicators === 'function') syncDockIndicators();
 }
 
 function closeWindow(id) {
@@ -3889,12 +4202,9 @@ function closeWindow(id) {
   if (!win) return;
   win.classList.add('closing');
   setTimeout(() => {
-    win.classList.remove('open','closing');
+    win.classList.remove('open','closing','hidden-desktop');
     delete openWindows[id];
-    const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin'];
-    const idx = names.indexOf(id);
-    const dockItems = document.querySelectorAll('.dock-item');
-    if (idx >= 0 && dockItems[idx]) dockItems[idx].classList.remove('active');
+    if (typeof syncDockIndicators === 'function') syncDockIndicators();
   }, 250);
 }
 
@@ -3941,9 +4251,19 @@ document.addEventListener('mousemove', (e) => {
   if (!dragEl) return;
   dragEl.style.left = (e.clientX - dragOffX) + 'px';
   dragEl.style.top = (e.clientY - dragOffY) + 'px';
+  updateSnapPreview(e.clientX, e.clientY);
 });
 
-document.addEventListener('mouseup', () => { dragEl = null; });
+document.addEventListener('mouseup', (e) => {
+  if (dragEl && currentSnapZone) {
+    const winId = dragEl.id.replace('win-', '');
+    snapWindow(winId, currentSnapZone);
+  }
+  const preview = document.getElementById('snap-preview');
+  if (preview) preview.classList.remove('active');
+  currentSnapZone = null;
+  dragEl = null;
+});
 
 // Touch drag for mobile
 document.addEventListener('touchmove', (e) => {
@@ -4111,10 +4431,23 @@ document.addEventListener('mousemove', (e) => {
   }
   widgetDrag.style.left = (e.clientX - wdOffX) + 'px';
   widgetDrag.style.top = (e.clientY - wdOffY) + 'px';
+  updateSnapPreview(e.clientX, e.clientY);
 });
 
-document.addEventListener('mouseup', () => {
+document.addEventListener('mouseup', (e) => {
   if (widgetDrag) {
+    if (currentSnapZone) {
+      const g = snapGeometry(currentSnapZone);
+      widgetDrag.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+      widgetDrag.style.left = g.left + 'px';
+      widgetDrag.style.top = g.top + 'px';
+      widgetDrag.style.width = g.width + 'px';
+      widgetDrag.style.height = g.height + 'px';
+      setTimeout(() => { widgetDrag.style.transition = ''; }, 350);
+    }
+    const preview = document.getElementById('snap-preview');
+    if (preview) preview.classList.remove('active');
+    currentSnapZone = null;
     widgetDrag.classList.remove('dragging');
     widgetDrag = null;
   }
@@ -4409,6 +4742,486 @@ if (window.innerWidth > 768) {
       card.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
       setTimeout(() => { card.style.transition = ''; }, 500);
     });
+  });
+}
+
+// ===== WINDOW SNAPPING =====
+let currentSnapZone = null;
+const SNAP_EDGE = 50;
+
+function getSnapZone(mx, my) {
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  const menuH = 28;
+  const dockH = 80;
+  const corner = 80;
+
+  const nearLeft = mx < SNAP_EDGE;
+  const nearRight = mx > W - SNAP_EDGE;
+  const nearTop = my < menuH + SNAP_EDGE;
+  const nearBottom = my > H - dockH - SNAP_EDGE;
+
+  if (nearLeft && nearTop) return 'topleft-quarter';
+  if (nearRight && nearTop) return 'topright-quarter';
+  if (nearLeft && nearBottom) return 'bottomleft-quarter';
+  if (nearRight && nearBottom) return 'bottomright-quarter';
+  if (nearLeft) return 'left-half';
+  if (nearRight) return 'right-half';
+  if (nearTop) return 'top-full';
+  return null;
+}
+
+function snapGeometry(zone) {
+  const W = window.innerWidth;
+  const menuH = 28;
+  const dockH = 80;
+  const areaH = window.innerHeight - menuH - dockH;
+  const p = 8;
+  const g = { top: menuH + p, left: p, width: W - p * 2, height: areaH - p * 2 };
+
+  switch (zone) {
+    case 'left-half':
+      g.width = W / 2 - p * 1.5;
+      break;
+    case 'right-half':
+      g.left = W / 2 + p / 2;
+      g.width = W / 2 - p * 1.5;
+      break;
+    case 'top-full':
+      // full screen
+      break;
+    case 'topleft-quarter':
+      g.width = W / 2 - p * 1.5;
+      g.height = areaH / 2 - p * 1.5;
+      break;
+    case 'topright-quarter':
+      g.left = W / 2 + p / 2;
+      g.width = W / 2 - p * 1.5;
+      g.height = areaH / 2 - p * 1.5;
+      break;
+    case 'bottomleft-quarter':
+      g.width = W / 2 - p * 1.5;
+      g.top = menuH + areaH / 2 + p / 2;
+      g.height = areaH / 2 - p * 1.5;
+      break;
+    case 'bottomright-quarter':
+      g.left = W / 2 + p / 2;
+      g.width = W / 2 - p * 1.5;
+      g.top = menuH + areaH / 2 + p / 2;
+      g.height = areaH / 2 - p * 1.5;
+      break;
+  }
+  return g;
+}
+
+function updateSnapPreview(mx, my) {
+  const preview = document.getElementById('snap-preview');
+  const zone = getSnapZone(mx, my);
+  if (zone) {
+    const g = snapGeometry(zone);
+    preview.style.top = g.top + 'px';
+    preview.style.left = g.left + 'px';
+    preview.style.width = g.width + 'px';
+    preview.style.height = g.height + 'px';
+    preview.classList.add('active');
+    currentSnapZone = zone;
+  } else {
+    preview.classList.remove('active');
+    currentSnapZone = null;
+  }
+}
+
+function snapWindow(winId, zone, event) {
+  if (event) { event.stopPropagation(); event.preventDefault(); }
+  const win = document.getElementById('win-' + winId);
+  if (!win) return;
+  const g = snapGeometry(zone);
+
+  // Save pre-snap state
+  if (!windowStates[winId + '_snap']) {
+    windowStates[winId + '_snap'] = {
+      top: win.style.top, left: win.style.left,
+      width: win.style.width, height: win.style.height
+    };
+  }
+
+  win.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+  win.style.top = g.top + 'px';
+  win.style.left = g.left + 'px';
+  win.style.width = g.width + 'px';
+  win.style.height = g.height + 'px';
+  win.dataset.snapped = zone;
+
+  // Close snap menus
+  document.querySelectorAll('.snap-menu').forEach(m => m.classList.remove('show'));
+
+  setTimeout(() => { win.style.transition = ''; }, 350);
+}
+
+function toggleSnapMenu(event, winId) {
+  event.stopPropagation();
+  event.preventDefault();
+  const menu = document.getElementById('sm-' + winId);
+  if (!menu) return;
+  document.querySelectorAll('.snap-menu').forEach(m => { if (m !== menu) m.classList.remove('show'); });
+  menu.classList.toggle('show');
+}
+
+// Close snap menus on outside click
+document.addEventListener('mousedown', (e) => {
+  if (!e.target.closest('.tl-maximize')) {
+    document.querySelectorAll('.snap-menu').forEach(m => m.classList.remove('show'));
+  }
+});
+
+// Double-click titlebar to maximize
+document.querySelectorAll('.window-toolbar').forEach(toolbar => {
+  toolbar.addEventListener('dblclick', (e) => {
+    if (e.target.closest('.traffic-lights')) return;
+    const win = toolbar.closest('.window');
+    if (!win) return;
+    const winId = win.id.replace('win-', '');
+    maximizeWindow(winId);
+  });
+});
+
+// ===== MULTIPLE DESKTOPS (SPACES) =====
+// Each desktop saves/restores FULL window state independently.
+// Same app can be open on multiple desktops. No cross-contamination.
+const allWindowIds = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin'];
+let desktops = [{ id: 0, name: 'Desktop 1' }];
+let currentDesktopId = 0;
+let nextDesktopId = 1;
+
+// Per-desktop state: { desktopId: { windowId: { open, top, left, width, height, zIndex } } }
+const desktopState = {};
+desktopState[0] = {}; // Desktop 1 starts empty
+
+// Save current desktop's window states into desktopState
+function saveDesktopState() {
+  const state = {};
+  allWindowIds.forEach(id => {
+    const win = document.getElementById('win-' + id);
+    if (!win) return;
+    if (openWindows[id]) {
+      state[id] = {
+        open: true,
+        top: win.style.top,
+        left: win.style.left,
+        width: win.style.width,
+        height: win.style.height,
+        zIndex: win.style.zIndex
+      };
+    }
+  });
+  desktopState[currentDesktopId] = state;
+}
+
+// Restore a desktop's saved state: close everything, then open saved windows
+function restoreDesktopState(dId) {
+  const state = desktopState[dId] || {};
+
+  // Close ALL windows instantly (no animation)
+  allWindowIds.forEach(id => {
+    const win = document.getElementById('win-' + id);
+    if (!win) return;
+    win.classList.remove('open','closing','minimizing','hidden-desktop');
+    win.style.display = '';
+    delete openWindows[id];
+  });
+
+  // Restore saved windows
+  Object.keys(state).forEach(id => {
+    const s = state[id];
+    if (!s.open) return;
+    const win = document.getElementById('win-' + id);
+    if (!win) return;
+    win.style.top = s.top;
+    win.style.left = s.left;
+    win.style.width = s.width;
+    win.style.height = s.height;
+    win.style.zIndex = s.zIndex;
+    win.classList.add('open');
+    openWindows[id] = true;
+  });
+
+  syncDockIndicators();
+}
+
+// Sync dock active dots with current open windows
+function syncDockIndicators() {
+  const dockItems = document.querySelectorAll('.dock-item');
+  const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin'];
+  names.forEach((id, idx) => {
+    if (!dockItems[idx]) return;
+    if (openWindows[id]) {
+      dockItems[idx].classList.add('active');
+    } else {
+      dockItems[idx].classList.remove('active');
+    }
+  });
+}
+
+function createDesktop() {
+  saveDesktopState();
+  const d = { id: nextDesktopId++, name: 'Desktop ' + (desktops.length + 1) };
+  desktops.push(d);
+  desktopState[d.id] = {}; // empty desktop
+  currentDesktopId = d.id;
+  restoreDesktopState(d.id);
+  if (inMissionControl) closeMissionControl();
+}
+
+function deleteDesktop(dId) {
+  if (desktops.length <= 1) return;
+  delete desktopState[dId];
+  desktops = desktops.filter(x => x.id !== dId);
+  if (currentDesktopId === dId) {
+    currentDesktopId = desktops[0].id;
+    restoreDesktopState(currentDesktopId);
+  }
+  if (inMissionControl) renderMissionControl();
+}
+
+function switchDesktop(dId, direction) {
+  if (currentDesktopId === dId) return;
+  const oldIdx = desktops.findIndex(x => x.id === currentDesktopId);
+  const newIdx = desktops.findIndex(x => x.id === dId);
+  const dir = direction || (newIdx > oldIdx ? 'left' : 'right');
+
+  // Save current state
+  saveDesktopState();
+
+  // Switch
+  currentDesktopId = dId;
+  restoreDesktopState(dId);
+
+  // Slide animation on restored windows
+  allWindowIds.forEach(id => {
+    if (!openWindows[id]) return;
+    const win = document.getElementById('win-' + id);
+    if (!win) return;
+    win.classList.add(dir === 'left' ? 'desktop-slide-left' : 'desktop-slide-right');
+    setTimeout(() => win.classList.remove('desktop-slide-left', 'desktop-slide-right'), 400);
+  });
+
+  if (inMissionControl) renderMissionControl();
+}
+
+// Helper: get open window list for a desktop (for MC previews)
+function getDesktopOpenWindows(dId) {
+  if (dId === currentDesktopId) {
+    return allWindowIds.filter(id => openWindows[id]);
+  }
+  const state = desktopState[dId] || {};
+  return Object.keys(state).filter(id => state[id] && state[id].open);
+}
+
+// Keyboard: Ctrl+Left/Right for desktops, F3/Ctrl+Up for Mission Control
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'ArrowLeft') {
+    e.preventDefault();
+    const idx = desktops.findIndex(d => d.id === currentDesktopId);
+    if (idx > 0) switchDesktop(desktops[idx - 1].id, 'right');
+  }
+  if (e.ctrlKey && e.key === 'ArrowRight') {
+    e.preventDefault();
+    const idx = desktops.findIndex(d => d.id === currentDesktopId);
+    if (idx < desktops.length - 1) switchDesktop(desktops[idx + 1].id, 'left');
+  }
+  if (e.key === 'F3' || (e.ctrlKey && e.key === 'ArrowUp')) {
+    e.preventDefault();
+    toggleMissionControl();
+  }
+  if (e.key === 'Escape' && inMissionControl) {
+    closeMissionControl();
+  }
+});
+
+// ===== MISSION CONTROL =====
+let inMissionControl = false;
+
+const winIcons = {
+  about: '💻', flutter: '💙', speaking: '🎤', experience: '💼',
+  oss: '🔓', tech: '⚙️', articles: '📝', contact: '✉️',
+  github: '🐙', linkedin: '💼'
+};
+
+function toggleMissionControl() {
+  if (inMissionControl) closeMissionControl();
+  else openMissionControl();
+}
+
+function openMissionControl() {
+  inMissionControl = true;
+  renderMissionControl();
+  const mc = document.getElementById('mission-control');
+  mc.classList.add('active');
+  mc.onclick = (e) => {
+    if (e.target === mc || e.target.id === 'mc-window-grid') closeMissionControl();
+  };
+}
+
+function closeMissionControl(focusWinId) {
+  inMissionControl = false;
+  document.getElementById('mission-control').classList.remove('active');
+  if (focusWinId) {
+    const win = document.getElementById('win-' + focusWinId);
+    if (win) win.style.zIndex = ++activeZ;
+  }
+}
+
+function renderMissionControl() {
+  // Desktop strip inside MC with mini previews
+  const mcStrip = document.getElementById('mc-desktop-strip');
+  mcStrip.innerHTML = '';
+  desktops.forEach(d => {
+    const t = document.createElement('div');
+    t.className = 'mc-thumb' + (d.id === currentDesktopId ? ' active' : '');
+    t.onclick = (e) => { e.stopPropagation(); switchDesktop(d.id); renderMissionControl(); };
+    t.style.overflow = 'hidden';
+    t.style.position = 'relative';
+
+    // Create mini desktop preview
+    const dOpenWins = getDesktopOpenWindows(d.id);
+    if (dOpenWins.length > 0) {
+      const desktopW = window.innerWidth;
+      const desktopH = window.innerHeight - 28 - 80;
+      const thumbW = 140;
+      const thumbH = 70;
+      const dScale = Math.min(thumbW / desktopW, thumbH / desktopH) * 0.85;
+
+      const thumbContent = document.createElement('div');
+      thumbContent.style.cssText = 'position:absolute;top:0;left:0;width:' + desktopW + 'px;height:' + desktopH + 'px;transform:scale(' + dScale + ');transform-origin:top left;pointer-events:none;';
+
+      if (d.id === currentDesktopId) {
+        // Current desktop: clone live windows
+        dOpenWins.forEach(wId => {
+          const win = document.getElementById('win-' + wId);
+          if (!win) return;
+          const clone = win.cloneNode(true);
+          clone.removeAttribute('id');
+          clone.classList.remove('open','closing','minimizing','hidden-desktop');
+          clone.style.display = 'block';
+          clone.style.position = 'absolute';
+          clone.style.left = (parseInt(win.style.left) || 0) + 'px';
+          clone.style.top = ((parseInt(win.style.top) || 28) - 28) + 'px';
+          clone.style.width = win.offsetWidth + 'px';
+          clone.style.height = win.offsetHeight + 'px';
+          clone.style.zIndex = win.style.zIndex || '100';
+          clone.style.pointerEvents = 'none';
+          clone.style.opacity = '1';
+          clone.querySelectorAll('.snap-menu, .window-resize').forEach(el => el.remove());
+          thumbContent.appendChild(clone);
+        });
+      } else {
+        // Other desktop: use saved state to show positioned rectangles with titles
+        const state = desktopState[d.id] || {};
+        dOpenWins.forEach(wId => {
+          const s = state[wId];
+          if (!s) return;
+          const win = document.getElementById('win-' + wId);
+          if (!win) return;
+          const clone = win.cloneNode(true);
+          clone.removeAttribute('id');
+          clone.classList.remove('open','closing','minimizing','hidden-desktop');
+          clone.style.display = 'block';
+          clone.style.position = 'absolute';
+          clone.style.left = s.left;
+          clone.style.top = ((parseInt(s.top) || 28) - 28) + 'px';
+          clone.style.width = s.width;
+          clone.style.height = s.height;
+          clone.style.zIndex = s.zIndex || '100';
+          clone.style.pointerEvents = 'none';
+          clone.style.opacity = '1';
+          clone.querySelectorAll('.snap-menu, .window-resize').forEach(el => el.remove());
+          thumbContent.appendChild(clone);
+        });
+      }
+      t.appendChild(thumbContent);
+    }
+
+    const label = document.createElement('div');
+    label.className = 'mc-thumb-label';
+    label.style.cssText = 'position:absolute;bottom:4px;left:0;right:0;text-align:center;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,0.8);';
+    label.textContent = d.name;
+    t.appendChild(label);
+
+    // Delete button for non-first desktops
+    if (desktops.length > 1) {
+      const del = document.createElement('div');
+      del.style.cssText = 'position:absolute;top:2px;right:4px;font-size:10px;color:var(--text2);cursor:pointer;opacity:0;transition:opacity 0.15s;z-index:3;';
+      del.textContent = '✕';
+      del.onclick = (e) => { e.stopPropagation(); deleteDesktop(d.id); };
+      t.onmouseenter = () => { del.style.opacity = '1'; };
+      t.onmouseleave = () => { del.style.opacity = '0'; };
+      t.appendChild(del);
+    }
+
+    mcStrip.appendChild(t);
+  });
+  const addBtn = document.createElement('div');
+  addBtn.className = 'mc-add-btn';
+  addBtn.textContent = '+';
+  addBtn.onclick = (e) => { e.stopPropagation(); createDesktop(); renderMissionControl(); };
+  mcStrip.appendChild(addBtn);
+
+  // Window grid for current desktop - actual scaled previews
+  const grid = document.getElementById('mc-window-grid');
+  grid.innerHTML = '';
+  const currentD = desktops.find(d => d.id === currentDesktopId);
+  if (!currentD) return;
+
+  const openWins = getDesktopOpenWindows(currentDesktopId);
+  if (openWins.length === 0) {
+    grid.innerHTML = '<div style="color:var(--text2);font-size:14px;">No windows open on this desktop</div>';
+    return;
+  }
+
+  // Max preview height based on available space
+  const availH = window.innerHeight - 28 - 140 - 80; // menubar, strip, dock
+  const maxH = Math.min(availH * 0.7, 400);
+  const maxW = Math.min(500, (window.innerWidth - 80) / Math.min(openWins.length, 3) - 28);
+
+  openWins.forEach(wId => {
+    const win = document.getElementById('win-' + wId);
+    if (!win) return;
+
+    // Dynamic size: scale window to fit within max bounds, keeping aspect ratio
+    const winW = win.offsetWidth || 700;
+    const winH = win.offsetHeight || 500;
+    const scale = Math.min(maxW / winW, maxH / winH, 0.45);
+    const pW = Math.round(winW * scale);
+    const pH = Math.round(winH * scale);
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'mc-win-preview';
+    wrapper.style.width = pW + 'px';
+    wrapper.style.height = pH + 'px';
+    wrapper.style.overflow = 'hidden';
+    wrapper.style.position = 'relative';
+    wrapper.onclick = (e) => { e.stopPropagation(); closeMissionControl(wId); };
+
+    // Clone window content and scale it down
+    const clone = win.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.classList.remove('open', 'closing', 'minimizing', 'hidden-desktop');
+    clone.style.cssText = 'position:absolute;top:0;left:0;display:block;pointer-events:none;opacity:1;';
+    clone.style.width = winW + 'px';
+    clone.style.height = winH + 'px';
+    clone.style.transform = 'scale(' + scale + ')';
+    clone.style.transformOrigin = 'top left';
+    clone.querySelectorAll('.snap-menu, .window-resize').forEach(el => el.remove());
+    wrapper.appendChild(clone);
+
+    // Title label below
+    const title = win.querySelector('.window-title')?.textContent || wId;
+    const label = document.createElement('div');
+    label.style.cssText = 'position:absolute;bottom:0;left:0;right:0;padding:6px 10px;font-size:11px;font-weight:600;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,0.7));text-align:center;z-index:2;border-radius:0 0 12px 12px;';
+    label.textContent = title;
+    wrapper.appendChild(label);
+
+    grid.appendChild(wrapper);
   });
 }
 </script>
