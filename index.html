@@ -1255,15 +1255,15 @@
     <!-- Score HUD -->
     <div class="snake-hud">
       <div class="snake-hud-card snake-hud-score">
-        <div class="snake-hud-label">SCORE</div>
+        <svg class="snake-hud-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
         <div class="snake-hud-value" id="snake-score">0</div>
       </div>
       <div class="snake-hud-card snake-hud-best">
-        <div class="snake-hud-label">BEST</div>
+        <svg class="snake-hud-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
         <div class="snake-hud-value" id="snake-high">0</div>
       </div>
-      <div class="snake-hud-card snake-hud-speed">
-        <div class="snake-hud-label">SPEED</div>
+      <div class="snake-hud-card snake-hud-speed" id="snake-speed-card">
+        <svg class="snake-hud-icon snake-speed-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h8l-1 8 10-12h-8z"/></svg>
         <div class="snake-hud-value" id="snake-speed-label">1x</div>
         <div class="snake-speed-bar"><div class="snake-speed-fill" id="snake-speed-fill"></div></div>
       </div>
@@ -1858,15 +1858,15 @@
       <!-- HUD -->
       <div class="mob-snake-hud">
         <div class="mob-snake-hud-item">
-          <span class="mob-snake-hud-label">SCORE</span>
+          <svg class="mob-snake-hud-icon" style="color:#39d353;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
           <span class="mob-snake-hud-val" id="mob-snake-score" style="color:#39d353;">0</span>
         </div>
-        <div class="mob-snake-hud-item">
-          <span class="mob-snake-hud-label">SPEED</span>
+        <div class="mob-snake-hud-item" id="mob-snake-speed-card">
+          <svg class="mob-snake-hud-icon mob-snake-speed-icon" style="color:#00D4FF;" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h8l-1 8 10-12h-8z"/></svg>
           <span class="mob-snake-hud-val" id="mob-snake-speed" style="color:#00D4FF;">1x</span>
         </div>
         <div class="mob-snake-hud-item">
-          <span class="mob-snake-hud-label">BEST</span>
+          <svg class="mob-snake-hud-icon" style="color:#FFD60A;" viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
           <span class="mob-snake-hud-val" id="mob-snake-best" style="color:#FFD60A;">0</span>
         </div>
       </div>

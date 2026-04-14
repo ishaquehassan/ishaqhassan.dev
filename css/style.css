@@ -369,18 +369,21 @@ body {
 
 /* HUD */
 .snake-hud {
-  display: flex; gap: 8px; width: 100%; padding: 10px 12px 4px; box-sizing: border-box;
+  display: flex; gap: 6px; width: 100%; padding: 8px 10px 4px; box-sizing: border-box;
 }
 .snake-hud-card {
-  flex: 1; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 8px 10px;
-  text-align: center; transition: box-shadow 0.3s, background 0.3s;
+  flex: 1; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 6px 8px 6px;
+  text-align: center; transition: box-shadow 0.3s, background 0.3s, border-color 0.3s;
+  border: 1px solid transparent;
 }
-.snake-hud-label {
-  font-size: 9px; font-weight: 600; letter-spacing: 1.5px; color: rgba(255,255,255,0.3);
-  text-transform: uppercase; margin-bottom: 4px;
+.snake-hud-icon {
+  width: 13px; height: 13px; color: rgba(255,255,255,0.3); display: block; margin: 0 auto 2px;
 }
+.snake-hud-score .snake-hud-icon { color: #39d353; filter: drop-shadow(0 0 3px rgba(57,211,83,0.3)); }
+.snake-hud-best .snake-hud-icon { color: #FFD60A; filter: drop-shadow(0 0 3px rgba(255,214,10,0.2)); }
+.snake-hud-speed .snake-hud-icon { color: #00D4FF; filter: drop-shadow(0 0 3px rgba(0,212,255,0.3)); }
 .snake-hud-value {
-  font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums;
+  font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums;
   transition: transform 0.15s, color 0.3s, text-shadow 0.3s;
 }
 .snake-hud-score .snake-hud-value { color: #39d353; text-shadow: 0 0 8px rgba(57,211,83,0.3); }
@@ -399,14 +402,37 @@ body {
   from { box-shadow: 0 0 16px rgba(255,214,10,0.15); }
   to { box-shadow: 0 0 32px rgba(255,214,10,0.35); }
 }
-.snake-hud-speed .snake-hud-value { color: #00D4FF; font-size: 18px; }
+.snake-hud-speed .snake-hud-value { color: #00D4FF; font-size: 18px; transition: transform 0.15s, color 0.15s, text-shadow 0.15s; }
 .snake-speed-bar {
-  width: 100%; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-top: 6px; overflow: hidden;
+  width: 100%; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-top: 4px; overflow: hidden;
 }
 .snake-speed-fill {
   height: 100%; width: 0%; border-radius: 2px; transition: width 0.3s, background 0.3s;
   background: #39d353;
 }
+/* Speed card power-up active state */
+.snake-hud-speed.bonus-active {
+  border-color: var(--bonus-color, #00D4FF);
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 0 12px var(--bonus-glow, rgba(0,212,255,0.2)), inset 0 0 12px var(--bonus-glow, rgba(0,212,255,0.05));
+}
+.snake-hud-speed.bonus-active .snake-hud-value {
+  color: var(--bonus-color, #00D4FF);
+  text-shadow: 0 0 10px var(--bonus-glow, rgba(0,212,255,0.4));
+  transform: scale(1.1);
+}
+.snake-hud-speed.bonus-active .snake-hud-icon {
+  color: var(--bonus-color, #00D4FF);
+  filter: drop-shadow(0 0 5px var(--bonus-glow, rgba(0,212,255,0.5)));
+}
+@keyframes speedUrgency {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.snake-hud-speed.bonus-urgent {
+  animation: speedUrgency var(--urgency-speed, 0.8s) ease infinite;
+}
+.snake-hud-speed.bonus-urgent .snake-hud-value { transform: scale(1.15); }
 
 /* Combo Bar */
 .snake-combo-bar {
@@ -462,14 +488,27 @@ body {
 .mob-snake-hud-item {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
 }
-.mob-snake-hud-label {
-  font-size: 8px; font-weight: 600; letter-spacing: 1.5px; color: rgba(255,255,255,0.25);
-  text-transform: uppercase;
+.mob-snake-hud-icon {
+  width: 12px; height: 12px; display: block; margin: 0 auto 1px;
 }
 .mob-snake-hud-val {
   font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums;
-  transition: transform 0.15s;
+  transition: transform 0.15s, color 0.15s, text-shadow 0.15s;
 }
+/* Mobile speed power-up */
+.mob-snake-hud-item.bonus-active .mob-snake-hud-val {
+  color: var(--bonus-color, #00D4FF) !important;
+  text-shadow: 0 0 10px var(--bonus-glow, rgba(0,212,255,0.4));
+  transform: scale(1.1);
+}
+.mob-snake-hud-item.bonus-active .mob-snake-hud-icon {
+  color: var(--bonus-color, #00D4FF) !important;
+  filter: drop-shadow(0 0 5px var(--bonus-glow, rgba(0,212,255,0.5)));
+}
+.mob-snake-hud-item.bonus-urgent {
+  animation: speedUrgency var(--urgency-speed, 0.8s) ease infinite;
+}
+.mob-snake-hud-item.bonus-urgent .mob-snake-hud-val { transform: scale(1.15); }
 .mob-snake-canvas-area {
   flex: 1; min-height: 0; position: relative; overflow: hidden; display: flex;
   align-items: center; justify-content: center; touch-action: none;

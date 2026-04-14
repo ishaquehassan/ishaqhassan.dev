@@ -87,6 +87,61 @@ function snakeUpdateHUD() {
   else fill.style.background = '#FF453A';
 }
 
+// Speed HUD power-up glow (called every frame from render loop)
+function snakeUpdateSpeedGlow() {
+  const card = document.getElementById('snake-speed-card');
+  if (!card) return;
+  if (snakeBonus) {
+    const bCol = bonusColors[snakeBonus.colorIdx || 0];
+    const elapsed = performance.now() - snakeBonus.spawnTime;
+    const timeRatio = Math.max(0, 1 - elapsed / BONUS_DURATION);
+    card.classList.add('bonus-active');
+    card.style.setProperty('--bonus-color', bCol.main);
+    card.style.setProperty('--bonus-glow', bCol.glow + '40');
+    // Urgency: last 33% of bonus time, pulse faster as it runs out
+    if (timeRatio < 0.33) {
+      card.classList.add('bonus-urgent');
+      // Speed up pulse: 0.8s at 33% down to 0.15s at 0%
+      const urgencySpeed = (0.15 + (timeRatio / 0.33) * 0.65).toFixed(2) + 's';
+      card.style.setProperty('--urgency-speed', urgencySpeed);
+    } else {
+      card.classList.remove('bonus-urgent');
+    }
+  } else {
+    card.classList.remove('bonus-active', 'bonus-urgent');
+    card.style.removeProperty('--bonus-color');
+    card.style.removeProperty('--bonus-glow');
+    card.style.removeProperty('--urgency-speed');
+  }
+}
+
+// Mobile speed HUD power-up glow
+function mobSnakeUpdateSpeedGlow() {
+  const card = document.getElementById('mob-snake-speed-card');
+  if (!card) return;
+  const S = mobSnake;
+  if (S.bonus) {
+    const bCol = bonusColors[S.bonus.colorIdx || 0];
+    const elapsed = performance.now() - S.bonus.spawnTime;
+    const timeRatio = Math.max(0, 1 - elapsed / BONUS_DURATION);
+    card.classList.add('bonus-active');
+    card.style.setProperty('--bonus-color', bCol.main);
+    card.style.setProperty('--bonus-glow', bCol.glow + '40');
+    if (timeRatio < 0.33) {
+      card.classList.add('bonus-urgent');
+      const urgencySpeed = (0.15 + (timeRatio / 0.33) * 0.65).toFixed(2) + 's';
+      card.style.setProperty('--urgency-speed', urgencySpeed);
+    } else {
+      card.classList.remove('bonus-urgent');
+    }
+  } else {
+    card.classList.remove('bonus-active', 'bonus-urgent');
+    card.style.removeProperty('--bonus-color');
+    card.style.removeProperty('--bonus-glow');
+    card.style.removeProperty('--urgency-speed');
+  }
+}
+
 function snakePulseScore() {
   const card = document.querySelector('.snake-hud-score');
   card.classList.add('pulse');
@@ -394,6 +449,7 @@ function snakeRenderLoop() {
   const elapsed = now - snakeLastTick;
   const t = Math.min(elapsed / snakeGetSpeed(), 1);
   snakeDraw(t);
+  snakeUpdateSpeedGlow();
   snakeAnimFrame = requestAnimationFrame(snakeRenderLoop);
 }
 
@@ -433,6 +489,8 @@ function snakeReset() {
   document.getElementById('snake-speed-label').textContent = '1x';
   document.getElementById('snake-speed-fill').style.width = '0%';
   document.querySelector('.snake-hud-best').classList.remove('new-record');
+  const speedCard = document.getElementById('snake-speed-card');
+  if (speedCard) { speedCard.classList.remove('bonus-active', 'bonus-urgent'); speedCard.style.removeProperty('--bonus-color'); speedCard.style.removeProperty('--bonus-glow'); speedCard.style.removeProperty('--urgency-speed'); }
   const wrap = document.getElementById('snake-canvas-wrap');
   wrap.classList.remove('death-flash', 'shake');
   const overlay = document.getElementById('snake-overlay');
@@ -1083,6 +1141,7 @@ function mobSnakeRenderLoop() {
   const t = Math.min((performance.now() - mobSnake.lastTick) / snakeGetSpeed(), 1);
   const ease = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
   mobSnakeDraw(ease);
+  mobSnakeUpdateSpeedGlow();
   mobSnake.animFrame = requestAnimationFrame(mobSnakeRenderLoop);
 }
 
@@ -1104,6 +1163,8 @@ function mobSnakeReset() {
   mobSnake.food = {x: Math.floor(Math.random()*MOB_SNAKE_COLS), y: Math.floor(Math.random()*MOB_SNAKE_ROWS)};
   document.getElementById('mob-snake-score').textContent = '0';
   document.getElementById('mob-snake-speed').textContent = '1x';
+  const mobSpeedCard = document.getElementById('mob-snake-speed-card');
+  if (mobSpeedCard) { mobSpeedCard.classList.remove('bonus-active', 'bonus-urgent'); mobSpeedCard.style.removeProperty('--bonus-color'); mobSpeedCard.style.removeProperty('--bonus-glow'); mobSpeedCard.style.removeProperty('--urgency-speed'); }
   const ov = document.getElementById('mob-snake-overlay');
   if (ov) { ov.style.display = 'block'; ov.innerHTML = '<div style="font-size:22px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div><div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Tap anywhere to play</div>'; }
   mobSnakeDraw();
