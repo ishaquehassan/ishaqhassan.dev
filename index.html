@@ -2647,7 +2647,7 @@ body {
 <div id="macos-notif" onclick="dismissNotif()">
   <img src="assets/profile-photo.png" alt="">
   <div class="notif-text">
-    <div class="notif-app">Snake Neon</div>
+    <div class="notif-app" id="notif-app">Ishaq OS</div>
     <div class="notif-msg" id="notif-msg">Done playing? Now back to work 😂</div>
   </div>
   <div class="notif-time">now</div>
@@ -2663,7 +2663,7 @@ body {
 <div id="about-dialog-overlay" onclick="if(event.target===this)closeAboutDialog()">
   <div id="about-dialog">
     <img src="assets/profile-photo.png" alt="Ishaq Hassan">
-    <h2>Ishaq Hassan's Portfolio</h2>
+    <h2>Ishaq OS</h2>
     <div class="about-version">Version 2.0 (macOS Edition)</div>
     <div class="about-specs">
       <div class="about-spec-row">
@@ -2720,7 +2720,7 @@ body {
     <div class="menu-parent" data-menu="apple">
       <span class="logo"><svg width="14" height="17" viewBox="0 0 14 17" fill="rgba(255,255,255,0.95)"><path d="M13.2 12.45c-.3.67-.44.97-.82 1.56-.53.82-1.28 1.84-2.2 1.85-.83.01-1.04-.54-2.17-.53-1.12.01-1.36.54-2.18.53-.93-.01-1.63-.93-2.16-1.75C2.15 11.76 1.97 9.15 2.98 7.76c.72-1 1.83-1.58 2.87-1.58.95 0 1.55.54 2.33.54.76 0 1.22-.54 2.31-.54.93 0 1.91.5 2.63 1.37-2.31 1.27-1.94 4.57.38 5.45zM9.65 4.9c.41-.53.72-1.27.61-2.03-.67.04-1.45.47-1.91 1.02-.42.49-.76 1.24-.63 1.96.73.02 1.49-.41 1.93-0.95z"/></svg></span>
       <div class="menu-dropdown" id="menu-apple">
-        <div class="menu-dd-item bold" onclick="openAboutDialog()">About This Portfolio</div>
+        <div class="menu-dd-item bold" onclick="openAboutDialog()">About Ishaq OS</div>
         <div class="menu-dd-sep"></div>
         <div class="menu-dd-item" onclick="openWindow('about')">Terminal<span class="shortcut">⌘T</span></div>
         <div class="menu-dd-item" onclick="openWindow('contact')">Contact<span class="shortcut">⌘K</span></div>
@@ -4233,13 +4233,14 @@ body {
 <script>
 // ===== macOS NOTIFICATION =====
 let notifTimeout = null;
-function showNotif(msg) {
+function showNotif(msg, app) {
   const notif = document.getElementById('macos-notif');
   document.getElementById('notif-msg').textContent = msg;
+  document.getElementById('notif-app').textContent = app || 'Ishaq OS';
   notif.classList.add('show');
   playSfx(sfxClick);
   clearTimeout(notifTimeout);
-  notifTimeout = setTimeout(() => notif.classList.remove('show'), 6000);
+  notifTimeout = setTimeout(() => notif.classList.remove('show'), 5000);
 }
 function dismissNotif() {
   document.getElementById('macos-notif').classList.remove('show');
@@ -4983,7 +4984,7 @@ function snakeTick() {
     // Instant: close snake, open LinkedIn, show notification
     closeWindow('snake');
     openWindow('linkedin');
-    showNotif('Done playing? Now back to work 😂');
+    showNotif('Done playing? Now back to work 😂', 'Snake Neon');
     snakeDraw(1);
     return;
   }
@@ -5314,6 +5315,7 @@ window.addEventListener('load', () => {
           screen.style.display = 'none';
           initResize();
           initMusicPlayer();
+          setTimeout(() => showNotif('Welcome to Ishaq OS ✨'), 500);
           // GitHub contribution graph
           fetch('assets/github-contributions.json')
             .then(r => r.json())
