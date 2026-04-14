@@ -86,7 +86,7 @@ body {
 #wallpaper {
   position: fixed;
   inset: 0;
-  background: #0c0c0c;
+  background: #0c0c0c url('assets/wallpaper.jpg') center/cover no-repeat;
   z-index: 0;
   overflow: hidden;
 }
@@ -95,11 +95,74 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 800px 400px at 30% 20%, rgba(99,102,241,0.06) 0%, transparent 100%),
-              radial-gradient(ellipse 600px 400px at 70% 70%, rgba(139,92,246,0.04) 0%, transparent 100%);
+  background: rgba(0,0,0,0.35);
 }
 
 #wallpaper::after { display: none; }
+
+/* ===== ABOUT DIALOG ===== */
+#about-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99998;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+#about-dialog-overlay.show { display: flex; }
+#about-dialog {
+  background: rgba(36,36,36,0.95);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 32px 40px;
+  text-align: center;
+  min-width: 300px;
+  max-width: 340px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  animation: menuDrop 0.2s ease;
+}
+#about-dialog img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 16px;
+}
+#about-dialog h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 4px;
+}
+#about-dialog .about-version {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 16px;
+}
+#about-dialog .about-info {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.8;
+}
+#about-dialog .about-info strong {
+  color: rgba(255,255,255,0.85);
+}
+#about-dialog .about-close {
+  margin-top: 20px;
+  padding: 6px 32px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  color: rgba(255,255,255,0.8);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+#about-dialog .about-close:hover { background: rgba(255,255,255,0.15); }
 
 #particle-canvas {
   position: fixed;
@@ -2459,6 +2522,22 @@ body {
 <!-- CURSOR SPOTLIGHT (Desktop) -->
 <div id="cursor-spotlight"></div>
 
+<!-- ABOUT DIALOG -->
+<div id="about-dialog-overlay" onclick="if(event.target===this)closeAboutDialog()">
+  <div id="about-dialog">
+    <img src="assets/profile-photo.png" alt="Ishaq Hassan">
+    <h2>Ishaq Hassan's Portfolio</h2>
+    <div class="about-version">Version 2.0 (macOS Edition)</div>
+    <div class="about-info">
+      <strong>Built with</strong> HTML, CSS, JavaScript<br>
+      <strong>Designed as</strong> macOS Desktop Experience<br>
+      <strong>Features</strong> Window Management, Multiple Desktops,<br>Mission Control, Terminal Emulator<br>
+      <strong>Made by</strong> Ishaq Hassan
+    </div>
+    <button class="about-close" onclick="closeAboutDialog()">OK</button>
+  </div>
+</div>
+
 <!-- BOOT SCREEN -->
 <div id="boot-screen">
   <div id="boot-logo" style="font-size:0;"><img src="./assets/profile-photo.png" style="width:80px;height:80px;border-radius:50%;box-shadow:0 0 40px rgba(99,102,241,0.4), 0 0 80px rgba(6,182,212,0.2);"></div>
@@ -2483,7 +2562,7 @@ body {
     <div class="menu-parent" data-menu="apple">
       <span class="logo"><svg width="14" height="17" viewBox="0 0 14 17" fill="rgba(255,255,255,0.95)"><path d="M13.2 12.45c-.3.67-.44.97-.82 1.56-.53.82-1.28 1.84-2.2 1.85-.83.01-1.04-.54-2.17-.53-1.12.01-1.36.54-2.18.53-.93-.01-1.63-.93-2.16-1.75C2.15 11.76 1.97 9.15 2.98 7.76c.72-1 1.83-1.58 2.87-1.58.95 0 1.55.54 2.33.54.76 0 1.22-.54 2.31-.54.93 0 1.91.5 2.63 1.37-2.31 1.27-1.94 4.57.38 5.45zM9.65 4.9c.41-.53.72-1.27.61-2.03-.67.04-1.45.47-1.91 1.02-.42.49-.76 1.24-.63 1.96.73.02 1.49-.41 1.93-0.95z"/></svg></span>
       <div class="menu-dropdown" id="menu-apple">
-        <div class="menu-dd-item bold">About This Portfolio</div>
+        <div class="menu-dd-item bold" onclick="openAboutDialog()">About This Portfolio</div>
         <div class="menu-dd-sep"></div>
         <div class="menu-dd-item" onclick="openWindow('about')">Terminal<span class="shortcut">⌘T</span></div>
         <div class="menu-dd-item" onclick="openWindow('contact')">Contact<span class="shortcut">⌘K</span></div>
@@ -3878,6 +3957,14 @@ body {
 </noscript>
 
 <script>
+// ===== ABOUT DIALOG =====
+function openAboutDialog() {
+  document.getElementById('about-dialog-overlay').classList.add('show');
+}
+function closeAboutDialog() {
+  document.getElementById('about-dialog-overlay').classList.remove('show');
+}
+
 // ===== MENUBAR DROPDOWNS =====
 let activeMenu = null;
 let activeParent = null;
