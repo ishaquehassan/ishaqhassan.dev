@@ -5023,11 +5023,11 @@ function snakeDraw(t) {
   const ease = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
 
   // Dotted grid background
-  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  ctx.fillStyle = 'rgba(255,255,255,0.12)';
   for (let gx = 0; gx < SNAKE_COLS; gx++) {
     for (let gy = 0; gy < SNAKE_ROWS; gy++) {
       ctx.beginPath();
-      ctx.arc(gx * S + S/2, gy * S + S/2, 1, 0, Math.PI*2);
+      ctx.arc(gx * S + S/2, gy * S + S/2, 1.5, 0, Math.PI*2);
       ctx.fill();
     }
   }
@@ -5238,8 +5238,8 @@ function mobSnakeDraw(t) {
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
   // Dotted grid
-  ctx.fillStyle='rgba(255,255,255,0.04)';
-  for(let gx=0;gx<SNAKE_COLS;gx++)for(let gy=0;gy<SNAKE_ROWS;gy++){ctx.beginPath();ctx.arc(gx*C+C/2,gy*C+C/2,1,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle='rgba(255,255,255,0.12)';
+  for(let gx=0;gx<SNAKE_COLS;gx++)for(let gy=0;gy<SNAKE_ROWS;gy++){ctx.beginPath();ctx.arc(gx*C+C/2,gy*C+C/2,1.5,0,Math.PI*2);ctx.fill();}
 
   const pulse = 0.85+Math.sin(Date.now()/200)*0.15;
   ctx.shadowColor='#FF5F57';ctx.shadowBlur=14*pulse;ctx.fillStyle='#FF5F57';
