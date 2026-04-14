@@ -4227,6 +4227,15 @@ body {
       <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" style="text-decoration:none;color:inherit;">
         <div class="mobile-exp-item"><div class="mobile-exp-company">📁 assets_indexer</div><div class="mobile-exp-role">C++ | ⭐ 9 🍴 2</div></div>
       </a>
+      <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" style="text-decoration:none;color:inherit;">
+        <div class="mobile-exp-item"><div class="mobile-exp-company">🪪 nadra_verisys_flutter</div><div class="mobile-exp-role">Dart | ⭐ 3</div></div>
+      </a>
+      <a href="https://github.com/ishaquehassan/claude-remote-terminal" target="_blank" style="text-decoration:none;color:inherit;">
+        <div class="mobile-exp-item"><div class="mobile-exp-company">📱 claude-remote-terminal</div><div class="mobile-exp-role">Dart | ⭐ 1</div></div>
+      </a>
+      <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" style="text-decoration:none;color:inherit;">
+        <div class="mobile-exp-item"><div class="mobile-exp-company">🎯 goal-agent</div><div class="mobile-exp-role">JS | Claude Code Plugin</div></div>
+      </a>
       <a href="https://github.com/ishaquehassan" target="_blank" style="display:block;text-align:center;padding:14px;background:linear-gradient(135deg,#24292e,#40464d);border-radius:16px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:4px;">Open GitHub Profile →</a>
     </div>
   </div>
@@ -4891,16 +4900,18 @@ function initMusicPlayer() {
     document.getElementById('music-vol-fill').style.width = (pct * 100) + '%';
   });
 
-  // Try autoplay after user interaction
-  document.addEventListener('click', function autoplayOnce() {
-    if (!musicPlaying) {
-      musicAudio.play().then(() => {
-        musicPlaying = true;
-        document.getElementById('music-play').textContent = '⏸';
-      }).catch(() => {});
-    }
-    document.removeEventListener('click', autoplayOnce);
-  }, { once: false });
+  // Try autoplay after user interaction (desktop only)
+  if (window.innerWidth > 768) {
+    document.addEventListener('click', function autoplayOnce() {
+      if (!musicPlaying) {
+        musicAudio.play().then(() => {
+          musicPlaying = true;
+          document.getElementById('music-play').textContent = '⏸';
+        }).catch(() => {});
+      }
+      document.removeEventListener('click', autoplayOnce);
+    }, { once: false });
+  }
 }
 
 function toggleMusic() {
@@ -5027,6 +5038,13 @@ function mobMusicCtrl(action) {
 }
 
 // Mobile weather
+// Auto-check if location already permitted
+if (navigator.permissions) {
+  navigator.permissions.query({name:'geolocation'}).then(p => {
+    if (p.state === 'granted') { requestMobWeather(); requestWeatherLocation(); }
+  });
+}
+
 function requestMobWeather() {
   if (!navigator.geolocation) { fetchMobWeather(24.86, 67.01, 'Karachi, PK'); return; }
   navigator.geolocation.getCurrentPosition(
