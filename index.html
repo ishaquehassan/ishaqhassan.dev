@@ -5690,7 +5690,7 @@ window.addEventListener('load', () => {
           screen.style.display = 'none';
           initResize();
           initMusicPlayer();
-          setTimeout(() => showNotif('Welcome to Ishaq OS ✨'), 500);
+          if (window.innerWidth > 768) setTimeout(() => showNotif('Welcome to Ishaq OS ✨'), 500);
           // GitHub contribution graph
           fetch('assets/github-contributions.json')
             .then(r => r.json())
