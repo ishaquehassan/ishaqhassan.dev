@@ -3649,7 +3649,7 @@ body {
       <!-- GitHub (full width) -->
       <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:12px;">
         <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.3);">GitHub Activity</div>
-        <div id="mob-gh-graph" style="margin-top:6px;display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:3px;overflow:hidden;"></div>
+        <div id="mob-gh-graph" style="margin-top:6px;display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:2px;overflow:hidden;height:56px;"></div>
         <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:6px;" id="mob-gh-total">Loading...</div>
       </div>
       <!-- Weather + Music (half/half) -->
@@ -4198,30 +4198,36 @@ body {
       <div style="width:40px;"></div>
     </div>
     <div class="mobile-expanded-content">
-      <div style="text-align:center;padding:12px 0;">
+      <div class="mobile-exp-item" style="text-align:center;">
         <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:0 auto 10px;border:2px solid rgba(255,255,255,0.1);"><img src="./assets/github-avatar.png" style="width:100%;height:100%;object-fit:cover;"></div>
-        <div style="font-size:18px;font-weight:700;">ishaquehassan</div>
-        <div style="color:rgba(255,255,255,0.4);font-size:11px;margin-top:4px;">Flutter Framework Contributor | Engineering Manager</div>
-        <div style="display:flex;justify-content:center;gap:12px;margin-top:8px;font-size:11px;color:rgba(255,255,255,0.4);">
+        <div class="mobile-exp-company" style="margin-bottom:2px;">ishaquehassan</div>
+        <div class="mobile-exp-desc" style="margin-bottom:8px;">Flutter Framework Contributor | Engineering Manager</div>
+        <div style="display:flex;justify-content:center;gap:12px;font-size:12px;color:var(--text2);">
           <span>👥 213</span><span>📦 170</span><span>📍 Karachi</span>
         </div>
-        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:8px;">
-          <span style="padding:2px 7px;border-radius:10px;background:rgba(99,102,241,0.15);font-size:9px;color:#a5b4fc;">🏆 Pull Shark x4</span>
-          <span style="padding:2px 7px;border-radius:10px;background:rgba(48,209,88,0.15);font-size:9px;color:#30D158;">🤝 Pair Extraordinaire</span>
-          <span style="padding:2px 7px;border-radius:10px;background:rgba(6,182,212,0.15);font-size:9px;color:#67e8f9;">🧊 Arctic Vault</span>
-          <span style="padding:2px 7px;border-radius:10px;background:rgba(255,159,10,0.15);font-size:9px;color:#FF9F0A;">⭐ Starstruck</span>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:10px;">
+          <span style="padding:3px 8px;border-radius:10px;background:rgba(99,102,241,0.15);font-size:10px;color:#a5b4fc;">🏆 Pull Shark x4</span>
+          <span style="padding:3px 8px;border-radius:10px;background:rgba(48,209,88,0.15);font-size:10px;color:var(--green);">🤝 Pair Extraordinaire</span>
+          <span style="padding:3px 8px;border-radius:10px;background:rgba(6,182,212,0.15);font-size:10px;color:#67e8f9;">🧊 Arctic Vault</span>
+          <span style="padding:3px 8px;border-radius:10px;background:rgba(255,159,10,0.15);font-size:10px;color:var(--orange);">⭐ Starstruck</span>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0;">
-        <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:18px;font-weight:700;">9.8K+</div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px;">Contributions</div></div>
-        <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:18px;font-weight:700;">64</div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px;">Stars</div></div>
-        <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:18px;font-weight:700;">135+</div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px;">Forks</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+        <div class="mobile-exp-item" style="text-align:center;margin-bottom:0;"><div style="font-size:18px;font-weight:700;">9.8K+</div><div class="mobile-exp-desc" style="font-size:10px;">Contributions</div></div>
+        <div class="mobile-exp-item" style="text-align:center;margin-bottom:0;"><div style="font-size:18px;font-weight:700;">64</div><div class="mobile-exp-desc" style="font-size:10px;">Stars</div></div>
+        <div class="mobile-exp-item" style="text-align:center;margin-bottom:0;"><div style="font-size:18px;font-weight:700;">135+</div><div class="mobile-exp-desc" style="font-size:10px;">Forks</div></div>
       </div>
-      <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.4);margin:12px 0 8px;">📌 Pinned Repos</div>
-      <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" style="display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:8px;"><div style="font-weight:600;font-size:13px;">📸 document_scanner_flutter</div><div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">Dart | ⭐ 64 🍴 135</div></a>
-      <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" style="display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:8px;"><div style="font-weight:600;font-size:13px;">⏰ alarm_background_trigger</div><div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">Kotlin | ⭐ 13 🍴 3</div></a>
-      <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" style="display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:8px;"><div style="font-weight:600;font-size:13px;">📁 assets_indexer</div><div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">C++ | ⭐ 9 🍴 2</div></a>
-      <a href="https://github.com/ishaquehassan" target="_blank" style="display:block;text-align:center;padding:12px;background:linear-gradient(135deg,#24292e,#40464d);border-radius:12px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:8px;">Open GitHub Profile →</a>
+      <div class="mobile-exp-company" style="font-size:13px;margin-bottom:8px;">📌 Pinned Repos</div>
+      <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" style="text-decoration:none;color:inherit;">
+        <div class="mobile-exp-item"><div class="mobile-exp-company">📸 document_scanner_flutter</div><div class="mobile-exp-role">Dart | ⭐ 64 🍴 135</div></div>
+      </a>
+      <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" style="text-decoration:none;color:inherit;">
+        <div class="mobile-exp-item"><div class="mobile-exp-company">⏰ alarm_background_trigger</div><div class="mobile-exp-role">Kotlin | ⭐ 13 🍴 3</div></div>
+      </a>
+      <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" style="text-decoration:none;color:inherit;">
+        <div class="mobile-exp-item"><div class="mobile-exp-company">📁 assets_indexer</div><div class="mobile-exp-role">C++ | ⭐ 9 🍴 2</div></div>
+      </a>
+      <a href="https://github.com/ishaquehassan" target="_blank" style="display:block;text-align:center;padding:14px;background:linear-gradient(135deg,#24292e,#40464d);border-radius:16px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:4px;">Open GitHub Profile →</a>
     </div>
   </div>
 
@@ -4233,24 +4239,24 @@ body {
       <div style="width:40px;"></div>
     </div>
     <div class="mobile-expanded-content">
-      <div style="text-align:center;padding:8px 0 12px;">
-        <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;margin:0 auto 8px;border:2px solid rgba(255,255,255,0.1);"><img src="./assets/profile-photo.png" style="width:100%;height:100%;object-fit:cover;"></div>
-        <div style="font-size:17px;font-weight:700;color:#fff;">Ishaq Hassan</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px;">Flutter Framework Contributor | Engineering Manager @ DigitalHire</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:4px;">Karachi, Pakistan 🇵🇰 • 3,051 followers • 500+ connections</div>
+      <div class="mobile-exp-item" style="text-align:center;">
+        <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:0 auto 10px;border:2px solid rgba(255,255,255,0.1);"><img src="./assets/profile-photo.png" style="width:100%;height:100%;object-fit:cover;"></div>
+        <div class="mobile-exp-company" style="margin-bottom:2px;">Ishaq Hassan</div>
+        <div class="mobile-exp-desc" style="margin-bottom:6px;">Flutter Framework Contributor | Engineering Manager @ DigitalHire</div>
+        <div class="mobile-exp-date">Karachi, Pakistan 🇵🇰 • 3,051 followers • 500+ connections</div>
       </div>
-      <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.35);margin:8px 0 6px;">Experience</div>
-      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 12px;margin-bottom:5px;"><div style="font-weight:600;font-size:12px;">🏢 DigitalHire</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">Engineering Manager • May 2024 - Present</div></div>
-      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 12px;margin-bottom:5px;"><div style="font-weight:600;font-size:12px;">🏢 DigitalHire</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">Technical Lead • Oct 2023 - May 2024</div></div>
-      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 12px;margin-bottom:5px;"><div style="font-weight:600;font-size:12px;">🏢 DigitalHire</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">Staff Engineer • Feb 2023 - Oct 2023</div></div>
-      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 12px;margin-bottom:5px;"><div style="font-weight:600;font-size:12px;">🎓 Tech Idara</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">Senior Instructor • Dec 2021 - Sep 2024</div></div>
-      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 12px;margin-bottom:5px;"><div style="font-weight:600;font-size:12px;">✈️ AeroGlobe</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">Technical Lead • Jun 2022 - May 2024</div></div>
-      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 12px;margin-bottom:5px;"><div style="font-weight:600;font-size:12px;">🎫 Sastaticket.pk</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">Software Dev Consultant • Mar 2023 - Mar 2024</div></div>
-      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 12px;margin-bottom:5px;"><div style="font-weight:600;font-size:12px;">📱 Pocket Systems</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">Co-Founder • Jan 2020 - Dec 2022</div></div>
-      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 12px;margin-bottom:5px;"><div style="font-weight:600;font-size:12px;">🌍 Optimyse (Estonia)</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">Lead Software Engineer • Feb 2019 - Dec 2021</div></div>
-      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 12px;margin-bottom:5px;"><div style="font-weight:600;font-size:12px;">🚀 Cyber Avanza</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">Co-Founder • Sep 2016 - Dec 2018</div></div>
-      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 12px;margin-bottom:5px;"><div style="font-weight:600;font-size:12px;">💻 VividVisionz</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">Mobile & Web Developer • Feb 2013 - Feb 2019</div></div>
-      <a href="https://linkedin.com/in/ishaquehassan" target="_blank" style="display:block;text-align:center;padding:12px;background:#0077B5;border-radius:12px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:10px;">Open LinkedIn Profile →</a>
+      <div class="mobile-exp-company" style="font-size:13px;margin-bottom:8px;">Experience</div>
+      <div class="mobile-exp-item"><div class="mobile-exp-company">🏢 DigitalHire</div><div class="mobile-exp-role">Engineering Manager</div><div class="mobile-exp-date">May 2024 - Present</div></div>
+      <div class="mobile-exp-item"><div class="mobile-exp-company">🏢 DigitalHire</div><div class="mobile-exp-role">Technical Lead</div><div class="mobile-exp-date">Oct 2023 - May 2024</div></div>
+      <div class="mobile-exp-item"><div class="mobile-exp-company">🏢 DigitalHire</div><div class="mobile-exp-role">Staff Engineer</div><div class="mobile-exp-date">Feb 2023 - Oct 2023</div></div>
+      <div class="mobile-exp-item"><div class="mobile-exp-company">🎓 Tech Idara</div><div class="mobile-exp-role">Senior Instructor</div><div class="mobile-exp-date">Dec 2021 - Sep 2024 · Flutter course on official docs</div></div>
+      <div class="mobile-exp-item"><div class="mobile-exp-company">✈️ AeroGlobe</div><div class="mobile-exp-role">Technical Lead</div><div class="mobile-exp-date">Jun 2022 - May 2024</div></div>
+      <div class="mobile-exp-item"><div class="mobile-exp-company">🎫 Sastaticket.pk</div><div class="mobile-exp-role">Engineering Consultant</div><div class="mobile-exp-date">Jan 2022 - Mar 2024</div></div>
+      <div class="mobile-exp-item"><div class="mobile-exp-company">📱 Pocket Systems</div><div class="mobile-exp-role">Co-Founder</div><div class="mobile-exp-date">Jan 2020 - Dec 2022</div></div>
+      <div class="mobile-exp-item"><div class="mobile-exp-company">🌍 Optimyse (Estonia)</div><div class="mobile-exp-role">Lead Software Engineer</div><div class="mobile-exp-date">Feb 2019 - Dec 2021</div></div>
+      <div class="mobile-exp-item"><div class="mobile-exp-company">🚀 Cyber Avanza</div><div class="mobile-exp-role">Co-Founder</div><div class="mobile-exp-date">Sep 2016 - Dec 2018</div></div>
+      <div class="mobile-exp-item"><div class="mobile-exp-company">💻 VividVisionz</div><div class="mobile-exp-role">Mobile & Web Developer</div><div class="mobile-exp-date">Feb 2013 - Feb 2019</div></div>
+      <a href="https://linkedin.com/in/ishaquehassan" target="_blank" style="display:block;text-align:center;padding:14px;background:#0077B5;border-radius:16px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:4px;">Open LinkedIn Profile →</a>
     </div>
   </div>
 
@@ -4262,15 +4268,21 @@ body {
       <div style="width:40px;"></div>
     </div>
     <div class="mobile-expanded-content">
-      <div style="text-align:center;padding:8px 0 12px;">
+      <div class="mobile-exp-item" style="text-align:center;">
         <div style="font-size:28px;">📝</div>
-        <div style="font-size:15px;font-weight:700;margin-top:6px;">@ishaqhassan</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:3px;">Technical articles on Flutter, Mobile Dev, and Engineering</div>
+        <div class="mobile-exp-company" style="margin-top:8px;">@ishaqhassan</div>
+        <div class="mobile-exp-desc">Technical articles on Flutter, Mobile Dev, and Engineering</div>
       </div>
-      <a href="https://medium.com/@ishaqhassan/multi-module-clean-architecture-in-flutter-24dcb82d7a15" target="_blank" style="display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.05);border-radius:10px;padding:12px;margin-bottom:6px;"><div style="font-weight:600;font-size:12px;">Multi Module Clean Architecture in Flutter</div><div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px;">Clean architecture guide for scalable Flutter apps</div></a>
-      <a href="https://medium.com/@ishaqhassan/flutter-clean-architecture-with-riverpod-bfb1d7ce0408" target="_blank" style="display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.05);border-radius:10px;padding:12px;margin-bottom:6px;"><div style="font-weight:600;font-size:12px;">Flutter Clean Architecture with Riverpod</div><div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px;">State management with clean separation</div></a>
-      <a href="https://medium.com/@ishaqhassan/flutter-responsive-ui-the-right-way-327be3ed5da5" target="_blank" style="display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.05);border-radius:10px;padding:12px;margin-bottom:6px;"><div style="font-weight:600;font-size:12px;">Flutter Responsive UI the Right Way</div><div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px;">Adaptive layouts for all screen sizes</div></a>
-      <a href="https://medium.com/@ishaqhassan" target="_blank" style="display:block;text-align:center;padding:10px;background:linear-gradient(135deg,#1a8917,#0d7a0d);border-radius:10px;color:#fff;text-decoration:none;font-weight:600;font-size:12px;margin-top:8px;">Read All Articles on Medium →</a>
+      <a href="https://medium.com/@ishaqhassan/multi-module-clean-architecture-in-flutter-24dcb82d7a15" target="_blank" style="text-decoration:none;color:inherit;">
+        <div class="mobile-exp-item"><div class="mobile-exp-company">Multi Module Clean Architecture in Flutter</div><div class="mobile-exp-desc">Clean architecture guide for scalable Flutter apps</div></div>
+      </a>
+      <a href="https://medium.com/@ishaqhassan/flutter-clean-architecture-with-riverpod-bfb1d7ce0408" target="_blank" style="text-decoration:none;color:inherit;">
+        <div class="mobile-exp-item"><div class="mobile-exp-company">Flutter Clean Architecture with Riverpod</div><div class="mobile-exp-desc">State management with clean separation</div></div>
+      </a>
+      <a href="https://medium.com/@ishaqhassan/flutter-responsive-ui-the-right-way-327be3ed5da5" target="_blank" style="text-decoration:none;color:inherit;">
+        <div class="mobile-exp-item"><div class="mobile-exp-company">Flutter Responsive UI the Right Way</div><div class="mobile-exp-desc">Adaptive layouts for all screen sizes</div></div>
+      </a>
+      <a href="https://medium.com/@ishaqhassan" target="_blank" style="display:block;text-align:center;padding:14px;background:linear-gradient(135deg,#1a8917,#0d7a0d);border-radius:16px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:4px;">Read All Articles on Medium →</a>
     </div>
   </div>
 
@@ -5641,13 +5653,13 @@ window.addEventListener('load', () => {
               const mobGraph = document.getElementById('mob-gh-graph');
               const mobTotal = document.getElementById('mob-gh-total');
               if (mobGraph) {
-                const mobWeeks = data.weeks.slice(-16);
+                const mobWeeks = data.weeks.slice(-40);
                 mobWeeks.forEach(week => {
                   week.contributionDays.forEach(day => {
                     const cell = document.createElement('div');
                     cell.className = 'gh-cell';
-                    cell.style.aspectRatio = '1';
                     cell.style.borderRadius = '2px';
+                    cell.style.minWidth = '0';
                     const c = day.contributionCount;
                     if (c > 0) cell.dataset.level = c >= 30 ? 4 : c >= 15 ? 3 : c >= 5 ? 2 : 1;
                     mobGraph.appendChild(cell);
