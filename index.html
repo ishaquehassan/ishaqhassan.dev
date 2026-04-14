@@ -3649,7 +3649,7 @@ body {
       <!-- GitHub (full width) -->
       <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:12px;">
         <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.3);">GitHub Activity</div>
-        <div id="mob-gh-graph" style="margin-top:6px;display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:2px;overflow:hidden;"></div>
+        <div id="mob-gh-graph" style="margin-top:6px;display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:3px;overflow:hidden;"></div>
         <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:6px;" id="mob-gh-total">Loading...</div>
       </div>
       <!-- Weather + Music (half/half) -->
@@ -4190,20 +4190,98 @@ body {
     </div>
   </div>
 
-  <!-- BOTTOM SOCIAL BAR -->
+  <!-- GITHUB MOBILE -->
+  <div id="mobile-github-expanded" class="mobile-expanded" style="display:none;">
+    <div class="mobile-expanded-header">
+      <button class="mobile-back-btn" onclick="closeMobileSection('github')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+      <div class="mobile-expanded-title">GitHub</div>
+      <div style="width:40px;"></div>
+    </div>
+    <div class="mobile-expanded-content">
+      <div style="text-align:center;padding:12px 0;">
+        <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:0 auto 10px;border:2px solid rgba(255,255,255,0.1);"><img src="./assets/github-avatar.png" style="width:100%;height:100%;object-fit:cover;"></div>
+        <div style="font-size:18px;font-weight:700;">ishaquehassan</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:11px;margin-top:4px;">Flutter Framework Contributor | Engineering Manager</div>
+        <div style="display:flex;justify-content:center;gap:12px;margin-top:8px;font-size:11px;color:rgba(255,255,255,0.4);">
+          <span>👥 213</span><span>📦 170</span><span>📍 Karachi</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:8px;">
+          <span style="padding:2px 7px;border-radius:10px;background:rgba(99,102,241,0.15);font-size:9px;color:#a5b4fc;">🏆 Pull Shark x4</span>
+          <span style="padding:2px 7px;border-radius:10px;background:rgba(48,209,88,0.15);font-size:9px;color:#30D158;">🤝 Pair Extraordinaire</span>
+          <span style="padding:2px 7px;border-radius:10px;background:rgba(6,182,212,0.15);font-size:9px;color:#67e8f9;">🧊 Arctic Vault</span>
+          <span style="padding:2px 7px;border-radius:10px;background:rgba(255,159,10,0.15);font-size:9px;color:#FF9F0A;">⭐ Starstruck</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0;">
+        <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:18px;font-weight:700;">9.8K+</div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px;">Contributions</div></div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:18px;font-weight:700;">64</div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px;">Stars</div></div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:18px;font-weight:700;">135+</div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px;">Forks</div></div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.4);margin:12px 0 8px;">📌 Pinned Repos</div>
+      <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" style="display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:8px;"><div style="font-weight:600;font-size:13px;">📸 document_scanner_flutter</div><div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">Dart | ⭐ 64 🍴 135</div></a>
+      <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" style="display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:8px;"><div style="font-weight:600;font-size:13px;">⏰ alarm_background_trigger</div><div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">Kotlin | ⭐ 13 🍴 3</div></a>
+      <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" style="display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:8px;"><div style="font-weight:600;font-size:13px;">📁 assets_indexer</div><div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">C++ | ⭐ 9 🍴 2</div></a>
+      <a href="https://github.com/ishaquehassan" target="_blank" style="display:block;text-align:center;padding:12px;background:linear-gradient(135deg,#24292e,#40464d);border-radius:12px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:8px;">Open GitHub Profile →</a>
+    </div>
+  </div>
+
+  <!-- LINKEDIN MOBILE -->
+  <div id="mobile-linkedin-expanded" class="mobile-expanded" style="display:none;">
+    <div class="mobile-expanded-header">
+      <button class="mobile-back-btn" onclick="closeMobileSection('linkedin')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+      <div class="mobile-expanded-title">LinkedIn</div>
+      <div style="width:40px;"></div>
+    </div>
+    <div class="mobile-expanded-content" style="padding:0;">
+      <div style="height:100px;background:url('./assets/linkedin-banner.png') center 30%/cover no-repeat;opacity:0.7;"></div>
+      <div style="text-align:center;padding:0 16px 16px;">
+        <div style="width:56px;height:56px;border-radius:50%;overflow:hidden;margin:-28px auto 8px;border:3px solid #0c0c0c;"><img src="./assets/profile-photo.png" style="width:100%;height:100%;object-fit:cover;"></div>
+        <div style="font-size:18px;font-weight:700;color:#0077B5;">Ishaq Hassan</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">Flutter Framework Contributor | Engineering Manager @ DigitalHire</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:6px;">Karachi, Pakistan 🇵🇰 • 3,051 followers • 500+ connections</div>
+      </div>
+      <div style="padding:0 16px 16px;">
+        <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.4);margin-bottom:8px;">Recent Roles</div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:6px;"><div style="font-weight:600;font-size:13px;">🏢 DigitalHire</div><div style="font-size:11px;color:rgba(255,255,255,0.4);">Engineering Manager • May 2024 - Present</div></div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:6px;"><div style="font-weight:600;font-size:13px;">🎓 Tech Idara</div><div style="font-size:11px;color:rgba(255,255,255,0.4);">Senior Instructor • Dec 2021 - Sep 2024</div></div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:6px;"><div style="font-weight:600;font-size:13px;">✈️ AeroGlobe</div><div style="font-size:11px;color:rgba(255,255,255,0.4);">Technical Lead • Jun 2022 - May 2024</div></div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:6px;"><div style="font-weight:600;font-size:13px;">📱 Pocket Systems</div><div style="font-size:11px;color:rgba(255,255,255,0.4);">Co-Founder • Jan 2020 - Dec 2022</div></div>
+        <a href="https://linkedin.com/in/ishaquehassan" target="_blank" style="display:block;text-align:center;padding:12px;background:#0077B5;border-radius:12px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:8px;">Open LinkedIn Profile →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEDIUM MOBILE -->
+  <div id="mobile-medium-expanded" class="mobile-expanded" style="display:none;">
+    <div class="mobile-expanded-header">
+      <button class="mobile-back-btn" onclick="closeMobileSection('medium')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+      <div class="mobile-expanded-title">Medium</div>
+      <div style="width:40px;"></div>
+    </div>
+    <div class="mobile-expanded-content">
+      <div style="text-align:center;padding:12px 0;">
+        <div style="font-size:32px;">📝</div>
+        <div style="font-size:18px;font-weight:700;margin-top:8px;">@ishaqhassan</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px;">Technical articles on Flutter, Mobile Dev, and Engineering</div>
+      </div>
+      <a href="https://medium.com/@ishaqhassan/multi-module-clean-architecture-in-flutter-24dcb82d7a15" target="_blank" style="display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.05);border-radius:12px;padding:14px;margin-bottom:8px;"><div style="font-weight:600;font-size:13px;">Multi Module Clean Architecture in Flutter</div><div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">Clean architecture guide for scalable Flutter apps</div></a>
+      <a href="https://medium.com/@ishaqhassan/flutter-clean-architecture-with-riverpod-bfb1d7ce0408" target="_blank" style="display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.05);border-radius:12px;padding:14px;margin-bottom:8px;"><div style="font-weight:600;font-size:13px;">Flutter Clean Architecture with Riverpod</div><div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">State management with clean separation</div></a>
+      <a href="https://medium.com/@ishaqhassan/flutter-responsive-ui-the-right-way-327be3ed5da5" target="_blank" style="display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.05);border-radius:12px;padding:14px;margin-bottom:8px;"><div style="font-weight:600;font-size:13px;">Flutter Responsive UI the Right Way</div><div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">Adaptive layouts for all screen sizes</div></a>
+      <a href="https://medium.com/@ishaqhassan" target="_blank" style="display:block;text-align:center;padding:12px;background:linear-gradient(135deg,#1a8917,#0d7a0d);border-radius:12px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:8px;">Read All Articles on Medium →</a>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV BAR -->
   <div class="mobile-social-bottom">
-    <a href="https://github.com/ishaquehassan" target="_blank" class="mobile-social-icon" style="background:linear-gradient(135deg,#24292e,#40464d);">
+    <div class="mobile-social-icon" style="background:linear-gradient(135deg,#24292e,#40464d);cursor:pointer;" onclick="expandMobileSection('github')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-    </a>
-    <a href="https://linkedin.com/in/ishaquehassan" target="_blank" class="mobile-social-icon" style="background:linear-gradient(135deg,#0077B5,#00a0dc);">
+    </div>
+    <div class="mobile-social-icon" style="background:linear-gradient(135deg,#0077B5,#00a0dc);cursor:pointer;" onclick="expandMobileSection('linkedin')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-    </a>
-    <a href="https://medium.com/@ishaqhassan" target="_blank" class="mobile-social-icon" style="background:linear-gradient(135deg,#1a8917,#0d7a0d);">
+    </div>
+    <div class="mobile-social-icon" style="background:linear-gradient(135deg,#1a8917,#0d7a0d);cursor:pointer;" onclick="expandMobileSection('medium')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
-    </a>
-    <a href="https://stackoverflow.com/users/2094696/ishaq-hassan" target="_blank" class="mobile-social-icon" style="background:linear-gradient(135deg,#F48024,#e7700d);">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M15.725 0l-1.72 1.277 6.39 8.588 1.716-1.277L15.725 0zm-3.94 3.418l-1.369 1.644 8.225 6.85 1.369-1.644-8.225-6.85zm-3.15 4.465l-.905 1.94 9.702 4.517.904-1.94-9.701-4.517zm-1.85 4.86l-.44 2.093 10.473 2.201.44-2.092-10.473-2.203zM1.89 15.47V24h19.19v-8.53h-2.133v6.397H4.021v-6.396H1.89zm4.265 2.133v2.13h10.66v-2.13H6.154z"/></svg>
-    </a>
+    </div>
     <a href="mailto:hello@ishaqhassan.dev" class="mobile-social-icon" style="background:linear-gradient(135deg,#30D158,#34d399);">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="#fff" stroke-width="1.5"/></svg>
     </a>
@@ -5565,8 +5643,8 @@ window.addEventListener('load', () => {
                   week.contributionDays.forEach(day => {
                     const cell = document.createElement('div');
                     cell.className = 'gh-cell';
-                    cell.style.width = '6px';
-                    cell.style.height = '6px';
+                    cell.style.aspectRatio = '1';
+                    cell.style.borderRadius = '2px';
                     const c = day.contributionCount;
                     if (c > 0) cell.dataset.level = c >= 30 ? 4 : c >= 15 ? 3 : c >= 5 ? 2 : 1;
                     mobGraph.appendChild(cell);
@@ -5679,7 +5757,10 @@ function expandMobileSection(section) {
     'tech': 'mobile-tech-expanded',
     'articles': 'mobile-articles-expanded',
     'connect': 'mobile-connect-expanded',
-    'snake': 'mobile-snake-expanded'
+    'snake': 'mobile-snake-expanded',
+    'github': 'mobile-github-expanded',
+    'linkedin': 'mobile-linkedin-expanded',
+    'medium': 'mobile-medium-expanded'
   };
   const elem = document.getElementById(map[section]);
   if (elem) {
@@ -5697,7 +5778,10 @@ function closeMobileSection(section) {
     'tech': 'mobile-tech-expanded',
     'articles': 'mobile-articles-expanded',
     'connect': 'mobile-connect-expanded',
-    'snake': 'mobile-snake-expanded'
+    'snake': 'mobile-snake-expanded',
+    'github': 'mobile-github-expanded',
+    'linkedin': 'mobile-linkedin-expanded',
+    'medium': 'mobile-medium-expanded'
   };
   const elem = document.getElementById(map[section]);
   if (elem) {
