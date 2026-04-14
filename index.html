@@ -5476,13 +5476,19 @@ function initMobSnake() {
   canvas.style.height = pxH + 'px';
   mobSnakeReset();
 
-  // Swipe controls
-  let tx = 0, ty = 0;
-  canvas.ontouchstart = (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; };
-  canvas.ontouchend = (e) => {
-    const dx = e.changedTouches[0].clientX - tx;
-    const dy = e.changedTouches[0].clientY - ty;
-    if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+  // Tap direction: tap relative to snake head
+  canvas.ontouchstart = (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const tapX = (touch.clientX - rect.left) / rect.width * canvas.width;
+    const tapY = (touch.clientY - rect.top) / rect.height * canvas.height;
+    const head = mobSnake.body[0];
+    const C = mobSnake.cellSize;
+    const hx = head.x * C + C/2;
+    const hy = head.y * C + C/2;
+    const dx = tapX - hx;
+    const dy = tapY - hy;
     if (Math.abs(dx) > Math.abs(dy)) mobSnakeDir(dx > 0 ? 1 : -1, 0);
     else mobSnakeDir(0, dy > 0 ? 1 : -1);
   };
