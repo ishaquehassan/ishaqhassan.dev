@@ -4242,10 +4242,8 @@ function showNotif(msg) {
   notifTimeout = setTimeout(() => notif.classList.remove('show'), 6000);
 }
 function dismissNotif() {
-  const notif = document.getElementById('macos-notif');
-  notif.classList.remove('show');
+  document.getElementById('macos-notif').classList.remove('show');
   clearTimeout(notifTimeout);
-  openWindow('linkedin');
 }
 
 // ===== ABOUT DIALOG =====
@@ -4968,10 +4966,10 @@ function snakeTick() {
       document.getElementById('snake-high').textContent = snakeHighScore;
     }
     localStorage.setItem('snakeLastScore', snakeScore);
-    const overlay = document.getElementById('snake-overlay');
-    if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:28px;font-weight:700;color:#FF5F57;text-shadow:0 0 20px rgba(255,95,87,0.5);">GAME OVER</div><div style="font-size:22px;color:#fff;margin-top:4px;">Score: ' + snakeScore + '</div><div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any key to restart</div>'; }
-    // Show macOS notification
-    setTimeout(() => showNotif('Done playing? Now back to work 😂'), 800);
+    // Instant: close snake, open LinkedIn, show notification
+    closeWindow('snake');
+    openWindow('linkedin');
+    showNotif('Done playing? Now back to work 😂');
     snakeDraw(1);
     return;
   }
