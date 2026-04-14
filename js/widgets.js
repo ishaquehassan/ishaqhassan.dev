@@ -117,9 +117,10 @@ function fetchWeatherFallback() {
 }
 
 function fetchWeather(lat, lon, fallbackCity) {
-  document.getElementById('weather-permit').style.display = 'none';
+  const wp = document.getElementById('weather-permit');
+  if (wp) wp.style.display = 'none';
   const wd = document.getElementById('weather-data');
-  wd.classList.add('show');
+  if (wd) wd.classList.add('show');
 
   fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true&hourly=relative_humidity_2m')
     .then(r => r.json())
@@ -181,12 +182,24 @@ function mobMusicCtrl(action) {
 }
 
 // Mobile weather
-// Auto-check if location already permitted
-if (navigator.permissions) {
-  navigator.permissions.query({name:'geolocation'}).then(p => {
-    if (p.state === 'granted') { requestMobWeather(); requestWeatherLocation(); }
-  });
-}
+// Auto-check if location already permitted (with fallback for browsers that don't support permissions API)
+(function autoWeather() {
+  if (navigator.permissions && navigator.permissions.query) {
+    navigator.permissions.query({name:'geolocation'}).then(p => {
+      if (p.state === 'granted') {
+        if (document.getElementById('mob-weather-permit')) requestMobWeather();
+        if (document.getElementById('weather-city')) requestWeatherLocation();
+      }
+      // Also listen for permission change
+      p.onchange = () => {
+        if (p.state === 'granted') {
+          if (document.getElementById('mob-weather-permit')) requestMobWeather();
+          if (document.getElementById('weather-city')) requestWeatherLocation();
+        }
+      };
+    }).catch(() => {});
+  }
+})();
 
 function requestMobWeather() {
   if (!navigator.geolocation) { fetchMobWeather(24.86, 67.01, 'Karachi, PK'); return; }
@@ -196,8 +209,10 @@ function requestMobWeather() {
   );
 }
 function fetchMobWeather(lat, lon, fallbackCity) {
-  document.getElementById('mob-weather-permit').style.display = 'none';
-  document.getElementById('mob-weather-data').style.display = 'block';
+  const permit = document.getElementById('mob-weather-permit');
+  const dataEl = document.getElementById('mob-weather-data');
+  if (permit) permit.style.display = 'none';
+  if (dataEl) dataEl.style.display = 'block';
   const mobWD = document.getElementById('mob-weather-details');
   if (mobWD) mobWD.style.display = 'block';
   fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current_weather=true&hourly=relative_humidity_2m')

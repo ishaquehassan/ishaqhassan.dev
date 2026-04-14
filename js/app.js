@@ -309,6 +309,11 @@ function openWindow(id) {
 
   // Special: terminal typing
   if (id === 'about') startTerminal();
+  if (id === 'snake') {
+    if (typeof snakeLocked !== 'undefined') snakeLocked = false;
+    if (typeof snakeReset === 'function') snakeReset();
+    if (typeof snakeResizeCanvas === 'function') setTimeout(snakeResizeCanvas, 50);
+  }
 
   win.addEventListener('mousedown', () => { win.style.zIndex = ++activeZ; });
 

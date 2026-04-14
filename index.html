@@ -1249,30 +1249,32 @@
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('snake')">−</div>
       <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'snake')">+<div class="snap-menu" id="sm-snake"><div class="snap-menu-item" onclick="snapWindow('snake','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('snake','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('snake','top-full',event)">⬆ Full Screen</div></div></div>
     </div>
-    <div class="window-title">Snake Neon — <span id="snake-speed-label" style="color:rgba(255,255,255,0.3);font-weight:400;">Speed: 1x</span></div>
+    <div class="window-title">Snake Neon</div>
   </div>
-  <div class="window-body" style="padding:0;display:flex;flex-direction:column;align-items:center;">
-    <div style="display:flex;justify-content:space-between;align-items:center;width:100%;padding:8px 16px;box-sizing:border-box;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <div style="font-size:24px;font-weight:800;color:#39d353;text-shadow:0 0 10px rgba(57,211,83,0.3);transition:transform 0.15s;min-width:40px;" id="snake-score">0</div>
-        <div id="snake-streak" style="font-size:10px;color:#FFD60A;font-weight:700;opacity:0;transition:opacity 0.2s;"></div>
+  <div class="window-body" style="padding:0;display:flex;flex-direction:column;align-items:center;position:relative;">
+    <!-- Score HUD -->
+    <div class="snake-hud">
+      <div class="snake-hud-card snake-hud-score">
+        <div class="snake-hud-label">SCORE</div>
+        <div class="snake-hud-value" id="snake-score">0</div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div style="font-size:10px;color:rgba(255,255,255,0.25);">🏆 <span id="snake-high" style="color:#FFD60A;font-weight:700;">0</span></div>
+      <div class="snake-hud-card snake-hud-best">
+        <div class="snake-hud-label">BEST</div>
+        <div class="snake-hud-value" id="snake-high">0</div>
+      </div>
+      <div class="snake-hud-card snake-hud-speed">
+        <div class="snake-hud-label">SPEED</div>
+        <div class="snake-hud-value" id="snake-speed-label">1x</div>
+        <div class="snake-speed-bar"><div class="snake-speed-fill" id="snake-speed-fill"></div></div>
       </div>
     </div>
-    <canvas id="snake-canvas" style="width:100%;background:#0a0a0a;display:block;"></canvas>
-    <div id="snake-overlay" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;z-index:2;">
-      <div style="font-size:28px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div>
-      <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any arrow key or tap to start</div>
-    </div>
-    <div style="display:flex;gap:8px;padding:8px 0 4px;">
-      <button class="snake-dir-btn" onclick="snakeSetDir(0,-1)">↑</button>
-    </div>
-    <div style="display:flex;gap:8px;padding-bottom:10px;">
-      <button class="snake-dir-btn" onclick="snakeSetDir(-1,0)">←</button>
-      <button class="snake-dir-btn" onclick="snakeSetDir(0,1)">↓</button>
-      <button class="snake-dir-btn" onclick="snakeSetDir(1,0)">→</button>
+    <!-- Canvas -->
+    <div class="snake-canvas-wrap" id="snake-canvas-wrap">
+      <canvas id="snake-canvas"></canvas>
+      <div id="snake-overlay">
+        <div style="font-size:28px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any arrow key to start</div>
+      </div>
     </div>
   </div>
 </div>
@@ -1838,21 +1840,52 @@
   <!-- SNAKE GAME MOBILE -->
   <div id="mobile-snake-expanded" class="mobile-expanded" style="display: none;">
     <div class="mobile-expanded-header">
-      <button class="mobile-back-btn" onclick="closeMobileSection('snake');snakeReset()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+      <button class="mobile-back-btn" onclick="closeMobileSection('snake');mobSnakeReset()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
       <div class="mobile-expanded-title">Snake Neon</div>
       <div style="width:40px;text-align:right;font-size:11px;color:#FFD60A;" id="mob-snake-high">0</div>
     </div>
-    <div class="mobile-expanded-content" style="padding:0;text-align:center;display:flex;flex-direction:column;height:calc(100vh - 56px);overflow:hidden;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;">
-        <span style="font-size:22px;font-weight:800;color:#39d353;text-shadow:0 0 10px rgba(57,211,83,0.3);transition:transform 0.15s;" id="mob-snake-score">0</span>
-        <span style="font-size:11px;color:rgba(255,255,255,0.3);" id="mob-snake-speed">Speed: 1x</span>
-      </div>
-      <div style="flex:1;position:relative;overflow:hidden;">
-        <canvas id="mob-snake-canvas" style="width:100%;height:100%;background:#0a0a0a;display:block;touch-action:none;"></canvas>
-        <div id="mob-snake-overlay" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;z-index:2;">
-          <div style="font-size:24px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Swipe or tap arrows to play</div>
+    <div class="mob-snake-body">
+      <!-- HUD -->
+      <div class="mob-snake-hud">
+        <div class="mob-snake-hud-item">
+          <span class="mob-snake-hud-label">SCORE</span>
+          <span class="mob-snake-hud-val" id="mob-snake-score" style="color:#39d353;">0</span>
         </div>
+        <div class="mob-snake-hud-item">
+          <span class="mob-snake-hud-label">SPEED</span>
+          <span class="mob-snake-hud-val" id="mob-snake-speed" style="color:#00D4FF;">1x</span>
+        </div>
+        <div class="mob-snake-hud-item">
+          <span class="mob-snake-hud-label">BEST</span>
+          <span class="mob-snake-hud-val" id="mob-snake-best" style="color:#FFD60A;">0</span>
+        </div>
+      </div>
+      <!-- Canvas -->
+      <div class="mob-snake-canvas-area">
+        <canvas id="mob-snake-canvas"></canvas>
+        <div id="mob-snake-overlay">
+          <div style="font-size:24px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Tap anywhere to play</div>
+        </div>
+      </div>
+      <!-- Controls: Restart + Joystick + Pause -->
+      <div class="mob-snake-controls">
+        <button class="mob-snake-action-btn" id="mob-snake-restart" ontouchstart="event.preventDefault();if(mobSnake.locked)return;mobSnakeReset();">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        </button>
+        <div class="joystick-base" id="joystick-base">
+          <div class="joystick-ring" id="joystick-ring"></div>
+          <div class="joystick-arrows">
+            <span class="joystick-arrow ja-up">▲</span>
+            <span class="joystick-arrow ja-right">▶</span>
+            <span class="joystick-arrow ja-down">▼</span>
+            <span class="joystick-arrow ja-left">◀</span>
+          </div>
+          <div class="joystick-knob" id="joystick-knob"></div>
+        </div>
+        <button class="mob-snake-action-btn" id="mob-snake-pause" ontouchstart="event.preventDefault();mobSnakeTogglePause();">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" id="mob-pause-icon"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+        </button>
       </div>
     </div>
   </div>
