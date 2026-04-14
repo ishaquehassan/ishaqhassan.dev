@@ -5204,11 +5204,13 @@ function mobSnakeTick() {
   S.lastTick = performance.now();
   const head = { x: S.body[0].x + S.dir.x, y: S.body[0].y + S.dir.y };
   if (head.x < 0 || head.x >= SNAKE_COLS || head.y < 0 || head.y >= SNAKE_ROWS || S.body.some(s => s.x === head.x && s.y === head.y)) {
-    clearTimeout(S.interval); S.over = true; S.running = false;
+    clearTimeout(S.interval); cancelAnimationFrame(S.animFrame); S.over = true; S.running = false;
     if (S.score > snakeHighScore) { snakeHighScore = S.score; localStorage.setItem('snakeHigh', snakeHighScore); document.getElementById('mob-snake-high').textContent = snakeHighScore; document.getElementById('snake-high').textContent = snakeHighScore; }
     localStorage.setItem('snakeLastScore', S.score);
-    const ov = document.getElementById('mob-snake-overlay');
-    if (ov) { ov.style.display = 'block'; ov.innerHTML = '<div style="font-size:22px;font-weight:700;color:#FF5F57;text-shadow:0 0 20px rgba(255,95,87,0.5);">GAME OVER</div><div style="font-size:20px;color:#fff;margin-top:4px;">Score: '+S.score+'</div><div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Swipe to restart</div>'; }
+    closeMobileSection('snake');
+    mobSnakeReset();
+    showNotif('Done playing? Now back to work 😂', 'Snake Neon');
+    window.open('https://linkedin.com/in/ishaquehassan', '_blank');
     return;
   }
   S.body.unshift(head);
