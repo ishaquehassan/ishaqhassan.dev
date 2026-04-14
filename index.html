@@ -3638,7 +3638,7 @@ body {
 
     <!-- WIDGETS -->
     <div style="padding:0 16px 8px;display:flex;flex-direction:column;gap:10px;">
-      <!-- Status -->
+      <!-- Status (full width) -->
       <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px;">
         <span class="status-dot"></span>
         <div>
@@ -3646,47 +3646,46 @@ body {
           <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">hello@ishaqhassan.dev</div>
         </div>
       </div>
-      <!-- GitHub + Music row -->
+      <!-- GitHub (full width) -->
+      <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:12px;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.3);">GitHub Activity</div>
+        <div id="mob-gh-graph" style="margin-top:6px;display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:2px;overflow:hidden;"></div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:6px;" id="mob-gh-total">Loading...</div>
+      </div>
+      <!-- Weather + Music (half/half) -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:12px;">
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.3);">GitHub</div>
-          <div id="mob-gh-graph" style="margin-top:6px;display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:1px;overflow:hidden;"></div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;" id="mob-gh-total">Loading...</div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:12px;" id="mob-w-weather">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.3);">Weather</div>
+          <div id="mob-weather-permit" style="margin-top:8px;">
+            <button class="weather-permit-btn" onclick="requestMobWeather()" style="font-size:10px;padding:5px 10px;">📍 Allow</button>
+          </div>
+          <div id="mob-weather-data" style="display:none;">
+            <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
+              <span style="font-size:22px;" id="mob-weather-icon">☀️</span>
+              <div>
+                <span style="font-size:22px;font-weight:700;color:#fff;" id="mob-weather-temp">--</span><span style="font-size:12px;color:rgba(255,255,255,0.4);">°C</span>
+              </div>
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px;" id="mob-weather-city">Detecting...</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:3px;">
+              <span id="mob-weather-humidity">💧 --%</span><br>
+              <span id="mob-weather-wind">💨 -- km/h</span>
+            </div>
+          </div>
         </div>
         <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:12px;" id="mob-w-music">
           <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.3);">Now Playing</div>
           <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
             <div style="font-size:20px;">🎵</div>
             <div>
-              <div style="font-size:12px;color:#fff;font-weight:500;" id="mob-music-track">Hanging Lanterns</div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.3);" id="mob-music-artist">Kalaido</div>
+              <div style="font-size:11px;color:#fff;font-weight:500;" id="mob-music-track">Hanging Lanterns</div>
+              <div style="font-size:9px;color:rgba(255,255,255,0.3);" id="mob-music-artist">Kalaido</div>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
-            <button style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:12px;cursor:pointer;" onclick="if(typeof toggleMusic==='function')toggleMusic()">⏮</button>
-            <button style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer;" id="mob-music-play" onclick="if(typeof toggleMusic==='function')toggleMusic()">▶</button>
-            <button style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:12px;cursor:pointer;" onclick="if(typeof nextTrack==='function')nextTrack()">⏭</button>
-          </div>
-        </div>
-      </div>
-      <!-- Weather -->
-      <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:14px 16px;" id="mob-w-weather">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.3);">Weather</div>
-        <div id="mob-weather-permit" style="display:flex;align-items:center;gap:8px;margin-top:8px;">
-          <span style="font-size:20px;">📍</span>
-          <button class="weather-permit-btn" onclick="requestMobWeather()">🔒 Allow Location Access</button>
-        </div>
-        <div id="mob-weather-data" style="display:none;">
-          <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
-            <span style="font-size:28px;" id="mob-weather-icon">☀️</span>
-            <div>
-              <span style="font-size:26px;font-weight:700;color:#fff;" id="mob-weather-temp">--</span><span style="font-size:14px;color:rgba(255,255,255,0.4);">°C</span>
-            </div>
-          </div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px;" id="mob-weather-city">Detecting...</div>
-          <div style="display:flex;gap:12px;margin-top:4px;font-size:10px;color:rgba(255,255,255,0.3);">
-            <span id="mob-weather-humidity">💧 --%</span>
-            <span id="mob-weather-wind">💨 -- km/h</span>
+            <button style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:12px;cursor:pointer;" onclick="mobMusicCtrl('prev')">⏮</button>
+            <button style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer;" id="mob-music-play" onclick="mobMusicCtrl('toggle')">▶</button>
+            <button style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:12px;cursor:pointer;" onclick="mobMusicCtrl('next')">⏭</button>
           </div>
         </div>
       </div>
@@ -4915,6 +4914,23 @@ function getWeatherIcon(code) {
   if (code <= 86) return '🌨️';
   if (code >= 95) return '⛈️';
   return '🌤️';
+}
+
+// Mobile music controls
+function mobMusicCtrl(action) {
+  if (!musicAudio) initMusicPlayer();
+  if (action === 'toggle') toggleMusic();
+  else if (action === 'next') nextTrack();
+  else if (action === 'prev') prevTrack();
+  // Sync mobile UI
+  setTimeout(() => {
+    const btn = document.getElementById('mob-music-play');
+    if (btn) btn.textContent = musicPlaying ? '⏸' : '▶';
+    const t = document.getElementById('mob-music-track');
+    const a = document.getElementById('mob-music-artist');
+    if (t && musicTracks[musicIndex]) t.textContent = musicTracks[musicIndex].name;
+    if (a && musicTracks[musicIndex]) a.textContent = musicTracks[musicIndex].artist;
+  }, 100);
 }
 
 // Mobile weather
