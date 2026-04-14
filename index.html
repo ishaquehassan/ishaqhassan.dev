@@ -1499,6 +1499,7 @@ body {
   #menubar, #desktop, #dock-container, .window, #noise-overlay { display: none !important; }
   #mobile-app { display: block !important; }
   #particle-canvas { display: none; }
+  #macos-notif { width: auto; left: 8px; right: 8px; top: 8px; border-radius: 12px; }
 }
 
 #mobile-app {
@@ -5130,14 +5131,15 @@ function initMobSnake() {
   const container = canvas.parentElement;
   const w = container.clientWidth;
   const h = container.clientHeight;
-  // Fill container, calculate cell size from both dimensions
-  mobSnake.cellSize = Math.floor(Math.min(w / SNAKE_COLS, h / SNAKE_ROWS));
+  // Use screen width as cell size basis for bigger game
+  mobSnake.cellSize = Math.floor(w / SNAKE_COLS);
   const pxW = mobSnake.cellSize * SNAKE_COLS;
   const pxH = mobSnake.cellSize * SNAKE_ROWS;
   canvas.width = pxW;
   canvas.height = pxH;
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
+  // Keep aspect ratio, no stretch
+  canvas.style.width = pxW + 'px';
+  canvas.style.height = pxH + 'px';
   mobSnakeReset();
 
   // Swipe controls
