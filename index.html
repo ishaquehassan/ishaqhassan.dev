@@ -530,6 +530,24 @@ body {
   border-radius: 0;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.exit-fullscreen {
+  display: none;
+  position: absolute;
+  top: 44px;
+  right: 12px;
+  padding: 4px 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  color: rgba(255,255,255,0.6);
+  font-size: 11px;
+  cursor: pointer;
+  z-index: 5;
+  transition: all 0.15s;
+}
+.exit-fullscreen:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.window.maximized .exit-fullscreen,
+.window[data-snapped] .exit-fullscreen { display: block; }
 
 @keyframes windowOpen {
   0% { opacity: 0; transform: scale(0.8) translateY(20px); }
@@ -4310,6 +4328,27 @@ function initResize() {
       win.classList.add('resizing');
     });
     win.appendChild(handle);
+
+    const exitBtn = document.createElement('button');
+    exitBtn.className = 'exit-fullscreen';
+    exitBtn.textContent = 'Exit Full Screen';
+    exitBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const winId = win.id.replace('win-', '');
+      if (win.classList.contains('maximized')) {
+        maximizeWindow(winId);
+      } else if (win.dataset.snapped) {
+        const saved = windowStates[winId + '_snap'];
+        if (saved) {
+          win.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+          Object.assign(win.style, saved);
+          setTimeout(() => win.style.transition = '', 300);
+          delete windowStates[winId + '_snap'];
+        }
+        delete win.dataset.snapped;
+      }
+    });
+    win.appendChild(exitBtn);
   });
 }
 
