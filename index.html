@@ -3707,15 +3707,6 @@ body {
           </div>
         </div>
       </div>
-      <div class="mobile-section-card" onclick="expandMobileSection('snake')">
-        <div class="mobile-section-header">
-          <span class="mobile-section-icon">🐍</span>
-          <div>
-            <div class="mobile-section-title">Snake Neon</div>
-            <div class="mobile-section-subtitle">Play a quick game</div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -4122,20 +4113,22 @@ body {
       <div class="mobile-expanded-title">Snake Neon</div>
       <div style="width:40px;text-align:right;font-size:11px;color:#FFD60A;" id="mob-snake-high">0</div>
     </div>
-    <div class="mobile-expanded-content" style="padding:8px;text-align:center;">
-      <div style="display:flex;justify-content:space-between;padding:0 8px 8px;">
-        <span style="font-size:20px;font-weight:800;color:#39d353;text-shadow:0 0 10px rgba(57,211,83,0.3);transition:transform 0.15s;" id="mob-snake-score">0</span>
+    <div class="mobile-expanded-content" style="padding:0;text-align:center;display:flex;flex-direction:column;height:calc(100vh - 56px);overflow:hidden;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;">
+        <span style="font-size:22px;font-weight:800;color:#39d353;text-shadow:0 0 10px rgba(57,211,83,0.3);transition:transform 0.15s;" id="mob-snake-score">0</span>
         <span style="font-size:11px;color:rgba(255,255,255,0.3);" id="mob-snake-speed">Speed: 1x</span>
       </div>
-      <canvas id="mob-snake-canvas" style="width:100%;background:#0a0a0a;border-radius:12px;border:1px solid rgba(255,255,255,0.06);touch-action:none;"></canvas>
-      <div id="mob-snake-overlay" style="margin-top:-120px;position:relative;text-align:center;pointer-events:none;z-index:2;margin-bottom:80px;">
-        <div style="font-size:22px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Swipe or tap arrows to play</div>
+      <div style="flex:1;position:relative;overflow:hidden;">
+        <canvas id="mob-snake-canvas" style="width:100%;height:100%;background:#0a0a0a;display:block;touch-action:none;"></canvas>
+        <div id="mob-snake-overlay" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;z-index:2;">
+          <div style="font-size:24px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Swipe or tap arrows to play</div>
+        </div>
       </div>
-      <div style="display:flex;justify-content:center;gap:6px;margin-top:8px;">
+      <div style="display:flex;justify-content:center;gap:6px;padding:6px 0 2px;">
         <button class="snake-dir-btn" onclick="mobSnakeDir(0,-1)">↑</button>
       </div>
-      <div style="display:flex;justify-content:center;gap:6px;margin-top:4px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:center;gap:6px;padding:0 0 10px;">
         <button class="snake-dir-btn" onclick="mobSnakeDir(-1,0)">←</button>
         <button class="snake-dir-btn" onclick="mobSnakeDir(0,1)">↓</button>
         <button class="snake-dir-btn" onclick="mobSnakeDir(1,0)">→</button>
@@ -4160,6 +4153,9 @@ body {
     <a href="mailto:hello@ishaqhassan.dev" class="mobile-social-icon" style="background:linear-gradient(135deg,#30D158,#34d399);">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="#fff" stroke-width="1.5"/></svg>
     </a>
+    <div class="mobile-social-icon" style="background:linear-gradient(135deg,#0a2e1a,#0d3320);cursor:pointer;" onclick="expandMobileSection('snake')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12h2v2H4v-2zm4 0h2v2H8v-2zm4-4h2v2h-2V8zm0 4h2v2h-2v-2zm4-4h2v2h-2V8zm0 8h2v2h-2v-2zm-4 0h2v2h-2v-2zm-4 0h2v2H8v-2z" fill="#39d353"/><circle cx="18" cy="8" r="1.5" fill="#39d353"/></svg>
+    </div>
   </div>
 </div>
 
@@ -5026,6 +5022,16 @@ function snakeDraw(t) {
   // Smooth easing
   const ease = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
 
+  // Dotted grid background
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  for (let gx = 0; gx < SNAKE_COLS; gx++) {
+    for (let gy = 0; gy < SNAKE_ROWS; gy++) {
+      ctx.beginPath();
+      ctx.arc(gx * S + S/2, gy * S + S/2, 1, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+
   // Food pulsing glow
   const pulse = 0.85 + Math.sin(Date.now() / 200) * 0.15;
   ctx.shadowColor = '#FF5F57';
@@ -5121,13 +5127,17 @@ let mobSnake = { body: [{x:12,y:12}], prevBody: [{x:12,y:12}], dir: {x:1,y:0}, n
 function initMobSnake() {
   const canvas = document.getElementById('mob-snake-canvas');
   if (!canvas) return;
-  const w = canvas.parentElement.clientWidth - 16;
-  mobSnake.cellSize = Math.floor(w / SNAKE_COLS);
-  const px = mobSnake.cellSize * SNAKE_COLS;
-  canvas.width = px;
-  canvas.height = mobSnake.cellSize * SNAKE_ROWS;
-  canvas.style.width = px + 'px';
-  canvas.style.height = canvas.height + 'px';
+  const container = canvas.parentElement;
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  // Fill container, calculate cell size from both dimensions
+  mobSnake.cellSize = Math.floor(Math.min(w / SNAKE_COLS, h / SNAKE_ROWS));
+  const pxW = mobSnake.cellSize * SNAKE_COLS;
+  const pxH = mobSnake.cellSize * SNAKE_ROWS;
+  canvas.width = pxW;
+  canvas.height = pxH;
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
   mobSnakeReset();
 
   // Swipe controls
@@ -5226,6 +5236,10 @@ function mobSnakeDraw(t) {
   const MS = mobSnake;
   const C = MS.cellSize;
   ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // Dotted grid
+  ctx.fillStyle='rgba(255,255,255,0.04)';
+  for(let gx=0;gx<SNAKE_COLS;gx++)for(let gy=0;gy<SNAKE_ROWS;gy++){ctx.beginPath();ctx.arc(gx*C+C/2,gy*C+C/2,1,0,Math.PI*2);ctx.fill();}
 
   const pulse = 0.85+Math.sin(Date.now()/200)*0.15;
   ctx.shadowColor='#FF5F57';ctx.shadowBlur=14*pulse;ctx.fillStyle='#FF5F57';
