@@ -86,7 +86,7 @@ body {
 #wallpaper {
   position: fixed;
   inset: 0;
-  background: #0c0c0c url('assets/wallpaper-4k.jpg') center/cover no-repeat;
+  background: #0c0c0c;
   z-index: 0;
   overflow: hidden;
 }
@@ -95,7 +95,8 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.55);
+  background: radial-gradient(ellipse 800px 400px at 30% 20%, rgba(99,102,241,0.06) 0%, transparent 100%),
+              radial-gradient(ellipse 600px 400px at 70% 70%, rgba(139,92,246,0.04) 0%, transparent 100%);
 }
 
 #wallpaper::after { display: none; }
