@@ -3535,29 +3535,29 @@ body {
   <div class="window-footer"><a href="https://linkedin.com/in/ishaquehassan" target="_blank" style="display:inline-block;background:#0077B5;color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;">Open LinkedIn Profile →</a></div>
 </div>
 
-<div class="window" id="win-snake" style="width:480px;height:560px;top:50px;left:calc(50% - 240px);">
+<div class="window" id="win-snake" style="width:640px;height:700px;top:40px;left:calc(50% - 320px);">
   <div class="window-toolbar" onmousedown="startDrag(event,'win-snake')">
     <div class="traffic-lights">
       <div class="traffic-light tl-close" onclick="closeWindow('snake')">✕</div>
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('snake')">−</div>
       <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'snake')">+<div class="snap-menu" id="sm-snake"><div class="snap-menu-item" onclick="snapWindow('snake','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('snake','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('snake','top-full',event)">⬆ Full Screen</div></div></div>
     </div>
-    <div class="window-title">Snake Neon</div>
+    <div class="window-title">Snake Neon — <span id="snake-speed-label" style="color:rgba(255,255,255,0.3);font-weight:400;">Speed: 1x</span></div>
   </div>
-  <div class="window-body" style="padding:16px;display:flex;flex-direction:column;align-items:center;gap:12px;">
-    <div style="display:flex;justify-content:space-between;width:100%;max-width:400px;">
+  <div class="window-body" style="padding:0;display:flex;flex-direction:column;align-items:center;">
+    <div style="display:flex;justify-content:space-between;width:100%;padding:8px 16px;box-sizing:border-box;">
       <div style="font-size:12px;color:rgba(255,255,255,0.5);">Score: <span id="snake-score" style="color:#39d353;font-weight:700;">0</span></div>
       <div style="font-size:12px;color:rgba(255,255,255,0.5);">High: <span id="snake-high" style="color:#FFD60A;font-weight:700;">0</span></div>
     </div>
-    <canvas id="snake-canvas" width="400" height="400" style="border-radius:12px;background:#0a0a0a;border:1px solid rgba(255,255,255,0.06);"></canvas>
-    <div id="snake-overlay" style="position:relative;margin-top:-200px;text-align:center;pointer-events:none;z-index:2;">
-      <div style="font-size:24px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any arrow key or tap to start</div>
+    <canvas id="snake-canvas" style="width:100%;background:#0a0a0a;display:block;"></canvas>
+    <div id="snake-overlay" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;z-index:2;">
+      <div style="font-size:28px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any arrow key or tap to start</div>
     </div>
-    <div style="display:flex;gap:8px;margin-top:-180px;">
+    <div style="display:flex;gap:8px;padding:8px 0 4px;">
       <button class="snake-dir-btn" onclick="snakeSetDir(0,-1)">↑</button>
     </div>
-    <div style="display:flex;gap:8px;">
+    <div style="display:flex;gap:8px;padding-bottom:10px;">
       <button class="snake-dir-btn" onclick="snakeSetDir(-1,0)">←</button>
       <button class="snake-dir-btn" onclick="snakeSetDir(0,1)">↓</button>
       <button class="snake-dir-btn" onclick="snakeSetDir(1,0)">→</button>
@@ -3666,6 +3666,15 @@ body {
           <div>
             <div class="mobile-section-title">Connect</div>
             <div class="mobile-section-subtitle">All social links</div>
+          </div>
+        </div>
+      </div>
+      <div class="mobile-section-card" onclick="expandMobileSection('snake')">
+        <div class="mobile-section-header">
+          <span class="mobile-section-icon">🐍</span>
+          <div>
+            <div class="mobile-section-title">Snake Neon</div>
+            <div class="mobile-section-subtitle">Play a quick game</div>
           </div>
         </div>
       </div>
@@ -4065,6 +4074,34 @@ body {
         <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="#fff" stroke-width="1.5"/></svg></div>
         <div><div style="font-weight:600;font-size:15px;color:var(--text);">Website</div><div style="font-size:12px;color:var(--text2);margin-top:2px;">ishaqhassan.dev</div></div>
       </a>
+    </div>
+  </div>
+
+  <!-- SNAKE GAME MOBILE -->
+  <div id="mobile-snake-expanded" class="mobile-expanded" style="display: none;">
+    <div class="mobile-expanded-header">
+      <button class="mobile-back-btn" onclick="closeMobileSection('snake');snakeReset()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+      <div class="mobile-expanded-title">Snake Neon</div>
+      <div style="width:40px;text-align:right;font-size:11px;color:#FFD60A;" id="mob-snake-high">0</div>
+    </div>
+    <div class="mobile-expanded-content" style="padding:8px;text-align:center;">
+      <div style="display:flex;justify-content:space-between;padding:0 8px 8px;">
+        <span style="font-size:12px;color:rgba(255,255,255,0.5);">Score: <span id="mob-snake-score" style="color:#39d353;font-weight:700;">0</span></span>
+        <span style="font-size:11px;color:rgba(255,255,255,0.3);" id="mob-snake-speed">Speed: 1x</span>
+      </div>
+      <canvas id="mob-snake-canvas" style="width:100%;background:#0a0a0a;border-radius:12px;border:1px solid rgba(255,255,255,0.06);touch-action:none;"></canvas>
+      <div id="mob-snake-overlay" style="margin-top:-120px;position:relative;text-align:center;pointer-events:none;z-index:2;margin-bottom:80px;">
+        <div style="font-size:22px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Swipe or tap arrows to play</div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:6px;margin-top:8px;">
+        <button class="snake-dir-btn" onclick="mobSnakeDir(0,-1)">↑</button>
+      </div>
+      <div style="display:flex;justify-content:center;gap:6px;margin-top:4px;margin-bottom:8px;">
+        <button class="snake-dir-btn" onclick="mobSnakeDir(-1,0)">←</button>
+        <button class="snake-dir-btn" onclick="mobSnakeDir(0,1)">↓</button>
+        <button class="snake-dir-btn" onclick="mobSnakeDir(1,0)">→</button>
+      </div>
     </div>
   </div>
 
@@ -4726,19 +4763,47 @@ function getWeatherIcon(code) {
 }
 
 // ===== SNAKE NEON GAME =====
-const SNAKE_SIZE = 20;
-const SNAKE_COLS = 20;
-const SNAKE_ROWS = 20;
-let snakeBody = [{x:10,y:10}];
+const SNAKE_COLS = 25;
+const SNAKE_ROWS = 25;
+let snakeCellSize = 20;
+let snakeBody = [{x:12,y:12}];
 let snakeDir = {x:1,y:0};
 let snakeNextDir = {x:1,y:0};
-let snakeFood = {x:15,y:10};
+let snakeFood = {x:18,y:12};
 let snakeScore = 0;
 let snakeHighScore = parseInt(localStorage.getItem('snakeHigh') || '0');
 let snakeRunning = false;
 let snakeGameOver = false;
 let snakeInterval = null;
 let snakeParticles = [];
+let snakeBaseSpeed = 180;
+
+function snakeGetSpeed() {
+  const speedup = Math.floor(snakeScore / 3) * 8;
+  return Math.max(55, snakeBaseSpeed - speedup);
+}
+
+function snakeGetSpeedLabel() {
+  const speed = snakeGetSpeed();
+  const level = Math.round((snakeBaseSpeed - speed) / ((snakeBaseSpeed - 55) / 10)) + 1;
+  return Math.min(level, 10) + 'x';
+}
+
+function snakeResizeCanvas() {
+  const canvas = document.getElementById('snake-canvas');
+  const win = document.getElementById('win-snake');
+  if (!canvas || !win) return;
+  const body = canvas.parentElement;
+  const w = body.clientWidth;
+  snakeCellSize = Math.floor(w / SNAKE_COLS);
+  const pxW = snakeCellSize * SNAKE_COLS;
+  const pxH = snakeCellSize * SNAKE_ROWS;
+  canvas.width = pxW;
+  canvas.height = pxH;
+  canvas.style.width = pxW + 'px';
+  canvas.style.height = pxH + 'px';
+  snakeDraw();
+}
 
 function snakeSetDir(dx, dy) {
   if (snakeGameOver) { snakeReset(); return; }
@@ -4758,14 +4823,23 @@ document.addEventListener('keydown', (e) => {
 
 function snakeStart() {
   snakeRunning = true;
+  snakeResizeCanvas();
   const overlay = document.getElementById('snake-overlay');
   if (overlay) overlay.style.display = 'none';
-  snakeInterval = setInterval(snakeTick, 100);
+  snakeScheduleNext();
+}
+
+function snakeScheduleNext() {
+  clearTimeout(snakeInterval);
+  snakeInterval = setTimeout(() => {
+    snakeTick();
+    if (snakeRunning) snakeScheduleNext();
+  }, snakeGetSpeed());
 }
 
 function snakeReset() {
-  clearInterval(snakeInterval);
-  snakeBody = [{x:10,y:10}];
+  clearTimeout(snakeInterval);
+  snakeBody = [{x:12,y:12}];
   snakeDir = {x:1,y:0};
   snakeNextDir = {x:1,y:0};
   snakeScore = 0;
@@ -4774,9 +4848,10 @@ function snakeReset() {
   snakeParticles = [];
   snakePlaceFood();
   document.getElementById('snake-score').textContent = '0';
+  document.getElementById('snake-speed-label').textContent = 'Speed: 1x';
   const overlay = document.getElementById('snake-overlay');
-  if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:24px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div><div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any arrow key or tap to start</div>'; }
-  snakeDraw();
+  if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:28px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div><div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any arrow key or tap to start</div>'; }
+  snakeResizeCanvas();
 }
 
 function snakePlaceFood() {
@@ -4792,7 +4867,7 @@ function snakeTick() {
   const head = { x: snakeBody[0].x + snakeDir.x, y: snakeBody[0].y + snakeDir.y };
 
   if (head.x < 0 || head.x >= SNAKE_COLS || head.y < 0 || head.y >= SNAKE_ROWS || snakeBody.some(s => s.x === head.x && s.y === head.y)) {
-    clearInterval(snakeInterval);
+    clearTimeout(snakeInterval);
     snakeGameOver = true;
     snakeRunning = false;
     if (snakeScore > snakeHighScore) {
@@ -4801,7 +4876,7 @@ function snakeTick() {
       document.getElementById('snake-high').textContent = snakeHighScore;
     }
     const overlay = document.getElementById('snake-overlay');
-    if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:24px;font-weight:700;color:#FF5F57;text-shadow:0 0 20px rgba(255,95,87,0.5);">GAME OVER</div><div style="font-size:16px;color:#fff;margin-top:4px;">Score: ' + snakeScore + '</div><div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any key to restart</div>'; }
+    if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:28px;font-weight:700;color:#FF5F57;text-shadow:0 0 20px rgba(255,95,87,0.5);">GAME OVER</div><div style="font-size:18px;color:#fff;margin-top:4px;">Score: ' + snakeScore + '</div><div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any key to restart</div>'; }
     return;
   }
 
@@ -4809,8 +4884,9 @@ function snakeTick() {
   if (head.x === snakeFood.x && head.y === snakeFood.y) {
     snakeScore++;
     document.getElementById('snake-score').textContent = snakeScore;
+    document.getElementById('snake-speed-label').textContent = 'Speed: ' + snakeGetSpeedLabel();
     for (let i = 0; i < 8; i++) {
-      snakeParticles.push({ x: snakeFood.x * SNAKE_SIZE + SNAKE_SIZE/2, y: snakeFood.y * SNAKE_SIZE + SNAKE_SIZE/2, vx: (Math.random()-0.5)*6, vy: (Math.random()-0.5)*6, life: 15 });
+      snakeParticles.push({ x: snakeFood.x * snakeCellSize + snakeCellSize/2, y: snakeFood.y * snakeCellSize + snakeCellSize/2, vx: (Math.random()-0.5)*6, vy: (Math.random()-0.5)*6, life: 15 });
     }
     snakePlaceFood();
     playSfx(sfxClick);
@@ -4824,19 +4900,22 @@ function snakeDraw() {
   const canvas = document.getElementById('snake-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, 400, 400);
+  const S = snakeCellSize;
+  const W = S * SNAKE_COLS;
+  const H = S * SNAKE_ROWS;
+  ctx.clearRect(0, 0, W, H);
 
   // Grid
   ctx.strokeStyle = 'rgba(255,255,255,0.02)';
-  for (let i = 0; i <= SNAKE_COLS; i++) { ctx.beginPath(); ctx.moveTo(i*SNAKE_SIZE,0); ctx.lineTo(i*SNAKE_SIZE,400); ctx.stroke(); }
-  for (let i = 0; i <= SNAKE_ROWS; i++) { ctx.beginPath(); ctx.moveTo(0,i*SNAKE_SIZE); ctx.lineTo(400,i*SNAKE_SIZE); ctx.stroke(); }
+  for (let i = 0; i <= SNAKE_COLS; i++) { ctx.beginPath(); ctx.moveTo(i*S,0); ctx.lineTo(i*S,H); ctx.stroke(); }
+  for (let i = 0; i <= SNAKE_ROWS; i++) { ctx.beginPath(); ctx.moveTo(0,i*S); ctx.lineTo(W,i*S); ctx.stroke(); }
 
   // Food glow
   ctx.shadowColor = '#FF5F57';
   ctx.shadowBlur = 15;
   ctx.fillStyle = '#FF5F57';
   ctx.beginPath();
-  ctx.arc(snakeFood.x * SNAKE_SIZE + SNAKE_SIZE/2, snakeFood.y * SNAKE_SIZE + SNAKE_SIZE/2, 6, 0, Math.PI*2);
+  ctx.arc(snakeFood.x * S + S/2, snakeFood.y * S + S/2, S*0.3, 0, Math.PI*2);
   ctx.fill();
   ctx.shadowBlur = 0;
 
@@ -4850,7 +4929,7 @@ function snakeDraw() {
     ctx.globalAlpha = alpha;
     const pad = i === 0 ? 1 : 2;
     ctx.beginPath();
-    ctx.roundRect(seg.x * SNAKE_SIZE + pad, seg.y * SNAKE_SIZE + pad, SNAKE_SIZE - pad*2, SNAKE_SIZE - pad*2, 4);
+    ctx.roundRect(seg.x * S + pad, seg.y * S + pad, S - pad*2, S - pad*2, 4);
     ctx.fill();
 
     // Head eyes
@@ -4858,12 +4937,15 @@ function snakeDraw() {
       ctx.shadowBlur = 0;
       ctx.fillStyle = '#0a0a0a';
       ctx.globalAlpha = 1;
-      const ex = snakeDir.x === 0 ? 5 : (snakeDir.x > 0 ? 10 : 4);
-      const ey = snakeDir.y === 0 ? 5 : (snakeDir.y > 0 ? 10 : 4);
-      ctx.beginPath(); ctx.arc(seg.x*SNAKE_SIZE + ex, seg.y*SNAKE_SIZE + ey, 2, 0, Math.PI*2); ctx.fill();
-      const ex2 = snakeDir.x === 0 ? 15 : (snakeDir.x > 0 ? 10 : 16);
-      const ey2 = snakeDir.y === 0 ? 15 : (snakeDir.y > 0 ? 10 : 16);
-      ctx.beginPath(); ctx.arc(seg.x*SNAKE_SIZE + ex2, seg.y*SNAKE_SIZE + ey2, 2, 0, Math.PI*2); ctx.fill();
+      const r = S * 0.12;
+      const o1 = S * 0.25, o2 = S * 0.75, mid = S * 0.5;
+      let ex1, ey1, ex2, ey2;
+      if (snakeDir.x === 1) { ex1=o2; ey1=o1; ex2=o2; ey2=o2; }
+      else if (snakeDir.x === -1) { ex1=o1; ey1=o1; ex2=o1; ey2=o2; }
+      else if (snakeDir.y === 1) { ex1=o1; ey1=o2; ex2=o2; ey2=o2; }
+      else { ex1=o1; ey1=o1; ex2=o2; ey2=o1; }
+      ctx.beginPath(); ctx.arc(seg.x*S + ex1, seg.y*S + ey1, r, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(seg.x*S + ex2, seg.y*S + ey2, r, 0, Math.PI*2); ctx.fill();
     }
   });
   ctx.globalAlpha = 1;
@@ -4885,7 +4967,107 @@ function snakeDraw() {
 }
 
 document.getElementById('snake-high').textContent = snakeHighScore;
-snakeDraw();
+snakeResizeCanvas();
+
+// ===== MOBILE SNAKE =====
+let mobSnake = { body: [{x:12,y:12}], dir: {x:1,y:0}, nextDir: {x:1,y:0}, food: {x:18,y:12}, score: 0, running: false, over: false, interval: null, particles: [], cellSize: 14 };
+
+function initMobSnake() {
+  const canvas = document.getElementById('mob-snake-canvas');
+  if (!canvas) return;
+  const w = canvas.parentElement.clientWidth - 16;
+  mobSnake.cellSize = Math.floor(w / SNAKE_COLS);
+  const px = mobSnake.cellSize * SNAKE_COLS;
+  canvas.width = px;
+  canvas.height = mobSnake.cellSize * SNAKE_ROWS;
+  canvas.style.width = px + 'px';
+  canvas.style.height = canvas.height + 'px';
+  mobSnakeReset();
+
+  // Swipe controls
+  let tx = 0, ty = 0;
+  canvas.ontouchstart = (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; };
+  canvas.ontouchend = (e) => {
+    const dx = e.changedTouches[0].clientX - tx;
+    const dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+    if (Math.abs(dx) > Math.abs(dy)) mobSnakeDir(dx > 0 ? 1 : -1, 0);
+    else mobSnakeDir(0, dy > 0 ? 1 : -1);
+  };
+  document.getElementById('mob-snake-high').textContent = snakeHighScore;
+}
+
+function mobSnakeDir(dx, dy) {
+  if (mobSnake.over) { mobSnakeReset(); return; }
+  if (!mobSnake.running) mobSnakeStart();
+  if (mobSnake.dir.x === -dx && mobSnake.dir.y === -dy) return;
+  mobSnake.nextDir = {x:dx, y:dy};
+}
+
+function mobSnakeStart() {
+  mobSnake.running = true;
+  document.getElementById('mob-snake-overlay').style.display = 'none';
+  mobSnakeSchedule();
+}
+
+function mobSnakeSchedule() {
+  clearTimeout(mobSnake.interval);
+  const speedup = Math.floor(mobSnake.score / 3) * 8;
+  const speed = Math.max(55, snakeBaseSpeed - speedup);
+  mobSnake.interval = setTimeout(() => { mobSnakeTick(); if (mobSnake.running) mobSnakeSchedule(); }, speed);
+}
+
+function mobSnakeReset() {
+  clearTimeout(mobSnake.interval);
+  mobSnake.body = [{x:12,y:12}]; mobSnake.dir = {x:1,y:0}; mobSnake.nextDir = {x:1,y:0};
+  mobSnake.score = 0; mobSnake.over = false; mobSnake.running = false; mobSnake.particles = [];
+  mobSnake.food = {x: Math.floor(Math.random()*SNAKE_COLS), y: Math.floor(Math.random()*SNAKE_ROWS)};
+  document.getElementById('mob-snake-score').textContent = '0';
+  document.getElementById('mob-snake-speed').textContent = 'Speed: 1x';
+  const ov = document.getElementById('mob-snake-overlay');
+  if (ov) { ov.style.display = 'block'; ov.innerHTML = '<div style="font-size:22px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div><div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Swipe or tap arrows to play</div>'; }
+  mobSnakeDraw();
+}
+
+function mobSnakeTick() {
+  const S = mobSnake;
+  S.dir = S.nextDir;
+  const head = { x: S.body[0].x + S.dir.x, y: S.body[0].y + S.dir.y };
+  if (head.x < 0 || head.x >= SNAKE_COLS || head.y < 0 || head.y >= SNAKE_ROWS || S.body.some(s => s.x === head.x && s.y === head.y)) {
+    clearTimeout(S.interval); S.over = true; S.running = false;
+    if (S.score > snakeHighScore) { snakeHighScore = S.score; localStorage.setItem('snakeHigh', snakeHighScore); document.getElementById('mob-snake-high').textContent = snakeHighScore; document.getElementById('snake-high').textContent = snakeHighScore; }
+    const ov = document.getElementById('mob-snake-overlay');
+    if (ov) { ov.style.display = 'block'; ov.innerHTML = '<div style="font-size:22px;font-weight:700;color:#FF5F57;text-shadow:0 0 20px rgba(255,95,87,0.5);">GAME OVER</div><div style="font-size:16px;color:#fff;margin-top:4px;">Score: '+S.score+'</div><div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Swipe to restart</div>'; }
+    return;
+  }
+  S.body.unshift(head);
+  if (head.x === S.food.x && head.y === S.food.y) {
+    S.score++;
+    document.getElementById('mob-snake-score').textContent = S.score;
+    const lvl = Math.min(Math.round(Math.floor(S.score/3)*8/((snakeBaseSpeed-55)/10))+1, 10);
+    document.getElementById('mob-snake-speed').textContent = 'Speed: '+lvl+'x';
+    for (let i=0;i<6;i++) S.particles.push({x:S.food.x*S.cellSize+S.cellSize/2, y:S.food.y*S.cellSize+S.cellSize/2, vx:(Math.random()-0.5)*5, vy:(Math.random()-0.5)*5, life:12});
+    let np; do { np={x:Math.floor(Math.random()*SNAKE_COLS),y:Math.floor(Math.random()*SNAKE_ROWS)}; } while(S.body.some(s=>s.x===np.x&&s.y===np.y)); S.food=np;
+    playSfx(sfxClick);
+  } else { S.body.pop(); }
+  mobSnakeDraw();
+}
+
+function mobSnakeDraw() {
+  const canvas = document.getElementById('mob-snake-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const S = mobSnake;
+  const C = S.cellSize;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle='rgba(255,255,255,0.02)';
+  for(let i=0;i<=SNAKE_COLS;i++){ctx.beginPath();ctx.moveTo(i*C,0);ctx.lineTo(i*C,canvas.height);ctx.stroke();}
+  for(let i=0;i<=SNAKE_ROWS;i++){ctx.beginPath();ctx.moveTo(0,i*C);ctx.lineTo(canvas.width,i*C);ctx.stroke();}
+  ctx.shadowColor='#FF5F57';ctx.shadowBlur=12;ctx.fillStyle='#FF5F57';ctx.beginPath();ctx.arc(S.food.x*C+C/2,S.food.y*C+C/2,C*0.3,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  S.body.forEach((seg,i)=>{const a=1-(i/S.body.length)*0.6;ctx.shadowColor='#39d353';ctx.shadowBlur=i===0?10:4;ctx.fillStyle=i===0?'#39d353':'#26a641';ctx.globalAlpha=a;const p=i===0?1:2;ctx.beginPath();ctx.roundRect(seg.x*C+p,seg.y*C+p,C-p*2,C-p*2,3);ctx.fill();if(i===0){ctx.shadowBlur=0;ctx.fillStyle='#0a0a0a';ctx.globalAlpha=1;const r=C*0.1;let e1x,e1y,e2x,e2y;if(S.dir.x===1){e1x=C*0.75;e1y=C*0.25;e2x=C*0.75;e2y=C*0.75;}else if(S.dir.x===-1){e1x=C*0.25;e1y=C*0.25;e2x=C*0.25;e2y=C*0.75;}else if(S.dir.y===1){e1x=C*0.25;e1y=C*0.75;e2x=C*0.75;e2y=C*0.75;}else{e1x=C*0.25;e1y=C*0.25;e2x=C*0.75;e2y=C*0.25;}ctx.beginPath();ctx.arc(seg.x*C+e1x,seg.y*C+e1y,r,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(seg.x*C+e2x,seg.y*C+e2y,r,0,Math.PI*2);ctx.fill();}});
+  ctx.globalAlpha=1;ctx.shadowBlur=0;
+  S.particles=S.particles.filter(p=>p.life>0);S.particles.forEach(p=>{ctx.fillStyle='#39d353';ctx.globalAlpha=p.life/12;ctx.beginPath();ctx.arc(p.x,p.y,2,0,Math.PI*2);ctx.fill();p.x+=p.vx;p.y+=p.vy;p.life--;});ctx.globalAlpha=1;
+}
 
 // ===== WINDOW RESIZE =====
 let resizeEl = null, resizeStartX = 0, resizeStartY = 0, resizeStartW = 0, resizeStartH = 0;
@@ -5082,10 +5264,14 @@ function expandMobileSection(section) {
     'oss': 'mobile-oss-expanded',
     'tech': 'mobile-tech-expanded',
     'articles': 'mobile-articles-expanded',
-    'connect': 'mobile-connect-expanded'
+    'connect': 'mobile-connect-expanded',
+    'snake': 'mobile-snake-expanded'
   };
   const elem = document.getElementById(map[section]);
-  if (elem) elem.style.display = 'block';
+  if (elem) {
+    elem.style.display = 'block';
+    if (section === 'snake') initMobSnake();
+  }
 }
 
 function closeMobileSection(section) {
@@ -5096,7 +5282,8 @@ function closeMobileSection(section) {
     'oss': 'mobile-oss-expanded',
     'tech': 'mobile-tech-expanded',
     'articles': 'mobile-articles-expanded',
-    'connect': 'mobile-connect-expanded'
+    'connect': 'mobile-connect-expanded',
+    'snake': 'mobile-snake-expanded'
   };
   const elem = document.getElementById(map[section]);
   if (elem) {
