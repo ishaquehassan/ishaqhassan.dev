@@ -5303,7 +5303,7 @@ function mobSnakeTick() {
     closeMobileSection('snake');
     mobSnakeReset();
     showNotif('Done playing? Now back to work 😂', 'Snake Neon');
-    window.open('https://linkedin.com/in/ishaquehassan', '_blank');
+    setTimeout(() => expandMobileSection('experience'), 300);
     return;
   }
   S.body.unshift(head);
