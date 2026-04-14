@@ -5088,8 +5088,18 @@ let snakeInterval = null;
 let snakeParticles = [];
 let snakeBaseSpeed = 200;
 let snakeEatCount = 0;
-let snakeBonus = null; // {x, y, timer}
+let snakeBonus = null; // {x, y, color}
 let snakeBonusTimer = null;
+let snakeColor = '#39d353'; // current snake color
+let snakeColorSecondary = '#26a641';
+const bonusColors = [
+  { main: '#FFD60A', secondary: '#b8960a', glow: '#FFD60A' },
+  { main: '#FF5F97', secondary: '#b8436d', glow: '#FF5F97' },
+  { main: '#00D4FF', secondary: '#009bb8', glow: '#00D4FF' },
+  { main: '#BF5AF2', secondary: '#8a3fb0', glow: '#BF5AF2' },
+  { main: '#FF9F0A', secondary: '#b87008', glow: '#FF9F0A' },
+  { main: '#30D158', secondary: '#229640', glow: '#30D158' },
+];
 let snakeLastTick = 0;
 let snakeAnimFrame = null;
 let snakePaused = false;
@@ -5195,6 +5205,8 @@ function snakeReset() {
   snakeParticles = [];
   snakeEatCount = 0;
   snakeBonus = null;
+  snakeColor = '#39d353';
+  snakeColorSecondary = '#26a641';
   clearTimeout(snakeBonusTimer);
   snakePlaceFood();
   document.getElementById('snake-score').textContent = '0';
@@ -5243,8 +5255,11 @@ function snakeTick() {
   if (snakeBonus && head.x === snakeBonus.x && head.y === snakeBonus.y) {
     snakeScore += 5;
     clearTimeout(snakeBonusTimer);
+    const bc = bonusColors[snakeBonus.colorIdx || 0];
+    snakeColor = bc.main;
+    snakeColorSecondary = bc.secondary;
     for (let i = 0; i < 16; i++) {
-      snakeParticles.push({ x: snakeBonus.x * snakeCellSize + snakeCellSize/2, y: snakeBonus.y * snakeCellSize + snakeCellSize/2, vx: (Math.random()-0.5)*8, vy: (Math.random()-0.5)*8, life: 20 });
+      snakeParticles.push({ x: snakeBonus.x * snakeCellSize + snakeCellSize/2, y: snakeBonus.y * snakeCellSize + snakeCellSize/2, vx: (Math.random()-0.5)*8, vy: (Math.random()-0.5)*8, life: 20, color: bc.main });
     }
     snakeBonus = null;
     ate = true;
@@ -5264,6 +5279,7 @@ function snakeTick() {
     // Spawn bonus every 3 eats
     if (snakeEatCount % 3 === 0 && !snakeBonus) {
       let bp; do { bp = {x: Math.floor(Math.random()*SNAKE_COLS), y: Math.floor(Math.random()*SNAKE_ROWS)}; } while (snakeBody.some(s=>s.x===bp.x&&s.y===bp.y) || (bp.x===snakeFood.x&&bp.y===snakeFood.y));
+      bp.colorIdx = Math.floor(Math.random() * bonusColors.length);
       snakeBonus = bp;
       // Bonus disappears after 5 seconds
       snakeBonusTimer = setTimeout(() => { snakeBonus = null; }, 5000);
@@ -5330,22 +5346,23 @@ function snakeDraw(t) {
   ctx.arc(snakeFood.x * S + S/2, snakeFood.y * S + S/2, S * 0.08, 0, Math.PI*2);
   ctx.fill();
 
-  // Bonus food (big golden ball with breathing)
+  // Bonus food (colored ball with breathing)
   if (snakeBonus) {
+    const bCol = bonusColors[snakeBonus.colorIdx || 0];
     const bp = 0.92 + Math.sin(Date.now() / 300) * 0.08;
     const bx = snakeBonus.x * S + S/2;
     const by = snakeBonus.y * S + S/2;
     const bRadius = S * 0.75 * bp;
     // Outer glow ring
-    ctx.shadowColor = '#FFD60A';
+    ctx.shadowColor = bCol.glow;
     ctx.shadowBlur = 28 * bp;
-    ctx.fillStyle = 'rgba(255,214,10,0.15)';
+    ctx.fillStyle = bCol.main + '26';
     ctx.beginPath();
     ctx.arc(bx, by, S * 0.95 * bp, 0, Math.PI*2);
     ctx.fill();
     // Main ball
     ctx.shadowBlur = 20;
-    ctx.fillStyle = '#FFD60A';
+    ctx.fillStyle = bCol.main;
     ctx.beginPath();
     ctx.arc(bx, by, bRadius, 0, Math.PI*2);
     ctx.fill();
@@ -5371,11 +5388,11 @@ function snakeDraw(t) {
 
   // Draw smooth connected body (lines between segments)
   if (positions.length > 1) {
-    ctx.strokeStyle = '#26a641';
+    ctx.strokeStyle = snakeColorSecondary;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.lineWidth = S * 0.65;
-    ctx.shadowColor = '#39d353';
+    ctx.shadowColor = snakeColor;
     ctx.shadowBlur = 6;
     ctx.globalAlpha = 0.8;
     ctx.beginPath();
@@ -5390,9 +5407,9 @@ function snakeDraw(t) {
   // Draw segments as circles
   positions.forEach((pos, i) => {
     const alpha = 1 - (i / positions.length) * 0.6;
-    ctx.shadowColor = '#39d353';
+    ctx.shadowColor = snakeColor;
     ctx.shadowBlur = i === 0 ? 14 : 3;
-    ctx.fillStyle = i === 0 ? '#39d353' : '#26a641';
+    ctx.fillStyle = i === 0 ? snakeColor : snakeColorSecondary;
     ctx.globalAlpha = alpha;
     const radius = i === 0 ? S * 0.45 : S * 0.32 * (1 - i/positions.length * 0.3);
     ctx.beginPath();
@@ -5423,7 +5440,7 @@ function snakeDraw(t) {
   // Particles
   snakeParticles = snakeParticles.filter(p => p.life > 0);
   snakeParticles.forEach(p => {
-    ctx.fillStyle = '#39d353';
+    ctx.fillStyle = p.color || snakeColor;
     ctx.globalAlpha = p.life / 15;
     ctx.beginPath();
     ctx.arc(p.x, p.y, 2.5, 0, Math.PI*2);
@@ -5507,7 +5524,7 @@ function mobSnakeReset() {
   clearTimeout(mobSnake.interval);
   cancelAnimationFrame(mobSnake.animFrame);
   mobSnake.body = [{x:12,y:12}]; mobSnake.prevBody = [{x:12,y:12}]; mobSnake.dir = {x:1,y:0}; mobSnake.nextDir = {x:1,y:0};
-  mobSnake.score = 0; mobSnake.over = false; mobSnake.running = false; mobSnake.particles = []; mobSnake.eatCount = 0; mobSnake.bonus = null; clearTimeout(mobSnake.bonusTimer);
+  mobSnake.score = 0; mobSnake.over = false; mobSnake.running = false; mobSnake.particles = []; mobSnake.eatCount = 0; mobSnake.bonus = null; clearTimeout(mobSnake.bonusTimer); snakeColor = '#39d353'; snakeColorSecondary = '#26a641';
   mobSnake.food = {x: Math.floor(Math.random()*MOB_SNAKE_COLS), y: Math.floor(Math.random()*MOB_SNAKE_ROWS)};
   document.getElementById('mob-snake-score').textContent = '0';
   document.getElementById('mob-snake-speed').textContent = 'Speed: 1x';
@@ -5538,7 +5555,9 @@ function mobSnakeTick() {
   // Check bonus
   if (S.bonus && head.x === S.bonus.x && head.y === S.bonus.y) {
     S.score += 5; clearTimeout(S.bonusTimer);
-    for(let i=0;i<16;i++) S.particles.push({x:S.bonus.x*S.cellSize+S.cellSize/2,y:S.bonus.y*S.cellSize+S.cellSize/2,vx:(Math.random()-0.5)*8,vy:(Math.random()-0.5)*8,life:20});
+    const mbc = bonusColors[S.bonus.colorIdx || 0];
+    snakeColor = mbc.main; snakeColorSecondary = mbc.secondary;
+    for(let i=0;i<16;i++) S.particles.push({x:S.bonus.x*S.cellSize+S.cellSize/2,y:S.bonus.y*S.cellSize+S.cellSize/2,vx:(Math.random()-0.5)*8,vy:(Math.random()-0.5)*8,life:20,color:mbc.main});
     S.bonus = null; mobAte = true; playSfx(sfxClick);
   }
 
@@ -5548,7 +5567,7 @@ function mobSnakeTick() {
     for(let i=0;i<6;i++) S.particles.push({x:S.food.x*S.cellSize+S.cellSize/2,y:S.food.y*S.cellSize+S.cellSize/2,vx:(Math.random()-0.5)*5,vy:(Math.random()-0.5)*5,life:12});
     let np; do{np={x:Math.floor(Math.random()*MOB_SNAKE_COLS),y:Math.floor(Math.random()*MOB_SNAKE_ROWS)};}while(S.body.some(s=>s.x===np.x&&s.y===np.y)); S.food=np;
     playSfx(sfxClick); mobAte = true;
-    if(S.eatCount%3===0&&!S.bonus){let bp;do{bp={x:Math.floor(Math.random()*MOB_SNAKE_COLS),y:Math.floor(Math.random()*MOB_SNAKE_ROWS)};}while(S.body.some(s=>s.x===bp.x&&s.y===bp.y)||(bp.x===S.food.x&&bp.y===S.food.y));S.bonus=bp;S.bonusTimer=setTimeout(()=>{S.bonus=null;},5000);}
+    if(S.eatCount%3===0&&!S.bonus){let bp;do{bp={x:Math.floor(Math.random()*MOB_SNAKE_COLS),y:Math.floor(Math.random()*MOB_SNAKE_ROWS)};}while(S.body.some(s=>s.x===bp.x&&s.y===bp.y)||(bp.x===S.food.x&&bp.y===S.food.y));bp.colorIdx=Math.floor(Math.random()*bonusColors.length);S.bonus=bp;S.bonusTimer=setTimeout(()=>{S.bonus=null;},5000);}
   }
 
   if (mobAte) {
@@ -5579,18 +5598,18 @@ function mobSnakeDraw(t) {
   ctx.beginPath();ctx.arc(MS.food.x*C+C/2,MS.food.y*C+C/2,C*0.3*pulse,0,Math.PI*2);ctx.fill();
   ctx.shadowBlur=0;ctx.fillStyle='rgba(255,255,255,0.5)';ctx.beginPath();ctx.arc(MS.food.x*C+C/2,MS.food.y*C+C/2,C*0.08,0,Math.PI*2);ctx.fill();
 
-  // Bonus food (big golden ball with breathing)
-  if(MS.bonus){const bp=0.92+Math.sin(Date.now()/300)*0.08;const bx=MS.bonus.x*C+C/2,by=MS.bonus.y*C+C/2,bR=C*0.75*bp;ctx.shadowColor='#FFD60A';ctx.shadowBlur=24*bp;ctx.fillStyle='rgba(255,214,10,0.15)';ctx.beginPath();ctx.arc(bx,by,C*0.95*bp,0,Math.PI*2);ctx.fill();ctx.shadowBlur=18;ctx.fillStyle='#FFD60A';ctx.beginPath();ctx.arc(bx,by,bR,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='rgba(255,255,255,0.3)';ctx.beginPath();ctx.arc(bx-bR*0.2,by-bR*0.2,bR*0.3,0,Math.PI*2);ctx.fill();ctx.fillStyle='rgba(0,0,0,0.7)';ctx.font='bold '+Math.floor(C*0.55)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('+5',bx,by+1);}
+  // Bonus food (colored ball with breathing)
+  if(MS.bonus){const bCol=bonusColors[MS.bonus.colorIdx||0];const bp=0.92+Math.sin(Date.now()/300)*0.08;const bx=MS.bonus.x*C+C/2,by=MS.bonus.y*C+C/2,bR=C*0.75*bp;ctx.shadowColor=bCol.glow;ctx.shadowBlur=24*bp;ctx.fillStyle=bCol.main+'26';ctx.beginPath();ctx.arc(bx,by,C*0.95*bp,0,Math.PI*2);ctx.fill();ctx.shadowBlur=18;ctx.fillStyle=bCol.main;ctx.beginPath();ctx.arc(bx,by,bR,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='rgba(255,255,255,0.3)';ctx.beginPath();ctx.arc(bx-bR*0.2,by-bR*0.2,bR*0.3,0,Math.PI*2);ctx.fill();ctx.fillStyle='rgba(0,0,0,0.7)';ctx.font='bold '+Math.floor(C*0.55)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('+5',bx,by+1);}
 
   const positions=MS.body.map((seg,i)=>{const prev=MS.prevBody[i]||seg;return{x:snakeLerp(prev.x,seg.x,t),y:snakeLerp(prev.y,seg.y,t)};});
 
-  if(positions.length>1){ctx.strokeStyle='#26a641';ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=C*0.6;ctx.shadowColor='#39d353';ctx.shadowBlur=5;ctx.globalAlpha=0.8;ctx.beginPath();ctx.moveTo(positions[0].x*C+C/2,positions[0].y*C+C/2);for(let i=1;i<positions.length;i++)ctx.lineTo(positions[i].x*C+C/2,positions[i].y*C+C/2);ctx.stroke();ctx.shadowBlur=0;}
+  if(positions.length>1){ctx.strokeStyle=snakeColorSecondary;ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=C*0.6;ctx.shadowColor=snakeColor;ctx.shadowBlur=5;ctx.globalAlpha=0.8;ctx.beginPath();ctx.moveTo(positions[0].x*C+C/2,positions[0].y*C+C/2);for(let i=1;i<positions.length;i++)ctx.lineTo(positions[i].x*C+C/2,positions[i].y*C+C/2);ctx.stroke();ctx.shadowBlur=0;}
 
-  positions.forEach((pos,i)=>{const alpha=1-(i/positions.length)*0.6;ctx.shadowColor='#39d353';ctx.shadowBlur=i===0?12:3;ctx.fillStyle=i===0?'#39d353':'#26a641';ctx.globalAlpha=alpha;const radius=i===0?C*0.45:C*0.3*(1-i/positions.length*0.3);ctx.beginPath();ctx.arc(pos.x*C+C/2,pos.y*C+C/2,radius,0,Math.PI*2);ctx.fill();
+  positions.forEach((pos,i)=>{const alpha=1-(i/positions.length)*0.6;ctx.shadowColor=snakeColor;ctx.shadowBlur=i===0?12:3;ctx.fillStyle=i===0?snakeColor:snakeColorSecondary;ctx.globalAlpha=alpha;const radius=i===0?C*0.45:C*0.3*(1-i/positions.length*0.3);ctx.beginPath();ctx.arc(pos.x*C+C/2,pos.y*C+C/2,radius,0,Math.PI*2);ctx.fill();
   if(i===0){ctx.shadowBlur=0;ctx.globalAlpha=1;const r=C*0.1,pr=C*0.05;const px=pos.x*C,py=pos.y*C;let e1x,e1y,e2x,e2y;if(MS.dir.x===1){e1x=C*0.62;e1y=C*0.28;e2x=C*0.62;e2y=C*0.72;}else if(MS.dir.x===-1){e1x=C*0.38;e1y=C*0.28;e2x=C*0.38;e2y=C*0.72;}else if(MS.dir.y===1){e1x=C*0.28;e1y=C*0.62;e2x=C*0.72;e2y=C*0.62;}else{e1x=C*0.28;e1y=C*0.38;e2x=C*0.72;e2y=C*0.38;}ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(px+e1x,py+e1y,r,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(px+e2x,py+e2y,r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#111';ctx.beginPath();ctx.arc(px+e1x,py+e1y,pr,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(px+e2x,py+e2y,pr,0,Math.PI*2);ctx.fill();}});
   ctx.globalAlpha=1;ctx.shadowBlur=0;
 
-  MS.particles=MS.particles.filter(p=>p.life>0);MS.particles.forEach(p=>{ctx.fillStyle='#39d353';ctx.globalAlpha=p.life/12;ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,Math.PI*2);ctx.fill();p.x+=p.vx*0.93;p.y+=p.vy*0.93;p.life--;});ctx.globalAlpha=1;
+  MS.particles=MS.particles.filter(p=>p.life>0);MS.particles.forEach(p=>{ctx.fillStyle=p.color||snakeColor;ctx.globalAlpha=p.life/12;ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,Math.PI*2);ctx.fill();p.x+=p.vx*0.93;p.y+=p.vy*0.93;p.life--;});ctx.globalAlpha=1;
 }
 
 // ===== WINDOW RESIZE =====
