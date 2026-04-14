@@ -387,6 +387,35 @@ body {
 .gh-cell[data-level="3"] { background: #26a641; }
 .gh-cell[data-level="4"] { background: #39d353; }
 
+/* ===== MUSIC WIDGET ===== */
+#w-music { min-width: 200px; }
+.music-player { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.music-art { width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.music-info { flex: 1; min-width: 0; }
+.music-track { font-size: 12px; color: #fff; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.music-artist { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.music-controls { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.music-btn { background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 14px; padding: 2px; transition: color 0.15s; }
+.music-btn:hover { color: #fff; }
+.music-progress { flex: 1; height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; cursor: pointer; position: relative; overflow: hidden; }
+.music-progress-fill { height: 100%; background: rgba(255,255,255,0.4); border-radius: 2px; width: 0%; transition: width 0.3s linear; }
+.music-time { font-size: 9px; color: rgba(255,255,255,0.3); }
+.music-vol { width: 40px; height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; cursor: pointer; position: relative; }
+.music-vol-fill { height: 100%; background: rgba(255,255,255,0.3); border-radius: 2px; width: 70%; }
+
+/* ===== WEATHER WIDGET ===== */
+#w-weather { min-width: 160px; }
+.weather-permit { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 8px 0; }
+.weather-permit-btn { padding: 6px 14px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: rgba(255,255,255,0.7); font-size: 11px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+.weather-permit-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.weather-data { display: none; }
+.weather-data.show { display: block; }
+.weather-main { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.weather-icon { font-size: 28px; }
+.weather-temp { font-size: 28px; font-weight: 700; color: #fff; }
+.weather-unit { font-size: 14px; color: rgba(255,255,255,0.4); font-weight: 400; }
+.weather-details { display: flex; gap: 12px; margin-top: 8px; font-size: 10px; color: rgba(255,255,255,0.4); }
+
 .status-dot {
   display: inline-block;
   width: 8px; height: 8px;
@@ -2744,6 +2773,28 @@ body {
       <div id="gh-graph" style="margin-top:8px;overflow:hidden;"></div>
       <div class="widget-sub" id="gh-total">Loading contributions...</div>
     </div>
+    <div class="widget" id="w-music">
+      <div class="widget-title">Now Playing</div>
+      <div class="music-player">
+        <div class="music-art">🎵</div>
+        <div class="music-info">
+          <div class="music-track" id="music-track">Hanging Lanterns</div>
+          <div class="music-artist" id="music-artist">Kalaido</div>
+        </div>
+      </div>
+      <div class="music-controls">
+        <button class="music-btn" id="music-prev" title="Previous">⏮</button>
+        <button class="music-btn" id="music-play" title="Play">▶</button>
+        <button class="music-btn" id="music-next" title="Next">⏭</button>
+        <div class="music-progress" id="music-progress">
+          <div class="music-progress-fill" id="music-progress-fill"></div>
+        </div>
+        <span class="music-time" id="music-time">0:00</span>
+        <div class="music-vol" id="music-vol">
+          <div class="music-vol-fill" id="music-vol-fill"></div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="widget-col">
     <div class="widget" onclick="openWindow('flutter')" style="min-width:160px;">
@@ -2770,6 +2821,29 @@ body {
       <div style="display:flex;gap:12px;margin-top:6px;">
         <div><div style="font-size:18px;font-weight:700;color:#FFD60A;">⭐ 64</div><div class="widget-sub">Stars</div></div>
         <div><div style="font-size:18px;font-weight:700;color:#30D158;">🍴 135</div><div class="widget-sub">Forks</div></div>
+      </div>
+    </div>
+    <div class="widget" id="w-weather">
+      <div class="widget-title">Weather</div>
+      <div class="weather-permit" id="weather-permit">
+        <span style="font-size:24px;">📍</span>
+        <button class="weather-permit-btn" onclick="requestWeatherLocation()">
+          <span>🔒</span> Allow Location Access
+        </button>
+        <span style="font-size:9px;color:rgba(255,255,255,0.25);">Click to detect your weather</span>
+      </div>
+      <div class="weather-data" id="weather-data">
+        <div class="weather-main">
+          <span class="weather-icon" id="weather-icon">☀️</span>
+          <div>
+            <span class="weather-temp" id="weather-temp">--</span><span class="weather-unit">°C</span>
+          </div>
+        </div>
+        <div class="widget-sub" id="weather-city" style="margin-top:4px;">Detecting...</div>
+        <div class="weather-details">
+          <span id="weather-humidity">💧 --%</span>
+          <span id="weather-wind">💨 -- km/h</span>
+        </div>
       </div>
     </div>
   </div>
@@ -4418,6 +4492,190 @@ function switchLiTab(tab) {
   event.target.classList.add('active');
 }
 
+// ===== SOUND EFFECTS =====
+const sfxClick = new Audio('assets/music/click.mp3');
+const sfxHover = new Audio('assets/music/hover.mp3');
+sfxClick.volume = 0.3;
+sfxHover.volume = 0.15;
+
+function playSfx(sfx) {
+  sfx.currentTime = 0;
+  sfx.play().catch(() => {});
+}
+
+document.addEventListener('click', (e) => {
+  const target = e.target.closest('.dock-item, .traffic-light, .menu-dd-item, .music-btn, .weather-permit-btn, .about-close, .widget, .snap-menu-item, .exit-fullscreen');
+  if (target) playSfx(sfxClick);
+});
+
+document.addEventListener('mouseenter', (e) => {
+  const target = e.target.closest('.dock-item, .traffic-light, .menu-parent, .menu-dd-item:not(.disabled)');
+  if (target) playSfx(sfxHover);
+}, true);
+
+// ===== MUSIC PLAYER =====
+const musicTracks = [
+  { file: 'assets/music/chill1.mp3', name: 'Hanging Lanterns', artist: 'Kalaido' },
+  { file: 'assets/music/chill2.mp3', name: 'Waves', artist: 'Matt Quentin' }
+];
+let musicIndex = 0;
+let musicAudio = null;
+let musicPlaying = false;
+
+function initMusicPlayer() {
+  musicAudio = new Audio(musicTracks[0].file);
+  musicAudio.volume = 0.4;
+  musicAudio.addEventListener('ended', () => nextTrack());
+  musicAudio.addEventListener('timeupdate', updateMusicProgress);
+
+  document.getElementById('music-play').addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleMusic();
+  });
+  document.getElementById('music-next').addEventListener('click', (e) => {
+    e.stopPropagation();
+    nextTrack();
+  });
+  document.getElementById('music-prev').addEventListener('click', (e) => {
+    e.stopPropagation();
+    prevTrack();
+  });
+
+  const progressBar = document.getElementById('music-progress');
+  progressBar.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const rect = progressBar.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    if (musicAudio.duration) musicAudio.currentTime = pct * musicAudio.duration;
+  });
+
+  const volBar = document.getElementById('music-vol');
+  volBar.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const rect = volBar.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    musicAudio.volume = pct;
+    document.getElementById('music-vol-fill').style.width = (pct * 100) + '%';
+  });
+
+  // Try autoplay after user interaction
+  document.addEventListener('click', function autoplayOnce() {
+    if (!musicPlaying) {
+      musicAudio.play().then(() => {
+        musicPlaying = true;
+        document.getElementById('music-play').textContent = '⏸';
+      }).catch(() => {});
+    }
+    document.removeEventListener('click', autoplayOnce);
+  }, { once: false });
+}
+
+function toggleMusic() {
+  if (musicPlaying) {
+    musicAudio.pause();
+    musicPlaying = false;
+    document.getElementById('music-play').textContent = '▶';
+  } else {
+    musicAudio.play().then(() => {
+      musicPlaying = true;
+      document.getElementById('music-play').textContent = '⏸';
+    }).catch(() => {});
+  }
+}
+
+function loadTrack(index) {
+  const wasPlaying = musicPlaying;
+  if (musicAudio) musicAudio.pause();
+  musicIndex = index;
+  const track = musicTracks[musicIndex];
+  musicAudio.src = track.file;
+  document.getElementById('music-track').textContent = track.name;
+  document.getElementById('music-artist').textContent = track.artist;
+  document.getElementById('music-progress-fill').style.width = '0%';
+  document.getElementById('music-time').textContent = '0:00';
+  if (wasPlaying) {
+    musicAudio.play().then(() => {
+      musicPlaying = true;
+      document.getElementById('music-play').textContent = '⏸';
+    }).catch(() => {});
+  }
+}
+
+function nextTrack() { loadTrack((musicIndex + 1) % musicTracks.length); }
+function prevTrack() { loadTrack((musicIndex - 1 + musicTracks.length) % musicTracks.length); }
+
+function updateMusicProgress() {
+  if (!musicAudio.duration) return;
+  const pct = (musicAudio.currentTime / musicAudio.duration) * 100;
+  document.getElementById('music-progress-fill').style.width = pct + '%';
+  const m = Math.floor(musicAudio.currentTime / 60);
+  const s = Math.floor(musicAudio.currentTime % 60).toString().padStart(2, '0');
+  document.getElementById('music-time').textContent = m + ':' + s;
+}
+
+// ===== WEATHER WIDGET =====
+function requestWeatherLocation() {
+  if (!navigator.geolocation) {
+    fetchWeatherFallback();
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude),
+    () => fetchWeatherFallback()
+  );
+}
+
+function fetchWeatherFallback() {
+  fetchWeather(24.86, 67.01, 'Karachi, PK');
+}
+
+function fetchWeather(lat, lon, fallbackCity) {
+  document.getElementById('weather-permit').style.display = 'none';
+  const wd = document.getElementById('weather-data');
+  wd.classList.add('show');
+
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true&hourly=relative_humidity_2m')
+    .then(r => r.json())
+    .then(data => {
+      const cw = data.current_weather;
+      document.getElementById('weather-temp').textContent = Math.round(cw.temperature);
+      document.getElementById('weather-wind').textContent = '💨 ' + Math.round(cw.windspeed) + ' km/h';
+      document.getElementById('weather-icon').textContent = getWeatherIcon(cw.weathercode);
+      const hIdx = data.hourly.time.findIndex(t => t >= cw.time.substring(0, 13));
+      if (hIdx >= 0) document.getElementById('weather-humidity').textContent = '💧 ' + data.hourly.relative_humidity_2m[hIdx] + '%';
+
+      if (fallbackCity) {
+        document.getElementById('weather-city').textContent = fallbackCity;
+      } else {
+        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json')
+          .then(r => r.json())
+          .then(geo => {
+            const city = geo.address.city || geo.address.town || geo.address.state || 'Unknown';
+            const country = geo.address.country_code ? geo.address.country_code.toUpperCase() : '';
+            document.getElementById('weather-city').textContent = city + (country ? ', ' + country : '');
+          })
+          .catch(() => document.getElementById('weather-city').textContent = 'Your Location');
+      }
+    })
+    .catch(() => {
+      document.getElementById('weather-temp').textContent = '--';
+      document.getElementById('weather-city').textContent = 'Failed to load';
+    });
+}
+
+function getWeatherIcon(code) {
+  if (code === 0) return '☀️';
+  if (code <= 3) return '⛅';
+  if (code <= 48) return '🌫️';
+  if (code <= 57) return '🌧️';
+  if (code <= 67) return '🌧️';
+  if (code <= 77) return '❄️';
+  if (code <= 82) return '🌧️';
+  if (code <= 86) return '🌨️';
+  if (code >= 95) return '⛈️';
+  return '🌤️';
+}
+
 // ===== WINDOW RESIZE =====
 let resizeEl = null, resizeStartX = 0, resizeStartY = 0, resizeStartW = 0, resizeStartH = 0;
 
@@ -4489,6 +4747,7 @@ window.addEventListener('load', () => {
         setTimeout(() => {
           screen.style.display = 'none';
           initResize();
+          initMusicPlayer();
           // GitHub contribution graph
           fetch('assets/github-contributions.json')
             .then(r => r.json())
