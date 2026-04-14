@@ -430,6 +430,34 @@ body {
 .snake-dir-btn:hover { background: rgba(57,211,83,0.15); color: #39d353; border-color: rgba(57,211,83,0.3); }
 .snake-dir-btn:active { transform: scale(0.9); }
 
+/* ===== macOS NOTIFICATION ===== */
+#macos-notif {
+  position: fixed;
+  top: 36px;
+  right: 16px;
+  width: 340px;
+  background: rgba(36,36,36,0.92);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 14px 16px;
+  z-index: 99990;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  transform: translateX(400px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+#macos-notif.show { transform: translateX(0); }
+#macos-notif img { width: 38px; height: 38px; border-radius: 8px; }
+.notif-text { flex: 1; }
+.notif-app { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
+.notif-msg { font-size: 13px; color: #fff; margin-top: 2px; }
+.notif-time { font-size: 10px; color: rgba(255,255,255,0.3); align-self: flex-start; }
+
 .status-dot {
   display: inline-block;
   width: 8px; height: 8px;
@@ -2615,6 +2643,16 @@ body {
 </head>
 <body>
 
+<!-- macOS NOTIFICATION -->
+<div id="macos-notif" onclick="dismissNotif()">
+  <img src="assets/profile-photo.png" alt="">
+  <div class="notif-text">
+    <div class="notif-app">Snake Neon</div>
+    <div class="notif-msg" id="notif-msg">Done playing? Now back to work 😂</div>
+  </div>
+  <div class="notif-time">now</div>
+</div>
+
 <!-- NOISE TEXTURE OVERLAY -->
 <div id="noise-overlay"></div>
 
@@ -4193,6 +4231,23 @@ body {
 </noscript>
 
 <script>
+// ===== macOS NOTIFICATION =====
+let notifTimeout = null;
+function showNotif(msg) {
+  const notif = document.getElementById('macos-notif');
+  document.getElementById('notif-msg').textContent = msg;
+  notif.classList.add('show');
+  playSfx(sfxClick);
+  clearTimeout(notifTimeout);
+  notifTimeout = setTimeout(() => notif.classList.remove('show'), 6000);
+}
+function dismissNotif() {
+  const notif = document.getElementById('macos-notif');
+  notif.classList.remove('show');
+  clearTimeout(notifTimeout);
+  openWindow('linkedin');
+}
+
 // ===== ABOUT DIALOG =====
 function detectSystemSpecs() {
   const cores = navigator.hardwareConcurrency || 4;
@@ -4767,6 +4822,7 @@ const SNAKE_COLS = 25;
 const SNAKE_ROWS = 25;
 let snakeCellSize = 20;
 let snakeBody = [{x:12,y:12}];
+let snakePrevBody = [{x:12,y:12}];
 let snakeDir = {x:1,y:0};
 let snakeNextDir = {x:1,y:0};
 let snakeFood = {x:18,y:12};
@@ -4776,25 +4832,26 @@ let snakeRunning = false;
 let snakeGameOver = false;
 let snakeInterval = null;
 let snakeParticles = [];
-let snakeBaseSpeed = 180;
+let snakeBaseSpeed = 200;
+let snakeLastTick = 0;
+let snakeAnimFrame = null;
+let snakePaused = false;
 
 function snakeGetSpeed() {
-  const speedup = Math.floor(snakeScore / 3) * 8;
-  return Math.max(55, snakeBaseSpeed - speedup);
+  const speedup = Math.floor(snakeScore / 3) * 10;
+  return Math.max(70, snakeBaseSpeed - speedup);
 }
 
 function snakeGetSpeedLabel() {
   const speed = snakeGetSpeed();
-  const level = Math.round((snakeBaseSpeed - speed) / ((snakeBaseSpeed - 55) / 10)) + 1;
+  const level = Math.round((snakeBaseSpeed - speed) / ((snakeBaseSpeed - 70) / 10)) + 1;
   return Math.min(level, 10) + 'x';
 }
 
 function snakeResizeCanvas() {
   const canvas = document.getElementById('snake-canvas');
-  const win = document.getElementById('win-snake');
-  if (!canvas || !win) return;
-  const body = canvas.parentElement;
-  const w = body.clientWidth;
+  if (!canvas) return;
+  const w = canvas.parentElement.clientWidth;
   snakeCellSize = Math.floor(w / SNAKE_COLS);
   const pxW = snakeCellSize * SNAKE_COLS;
   const pxH = snakeCellSize * SNAKE_ROWS;
@@ -4802,7 +4859,7 @@ function snakeResizeCanvas() {
   canvas.height = pxH;
   canvas.style.width = pxW + 'px';
   canvas.style.height = pxH + 'px';
-  snakeDraw();
+  snakeDraw(1);
 }
 
 function snakeSetDir(dx, dy) {
@@ -4812,18 +4869,19 @@ function snakeSetDir(dx, dy) {
   if (dx !== 0 || dy !== 0) snakeNextDir = {x:dx, y:dy};
 }
 
-let snakePaused = false;
-
 function snakeTogglePause() {
   if (snakeGameOver || !snakeRunning) return;
   snakePaused = !snakePaused;
   const overlay = document.getElementById('snake-overlay');
   if (snakePaused) {
     clearTimeout(snakeInterval);
+    cancelAnimationFrame(snakeAnimFrame);
     if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:28px;font-weight:700;color:#FEBC2E;text-shadow:0 0 20px rgba(254,188,46,0.4);">PAUSED</div><div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px;">Press Esc to resume</div>'; }
   } else {
     if (overlay) overlay.style.display = 'none';
+    snakeLastTick = performance.now();
     snakeScheduleNext();
+    snakeRenderLoop();
   }
 }
 
@@ -4843,20 +4901,34 @@ function snakeStart() {
   snakeResizeCanvas();
   const overlay = document.getElementById('snake-overlay');
   if (overlay) overlay.style.display = 'none';
+  snakeLastTick = performance.now();
+  snakePrevBody = JSON.parse(JSON.stringify(snakeBody));
   snakeScheduleNext();
+  snakeRenderLoop();
+}
+
+function snakeRenderLoop() {
+  if (!snakeRunning || snakePaused) return;
+  const now = performance.now();
+  const elapsed = now - snakeLastTick;
+  const t = Math.min(elapsed / snakeGetSpeed(), 1);
+  snakeDraw(t);
+  snakeAnimFrame = requestAnimationFrame(snakeRenderLoop);
 }
 
 function snakeScheduleNext() {
   clearTimeout(snakeInterval);
   snakeInterval = setTimeout(() => {
     snakeTick();
-    if (snakeRunning) snakeScheduleNext();
+    if (snakeRunning && !snakePaused) snakeScheduleNext();
   }, snakeGetSpeed());
 }
 
 function snakeReset() {
   clearTimeout(snakeInterval);
+  cancelAnimationFrame(snakeAnimFrame);
   snakeBody = [{x:12,y:12}];
+  snakePrevBody = [{x:12,y:12}];
   snakeDir = {x:1,y:0};
   snakeNextDir = {x:1,y:0};
   snakeScore = 0;
@@ -4881,11 +4953,13 @@ function snakePlaceFood() {
 }
 
 function snakeTick() {
+  snakePrevBody = JSON.parse(JSON.stringify(snakeBody));
   snakeDir = snakeNextDir;
   const head = { x: snakeBody[0].x + snakeDir.x, y: snakeBody[0].y + snakeDir.y };
 
   if (head.x < 0 || head.x >= SNAKE_COLS || head.y < 0 || head.y >= SNAKE_ROWS || snakeBody.some(s => s.x === head.x && s.y === head.y)) {
     clearTimeout(snakeInterval);
+    cancelAnimationFrame(snakeAnimFrame);
     snakeGameOver = true;
     snakeRunning = false;
     if (snakeScore > snakeHighScore) {
@@ -4894,13 +4968,11 @@ function snakeTick() {
       document.getElementById('snake-high').textContent = snakeHighScore;
     }
     localStorage.setItem('snakeLastScore', snakeScore);
-    // Game over: close snake, open LinkedIn after delay
-    setTimeout(() => {
-      closeWindow('snake');
-      setTimeout(() => openWindow('linkedin'), 400);
-    }, 1500);
     const overlay = document.getElementById('snake-overlay');
-    if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:28px;font-weight:700;color:#FF5F57;text-shadow:0 0 20px rgba(255,95,87,0.5);">GAME OVER</div><div style="font-size:22px;color:#fff;margin-top:4px;">Score: ' + snakeScore + '</div><div style="font-size:13px;color:rgba(255,255,255,0.3);margin-top:10px;">Opening LinkedIn...</div>'; }
+    if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:28px;font-weight:700;color:#FF5F57;text-shadow:0 0 20px rgba(255,95,87,0.5);">GAME OVER</div><div style="font-size:22px;color:#fff;margin-top:4px;">Score: ' + snakeScore + '</div><div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any key to restart</div>'; }
+    // Show macOS notification
+    setTimeout(() => showNotif('Done playing? Now back to work 😂'), 800);
+    snakeDraw(1);
     return;
   }
 
@@ -4918,13 +4990,18 @@ function snakeTick() {
     }
     snakePlaceFood();
     playSfx(sfxClick);
+    // Pad prevBody since body grew
+    snakePrevBody.unshift(snakePrevBody[0]);
   } else {
     snakeBody.pop();
   }
-  snakeDraw();
+  snakeLastTick = performance.now();
 }
 
-function snakeDraw() {
+function snakeLerp(a, b, t) { return a + (b - a) * t; }
+
+function snakeDraw(t) {
+  if (t === undefined) t = 1;
   const canvas = document.getElementById('snake-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -4933,71 +5010,75 @@ function snakeDraw() {
   const H = S * SNAKE_ROWS;
   ctx.clearRect(0, 0, W, H);
 
+  // Smooth easing
+  const ease = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+
   // Food pulsing glow
-  const pulse = 0.8 + Math.sin(Date.now() / 200) * 0.2;
+  const pulse = 0.85 + Math.sin(Date.now() / 200) * 0.15;
   ctx.shadowColor = '#FF5F57';
-  ctx.shadowBlur = 18 * pulse;
+  ctx.shadowBlur = 16 * pulse;
   ctx.fillStyle = '#FF5F57';
   ctx.beginPath();
-  ctx.arc(snakeFood.x * S + S/2, snakeFood.y * S + S/2, S * 0.32 * pulse, 0, Math.PI*2);
+  ctx.arc(snakeFood.x * S + S/2, snakeFood.y * S + S/2, S * 0.3 * pulse, 0, Math.PI*2);
   ctx.fill();
-  // Food inner white dot
   ctx.shadowBlur = 0;
-  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
   ctx.beginPath();
-  ctx.arc(snakeFood.x * S + S/2, snakeFood.y * S + S/2, S * 0.1, 0, Math.PI*2);
+  ctx.arc(snakeFood.x * S + S/2, snakeFood.y * S + S/2, S * 0.08, 0, Math.PI*2);
   ctx.fill();
 
-  // Smooth snake body (connected segments with connectors)
-  if (snakeBody.length > 1) {
-    // Draw connectors between segments (fills gaps)
-    for (let i = 0; i < snakeBody.length - 1; i++) {
-      const a = snakeBody[i], b = snakeBody[i+1];
-      const alpha = 1 - (i / snakeBody.length) * 0.7;
-      ctx.fillStyle = '#26a641';
-      ctx.globalAlpha = alpha;
-      ctx.shadowColor = '#39d353';
-      ctx.shadowBlur = 4;
-      const cx = Math.min(a.x, b.x) * S + (a.x === b.x ? S*0.15 : 0);
-      const cy = Math.min(a.y, b.y) * S + (a.y === b.y ? S*0.15 : 0);
-      const cw = a.x === b.x ? S*0.7 : S*2 - S*0.3;
-      const ch = a.y === b.y ? S*0.7 : S*2 - S*0.3;
-      ctx.fillRect(cx, cy, cw > S*2 ? S : cw, ch > S*2 ? S : ch);
+  // Interpolated positions
+  const positions = snakeBody.map((seg, i) => {
+    const prev = snakePrevBody[i] || seg;
+    return { x: snakeLerp(prev.x, seg.x, ease), y: snakeLerp(prev.y, seg.y, ease) };
+  });
+
+  // Draw smooth connected body (lines between segments)
+  if (positions.length > 1) {
+    ctx.strokeStyle = '#26a641';
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = S * 0.65;
+    ctx.shadowColor = '#39d353';
+    ctx.shadowBlur = 6;
+    ctx.globalAlpha = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(positions[0].x * S + S/2, positions[0].y * S + S/2);
+    for (let i = 1; i < positions.length; i++) {
+      ctx.lineTo(positions[i].x * S + S/2, positions[i].y * S + S/2);
     }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
   }
 
-  // Draw segments as circles for smooth look
-  snakeBody.forEach((seg, i) => {
-    const alpha = 1 - (i / snakeBody.length) * 0.7;
+  // Draw segments as circles
+  positions.forEach((pos, i) => {
+    const alpha = 1 - (i / positions.length) * 0.6;
     ctx.shadowColor = '#39d353';
-    ctx.shadowBlur = i === 0 ? 14 : 5;
+    ctx.shadowBlur = i === 0 ? 14 : 3;
     ctx.fillStyle = i === 0 ? '#39d353' : '#26a641';
     ctx.globalAlpha = alpha;
-    const radius = i === 0 ? S * 0.48 : S * 0.38;
+    const radius = i === 0 ? S * 0.45 : S * 0.32 * (1 - i/positions.length * 0.3);
     ctx.beginPath();
-    ctx.arc(seg.x * S + S/2, seg.y * S + S/2, radius, 0, Math.PI*2);
+    ctx.arc(pos.x * S + S/2, pos.y * S + S/2, radius, 0, Math.PI*2);
     ctx.fill();
 
-    // Head details
     if (i === 0) {
       ctx.shadowBlur = 0;
       ctx.globalAlpha = 1;
-      // Eyes (white with dark pupil)
-      const r = S * 0.12;
-      const pr = S * 0.06;
-      let ex1, ey1, ex2, ey2;
-      if (snakeDir.x === 1) { ex1=S*0.65; ey1=S*0.3; ex2=S*0.65; ey2=S*0.7; }
-      else if (snakeDir.x === -1) { ex1=S*0.35; ey1=S*0.3; ex2=S*0.35; ey2=S*0.7; }
-      else if (snakeDir.y === 1) { ex1=S*0.3; ey1=S*0.65; ex2=S*0.7; ey2=S*0.65; }
-      else { ex1=S*0.3; ey1=S*0.35; ex2=S*0.7; ey2=S*0.35; }
-      // Eye whites
-      ctx.fillStyle = '#fff';
-      ctx.beginPath(); ctx.arc(seg.x*S+ex1, seg.y*S+ey1, r, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(seg.x*S+ex2, seg.y*S+ey2, r, 0, Math.PI*2); ctx.fill();
-      // Pupils
-      ctx.fillStyle = '#0a0a0a';
-      ctx.beginPath(); ctx.arc(seg.x*S+ex1, seg.y*S+ey1, pr, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(seg.x*S+ex2, seg.y*S+ey2, pr, 0, Math.PI*2); ctx.fill();
+      const r = S * 0.11, pr = S * 0.05;
+      const px = pos.x * S, py = pos.y * S;
+      let e1x,e1y,e2x,e2y;
+      if(snakeDir.x===1){e1x=S*0.62;e1y=S*0.28;e2x=S*0.62;e2y=S*0.72;}
+      else if(snakeDir.x===-1){e1x=S*0.38;e1y=S*0.28;e2x=S*0.38;e2y=S*0.72;}
+      else if(snakeDir.y===1){e1x=S*0.28;e1y=S*0.62;e2x=S*0.72;e2y=S*0.62;}
+      else{e1x=S*0.28;e1y=S*0.38;e2x=S*0.72;e2y=S*0.38;}
+      ctx.fillStyle='#fff';
+      ctx.beginPath();ctx.arc(px+e1x,py+e1y,r,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(px+e2x,py+e2y,r,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#111';
+      ctx.beginPath();ctx.arc(px+e1x,py+e1y,pr,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(px+e2x,py+e2y,pr,0,Math.PI*2);ctx.fill();
     }
   });
   ctx.globalAlpha = 1;
@@ -5009,23 +5090,20 @@ function snakeDraw() {
     ctx.fillStyle = '#39d353';
     ctx.globalAlpha = p.life / 15;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+    ctx.arc(p.x, p.y, 2.5, 0, Math.PI*2);
     ctx.fill();
-    p.x += p.vx * 0.95;
-    p.y += p.vy * 0.95;
+    p.x += p.vx * 0.93;
+    p.y += p.vy * 0.93;
     p.life--;
   });
   ctx.globalAlpha = 1;
-
-  // Request animation frame for food pulse
-  if (snakeRunning && !snakePaused) requestAnimationFrame(snakeDraw);
 }
 
 document.getElementById('snake-high').textContent = snakeHighScore;
 snakeResizeCanvas();
 
 // ===== MOBILE SNAKE =====
-let mobSnake = { body: [{x:12,y:12}], dir: {x:1,y:0}, nextDir: {x:1,y:0}, food: {x:18,y:12}, score: 0, running: false, over: false, interval: null, particles: [], cellSize: 14 };
+let mobSnake = { body: [{x:12,y:12}], prevBody: [{x:12,y:12}], dir: {x:1,y:0}, nextDir: {x:1,y:0}, food: {x:18,y:12}, score: 0, running: false, over: false, interval: null, particles: [], cellSize: 14, lastTick: 0, animFrame: null };
 
 function initMobSnake() {
   const canvas = document.getElementById('mob-snake-canvas');
@@ -5061,8 +5139,19 @@ function mobSnakeDir(dx, dy) {
 
 function mobSnakeStart() {
   mobSnake.running = true;
+  mobSnake.prevBody = JSON.parse(JSON.stringify(mobSnake.body));
+  mobSnake.lastTick = performance.now();
   document.getElementById('mob-snake-overlay').style.display = 'none';
   mobSnakeSchedule();
+  mobSnakeRenderLoop();
+}
+
+function mobSnakeRenderLoop() {
+  if (!mobSnake.running || mobSnake.over) return;
+  const t = Math.min((performance.now() - mobSnake.lastTick) / snakeGetSpeed(), 1);
+  const ease = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+  mobSnakeDraw(ease);
+  mobSnake.animFrame = requestAnimationFrame(mobSnakeRenderLoop);
 }
 
 function mobSnakeSchedule() {
@@ -5074,7 +5163,8 @@ function mobSnakeSchedule() {
 
 function mobSnakeReset() {
   clearTimeout(mobSnake.interval);
-  mobSnake.body = [{x:12,y:12}]; mobSnake.dir = {x:1,y:0}; mobSnake.nextDir = {x:1,y:0};
+  cancelAnimationFrame(mobSnake.animFrame);
+  mobSnake.body = [{x:12,y:12}]; mobSnake.prevBody = [{x:12,y:12}]; mobSnake.dir = {x:1,y:0}; mobSnake.nextDir = {x:1,y:0};
   mobSnake.score = 0; mobSnake.over = false; mobSnake.running = false; mobSnake.particles = [];
   mobSnake.food = {x: Math.floor(Math.random()*SNAKE_COLS), y: Math.floor(Math.random()*SNAKE_ROWS)};
   document.getElementById('mob-snake-score').textContent = '0';
@@ -5086,15 +5176,16 @@ function mobSnakeReset() {
 
 function mobSnakeTick() {
   const S = mobSnake;
+  S.prevBody = JSON.parse(JSON.stringify(S.body));
   S.dir = S.nextDir;
+  S.lastTick = performance.now();
   const head = { x: S.body[0].x + S.dir.x, y: S.body[0].y + S.dir.y };
   if (head.x < 0 || head.x >= SNAKE_COLS || head.y < 0 || head.y >= SNAKE_ROWS || S.body.some(s => s.x === head.x && s.y === head.y)) {
     clearTimeout(S.interval); S.over = true; S.running = false;
     if (S.score > snakeHighScore) { snakeHighScore = S.score; localStorage.setItem('snakeHigh', snakeHighScore); document.getElementById('mob-snake-high').textContent = snakeHighScore; document.getElementById('snake-high').textContent = snakeHighScore; }
     localStorage.setItem('snakeLastScore', S.score);
     const ov = document.getElementById('mob-snake-overlay');
-    if (ov) { ov.style.display = 'block'; ov.innerHTML = '<div style="font-size:22px;font-weight:700;color:#FF5F57;text-shadow:0 0 20px rgba(255,95,87,0.5);">GAME OVER</div><div style="font-size:20px;color:#fff;margin-top:4px;">Score: '+S.score+'</div><div style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:8px;">Opening LinkedIn...</div>'; }
-    setTimeout(() => { closeMobileSection('snake'); mobSnakeReset(); window.open('https://linkedin.com/in/ishaquehassan','_blank'); }, 1500);
+    if (ov) { ov.style.display = 'block'; ov.innerHTML = '<div style="font-size:22px;font-weight:700;color:#FF5F57;text-shadow:0 0 20px rgba(255,95,87,0.5);">GAME OVER</div><div style="font-size:20px;color:#fff;margin-top:4px;">Score: '+S.score+'</div><div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Swipe to restart</div>'; }
     return;
   }
   S.body.unshift(head);
@@ -5110,11 +5201,12 @@ function mobSnakeTick() {
     for (let i=0;i<6;i++) S.particles.push({x:S.food.x*S.cellSize+S.cellSize/2, y:S.food.y*S.cellSize+S.cellSize/2, vx:(Math.random()-0.5)*5, vy:(Math.random()-0.5)*5, life:12});
     let np; do { np={x:Math.floor(Math.random()*SNAKE_COLS),y:Math.floor(Math.random()*SNAKE_ROWS)}; } while(S.body.some(s=>s.x===np.x&&s.y===np.y)); S.food=np;
     playSfx(sfxClick);
+    S.prevBody.unshift(S.prevBody[0]);
   } else { S.body.pop(); }
-  mobSnakeDraw();
 }
 
-function mobSnakeDraw() {
+function mobSnakeDraw(t) {
+  if(t===undefined)t=1;
   const canvas = document.getElementById('mob-snake-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -5122,21 +5214,20 @@ function mobSnakeDraw() {
   const C = MS.cellSize;
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // Pulsing food
-  const pulse = 0.8 + Math.sin(Date.now()/200)*0.2;
+  const pulse = 0.85+Math.sin(Date.now()/200)*0.15;
   ctx.shadowColor='#FF5F57';ctx.shadowBlur=14*pulse;ctx.fillStyle='#FF5F57';
-  ctx.beginPath();ctx.arc(MS.food.x*C+C/2,MS.food.y*C+C/2,C*0.32*pulse,0,Math.PI*2);ctx.fill();
-  ctx.shadowBlur=0;ctx.fillStyle='rgba(255,255,255,0.4)';ctx.beginPath();ctx.arc(MS.food.x*C+C/2,MS.food.y*C+C/2,C*0.1,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(MS.food.x*C+C/2,MS.food.y*C+C/2,C*0.3*pulse,0,Math.PI*2);ctx.fill();
+  ctx.shadowBlur=0;ctx.fillStyle='rgba(255,255,255,0.5)';ctx.beginPath();ctx.arc(MS.food.x*C+C/2,MS.food.y*C+C/2,C*0.08,0,Math.PI*2);ctx.fill();
 
-  // Smooth connected snake
-  if(MS.body.length>1){for(let i=0;i<MS.body.length-1;i++){const a=MS.body[i],b=MS.body[i+1];const alpha=1-(i/MS.body.length)*0.7;ctx.fillStyle='#26a641';ctx.globalAlpha=alpha;ctx.shadowColor='#39d353';ctx.shadowBlur=4;const cx=Math.min(a.x,b.x)*C+(a.x===b.x?C*0.15:0);const cy=Math.min(a.y,b.y)*C+(a.y===b.y?C*0.15:0);const cw=a.x===b.x?C*0.7:C;const ch=a.y===b.y?C*0.7:C;ctx.fillRect(cx,cy,cw,ch);}}
+  const positions=MS.body.map((seg,i)=>{const prev=MS.prevBody[i]||seg;return{x:snakeLerp(prev.x,seg.x,t),y:snakeLerp(prev.y,seg.y,t)};});
 
-  MS.body.forEach((seg,i)=>{const alpha=1-(i/MS.body.length)*0.7;ctx.shadowColor='#39d353';ctx.shadowBlur=i===0?12:4;ctx.fillStyle=i===0?'#39d353':'#26a641';ctx.globalAlpha=alpha;const radius=i===0?C*0.48:C*0.38;ctx.beginPath();ctx.arc(seg.x*C+C/2,seg.y*C+C/2,radius,0,Math.PI*2);ctx.fill();
-  if(i===0){ctx.shadowBlur=0;ctx.globalAlpha=1;const r=C*0.12,pr=C*0.06;let e1x,e1y,e2x,e2y;if(MS.dir.x===1){e1x=C*0.65;e1y=C*0.3;e2x=C*0.65;e2y=C*0.7;}else if(MS.dir.x===-1){e1x=C*0.35;e1y=C*0.3;e2x=C*0.35;e2y=C*0.7;}else if(MS.dir.y===1){e1x=C*0.3;e1y=C*0.65;e2x=C*0.7;e2y=C*0.65;}else{e1x=C*0.3;e1y=C*0.35;e2x=C*0.7;e2y=C*0.35;}ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(seg.x*C+e1x,seg.y*C+e1y,r,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(seg.x*C+e2x,seg.y*C+e2y,r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#0a0a0a';ctx.beginPath();ctx.arc(seg.x*C+e1x,seg.y*C+e1y,pr,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(seg.x*C+e2x,seg.y*C+e2y,pr,0,Math.PI*2);ctx.fill();}});
+  if(positions.length>1){ctx.strokeStyle='#26a641';ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=C*0.6;ctx.shadowColor='#39d353';ctx.shadowBlur=5;ctx.globalAlpha=0.8;ctx.beginPath();ctx.moveTo(positions[0].x*C+C/2,positions[0].y*C+C/2);for(let i=1;i<positions.length;i++)ctx.lineTo(positions[i].x*C+C/2,positions[i].y*C+C/2);ctx.stroke();ctx.shadowBlur=0;}
+
+  positions.forEach((pos,i)=>{const alpha=1-(i/positions.length)*0.6;ctx.shadowColor='#39d353';ctx.shadowBlur=i===0?12:3;ctx.fillStyle=i===0?'#39d353':'#26a641';ctx.globalAlpha=alpha;const radius=i===0?C*0.45:C*0.3*(1-i/positions.length*0.3);ctx.beginPath();ctx.arc(pos.x*C+C/2,pos.y*C+C/2,radius,0,Math.PI*2);ctx.fill();
+  if(i===0){ctx.shadowBlur=0;ctx.globalAlpha=1;const r=C*0.1,pr=C*0.05;const px=pos.x*C,py=pos.y*C;let e1x,e1y,e2x,e2y;if(MS.dir.x===1){e1x=C*0.62;e1y=C*0.28;e2x=C*0.62;e2y=C*0.72;}else if(MS.dir.x===-1){e1x=C*0.38;e1y=C*0.28;e2x=C*0.38;e2y=C*0.72;}else if(MS.dir.y===1){e1x=C*0.28;e1y=C*0.62;e2x=C*0.72;e2y=C*0.62;}else{e1x=C*0.28;e1y=C*0.38;e2x=C*0.72;e2y=C*0.38;}ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(px+e1x,py+e1y,r,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(px+e2x,py+e2y,r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#111';ctx.beginPath();ctx.arc(px+e1x,py+e1y,pr,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(px+e2x,py+e2y,pr,0,Math.PI*2);ctx.fill();}});
   ctx.globalAlpha=1;ctx.shadowBlur=0;
 
-  MS.particles=MS.particles.filter(p=>p.life>0);MS.particles.forEach(p=>{ctx.fillStyle='#39d353';ctx.globalAlpha=p.life/12;ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill();p.x+=p.vx*0.95;p.y+=p.vy*0.95;p.life--;});ctx.globalAlpha=1;
-  if(MS.running&&!MS.over)requestAnimationFrame(mobSnakeDraw);
+  MS.particles=MS.particles.filter(p=>p.life>0);MS.particles.forEach(p=>{ctx.fillStyle='#39d353';ctx.globalAlpha=p.life/12;ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,Math.PI*2);ctx.fill();p.x+=p.vx*0.93;p.y+=p.vy*0.93;p.life--;});ctx.globalAlpha=1;
 }
 
 // ===== WINDOW RESIZE =====
