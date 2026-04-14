@@ -3636,6 +3636,62 @@ body {
       </div>
     </div>
 
+    <!-- WIDGETS -->
+    <div style="padding:0 16px 8px;display:flex;flex-direction:column;gap:10px;">
+      <!-- Status -->
+      <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px;">
+        <span class="status-dot"></span>
+        <div>
+          <div style="font-size:13px;color:#fff;">Available for opportunities</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">hello@ishaqhassan.dev</div>
+        </div>
+      </div>
+      <!-- GitHub + Music row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:12px;">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.3);">GitHub</div>
+          <div id="mob-gh-graph" style="margin-top:6px;display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:1px;overflow:hidden;"></div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;" id="mob-gh-total">Loading...</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:12px;" id="mob-w-music">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.3);">Now Playing</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+            <div style="font-size:20px;">🎵</div>
+            <div>
+              <div style="font-size:12px;color:#fff;font-weight:500;" id="mob-music-track">Hanging Lanterns</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.3);" id="mob-music-artist">Kalaido</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+            <button style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:12px;cursor:pointer;" onclick="if(typeof toggleMusic==='function')toggleMusic()">⏮</button>
+            <button style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer;" id="mob-music-play" onclick="if(typeof toggleMusic==='function')toggleMusic()">▶</button>
+            <button style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:12px;cursor:pointer;" onclick="if(typeof nextTrack==='function')nextTrack()">⏭</button>
+          </div>
+        </div>
+      </div>
+      <!-- Weather -->
+      <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:14px 16px;" id="mob-w-weather">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.3);">Weather</div>
+        <div id="mob-weather-permit" style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span style="font-size:20px;">📍</span>
+          <button class="weather-permit-btn" onclick="requestMobWeather()">🔒 Allow Location Access</button>
+        </div>
+        <div id="mob-weather-data" style="display:none;">
+          <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+            <span style="font-size:28px;" id="mob-weather-icon">☀️</span>
+            <div>
+              <span style="font-size:26px;font-weight:700;color:#fff;" id="mob-weather-temp">--</span><span style="font-size:14px;color:rgba(255,255,255,0.4);">°C</span>
+            </div>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px;" id="mob-weather-city">Detecting...</div>
+          <div style="display:flex;gap:12px;margin-top:4px;font-size:10px;color:rgba(255,255,255,0.3);">
+            <span id="mob-weather-humidity">💧 --%</span>
+            <span id="mob-weather-wind">💨 -- km/h</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- SECTIONS -->
     <div class="mobile-sections">
       <!-- Experience -->
@@ -4861,6 +4917,31 @@ function getWeatherIcon(code) {
   return '🌤️';
 }
 
+// Mobile weather
+function requestMobWeather() {
+  if (!navigator.geolocation) { fetchMobWeather(24.86, 67.01, 'Karachi, PK'); return; }
+  navigator.geolocation.getCurrentPosition(
+    (pos) => fetchMobWeather(pos.coords.latitude, pos.coords.longitude),
+    () => fetchMobWeather(24.86, 67.01, 'Karachi, PK')
+  );
+}
+function fetchMobWeather(lat, lon, fallbackCity) {
+  document.getElementById('mob-weather-permit').style.display = 'none';
+  document.getElementById('mob-weather-data').style.display = 'block';
+  fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current_weather=true&hourly=relative_humidity_2m')
+    .then(r => r.json())
+    .then(data => {
+      const cw = data.current_weather;
+      document.getElementById('mob-weather-temp').textContent = Math.round(cw.temperature);
+      document.getElementById('mob-weather-wind').textContent = '💨 '+Math.round(cw.windspeed)+' km/h';
+      document.getElementById('mob-weather-icon').textContent = getWeatherIcon(cw.weathercode);
+      const hIdx = data.hourly.time.findIndex(t => t >= cw.time.substring(0,13));
+      if (hIdx >= 0) document.getElementById('mob-weather-humidity').textContent = '💧 '+data.hourly.relative_humidity_2m[hIdx]+'%';
+      if (fallbackCity) { document.getElementById('mob-weather-city').textContent = fallbackCity; }
+      else { fetch('https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lon+'&format=json').then(r=>r.json()).then(geo=>{const city=geo.address.city||geo.address.town||geo.address.state||'Unknown';document.getElementById('mob-weather-city').textContent=city+', '+(geo.address.country_code||'').toUpperCase();}).catch(()=>document.getElementById('mob-weather-city').textContent='Your Location'); }
+    }).catch(() => { document.getElementById('mob-weather-temp').textContent = '--'; });
+}
+
 // ===== SNAKE NEON GAME =====
 const SNAKE_COLS = 25;
 const SNAKE_ROWS = 25;
@@ -5459,6 +5540,24 @@ window.addEventListener('load', () => {
                 });
               });
               if (total) total.textContent = data.totalContributions.toLocaleString() + ' contributions this year';
+              // Mobile graph too
+              const mobGraph = document.getElementById('mob-gh-graph');
+              const mobTotal = document.getElementById('mob-gh-total');
+              if (mobGraph) {
+                const mobWeeks = data.weeks.slice(-16);
+                mobWeeks.forEach(week => {
+                  week.contributionDays.forEach(day => {
+                    const cell = document.createElement('div');
+                    cell.className = 'gh-cell';
+                    cell.style.width = '6px';
+                    cell.style.height = '6px';
+                    const c = day.contributionCount;
+                    if (c > 0) cell.dataset.level = c >= 30 ? 4 : c >= 15 ? 3 : c >= 5 ? 2 : 1;
+                    mobGraph.appendChild(cell);
+                  });
+                });
+                if (mobTotal) mobTotal.textContent = data.totalContributions.toLocaleString() + ' contributions';
+              }
             });
         }, 800);
       }, 300);
