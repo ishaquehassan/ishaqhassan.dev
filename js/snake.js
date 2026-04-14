@@ -273,7 +273,7 @@ function snakeResizeCanvas() {
 function snakeSetDir(dx, dy) {
   if (snakeLocked) return;
   if (snakeGameOver) { snakeReset(); return; }
-  if (!snakeRunning) { snakeStart(); }
+  if (!snakeRunning) { snakeStart(); return; }
   // Use queue to buffer up to 2 moves for quick turns
   const ref = snakeDirQueue.length > 0 ? snakeDirQueue[snakeDirQueue.length - 1] : snakeDir;
   if (ref.x === -dx && ref.y === -dy) return;
@@ -281,6 +281,14 @@ function snakeSetDir(dx, dy) {
   if (dx !== 0 || dy !== 0) {
     snakeDirQueue.push({x:dx, y:dy});
     if (snakeDirQueue.length > 2) snakeDirQueue.shift();
+    // Instant tick if 40%+ of interval passed, feels snappier
+    const elapsed = performance.now() - snakeLastTick;
+    if (elapsed > snakeGetSpeed() * 0.4) {
+      clearTimeout(snakeInterval);
+      snakeLastTick = performance.now();
+      snakeTick();
+      if (snakeRunning && !snakePaused) snakeScheduleNext();
+    }
   }
 }
 
@@ -441,6 +449,7 @@ function snakePlaceFood() {
 }
 
 function snakeTick() {
+  snakeLastTick = performance.now();
   snakePrevBody = JSON.parse(JSON.stringify(snakeBody));
   if (snakeDirQueue.length > 0) { snakeDir = snakeDirQueue.shift(); snakeNextDir = snakeDir; }
   else snakeDir = snakeNextDir;
