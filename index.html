@@ -2482,8 +2482,8 @@ body {
 <!-- MENU BAR -->
 <div id="menubar">
   <div class="left">
-    <div class="menu-parent">
-      <span class="logo" onclick="toggleMenu('apple')"><svg width="14" height="17" viewBox="0 0 14 17" fill="rgba(255,255,255,0.95)"><path d="M13.2 12.45c-.3.67-.44.97-.82 1.56-.53.82-1.28 1.84-2.2 1.85-.83.01-1.04-.54-2.17-.53-1.12.01-1.36.54-2.18.53-.93-.01-1.63-.93-2.16-1.75C2.15 11.76 1.97 9.15 2.98 7.76c.72-1 1.83-1.58 2.87-1.58.95 0 1.55.54 2.33.54.76 0 1.22-.54 2.31-.54.93 0 1.91.5 2.63 1.37-2.31 1.27-1.94 4.57.38 5.45zM9.65 4.9c.41-.53.72-1.27.61-2.03-.67.04-1.45.47-1.91 1.02-.42.49-.76 1.24-.63 1.96.73.02 1.49-.41 1.93-0.95z"/></svg></span>
+    <div class="menu-parent" onclick="toggleMenu('apple')">
+      <span class="logo"><svg width="14" height="17" viewBox="0 0 14 17" fill="rgba(255,255,255,0.95)"><path d="M13.2 12.45c-.3.67-.44.97-.82 1.56-.53.82-1.28 1.84-2.2 1.85-.83.01-1.04-.54-2.17-.53-1.12.01-1.36.54-2.18.53-.93-.01-1.63-.93-2.16-1.75C2.15 11.76 1.97 9.15 2.98 7.76c.72-1 1.83-1.58 2.87-1.58.95 0 1.55.54 2.33.54.76 0 1.22-.54 2.31-.54.93 0 1.91.5 2.63 1.37-2.31 1.27-1.94 4.57.38 5.45zM9.65 4.9c.41-.53.72-1.27.61-2.03-.67.04-1.45.47-1.91 1.02-.42.49-.76 1.24-.63 1.96.73.02 1.49-.41 1.93-0.95z"/></svg></span>
       <div class="menu-dropdown" id="menu-apple">
         <div class="menu-dd-item bold">About This Portfolio</div>
         <div class="menu-dd-sep"></div>
@@ -2493,8 +2493,8 @@ body {
         <div class="menu-dd-item" onclick="window.open('mailto:hello@ishaqhassan.dev')">Send Email...</div>
       </div>
     </div>
-    <div class="menu-parent">
-      <span class="menu-item bold" onclick="toggleMenu('name')">Ishaq Hassan</span>
+    <div class="menu-parent" onclick="toggleMenu('name')">
+      <span class="menu-item bold">Ishaq Hassan</span>
       <div class="menu-dropdown" id="menu-name">
         <div class="menu-dd-item disabled">Flutter Framework Contributor</div>
         <div class="menu-dd-item disabled">Engineering Manager @ DigitalHire</div>
@@ -2504,8 +2504,8 @@ body {
         <div class="menu-dd-item" onclick="window.open('https://medium.com/@ishaqhassan')">Medium Blog</div>
       </div>
     </div>
-    <div class="menu-parent hide-mobile">
-      <span class="menu-item" onclick="toggleMenu('file')">File</span>
+    <div class="menu-parent hide-mobile" onclick="toggleMenu('file')">
+      <span class="menu-item">File</span>
       <div class="menu-dropdown" id="menu-file">
         <div class="menu-dd-item" onclick="openWindow('flutter')">Flutter Contributions<span class="shortcut">⌘1</span></div>
         <div class="menu-dd-item" onclick="openWindow('oss')">Open Source Projects<span class="shortcut">⌘2</span></div>
@@ -2518,8 +2518,8 @@ body {
         <div class="menu-dd-item" onclick="closeAllWindows()">Close All Windows<span class="shortcut">⌘W</span></div>
       </div>
     </div>
-    <div class="menu-parent hide-mobile">
-      <span class="menu-item" onclick="toggleMenu('edit')">Edit</span>
+    <div class="menu-parent hide-mobile" onclick="toggleMenu('edit')">
+      <span class="menu-item">Edit</span>
       <div class="menu-dropdown" id="menu-edit">
         <div class="menu-dd-item disabled">Undo<span class="shortcut">⌘Z</span></div>
         <div class="menu-dd-item disabled">Redo<span class="shortcut">⇧⌘Z</span></div>
@@ -2530,8 +2530,8 @@ body {
         <div class="menu-dd-item disabled">Select All<span class="shortcut">⌘A</span></div>
       </div>
     </div>
-    <div class="menu-parent hide-mobile">
-      <span class="menu-item" onclick="toggleMenu('view')">View</span>
+    <div class="menu-parent hide-mobile" onclick="toggleMenu('view')">
+      <span class="menu-item">View</span>
       <div class="menu-dropdown" id="menu-view">
         <div class="menu-dd-item" onclick="openAllWindows()">Open All Windows</div>
         <div class="menu-dd-item" onclick="toggleMissionControl()">Mission Control<span class="shortcut">F3</span></div>
@@ -2541,8 +2541,8 @@ body {
         <div class="menu-dd-item" onclick="openWindow('github')">GitHub</div>
       </div>
     </div>
-    <div class="menu-parent hide-mobile">
-      <span class="menu-item" onclick="toggleMenu('go')">Go</span>
+    <div class="menu-parent hide-mobile" onclick="toggleMenu('go')">
+      <span class="menu-item">Go</span>
       <div class="menu-dropdown" id="menu-go">
         <div class="menu-dd-item" onclick="window.open('https://github.com/ishaquehassan')">GitHub<span class="shortcut">⇧⌘G</span></div>
         <div class="menu-dd-item" onclick="window.open('https://linkedin.com/in/ishaquehassan')">LinkedIn<span class="shortcut">⇧⌘L</span></div>
