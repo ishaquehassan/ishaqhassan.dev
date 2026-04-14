@@ -416,6 +416,20 @@ body {
 .weather-unit { font-size: 14px; color: rgba(255,255,255,0.4); font-weight: 400; }
 .weather-details { display: flex; gap: 12px; margin-top: 8px; font-size: 10px; color: rgba(255,255,255,0.4); }
 
+/* ===== SNAKE GAME ===== */
+.snake-dir-btn {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: rgba(255,255,255,0.5);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.snake-dir-btn:hover { background: rgba(57,211,83,0.15); color: #39d353; border-color: rgba(57,211,83,0.3); }
+.snake-dir-btn:active { transform: scale(0.9); }
+
 .status-dot {
   display: inline-block;
   width: 8px; height: 8px;
@@ -2892,6 +2906,10 @@ body {
       <div class="dock-tooltip">LinkedIn</div>
       <div class="dock-icon linkedin"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
     </div>
+    <div class="dock-item" onclick="openWindow('snake')">
+      <div class="dock-tooltip">Snake Game</div>
+      <div class="dock-icon" style="background:linear-gradient(135deg,#0a2e1a,#0d3320);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 12h2v2H4v-2zm4 0h2v2H8v-2zm4-4h2v2h-2V8zm0 4h2v2h-2v-2zm4-4h2v2h-2V8zm0 8h2v2h-2v-2zm-4 0h2v2h-2v-2zm-4 0h2v2H8v-2z" fill="#39d353"/><circle cx="18" cy="8" r="1.5" fill="#39d353"/></svg></div>
+    </div>
     <div class="dock-item" onclick="toggleMissionControl()">
       <div class="dock-tooltip">Mission Control</div>
       <div class="dock-icon" style="background:linear-gradient(135deg,#2d2d44,#1a1a2e);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="8" height="7" rx="1.5" stroke="#fff" stroke-width="1.5"/><rect x="14" y="3" width="8" height="7" rx="1.5" stroke="#fff" stroke-width="1.5"/><rect x="2" y="14" width="8" height="7" rx="1.5" stroke="#fff" stroke-width="1.5"/><rect x="14" y="14" width="8" height="7" rx="1.5" stroke="#fff" stroke-width="1.5"/></svg></div>
@@ -3515,6 +3533,36 @@ body {
     </div>
   </div>
   <div class="window-footer"><a href="https://linkedin.com/in/ishaquehassan" target="_blank" style="display:inline-block;background:#0077B5;color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;">Open LinkedIn Profile →</a></div>
+</div>
+
+<div class="window" id="win-snake" style="width:480px;height:560px;top:50px;left:calc(50% - 240px);">
+  <div class="window-toolbar" onmousedown="startDrag(event,'win-snake')">
+    <div class="traffic-lights">
+      <div class="traffic-light tl-close" onclick="closeWindow('snake')">✕</div>
+      <div class="traffic-light tl-minimize" onclick="minimizeWindow('snake')">−</div>
+      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'snake')">+<div class="snap-menu" id="sm-snake"><div class="snap-menu-item" onclick="snapWindow('snake','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('snake','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('snake','top-full',event)">⬆ Full Screen</div></div></div>
+    </div>
+    <div class="window-title">Snake Neon</div>
+  </div>
+  <div class="window-body" style="padding:16px;display:flex;flex-direction:column;align-items:center;gap:12px;">
+    <div style="display:flex;justify-content:space-between;width:100%;max-width:400px;">
+      <div style="font-size:12px;color:rgba(255,255,255,0.5);">Score: <span id="snake-score" style="color:#39d353;font-weight:700;">0</span></div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.5);">High: <span id="snake-high" style="color:#FFD60A;font-weight:700;">0</span></div>
+    </div>
+    <canvas id="snake-canvas" width="400" height="400" style="border-radius:12px;background:#0a0a0a;border:1px solid rgba(255,255,255,0.06);"></canvas>
+    <div id="snake-overlay" style="position:relative;margin-top:-200px;text-align:center;pointer-events:none;z-index:2;">
+      <div style="font-size:24px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any arrow key or tap to start</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:-180px;">
+      <button class="snake-dir-btn" onclick="snakeSetDir(0,-1)">↑</button>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="snake-dir-btn" onclick="snakeSetDir(-1,0)">←</button>
+      <button class="snake-dir-btn" onclick="snakeSetDir(0,1)">↓</button>
+      <button class="snake-dir-btn" onclick="snakeSetDir(1,0)">→</button>
+    </div>
+  </div>
 </div>
 
 <!-- MOBILE APP -->
@@ -4317,7 +4365,7 @@ function openWindow(id) {
 
   // Bounce dock icon
   const dockItems = document.querySelectorAll('.dock-item');
-  const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin'];
+  const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake'];
   const idx = names.indexOf(id);
   if (idx >= 0 && dockItems[idx]) {
     dockItems[idx].querySelector('.dock-icon').classList.add('dock-bounce');
@@ -4363,6 +4411,7 @@ function openWindow(id) {
 function closeWindow(id) {
   const win = document.getElementById('win-' + id);
   if (!win) return;
+  if (id === 'snake') snakeReset();
   win.classList.add('closing');
   setTimeout(() => {
     win.classList.remove('open','closing','hidden-desktop');
@@ -4675,6 +4724,168 @@ function getWeatherIcon(code) {
   if (code >= 95) return '⛈️';
   return '🌤️';
 }
+
+// ===== SNAKE NEON GAME =====
+const SNAKE_SIZE = 20;
+const SNAKE_COLS = 20;
+const SNAKE_ROWS = 20;
+let snakeBody = [{x:10,y:10}];
+let snakeDir = {x:1,y:0};
+let snakeNextDir = {x:1,y:0};
+let snakeFood = {x:15,y:10};
+let snakeScore = 0;
+let snakeHighScore = parseInt(localStorage.getItem('snakeHigh') || '0');
+let snakeRunning = false;
+let snakeGameOver = false;
+let snakeInterval = null;
+let snakeParticles = [];
+
+function snakeSetDir(dx, dy) {
+  if (snakeGameOver) { snakeReset(); return; }
+  if (!snakeRunning) { snakeStart(); }
+  if (snakeDir.x === -dx && snakeDir.y === -dy) return;
+  if (dx !== 0 || dy !== 0) snakeNextDir = {x:dx, y:dy};
+}
+
+document.addEventListener('keydown', (e) => {
+  const win = document.getElementById('win-snake');
+  if (!win || !win.classList.contains('open')) return;
+  if (e.key === 'ArrowUp') { e.preventDefault(); snakeSetDir(0,-1); }
+  if (e.key === 'ArrowDown') { e.preventDefault(); snakeSetDir(0,1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); snakeSetDir(-1,0); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); snakeSetDir(1,0); }
+});
+
+function snakeStart() {
+  snakeRunning = true;
+  const overlay = document.getElementById('snake-overlay');
+  if (overlay) overlay.style.display = 'none';
+  snakeInterval = setInterval(snakeTick, 100);
+}
+
+function snakeReset() {
+  clearInterval(snakeInterval);
+  snakeBody = [{x:10,y:10}];
+  snakeDir = {x:1,y:0};
+  snakeNextDir = {x:1,y:0};
+  snakeScore = 0;
+  snakeGameOver = false;
+  snakeRunning = false;
+  snakeParticles = [];
+  snakePlaceFood();
+  document.getElementById('snake-score').textContent = '0';
+  const overlay = document.getElementById('snake-overlay');
+  if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:24px;font-weight:700;color:#39d353;text-shadow:0 0 20px rgba(57,211,83,0.5);">SNAKE NEON</div><div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any arrow key or tap to start</div>'; }
+  snakeDraw();
+}
+
+function snakePlaceFood() {
+  let pos;
+  do {
+    pos = { x: Math.floor(Math.random() * SNAKE_COLS), y: Math.floor(Math.random() * SNAKE_ROWS) };
+  } while (snakeBody.some(s => s.x === pos.x && s.y === pos.y));
+  snakeFood = pos;
+}
+
+function snakeTick() {
+  snakeDir = snakeNextDir;
+  const head = { x: snakeBody[0].x + snakeDir.x, y: snakeBody[0].y + snakeDir.y };
+
+  if (head.x < 0 || head.x >= SNAKE_COLS || head.y < 0 || head.y >= SNAKE_ROWS || snakeBody.some(s => s.x === head.x && s.y === head.y)) {
+    clearInterval(snakeInterval);
+    snakeGameOver = true;
+    snakeRunning = false;
+    if (snakeScore > snakeHighScore) {
+      snakeHighScore = snakeScore;
+      localStorage.setItem('snakeHigh', snakeHighScore);
+      document.getElementById('snake-high').textContent = snakeHighScore;
+    }
+    const overlay = document.getElementById('snake-overlay');
+    if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:24px;font-weight:700;color:#FF5F57;text-shadow:0 0 20px rgba(255,95,87,0.5);">GAME OVER</div><div style="font-size:16px;color:#fff;margin-top:4px;">Score: ' + snakeScore + '</div><div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;">Press any key to restart</div>'; }
+    return;
+  }
+
+  snakeBody.unshift(head);
+  if (head.x === snakeFood.x && head.y === snakeFood.y) {
+    snakeScore++;
+    document.getElementById('snake-score').textContent = snakeScore;
+    for (let i = 0; i < 8; i++) {
+      snakeParticles.push({ x: snakeFood.x * SNAKE_SIZE + SNAKE_SIZE/2, y: snakeFood.y * SNAKE_SIZE + SNAKE_SIZE/2, vx: (Math.random()-0.5)*6, vy: (Math.random()-0.5)*6, life: 15 });
+    }
+    snakePlaceFood();
+    playSfx(sfxClick);
+  } else {
+    snakeBody.pop();
+  }
+  snakeDraw();
+}
+
+function snakeDraw() {
+  const canvas = document.getElementById('snake-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 400, 400);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+  for (let i = 0; i <= SNAKE_COLS; i++) { ctx.beginPath(); ctx.moveTo(i*SNAKE_SIZE,0); ctx.lineTo(i*SNAKE_SIZE,400); ctx.stroke(); }
+  for (let i = 0; i <= SNAKE_ROWS; i++) { ctx.beginPath(); ctx.moveTo(0,i*SNAKE_SIZE); ctx.lineTo(400,i*SNAKE_SIZE); ctx.stroke(); }
+
+  // Food glow
+  ctx.shadowColor = '#FF5F57';
+  ctx.shadowBlur = 15;
+  ctx.fillStyle = '#FF5F57';
+  ctx.beginPath();
+  ctx.arc(snakeFood.x * SNAKE_SIZE + SNAKE_SIZE/2, snakeFood.y * SNAKE_SIZE + SNAKE_SIZE/2, 6, 0, Math.PI*2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Snake body with glow
+  snakeBody.forEach((seg, i) => {
+    const alpha = 1 - (i / snakeBody.length) * 0.6;
+    const green = i === 0 ? '#39d353' : '#26a641';
+    ctx.shadowColor = '#39d353';
+    ctx.shadowBlur = i === 0 ? 12 : 6;
+    ctx.fillStyle = green;
+    ctx.globalAlpha = alpha;
+    const pad = i === 0 ? 1 : 2;
+    ctx.beginPath();
+    ctx.roundRect(seg.x * SNAKE_SIZE + pad, seg.y * SNAKE_SIZE + pad, SNAKE_SIZE - pad*2, SNAKE_SIZE - pad*2, 4);
+    ctx.fill();
+
+    // Head eyes
+    if (i === 0) {
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#0a0a0a';
+      ctx.globalAlpha = 1;
+      const ex = snakeDir.x === 0 ? 5 : (snakeDir.x > 0 ? 10 : 4);
+      const ey = snakeDir.y === 0 ? 5 : (snakeDir.y > 0 ? 10 : 4);
+      ctx.beginPath(); ctx.arc(seg.x*SNAKE_SIZE + ex, seg.y*SNAKE_SIZE + ey, 2, 0, Math.PI*2); ctx.fill();
+      const ex2 = snakeDir.x === 0 ? 15 : (snakeDir.x > 0 ? 10 : 16);
+      const ey2 = snakeDir.y === 0 ? 15 : (snakeDir.y > 0 ? 10 : 16);
+      ctx.beginPath(); ctx.arc(seg.x*SNAKE_SIZE + ex2, seg.y*SNAKE_SIZE + ey2, 2, 0, Math.PI*2); ctx.fill();
+    }
+  });
+  ctx.globalAlpha = 1;
+  ctx.shadowBlur = 0;
+
+  // Particles
+  snakeParticles = snakeParticles.filter(p => p.life > 0);
+  snakeParticles.forEach(p => {
+    ctx.fillStyle = '#39d353';
+    ctx.globalAlpha = p.life / 15;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 2, 0, Math.PI*2);
+    ctx.fill();
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life--;
+  });
+  ctx.globalAlpha = 1;
+}
+
+document.getElementById('snake-high').textContent = snakeHighScore;
+snakeDraw();
 
 // ===== WINDOW RESIZE =====
 let resizeEl = null, resizeStartX = 0, resizeStartY = 0, resizeStartW = 0, resizeStartH = 0;
@@ -5284,7 +5495,7 @@ document.querySelectorAll('.window-toolbar').forEach(toolbar => {
 // ===== MULTIPLE DESKTOPS (SPACES) =====
 // Each desktop saves/restores FULL window state independently.
 // Same app can be open on multiple desktops. No cross-contamination.
-const allWindowIds = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin'];
+const allWindowIds = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake'];
 let desktops = [{ id: 0, name: 'Desktop 1' }];
 let currentDesktopId = 0;
 let nextDesktopId = 1;
@@ -5347,7 +5558,7 @@ function restoreDesktopState(dId) {
 // Sync dock active dots with current open windows
 function syncDockIndicators() {
   const dockItems = document.querySelectorAll('.dock-item');
-  const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin'];
+  const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake'];
   names.forEach((id, idx) => {
     if (!dockItems[idx]) return;
     if (openWindows[id]) {
