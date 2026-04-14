@@ -4824,6 +4824,23 @@ function snapWindow(winId, zone, event) {
 function toggleSnapMenu(event, winId) {
   event.stopPropagation();
   event.preventDefault();
+  const win = document.getElementById('win-' + winId);
+  if (win && (win.classList.contains('maximized') || win.dataset.snapped)) {
+    if (win.classList.contains('maximized')) {
+      maximizeWindow(winId);
+    } else if (win.dataset.snapped) {
+      const saved = windowStates[winId + '_snap'];
+      if (saved) {
+        win.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+        Object.assign(win.style, saved);
+        setTimeout(() => win.style.transition = '', 300);
+        delete windowStates[winId + '_snap'];
+      }
+      delete win.dataset.snapped;
+    }
+    document.querySelectorAll('.snap-menu').forEach(m => m.classList.remove('show'));
+    return;
+  }
   const menu = document.getElementById('sm-' + winId);
   if (!menu) return;
   document.querySelectorAll('.snap-menu').forEach(m => { if (m !== menu) m.classList.remove('show'); });
