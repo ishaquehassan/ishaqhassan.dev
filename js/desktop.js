@@ -291,6 +291,7 @@ if (window.innerWidth > 768) {
 }
 
 // ===== PARTICLE SYSTEM (Desktop only) =====
+let particleAnimRunning = false;
 if (window.innerWidth > 768) {
   const canvas = document.getElementById('particle-canvas');
   if (canvas) {
@@ -322,13 +323,12 @@ if (window.innerWidth > 768) {
         this.speedX = (Math.random() - 0.5) * 0.3;
         this.speedY = (Math.random() - 0.5) * 0.3;
         this.opacity = Math.random() * 0.5 + 0.1;
-        this.hue = Math.random() * 60 + 180; // cyan to purple range
+        this.hue = Math.random() * 60 + 180;
       }
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
 
-        // Mouse repulsion
         const dx = this.x - mouseX;
         const dy = this.y - mouseY;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -338,21 +338,18 @@ if (window.innerWidth > 768) {
           this.y += (dy / dist) * force * 2;
         }
 
-        // Wrap around
         if (this.x < -10) this.x = canvas.width + 10;
         if (this.x > canvas.width + 10) this.x = -10;
         if (this.y < -10) this.y = canvas.height + 10;
         if (this.y > canvas.height + 10) this.y = -10;
       }
-      draw() {
-        // Twinkle effect
-        const twinkle = Math.sin(Date.now() * 0.003 + this.x * 0.1) * 0.3 + 0.7;
+      draw(frameNow) {
+        const twinkle = Math.sin(frameNow * 0.003 + this.x * 0.1) * 0.3 + 0.7;
         const finalOpacity = this.opacity * twinkle;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${finalOpacity})`;
         ctx.fill();
-        // Add glow to larger particles
         if (this.size > 1.2) {
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
@@ -362,38 +359,65 @@ if (window.innerWidth > 768) {
       }
     }
 
-    // Create particles
-    const particleCount = Math.min(80, Math.floor(window.innerWidth * window.innerHeight / 15000));
+    const particleCount = Math.min(35, Math.floor(window.innerWidth * window.innerHeight / 30000));
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle());
     }
 
+    // Spatial grid for O(n) connection drawing instead of O(n²)
     function drawConnections() {
+      const cellSize = 120;
+      const cols = Math.ceil(canvas.width / cellSize);
+      const grid = {};
       for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            const opacity = (1 - dist / 120) * 0.15;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(0, 212, 255, ${opacity})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+        const cx = Math.floor(particles[i].x / cellSize);
+        const cy = Math.floor(particles[i].y / cellSize);
+        const key = cx + ',' + cy;
+        if (!grid[key]) grid[key] = [];
+        grid[key].push(i);
+      }
+      for (let i = 0; i < particles.length; i++) {
+        const cx = Math.floor(particles[i].x / cellSize);
+        const cy = Math.floor(particles[i].y / cellSize);
+        for (let nx = cx - 1; nx <= cx + 1; nx++) {
+          for (let ny = cy - 1; ny <= cy + 1; ny++) {
+            const neighbors = grid[nx + ',' + ny];
+            if (!neighbors) continue;
+            for (let k = 0; k < neighbors.length; k++) {
+              const j = neighbors[k];
+              if (j <= i) continue;
+              const dx = particles[i].x - particles[j].x;
+              const dy = particles[i].y - particles[j].y;
+              const distSq = dx * dx + dy * dy;
+              if (distSq < 14400) {
+                const dist = Math.sqrt(distSq);
+                const opacity = (1 - dist / 120) * 0.15;
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.strokeStyle = `rgba(0, 212, 255, ${opacity})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+              }
+            }
           }
         }
       }
     }
 
     function animateParticles() {
+      if (!particleAnimRunning) return;
+      const frameNow = Date.now();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => { p.update(); p.draw(); });
+      particles.forEach(p => { p.update(); p.draw(frameNow); });
       drawConnections();
       animFrame = requestAnimationFrame(animateParticles);
     }
+    particleAnimRunning = true;
     animateParticles();
+    document.addEventListener('resume-particles', () => {
+      if (particleAnimRunning) animateParticles();
+    });
   }
 }
 
@@ -982,3 +1006,27 @@ function renderMissionControl() {
     grid.appendChild(wrapper);
   });
 }
+
+// ===== PAGE VISIBILITY: pause animations when tab hidden =====
+let clockInterval = null;
+// Replace existing clock interval with controllable one
+(function() {
+  // The setInterval at line ~181 in app.js runs the clock. We add visibility control here.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      // Pause particle system
+      particleAnimRunning = false;
+    } else {
+      // Resume particle system
+      if (window.innerWidth > 768 && document.getElementById('particle-canvas')) {
+        particleAnimRunning = true;
+        // Restart animation loop
+        const canvas = document.getElementById('particle-canvas');
+        if (canvas) {
+          const evt = new CustomEvent('resume-particles');
+          document.dispatchEvent(evt);
+        }
+      }
+    }
+  });
+})();

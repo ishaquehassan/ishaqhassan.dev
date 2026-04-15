@@ -8,7 +8,8 @@ let musicAudio = null;
 let musicPlaying = false;
 
 function initMusicPlayer() {
-  musicAudio = new Audio(musicTracks[0].file);
+  musicAudio = new Audio();
+  musicAudio.preload = 'none';
   musicAudio.volume = 0.1;
   musicAudio.addEventListener('ended', () => nextTrack());
   musicAudio.addEventListener('timeupdate', updateMusicProgress);
@@ -47,6 +48,11 @@ function initMusicPlayer() {
   if (window.innerWidth > 768) {
     document.addEventListener('click', function autoplayOnce() {
       if (!musicPlaying) {
+        if (!musicAudio.src || musicAudio.src === location.href) {
+          musicAudio.src = musicTracks[musicIndex].file;
+          document.getElementById('music-track').textContent = musicTracks[musicIndex].name;
+          document.getElementById('music-artist').textContent = musicTracks[musicIndex].artist;
+        }
         musicAudio.play().then(() => {
           musicPlaying = true;
           document.getElementById('music-play').textContent = '⏸';
@@ -63,6 +69,11 @@ function toggleMusic() {
     musicPlaying = false;
     document.getElementById('music-play').textContent = '▶';
   } else {
+    if (!musicAudio.src || musicAudio.src === location.href) {
+      musicAudio.src = musicTracks[musicIndex].file;
+      document.getElementById('music-track').textContent = musicTracks[musicIndex].name;
+      document.getElementById('music-artist').textContent = musicTracks[musicIndex].artist;
+    }
     musicAudio.play().then(() => {
       musicPlaying = true;
       document.getElementById('music-play').textContent = '⏸';

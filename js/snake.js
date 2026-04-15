@@ -169,10 +169,20 @@ function snakeStartComboDecay() {
   }, 50);
 }
 
+// Shared AudioContext for all snake SFX (prevents memory leak)
+let snakeAudioCtx = null;
+function getSnakeAudioCtx() {
+  if (!snakeAudioCtx || snakeAudioCtx.state === 'closed') {
+    snakeAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (snakeAudioCtx.state === 'suspended') snakeAudioCtx.resume();
+  return snakeAudioCtx;
+}
+
 // Sound effects (Web Audio, no files needed)
 function snakeEatSfx() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = getSnakeAudioCtx();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = 'sine';
@@ -187,7 +197,7 @@ function snakeEatSfx() {
 
 function snakeBonusEatSfx() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = getSnakeAudioCtx();
     [0, 0.08, 0.16].forEach((delay, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -203,8 +213,7 @@ function snakeBonusEatSfx() {
 
 function snakeDeathSfx() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    // Impact hit
+    const ctx = getSnakeAudioCtx();
     const hit = ctx.createOscillator();
     const hitG = ctx.createGain();
     hit.type = 'sawtooth';
@@ -214,7 +223,6 @@ function snakeDeathSfx() {
     hitG.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
     hit.connect(hitG); hitG.connect(ctx.destination);
     hit.start(ctx.currentTime); hit.stop(ctx.currentTime + 0.3);
-    // Sad wind-down melody
     [0.25, 0.45, 0.65, 0.9].forEach((delay, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -227,7 +235,6 @@ function snakeDeathSfx() {
       osc.connect(gain); gain.connect(ctx.destination);
       osc.start(ctx.currentTime + delay); osc.stop(ctx.currentTime + delay + 0.28);
     });
-    // Low rumble underneath
     const rumble = ctx.createOscillator();
     const rumbleG = ctx.createGain();
     rumble.type = 'triangle';
@@ -242,8 +249,7 @@ function snakeDeathSfx() {
 
 function snakeBonusMissSfx() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    // Sharp buzz hit first (shock)
+    const ctx = getSnakeAudioCtx();
     const noise = ctx.createOscillator();
     const noiseGain = ctx.createGain();
     noise.type = 'sawtooth';
@@ -253,7 +259,6 @@ function snakeBonusMissSfx() {
     noiseGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
     noise.connect(noiseGain); noiseGain.connect(ctx.destination);
     noise.start(ctx.currentTime); noise.stop(ctx.currentTime + 0.15);
-    // Sad descending tones (womp womp womp)
     [0, 0.15, 0.35].forEach((delay, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -271,7 +276,7 @@ function snakeBonusMissSfx() {
 
 function snakeBonusSfx() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = getSnakeAudioCtx();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = 'sine';
@@ -381,7 +386,7 @@ document.addEventListener('keydown', (e) => {
 
 function snakeStartSfx(note) {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = getSnakeAudioCtx();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = 'sine';
@@ -395,7 +400,7 @@ function snakeStartSfx(note) {
 
 function snakeGoSfx() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = getSnakeAudioCtx();
     [0, 0.06, 0.12].forEach((d, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -442,7 +447,7 @@ function snakeStart() {
     snakeRunning = true;
     snakeStartTime = performance.now();
     snakeLastTick = performance.now();
-    snakePrevBody = JSON.parse(JSON.stringify(snakeBody));
+    snakePrevBody = snakeBody.map(s => ({x:s.x,y:s.y}));
     snakeScheduleNext();
     snakeRenderLoop();
   });
@@ -513,7 +518,7 @@ function snakePlaceFood() {
 
 function snakeTick() {
   snakeLastTick = performance.now();
-  snakePrevBody = JSON.parse(JSON.stringify(snakeBody));
+  snakePrevBody = snakeBody.map(s => ({x:s.x,y:s.y}));
   if (snakeDirQueue.length > 0) { snakeDir = snakeDirQueue.shift(); snakeNextDir = snakeDir; }
   else snakeDir = snakeNextDir;
   const head = { x: snakeBody[0].x + snakeDir.x, y: snakeBody[0].y + snakeDir.y };
@@ -1001,7 +1006,7 @@ function snakeDrawGameOver(isNewHigh) {
 }
 
 document.getElementById('snake-high').textContent = snakeHighScore;
-snakeResizeCanvas();
+// Snake canvas init deferred until window opens (see openWindow in app.js)
 
 // ===== MOBILE SNAKE =====
 let MOB_SNAKE_COLS = 25;
@@ -1151,7 +1156,7 @@ function mobSnakeStart() {
   snakeCountdown(canvas, () => {
     mobSnake.running = true;
     mobSnake.startTime = performance.now();
-    mobSnake.prevBody = JSON.parse(JSON.stringify(mobSnake.body));
+    mobSnake.prevBody = mobSnake.body.map(s => ({x:s.x,y:s.y}));
     mobSnake.lastTick = performance.now();
     mobSnakeSchedule();
     mobSnakeRenderLoop();
@@ -1193,7 +1198,7 @@ function mobSnakeReset() {
 
 function mobSnakeTick() {
   const S = mobSnake;
-  S.prevBody = JSON.parse(JSON.stringify(S.body));
+  S.prevBody = S.body.map(s => ({x:s.x,y:s.y}));
   S.dir = S.nextDir;
   S.lastTick = performance.now();
   const head = { x: S.body[0].x + S.dir.x, y: S.body[0].y + S.dir.y };
