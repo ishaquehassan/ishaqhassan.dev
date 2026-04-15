@@ -36,6 +36,10 @@ let snakeAnimFrame = null;
 let snakePaused = false;
 let snakeLocked = false; // true after game over, prevents restart until relaunched
 
+// Offscreen grid caches (pre-rendered once, blit each frame)
+let snakeGridCache = null;
+let mobSnakeGridCache = null;
+
 // Combo system
 let snakeCombo = 0;
 let snakeComboTimer = null;
@@ -322,6 +326,7 @@ function snakeResizeCanvas() {
   canvas.height = pxH;
   canvas.style.width = pxW + 'px';
   canvas.style.height = pxH + 'px';
+  snakeGridCache = null; // invalidate grid cache on resize
   snakeDraw(1);
 }
 
@@ -635,23 +640,32 @@ function snakeDraw(t) {
   const H = S * SNAKE_ROWS;
   ctx.clearRect(0, 0, W, H);
 
-  // Smooth easing
-  const ease = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+  // Linear interpolation (no easing, instant grid feel)
+  const ease = t;
 
-  // Dotted grid background
-  ctx.fillStyle = 'rgba(255,255,255,0.18)';
-  for (let gx = 0; gx < SNAKE_COLS; gx++) {
-    for (let gy = 0; gy < SNAKE_ROWS; gy++) {
-      ctx.beginPath();
-      ctx.arc(gx * S + S/2, gy * S + S/2, 1.5, 0, Math.PI*2);
-      ctx.fill();
+  // Dotted grid background (pre-rendered offscreen canvas)
+  if (!snakeGridCache || snakeGridCache.width !== W || snakeGridCache.height !== H) {
+    snakeGridCache = document.createElement('canvas');
+    snakeGridCache.width = W; snakeGridCache.height = H;
+    const gctx = snakeGridCache.getContext('2d');
+    gctx.fillStyle = 'rgba(255,255,255,0.18)';
+    for (let gx = 0; gx < SNAKE_COLS; gx++) {
+      for (let gy = 0; gy < SNAKE_ROWS; gy++) {
+        gctx.beginPath();
+        gctx.arc(gx * S + S/2, gy * S + S/2, 1.5, 0, Math.PI*2);
+        gctx.fill();
+      }
     }
   }
+  ctx.drawImage(snakeGridCache, 0, 0);
+
+  // Cache timestamp for all animations this frame
+  const frameNow = Date.now();
 
   // Food pulsing glow
-  const pulse = 0.85 + Math.sin(Date.now() / 200) * 0.15;
+  const pulse = 0.85 + Math.sin(frameNow / 200) * 0.15;
   ctx.shadowColor = '#FF5F57';
-  ctx.shadowBlur = 16 * pulse;
+  ctx.shadowBlur = 12 * pulse;
   ctx.fillStyle = '#FF5F57';
   ctx.beginPath();
   ctx.arc(snakeFood.x * S + S/2, snakeFood.y * S + S/2, S * 0.3 * pulse, 0, Math.PI*2);
@@ -670,7 +684,7 @@ function snakeDraw(t) {
     const currentScore = Math.round(BONUS_MIN_SCORE + (BONUS_MAX_SCORE - BONUS_MIN_SCORE) * timeRatio);
 
     // Smooth breathing (fixed frequency, no phase jumps)
-    const breathe = Math.sin(Date.now() * 0.004) * 0.5 + 0.5; // 0 to 1, smooth
+    const breathe = Math.sin(frameNow * 0.004) * 0.5 + 0.5; // 0 to 1, smooth
     const bp = 0.92 + breathe * 0.08;
     const bx = snakeBonus.x * S + S/2;
     const by = snakeBonus.y * S + S/2;
@@ -691,7 +705,7 @@ function snakeDraw(t) {
     // Urgency glow when < 3 seconds left (smooth sine, fixed freq)
     if (timeRatio < 0.33) {
       const urgency = (0.33 - timeRatio) / 0.33;
-      const glow = (Math.sin(Date.now() * 0.008) * 0.5 + 0.5) * (0.08 + urgency * 0.14);
+      const glow = (Math.sin(frameNow * 0.008) * 0.5 + 0.5) * (0.08 + urgency * 0.14);
       ctx.fillStyle = bCol.main;
       ctx.globalAlpha = glow;
       ctx.beginPath();
@@ -702,14 +716,14 @@ function snakeDraw(t) {
 
     // Outer glow
     ctx.shadowColor = bCol.glow;
-    ctx.shadowBlur = 24 + breathe * 10;
+    ctx.shadowBlur = 10;
     ctx.fillStyle = bCol.main + '18';
     ctx.beginPath();
     ctx.arc(bx, by, S * (0.95 + breathe * 0.1), 0, Math.PI*2);
     ctx.fill();
 
     // Main ball
-    ctx.shadowBlur = 18 + breathe * 6;
+    ctx.shadowBlur = 8;
     ctx.fillStyle = bCol.main;
     ctx.beginPath();
     ctx.arc(bx, by, bRadius, 0, Math.PI*2);
@@ -749,7 +763,7 @@ function snakeDraw(t) {
     ctx.lineJoin = 'round';
     ctx.lineWidth = S * 0.65;
     ctx.shadowColor = snakeColor;
-    ctx.shadowBlur = 6;
+    ctx.shadowBlur = 3;
     ctx.globalAlpha = 0.8;
     ctx.beginPath();
     ctx.moveTo(positions[0].x * S + S/2, positions[0].y * S + S/2);
@@ -791,7 +805,7 @@ function snakeDraw(t) {
   positions.forEach((pos, i) => {
     const alpha = 1 - (i / positions.length) * 0.6;
     ctx.shadowColor = snakeColor;
-    ctx.shadowBlur = i === 0 ? 14 : 3;
+    ctx.shadowBlur = i === 0 ? 6 : 0;
     ctx.fillStyle = i === 0 ? snakeColor : snakeColorSecondary;
     ctx.globalAlpha = alpha;
     const radius = i === 0 ? S * 0.45 : S * 0.32 * (1 - i/positions.length * 0.3);
@@ -820,8 +834,9 @@ function snakeDraw(t) {
   ctx.globalAlpha = 1;
   ctx.shadowBlur = 0;
 
-  // Particles
+  // Particles (capped at 30 for performance)
   snakeParticles = snakeParticles.filter(p => p.life > 0);
+  if (snakeParticles.length > 30) snakeParticles.splice(0, snakeParticles.length - 30);
   snakeParticles.forEach(p => {
     ctx.fillStyle = p.color || snakeColor;
     ctx.globalAlpha = p.life / 15;
@@ -845,11 +860,9 @@ function snakeDraw(t) {
     ctx.font = 'bold ' + size + 'px -apple-system, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.shadowColor = p.color;
-    ctx.shadowBlur = p.big ? 16 : 8;
     ctx.fillStyle = p.color;
     ctx.fillText(p.text, p.x, p.y - yOff);
-    ctx.shadowBlur = 0;
+
     p.life--;
   });
   ctx.globalAlpha = 1;
@@ -891,11 +904,8 @@ function snakeDraw(t) {
     ctx.font = 'bold 15px -apple-system, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.shadowColor = color;
-    ctx.shadowBlur = 12;
     ctx.fillStyle = color;
     ctx.fillText(fires + '  x' + b.combo + ' COMBO  +' + b.mult + 'x  ' + fires, W / 2, bannerY);
-    ctx.shadowBlur = 0;
     b.life--;
   }
   ctx.globalAlpha = 1;
@@ -931,10 +941,7 @@ function snakeDrawGameOver(isNewHigh) {
   ctx.fillStyle = '#FF453A';
   ctx.font = 'bold 24px -apple-system, sans-serif';
   ctx.textAlign = 'center';
-  ctx.shadowColor = '#FF453A';
-  ctx.shadowBlur = 20;
   ctx.fillText('GAME OVER', W/2, cy + 36);
-  ctx.shadowBlur = 0;
 
   // Stats
   const elapsed = snakeStartTime > 0 ? Math.round((performance.now() - snakeStartTime) / 1000) : 0;
@@ -966,10 +973,7 @@ function snakeDrawGameOver(isNewHigh) {
     ctx.font = 'bold 14px -apple-system, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#FFD60A';
-    ctx.shadowColor = '#FFD60A';
-    ctx.shadowBlur = 16;
     ctx.fillText('🏆 NEW HIGH SCORE!', W/2, nhY);
-    ctx.shadowBlur = 0;
   }
 
   // Play again hint
@@ -1084,6 +1088,7 @@ function initMobSnake() {
   canvas.height = pxH;
   canvas.style.width = pxW + 'px';
   canvas.style.height = pxH + 'px';
+  mobSnakeGridCache = null; // invalidate grid cache on resize
   mobSnakeReset();
 
   // Canvas tap to start game (blocked when locked)
@@ -1139,8 +1144,7 @@ function mobSnakeStart() {
 function mobSnakeRenderLoop() {
   if (!mobSnake.running || mobSnake.over || mobSnake.paused) return;
   const t = Math.min((performance.now() - mobSnake.lastTick) / snakeGetSpeed(), 1);
-  const ease = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
-  mobSnakeDraw(ease);
+  mobSnakeDraw(t);
   mobSnakeUpdateSpeedGlow();
   mobSnake.animFrame = requestAnimationFrame(mobSnakeRenderLoop);
 }
@@ -1263,13 +1267,22 @@ function mobSnakeDraw(t) {
   const W = canvas.width, H = canvas.height;
   ctx.clearRect(0,0,W,H);
 
-  // Dotted grid
-  ctx.fillStyle='rgba(255,255,255,0.12)';
-  for(let gx=0;gx<MOB_SNAKE_COLS;gx++)for(let gy=0;gy<MOB_SNAKE_ROWS;gy++){ctx.beginPath();ctx.arc(gx*C+C/2,gy*C+C/2,1.5,0,Math.PI*2);ctx.fill();}
+  // Dotted grid (pre-rendered offscreen canvas)
+  if (!mobSnakeGridCache || mobSnakeGridCache.width !== W || mobSnakeGridCache.height !== H) {
+    mobSnakeGridCache = document.createElement('canvas');
+    mobSnakeGridCache.width = W; mobSnakeGridCache.height = H;
+    const gctx = mobSnakeGridCache.getContext('2d');
+    gctx.fillStyle = 'rgba(255,255,255,0.12)';
+    for(let gx=0;gx<MOB_SNAKE_COLS;gx++)for(let gy=0;gy<MOB_SNAKE_ROWS;gy++){gctx.beginPath();gctx.arc(gx*C+C/2,gy*C+C/2,1.5,0,Math.PI*2);gctx.fill();}
+  }
+  ctx.drawImage(mobSnakeGridCache, 0, 0);
+
+  // Cache timestamp for all animations this frame
+  const frameNow = Date.now();
 
   // Regular food
-  const pulse = 0.85+Math.sin(Date.now()/200)*0.15;
-  ctx.shadowColor='#FF5F57';ctx.shadowBlur=14*pulse;ctx.fillStyle='#FF5F57';
+  const pulse = 0.85+Math.sin(frameNow/200)*0.15;
+  ctx.shadowColor='#FF5F57';ctx.shadowBlur=10*pulse;ctx.fillStyle='#FF5F57';
   ctx.beginPath();ctx.arc(MS.food.x*C+C/2,MS.food.y*C+C/2,C*0.3*pulse,0,Math.PI*2);ctx.fill();
   ctx.shadowBlur=0;ctx.fillStyle='rgba(255,255,255,0.5)';ctx.beginPath();ctx.arc(MS.food.x*C+C/2,MS.food.y*C+C/2,C*0.08,0,Math.PI*2);ctx.fill();
 
@@ -1279,7 +1292,7 @@ function mobSnakeDraw(t) {
     const elapsed=performance.now()-MS.bonus.spawnTime;
     const timeRatio=Math.max(0,1-elapsed/BONUS_DURATION);
     const currentScore=Math.round(BONUS_MIN_SCORE+(BONUS_MAX_SCORE-BONUS_MIN_SCORE)*timeRatio);
-    const breathe=Math.sin(Date.now()*0.004)*0.5+0.5;
+    const breathe=Math.sin(frameNow*0.004)*0.5+0.5;
     const bp=0.92+breathe*0.08;
     const bx=MS.bonus.x*C+C/2,by=MS.bonus.y*C+C/2,bR=C*0.75*bp;
     // Timer ring
@@ -1287,10 +1300,10 @@ function mobSnakeDraw(t) {
     ctx.beginPath();ctx.arc(bx,by,C*1.1,-Math.PI/2,-Math.PI/2+(Math.PI*2*timeRatio),false);ctx.stroke();
     ctx.shadowBlur=0;ctx.globalAlpha=1;
     // Urgency glow (smooth sine, fixed freq)
-    if(timeRatio<0.33){const urgency=(0.33-timeRatio)/0.33;const glow=(Math.sin(Date.now()*0.008)*0.5+0.5)*(0.08+urgency*0.14);ctx.fillStyle=bCol.main;ctx.globalAlpha=glow;ctx.beginPath();ctx.arc(bx,by,C*(1.2+breathe*0.2),0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
+    if(timeRatio<0.33){const urgency=(0.33-timeRatio)/0.33;const glow=(Math.sin(frameNow*0.008)*0.5+0.5)*(0.08+urgency*0.14);ctx.fillStyle=bCol.main;ctx.globalAlpha=glow;ctx.beginPath();ctx.arc(bx,by,C*(1.2+breathe*0.2),0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
     // Glow + ball
-    ctx.shadowColor=bCol.glow;ctx.shadowBlur=24+breathe*10;ctx.fillStyle=bCol.main+'18';ctx.beginPath();ctx.arc(bx,by,C*(0.95+breathe*0.1),0,Math.PI*2);ctx.fill();
-    ctx.shadowBlur=18+breathe*6;ctx.fillStyle=bCol.main;ctx.beginPath();ctx.arc(bx,by,bR,0,Math.PI*2);ctx.fill();
+    ctx.shadowColor=bCol.glow;ctx.shadowBlur=10;ctx.fillStyle=bCol.main+'18';ctx.beginPath();ctx.arc(bx,by,C*(0.95+breathe*0.1),0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=8;ctx.fillStyle=bCol.main;ctx.beginPath();ctx.arc(bx,by,bR,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;ctx.fillStyle='rgba(255,255,255,0.35)';ctx.beginPath();ctx.arc(bx-bR*0.2,by-bR*0.25,bR*0.3,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='rgba(0,0,0,0.8)';ctx.font='bold '+Math.floor(C*0.55)+'px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('+'+currentScore,bx,by+1);
   }
@@ -1298,14 +1311,14 @@ function mobSnakeDraw(t) {
   // Snake body
   const positions=MS.body.map((seg,i)=>{const prev=MS.prevBody[i]||seg;let px=prev.x,py=prev.y;if(seg.x-px>MOB_SNAKE_COLS/2)px+=MOB_SNAKE_COLS;else if(px-seg.x>MOB_SNAKE_COLS/2)px-=MOB_SNAKE_COLS;if(seg.y-py>MOB_SNAKE_ROWS/2)py+=MOB_SNAKE_ROWS;else if(py-seg.y>MOB_SNAKE_ROWS/2)py-=MOB_SNAKE_ROWS;return{x:snakeLerp(px,seg.x,t),y:snakeLerp(py,seg.y,t)};});
 
-  if(positions.length>1){ctx.strokeStyle=snakeColorSecondary;ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=C*0.6;ctx.shadowColor=snakeColor;ctx.shadowBlur=5;ctx.globalAlpha=0.8;ctx.beginPath();ctx.moveTo(positions[0].x*C+C/2,positions[0].y*C+C/2);for(let i=1;i<positions.length;i++){const ddx=positions[i].x-positions[i-1].x,ddy=positions[i].y-positions[i-1].y;if(Math.abs(ddx)>MOB_SNAKE_COLS/2||Math.abs(ddy)>MOB_SNAKE_ROWS/2){const prev=positions[i-1],next=positions[i];if(Math.abs(ddx)>MOB_SNAKE_COLS/2){if(prev.x<next.x)ctx.lineTo(-0.6*C,prev.y*C+C/2);else ctx.lineTo((MOB_SNAKE_COLS+0.6)*C,prev.y*C+C/2);}if(Math.abs(ddy)>MOB_SNAKE_ROWS/2){if(prev.y<next.y)ctx.lineTo(prev.x*C+C/2,-0.6*C);else ctx.lineTo(prev.x*C+C/2,(MOB_SNAKE_ROWS+0.6)*C);}ctx.stroke();ctx.beginPath();if(Math.abs(ddx)>MOB_SNAKE_COLS/2){if(next.x<prev.x)ctx.moveTo(-0.6*C,next.y*C+C/2);else ctx.moveTo((MOB_SNAKE_COLS+0.6)*C,next.y*C+C/2);}else if(Math.abs(ddy)>MOB_SNAKE_ROWS/2){if(next.y<prev.y)ctx.moveTo(next.x*C+C/2,-0.6*C);else ctx.moveTo(next.x*C+C/2,(MOB_SNAKE_ROWS+0.6)*C);}ctx.lineTo(next.x*C+C/2,next.y*C+C/2);}else{ctx.lineTo(positions[i].x*C+C/2,positions[i].y*C+C/2);}}ctx.stroke();ctx.shadowBlur=0;}
+  if(positions.length>1){ctx.strokeStyle=snakeColorSecondary;ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=C*0.6;ctx.shadowColor=snakeColor;ctx.shadowBlur=2;ctx.globalAlpha=0.8;ctx.beginPath();ctx.moveTo(positions[0].x*C+C/2,positions[0].y*C+C/2);for(let i=1;i<positions.length;i++){const ddx=positions[i].x-positions[i-1].x,ddy=positions[i].y-positions[i-1].y;if(Math.abs(ddx)>MOB_SNAKE_COLS/2||Math.abs(ddy)>MOB_SNAKE_ROWS/2){const prev=positions[i-1],next=positions[i];if(Math.abs(ddx)>MOB_SNAKE_COLS/2){if(prev.x<next.x)ctx.lineTo(-0.6*C,prev.y*C+C/2);else ctx.lineTo((MOB_SNAKE_COLS+0.6)*C,prev.y*C+C/2);}if(Math.abs(ddy)>MOB_SNAKE_ROWS/2){if(prev.y<next.y)ctx.lineTo(prev.x*C+C/2,-0.6*C);else ctx.lineTo(prev.x*C+C/2,(MOB_SNAKE_ROWS+0.6)*C);}ctx.stroke();ctx.beginPath();if(Math.abs(ddx)>MOB_SNAKE_COLS/2){if(next.x<prev.x)ctx.moveTo(-0.6*C,next.y*C+C/2);else ctx.moveTo((MOB_SNAKE_COLS+0.6)*C,next.y*C+C/2);}else if(Math.abs(ddy)>MOB_SNAKE_ROWS/2){if(next.y<prev.y)ctx.moveTo(next.x*C+C/2,-0.6*C);else ctx.moveTo(next.x*C+C/2,(MOB_SNAKE_ROWS+0.6)*C);}ctx.lineTo(next.x*C+C/2,next.y*C+C/2);}else{ctx.lineTo(positions[i].x*C+C/2,positions[i].y*C+C/2);}}ctx.stroke();ctx.shadowBlur=0;}
 
-  positions.forEach((pos,i)=>{const alpha=1-(i/positions.length)*0.6;ctx.shadowColor=snakeColor;ctx.shadowBlur=i===0?12:3;ctx.fillStyle=i===0?snakeColor:snakeColorSecondary;ctx.globalAlpha=alpha;const radius=i===0?C*0.45:C*0.3*(1-i/positions.length*0.3);ctx.beginPath();ctx.arc(pos.x*C+C/2,pos.y*C+C/2,radius,0,Math.PI*2);ctx.fill();
+  positions.forEach((pos,i)=>{const alpha=1-(i/positions.length)*0.6;ctx.shadowColor=snakeColor;ctx.shadowBlur=i===0?4:0;ctx.fillStyle=i===0?snakeColor:snakeColorSecondary;ctx.globalAlpha=alpha;const radius=i===0?C*0.45:C*0.3*(1-i/positions.length*0.3);ctx.beginPath();ctx.arc(pos.x*C+C/2,pos.y*C+C/2,radius,0,Math.PI*2);ctx.fill();
   if(i===0){ctx.shadowBlur=0;ctx.globalAlpha=1;const r=C*0.1,pr=C*0.05;const px=pos.x*C,py=pos.y*C;let e1x,e1y,e2x,e2y;if(MS.dir.x===1){e1x=C*0.62;e1y=C*0.28;e2x=C*0.62;e2y=C*0.72;}else if(MS.dir.x===-1){e1x=C*0.38;e1y=C*0.28;e2x=C*0.38;e2y=C*0.72;}else if(MS.dir.y===1){e1x=C*0.28;e1y=C*0.62;e2x=C*0.72;e2y=C*0.62;}else{e1x=C*0.28;e1y=C*0.38;e2x=C*0.72;e2y=C*0.38;}ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(px+e1x,py+e1y,r,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(px+e2x,py+e2y,r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#111';ctx.beginPath();ctx.arc(px+e1x,py+e1y,pr,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(px+e2x,py+e2y,pr,0,Math.PI*2);ctx.fill();}});
   ctx.globalAlpha=1;ctx.shadowBlur=0;
 
   // Particles
-  MS.particles=MS.particles.filter(p=>p.life>0);MS.particles.forEach(p=>{ctx.fillStyle=p.color||snakeColor;ctx.globalAlpha=p.life/12;ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,Math.PI*2);ctx.fill();p.x+=p.vx*0.93;p.y+=p.vy*0.93;p.life--;});ctx.globalAlpha=1;
+  MS.particles=MS.particles.filter(p=>p.life>0);if(MS.particles.length>30)MS.particles.splice(0,MS.particles.length-30);MS.particles.forEach(p=>{ctx.fillStyle=p.color||snakeColor;ctx.globalAlpha=p.life/12;ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,Math.PI*2);ctx.fill();p.x+=p.vx*0.93;p.y+=p.vy*0.93;p.life--;});ctx.globalAlpha=1;
 
   // Floating score popups
   MS.popups=MS.popups.filter(p=>p.life>0);
@@ -1313,8 +1326,8 @@ function mobSnakeDraw(t) {
     const progress=1-(p.life/p.maxLife);const alpha=1-progress;const yOff=progress*35;
     const size=p.big?Math.floor(C*0.85):Math.floor(C*0.6);
     ctx.globalAlpha=alpha;ctx.font='bold '+size+'px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.shadowColor=p.color;ctx.shadowBlur=p.big?14:6;ctx.fillStyle=p.color;
-    ctx.fillText(p.text,p.x,p.y-yOff);ctx.shadowBlur=0;p.life--;
+    ctx.fillStyle=p.color;
+    ctx.fillText(p.text,p.x,p.y-yOff);p.life--;
   });ctx.globalAlpha=1;
 
   // Combo banner
@@ -1330,9 +1343,8 @@ function mobSnakeDraw(t) {
     ctx.globalAlpha=alpha*0.6;ctx.fillStyle='rgba(0,0,0,0.7)';ctx.fillRect(0,bannerY-14,W,30);
     ctx.fillStyle=color;ctx.globalAlpha=alpha*0.8;ctx.fillRect(0,bannerY+15,W,2);
     ctx.globalAlpha=alpha;ctx.font='bold 13px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.shadowColor=color;ctx.shadowBlur=10;ctx.fillStyle=color;
-    ctx.fillText(fires+' x'+b.combo+' COMBO +'+b.mult+'x '+fires,W/2,bannerY);
-    ctx.shadowBlur=0;b.life--;
+    ctx.fillStyle=color;
+    ctx.fillText(fires+' x'+b.combo+' COMBO +'+b.mult+'x '+fires,W/2,bannerY);b.life--;
   }
   ctx.globalAlpha=1;
 }
@@ -1353,8 +1365,7 @@ function mobSnakeDrawGameOver(isNewHigh) {
   ctx.beginPath(); ctx.roundRect(cx, cy, cardW, cardH, 14); ctx.fill();
   ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1; ctx.stroke();
   ctx.fillStyle = '#FF453A'; ctx.font = 'bold 20px -apple-system,sans-serif'; ctx.textAlign = 'center';
-  ctx.shadowColor = '#FF453A'; ctx.shadowBlur = 16;
-  ctx.fillText('GAME OVER', W/2, cy + 32); ctx.shadowBlur = 0;
+  ctx.fillText('GAME OVER', W/2, cy + 32);
   const elapsed = S.startTime > 0 ? Math.round((performance.now() - S.startTime) / 1000) : 0;
   const stats = [['Score', S.score], ['Best', snakeHighScore], ['Length', S.body.length], ['Time', elapsed + 's']];
   ctx.font = '12px -apple-system,sans-serif';
@@ -1367,8 +1378,8 @@ function mobSnakeDrawGameOver(isNewHigh) {
   });
   if (isNewHigh) {
     ctx.font = 'bold 13px -apple-system,sans-serif'; ctx.textAlign = 'center';
-    ctx.fillStyle = '#FFD60A'; ctx.shadowColor = '#FFD60A'; ctx.shadowBlur = 14;
-    ctx.fillText('🏆 NEW HIGH SCORE!', W/2, startY + stats.length * 24 + 8); ctx.shadowBlur = 0;
+    ctx.fillStyle = '#FFD60A';
+    ctx.fillText('🏆 NEW HIGH SCORE!', W/2, startY + stats.length * 24 + 8);
   }
   ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.font = '10px -apple-system,sans-serif'; ctx.textAlign = 'center';
   ctx.fillText('Reopen Snake to play again', W/2, cy + cardH - 12);
