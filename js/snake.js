@@ -547,18 +547,11 @@ function snakeTick() {
     // Draw game over on canvas
     snakeDraw(1);
     snakeDrawGameOver(isNewHigh);
-    // After 3 seconds, close and open GitHub at snake's position
-    const snakeWin = document.getElementById('win-snake');
-    const snakeTop = snakeWin ? snakeWin.style.top : '';
-    const snakeLeft = snakeWin ? snakeWin.style.left : '';
+    // After 3 seconds, close and open LinkedIn
     setTimeout(() => {
       wrap.classList.remove('death-flash', 'shake');
       closeWindow('snake');
       openWindow('github');
-      if (snakeTop && snakeLeft) {
-        const ghWin = document.getElementById('win-github');
-        if (ghWin) { ghWin.style.top = snakeTop; ghWin.style.left = snakeLeft; }
-      }
       showNotif('Done playing? Now back to work 😂', 'Snake Neon');
     }, 3000);
     return;
@@ -751,18 +744,16 @@ function snakeDraw(t) {
     ctx.fillText('+' + currentScore, bx, by + 1);
   }
 
-  // Head-only interpolation, body snaps to grid (clean L/U turns)
+  // Interpolated positions (smooth wrap: adjust prev so lerp goes off-edge, canvas clips naturally)
   const positions = snakeBody.map((seg, i) => {
-    if (i === 0) {
-      const prev = snakePrevBody[0] || seg;
-      let px = prev.x, py = prev.y;
-      if (seg.x - px > SNAKE_COLS / 2) px += SNAKE_COLS;
-      else if (px - seg.x > SNAKE_COLS / 2) px -= SNAKE_COLS;
-      if (seg.y - py > SNAKE_ROWS / 2) py += SNAKE_ROWS;
-      else if (py - seg.y > SNAKE_ROWS / 2) py -= SNAKE_ROWS;
-      return { x: snakeLerp(px, seg.x, ease), y: snakeLerp(py, seg.y, ease) };
-    }
-    return { x: seg.x, y: seg.y };
+    const prev = snakePrevBody[i] || seg;
+    let px = prev.x, py = prev.y;
+    // Adjust previous position for wrap continuity
+    if (seg.x - px > SNAKE_COLS / 2) px += SNAKE_COLS;
+    else if (px - seg.x > SNAKE_COLS / 2) px -= SNAKE_COLS;
+    if (seg.y - py > SNAKE_ROWS / 2) py += SNAKE_ROWS;
+    else if (py - seg.y > SNAKE_ROWS / 2) py -= SNAKE_ROWS;
+    return { x: snakeLerp(px, seg.x, ease), y: snakeLerp(py, seg.y, ease) };
   });
 
   // Draw smooth connected body (portal-style wrap: extend lines to edges)
@@ -803,6 +794,16 @@ function snakeDraw(t) {
         }
         ctx.lineTo(next.x * S + S/2, next.y * S + S/2);
       } else {
+        // Insert corner vertex at turn points to prevent diagonal interpolation
+        if (ease < 1 && snakePrevBody[i-1] && snakePrevBody[i]) {
+          const d1x = snakeBody[i-1].x - snakePrevBody[i-1].x;
+          const d1y = snakeBody[i-1].y - snakePrevBody[i-1].y;
+          const d2x = snakeBody[i].x - snakePrevBody[i].x;
+          const d2y = snakeBody[i].y - snakePrevBody[i].y;
+          if (d1x !== d2x || d1y !== d2y) {
+            ctx.lineTo(snakeBody[i].x * S + S/2, snakeBody[i].y * S + S/2);
+          }
+        }
         ctx.lineTo(positions[i].x * S + S/2, positions[i].y * S + S/2);
       }
     }
@@ -1317,10 +1318,10 @@ function mobSnakeDraw(t) {
     ctx.fillStyle='rgba(0,0,0,0.8)';ctx.font='bold '+Math.floor(C*0.55)+'px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('+'+currentScore,bx,by+1);
   }
 
-  // Snake body (head-only interpolation, body snaps to grid)
-  const positions=MS.body.map((seg,i)=>{if(i===0){const prev=MS.prevBody[0]||seg;let px=prev.x,py=prev.y;if(seg.x-px>MOB_SNAKE_COLS/2)px+=MOB_SNAKE_COLS;else if(px-seg.x>MOB_SNAKE_COLS/2)px-=MOB_SNAKE_COLS;if(seg.y-py>MOB_SNAKE_ROWS/2)py+=MOB_SNAKE_ROWS;else if(py-seg.y>MOB_SNAKE_ROWS/2)py-=MOB_SNAKE_ROWS;return{x:snakeLerp(px,seg.x,t),y:snakeLerp(py,seg.y,t)};}return{x:seg.x,y:seg.y};});
+  // Snake body
+  const positions=MS.body.map((seg,i)=>{const prev=MS.prevBody[i]||seg;let px=prev.x,py=prev.y;if(seg.x-px>MOB_SNAKE_COLS/2)px+=MOB_SNAKE_COLS;else if(px-seg.x>MOB_SNAKE_COLS/2)px-=MOB_SNAKE_COLS;if(seg.y-py>MOB_SNAKE_ROWS/2)py+=MOB_SNAKE_ROWS;else if(py-seg.y>MOB_SNAKE_ROWS/2)py-=MOB_SNAKE_ROWS;return{x:snakeLerp(px,seg.x,t),y:snakeLerp(py,seg.y,t)};});
 
-  if(positions.length>1){ctx.strokeStyle=snakeColorSecondary;ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=C*0.6;ctx.shadowColor=snakeColor;ctx.shadowBlur=2;ctx.globalAlpha=0.8;ctx.beginPath();ctx.moveTo(positions[0].x*C+C/2,positions[0].y*C+C/2);for(let i=1;i<positions.length;i++){const ddx=positions[i].x-positions[i-1].x,ddy=positions[i].y-positions[i-1].y;if(Math.abs(ddx)>MOB_SNAKE_COLS/2||Math.abs(ddy)>MOB_SNAKE_ROWS/2){const prev=positions[i-1],next=positions[i];if(Math.abs(ddx)>MOB_SNAKE_COLS/2){if(prev.x<next.x)ctx.lineTo(-0.6*C,prev.y*C+C/2);else ctx.lineTo((MOB_SNAKE_COLS+0.6)*C,prev.y*C+C/2);}if(Math.abs(ddy)>MOB_SNAKE_ROWS/2){if(prev.y<next.y)ctx.lineTo(prev.x*C+C/2,-0.6*C);else ctx.lineTo(prev.x*C+C/2,(MOB_SNAKE_ROWS+0.6)*C);}ctx.stroke();ctx.beginPath();if(Math.abs(ddx)>MOB_SNAKE_COLS/2){if(next.x<prev.x)ctx.moveTo(-0.6*C,next.y*C+C/2);else ctx.moveTo((MOB_SNAKE_COLS+0.6)*C,next.y*C+C/2);}else if(Math.abs(ddy)>MOB_SNAKE_ROWS/2){if(next.y<prev.y)ctx.moveTo(next.x*C+C/2,-0.6*C);else ctx.moveTo(next.x*C+C/2,(MOB_SNAKE_ROWS+0.6)*C);}ctx.lineTo(next.x*C+C/2,next.y*C+C/2);}else{ctx.lineTo(positions[i].x*C+C/2,positions[i].y*C+C/2);}}ctx.stroke();ctx.shadowBlur=0;}
+  if(positions.length>1){ctx.strokeStyle=snakeColorSecondary;ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=C*0.6;ctx.shadowColor=snakeColor;ctx.shadowBlur=2;ctx.globalAlpha=0.8;ctx.beginPath();ctx.moveTo(positions[0].x*C+C/2,positions[0].y*C+C/2);for(let i=1;i<positions.length;i++){const ddx=positions[i].x-positions[i-1].x,ddy=positions[i].y-positions[i-1].y;if(Math.abs(ddx)>MOB_SNAKE_COLS/2||Math.abs(ddy)>MOB_SNAKE_ROWS/2){const prev=positions[i-1],next=positions[i];if(Math.abs(ddx)>MOB_SNAKE_COLS/2){if(prev.x<next.x)ctx.lineTo(-0.6*C,prev.y*C+C/2);else ctx.lineTo((MOB_SNAKE_COLS+0.6)*C,prev.y*C+C/2);}if(Math.abs(ddy)>MOB_SNAKE_ROWS/2){if(prev.y<next.y)ctx.lineTo(prev.x*C+C/2,-0.6*C);else ctx.lineTo(prev.x*C+C/2,(MOB_SNAKE_ROWS+0.6)*C);}ctx.stroke();ctx.beginPath();if(Math.abs(ddx)>MOB_SNAKE_COLS/2){if(next.x<prev.x)ctx.moveTo(-0.6*C,next.y*C+C/2);else ctx.moveTo((MOB_SNAKE_COLS+0.6)*C,next.y*C+C/2);}else if(Math.abs(ddy)>MOB_SNAKE_ROWS/2){if(next.y<prev.y)ctx.moveTo(next.x*C+C/2,-0.6*C);else ctx.moveTo(next.x*C+C/2,(MOB_SNAKE_ROWS+0.6)*C);}ctx.lineTo(next.x*C+C/2,next.y*C+C/2);}else{if(t<1&&MS.prevBody[i-1]&&MS.prevBody[i]){const d1x=MS.body[i-1].x-MS.prevBody[i-1].x,d1y=MS.body[i-1].y-MS.prevBody[i-1].y,d2x=MS.body[i].x-MS.prevBody[i].x,d2y=MS.body[i].y-MS.prevBody[i].y;if(d1x!==d2x||d1y!==d2y){ctx.lineTo(MS.body[i].x*C+C/2,MS.body[i].y*C+C/2);}}ctx.lineTo(positions[i].x*C+C/2,positions[i].y*C+C/2);}}ctx.stroke();ctx.shadowBlur=0;}
 
   positions.forEach((pos,i)=>{const alpha=1-(i/positions.length)*0.6;ctx.shadowColor=snakeColor;ctx.shadowBlur=i===0?4:0;ctx.fillStyle=i===0?snakeColor:snakeColorSecondary;ctx.globalAlpha=alpha;const radius=i===0?C*0.45:C*0.3*(1-i/positions.length*0.3);ctx.beginPath();ctx.arc(pos.x*C+C/2,pos.y*C+C/2,radius,0,Math.PI*2);ctx.fill();
   if(i===0){ctx.shadowBlur=0;ctx.globalAlpha=1;const r=C*0.1,pr=C*0.05;const px=pos.x*C,py=pos.y*C;let e1x,e1y,e2x,e2y;if(MS.dir.x===1){e1x=C*0.62;e1y=C*0.28;e2x=C*0.62;e2y=C*0.72;}else if(MS.dir.x===-1){e1x=C*0.38;e1y=C*0.28;e2x=C*0.38;e2y=C*0.72;}else if(MS.dir.y===1){e1x=C*0.28;e1y=C*0.62;e2x=C*0.72;e2y=C*0.62;}else{e1x=C*0.28;e1y=C*0.38;e2x=C*0.72;e2y=C*0.38;}ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(px+e1x,py+e1y,r,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(px+e2x,py+e2y,r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#111';ctx.beginPath();ctx.arc(px+e1x,py+e1y,pr,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(px+e2x,py+e2y,pr,0,Math.PI*2);ctx.fill();}});
