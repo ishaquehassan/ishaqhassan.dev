@@ -547,11 +547,18 @@ function snakeTick() {
     // Draw game over on canvas
     snakeDraw(1);
     snakeDrawGameOver(isNewHigh);
-    // After 3 seconds, close and open LinkedIn
+    // After 3 seconds, close and open GitHub at snake's position
+    const snakeWin = document.getElementById('win-snake');
+    const snakeTop = snakeWin ? snakeWin.style.top : '';
+    const snakeLeft = snakeWin ? snakeWin.style.left : '';
     setTimeout(() => {
       wrap.classList.remove('death-flash', 'shake');
       closeWindow('snake');
       openWindow('github');
+      if (snakeTop && snakeLeft) {
+        const ghWin = document.getElementById('win-github');
+        if (ghWin) { ghWin.style.top = snakeTop; ghWin.style.left = snakeLeft; }
+      }
       showNotif('Done playing? Now back to work 😂', 'Snake Neon');
     }, 3000);
     return;
