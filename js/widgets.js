@@ -14,6 +14,40 @@ function initMusicPlayer() {
   musicAudio.addEventListener('ended', () => nextTrack());
   musicAudio.addEventListener('timeupdate', updateMusicProgress);
 
+  // Sync UI when media keys or OS controls play/pause
+  musicAudio.addEventListener('play', () => {
+    musicPlaying = true;
+    document.getElementById('music-play').textContent = '⏸';
+    const mobBtn = document.getElementById('mob-music-play');
+    if (mobBtn) mobBtn.textContent = '⏸';
+    updateMediaSession();
+  });
+  musicAudio.addEventListener('pause', () => {
+    musicPlaying = false;
+    document.getElementById('music-play').textContent = '▶';
+    const mobBtn = document.getElementById('mob-music-play');
+    if (mobBtn) mobBtn.textContent = '▶';
+  });
+
+  // MediaSession API for OS media controls
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.setActionHandler('play', () => toggleMusic());
+    navigator.mediaSession.setActionHandler('pause', () => toggleMusic());
+    navigator.mediaSession.setActionHandler('previoustrack', () => prevTrack());
+    navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
+    navigator.mediaSession.setActionHandler('seekto', (details) => {
+      if (musicAudio.duration && details.seekTime != null) {
+        musicAudio.currentTime = details.seekTime;
+      }
+    });
+    navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+      musicAudio.currentTime = Math.max(0, musicAudio.currentTime - (details.seekOffset || 10));
+    });
+    navigator.mediaSession.setActionHandler('seekforward', (details) => {
+      musicAudio.currentTime = Math.min(musicAudio.duration || 0, musicAudio.currentTime + (details.seekOffset || 10));
+    });
+  }
+
   document.getElementById('music-play').addEventListener('click', (e) => {
     e.stopPropagation();
     toggleMusic();
@@ -53,10 +87,7 @@ function initMusicPlayer() {
           document.getElementById('music-track').textContent = musicTracks[musicIndex].name;
           document.getElementById('music-artist').textContent = musicTracks[musicIndex].artist;
         }
-        musicAudio.play().then(() => {
-          musicPlaying = true;
-          document.getElementById('music-play').textContent = '⏸';
-        }).catch(() => {});
+        musicAudio.play().catch(() => {});
       }
       document.removeEventListener('click', autoplayOnce);
     }, { once: false });
@@ -66,19 +97,24 @@ function initMusicPlayer() {
 function toggleMusic() {
   if (musicPlaying) {
     musicAudio.pause();
-    musicPlaying = false;
-    document.getElementById('music-play').textContent = '▶';
   } else {
     if (!musicAudio.src || musicAudio.src === location.href) {
       musicAudio.src = musicTracks[musicIndex].file;
       document.getElementById('music-track').textContent = musicTracks[musicIndex].name;
       document.getElementById('music-artist').textContent = musicTracks[musicIndex].artist;
     }
-    musicAudio.play().then(() => {
-      musicPlaying = true;
-      document.getElementById('music-play').textContent = '⏸';
-    }).catch(() => {});
+    musicAudio.play().catch(() => {});
   }
+}
+
+function updateMediaSession() {
+  if (!('mediaSession' in navigator)) return;
+  const track = musicTracks[musicIndex];
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: track.name,
+    artist: track.artist,
+    album: 'ishaqhassan.dev'
+  });
 }
 
 function loadTrack(index) {
@@ -91,11 +127,9 @@ function loadTrack(index) {
   document.getElementById('music-artist').textContent = track.artist;
   document.getElementById('music-progress-fill').style.width = '0%';
   document.getElementById('music-time').textContent = '0:00';
+  updateMediaSession();
   if (wasPlaying) {
-    musicAudio.play().then(() => {
-      musicPlaying = true;
-      document.getElementById('music-play').textContent = '⏸';
-    }).catch(() => {});
+    musicAudio.play().catch(() => {});
   }
 }
 
