@@ -35,7 +35,7 @@ body {
 #wallpaper {
   position: fixed;
   inset: 0;
-  background: #0c0c0c url('../assets/wallpaper.jpg') center/cover no-repeat;
+  background: #0c0c0c url('../assets/wallpaper.webp') center/cover no-repeat;
   z-index: 0;
   overflow: hidden;
 }
