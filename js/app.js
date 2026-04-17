@@ -273,7 +273,7 @@ function openWindow(id) {
 
   // Bounce dock icon
   const dockItems = document.querySelectorAll('.dock-item');
-  const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake'];
+  const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake','flutter-course'];
   const idx = names.indexOf(id);
   if (idx >= 0 && dockItems[idx]) {
     dockItems[idx].querySelector('.dock-icon').classList.add('dock-bounce');
@@ -314,6 +314,7 @@ function openWindow(id) {
     if (typeof snakeReset === 'function') snakeReset();
     if (typeof snakeResizeCanvas === 'function') setTimeout(snakeResizeCanvas, 50);
   }
+  if (id === 'flutter-course' && typeof initFlutterCourse === 'function') setTimeout(initFlutterCourse, 50);
 
   win.addEventListener('mousedown', () => { win.style.zIndex = ++activeZ; });
 
@@ -475,4 +476,133 @@ document.addEventListener('mouseenter', (e) => {
   const target = e.target.closest('.dock-item, .traffic-light, .menu-parent, .menu-dd-item:not(.disabled)');
   if (target) playSfx(sfxHover);
 }, true);
+
+// ===== FLUTTER COURSE =====
+const fcVideos = [
+  {id:'DB51xmXlaX4',t:'Basics Of Computers & Why Flutter',s:'Dart Basics'},
+  {id:'i6NyxOIDPAg',t:'Variables & Types',s:'Dart Basics'},
+  {id:'EwfsrybbU20',t:'Lists / Maps / Control Flow',s:'Dart Basics'},
+  {id:'GJpmATFL3JQ',t:'Loops / Scope / break',s:'Dart Basics'},
+  {id:'PMZIF36_LOk',t:'Loops / continue / labels / Functions',s:'Dart Basics'},
+  {id:'xKtramkjQJE',t:'Functions / Arguments / By Ref / By Value',s:'Dart Basics'},
+  {id:'LLes21jFpIY',t:'Higher Order Functions / const & final / typedef',s:'Dart Basics'},
+  {id:'wgHSJtaxdmE',t:'Arrow Functions / Class / Constructors',s:'OOP'},
+  {id:'MEKPMFf14kw',t:'Factory Constructor / Static / Get / Set',s:'OOP'},
+  {id:'-IKODeF5zgE',t:'Inheritance / super / overriding / Polymorphism',s:'OOP'},
+  {id:'cX8v6jX66ZA',t:'Encapsulation / Abstraction',s:'OOP'},
+  {id:'mIfYL2uQo64',t:'Mixins / Enums / Exception Handling',s:'OOP'},
+  {id:'sO9Kj2u_3A8',t:'Git Basics',s:'Foundation'},
+  {id:'zh4ilo3x2lo',t:'Flutter Intro',s:'Flutter UI'},
+  {id:'y86zTGZzg4E',t:'Widgets & How to Compose Them',s:'Flutter UI'},
+  {id:'e1jlRM5eALc',t:'Flex Layout Composition',s:'Flutter UI'},
+  {id:'Kd6xEbzB9Ls',t:'Stateful Widgets in Depth',s:'Flutter UI'},
+  {id:'LUb32ZGcDC0',t:'Assignment for Stateful Widget',s:'Flutter UI'},
+  {id:'t6Oar6baJ84',t:'Complex Data / Null Safety / Child Contexts',s:'Flutter UI'},
+  {id:'zOO5aiO0MVc',t:'Navigator & Future',s:'State Management'},
+  {id:'NzOleMz_39c',t:'HTTP / DNS / Server & Client / API / JSON',s:'API & Network'},
+  {id:'_8Sp-b3jC3k',t:'REST API / HTTP Methods / JSON Parsing',s:'API & Network'},
+  {id:'OpDiadtIWGY',t:'Assets / Theme / Dialog & Modal Sheet',s:'Flutter UI'},
+  {id:'8DceQCquWC0',t:'Complex JSON / Parsing to Models',s:'API & Network'},
+  {id:'zURZS5-sL90',t:'Deep JSON Parsing / Debugging',s:'API & Network'},
+  {id:'nQLiQ3AvoT8',t:'Future Builder / Form / Context Flow',s:'State Management'},
+  {id:'WtSBV06lWj4',t:'State Management / Inherited Widget',s:'State Management'},
+  {id:'YPTU4ebYkLw',t:'Authenticated API / Postman / Dart Server',s:'API & Network'},
+  {id:'KwOhPYsSS-o',t:'Access Token / Shared Preferences',s:'Advanced'},
+  {id:'-Bikp0jtas4',t:'Generics / Generic Model / Provider',s:'State Management'},
+  {id:'YBp7i8VGiaQ',t:'Stacked / Stacked Services / Generator',s:'Advanced'},
+  {id:'8FwRyiARuhI',t:'Unit Test / CI-CD / Github Actions',s:'Advanced'},
+  {id:'vJnH0HE-YZw',t:'UX UI / Figma / Product Lifecycle',s:'Advanced'},
+  {id:'414Ulz9HjMs',t:'Local Database / SQLite / ORM / Floor',s:'Advanced'},
+  {id:'b_MPN5n8g6o',t:'Deploying Flutter Web / Github Actions',s:'Advanced'}
+];
+const fcSectionOrder = ['Dart Basics','OOP','Foundation','Flutter UI','State Management','API & Network','Advanced'];
+let fcCurrentVideo = null;
+let fcGridRendered = false;
+
+function initFlutterCourse() {
+  if (!fcGridRendered) {
+    renderFlutterCourseGrid();
+    fcGridRendered = true;
+  }
+}
+
+function fcGroupVideos() {
+  const groups = {};
+  fcVideos.forEach((v, i) => {
+    if (!groups[v.s]) groups[v.s] = [];
+    groups[v.s].push({...v, idx: i});
+  });
+  return groups;
+}
+
+function renderFlutterCourseGrid() {
+  const c = document.getElementById('fc-sections-container');
+  if (!c) return;
+  const g = fcGroupVideos();
+  c.innerHTML = fcSectionOrder.filter(s => g[s]).map(s => {
+    const vids = g[s];
+    return '<div class="fc-section"><div class="fc-section-header" onclick="this.parentElement.classList.toggle(\'collapsed\')"><span>' + s + ' (' + vids.length + ')</span><span class="fc-collapse-icon">▼</span></div><div class="fc-videos-grid">' + vids.map(v =>
+      '<div class="fc-video-card" onclick="playFcVideo(' + v.idx + ')"><div class="fc-thumb-wrap"><img class="fc-video-thumbnail" src="https://img.youtube.com/vi/' + v.id + '/mqdefault.jpg" alt="" loading="lazy"><div class="fc-play-overlay"><div class="fc-play-icon"></div></div></div><div class="fc-video-info"><div class="fc-video-num">Video ' + (v.idx + 1) + '</div><div class="fc-video-title">' + v.t + '</div></div></div>'
+    ).join('') + '</div></div>';
+  }).join('');
+}
+
+function playFcVideo(i) {
+  if (i < 0 || i >= fcVideos.length) return;
+  fcCurrentVideo = i;
+  const v = fcVideos[i];
+  document.getElementById('fc-grid-view').style.display = 'none';
+  const pv = document.getElementById('fc-player-view');
+  pv.style.display = 'flex';
+  document.getElementById('fc-youtube-player').src = 'https://www.youtube.com/embed/' + v.id + '?autoplay=1&rel=0';
+  document.getElementById('fc-ptitle').textContent = v.t;
+  document.getElementById('fc-counter').textContent = 'Video ' + (i + 1) + ' of ' + fcVideos.length;
+  document.getElementById('fc-title').textContent = 'Video ' + (i + 1) + ' of ' + fcVideos.length;
+  document.getElementById('fc-prev').disabled = i === 0;
+  document.getElementById('fc-next').disabled = i === fcVideos.length - 1;
+}
+
+function fcBackToList() {
+  fcCurrentVideo = null;
+  document.getElementById('fc-youtube-player').src = '';
+  document.getElementById('fc-grid-view').style.display = 'flex';
+  document.getElementById('fc-player-view').style.display = 'none';
+  document.getElementById('fc-title').textContent = 'Flutter Course';
+}
+
+function fcNext() { if (fcCurrentVideo !== null && fcCurrentVideo < fcVideos.length - 1) playFcVideo(fcCurrentVideo + 1); }
+function fcPrev() { if (fcCurrentVideo !== null && fcCurrentVideo > 0) playFcVideo(fcCurrentVideo - 1); }
+
+// ===== MOBILE FLUTTER COURSE =====
+function renderMobileFlutterCourseGrid() {
+  const c = document.getElementById('mfc-content');
+  if (!c) return;
+  const g = fcGroupVideos();
+  c.innerHTML = '<div class="mfc-badges"><span class="mfc-badge">35 Videos</span><span class="mfc-badge mfc-badge-flutter">Official Flutter Docs</span><span class="mfc-badge mfc-badge-urdu">Urdu</span></div>' +
+    fcSectionOrder.filter(s => g[s]).map(s => {
+      const vids = g[s];
+      return '<div class="mfc-section"><div class="mfc-section-hdr" onclick="this.parentElement.classList.toggle(\'collapsed\')"><span>' + s + ' (' + vids.length + ')</span><span class="mfc-collapse">▼</span></div><div class="mfc-grid">' + vids.map(v =>
+        '<div class="mfc-card" onclick="playMfcVideo(' + v.idx + ')"><img src="https://img.youtube.com/vi/' + v.id + '/mqdefault.jpg" alt="" loading="lazy"><div class="mfc-card-info"><div class="mfc-card-num">Video ' + (v.idx + 1) + '</div><div class="mfc-card-title">' + v.t + '</div></div></div>'
+      ).join('') + '</div></div>';
+    }).join('');
+}
+
+function playMfcVideo(i) {
+  if (i < 0 || i >= fcVideos.length) return;
+  fcCurrentVideo = i;
+  const v = fcVideos[i];
+  const c = document.getElementById('mfc-content');
+  document.getElementById('mfc-title').textContent = 'Video ' + (i + 1);
+  c.innerHTML = '<div class="mfc-player"><iframe class="mfc-player-iframe" src="https://www.youtube.com/embed/' + v.id + '?autoplay=1&rel=0&playsinline=1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe><div class="mfc-player-title">' + v.t + '</div><div class="mfc-player-meta"><span class="mfc-badge mfc-badge-flutter">' + v.s + '</span><span class="mfc-player-counter">Video ' + (i + 1) + ' of ' + fcVideos.length + '</span></div></div><div class="mfc-player-nav"><button onclick="playMfcVideo(' + (i - 1) + ')"' + (i === 0 ? ' disabled' : '') + '>&#9664; Previous</button><button onclick="playMfcVideo(' + (i + 1) + ')"' + (i === fcVideos.length - 1 ? ' disabled' : '') + '>Next &#9654;</button></div>';
+}
+
+function mobileFlutterCourseBack() {
+  if (fcCurrentVideo !== null) {
+    fcCurrentVideo = null;
+    document.getElementById('mfc-title').textContent = 'Flutter Course';
+    renderMobileFlutterCourseGrid();
+  } else {
+    closeMobileSection('flutter-course');
+  }
+}
 

@@ -226,12 +226,14 @@ function expandMobileSection(section) {
     'snake': 'mobile-snake-expanded',
     'github': 'mobile-github-expanded',
     'linkedin': 'mobile-linkedin-expanded',
-    'medium': 'mobile-medium-expanded'
+    'medium': 'mobile-medium-expanded',
+    'flutter-course': 'mobile-flutter-course-expanded'
   };
   const elem = document.getElementById(map[section]);
   if (elem) {
     elem.style.display = 'block';
     if (section === 'snake') initMobSnake();
+    if (section === 'flutter-course') renderMobileFlutterCourseGrid();
   }
 }
 
@@ -247,7 +249,8 @@ function closeMobileSection(section) {
     'snake': 'mobile-snake-expanded',
     'github': 'mobile-github-expanded',
     'linkedin': 'mobile-linkedin-expanded',
-    'medium': 'mobile-medium-expanded'
+    'medium': 'mobile-medium-expanded',
+    'flutter-course': 'mobile-flutter-course-expanded'
   };
   const elem = document.getElementById(map[section]);
   if (elem) {
@@ -670,7 +673,7 @@ document.querySelectorAll('.window-toolbar').forEach(toolbar => {
 // ===== MULTIPLE DESKTOPS (SPACES) =====
 // Each desktop saves/restores FULL window state independently.
 // Same app can be open on multiple desktops. No cross-contamination.
-const allWindowIds = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake'];
+const allWindowIds = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake','flutter-course'];
 let desktops = [{ id: 0, name: 'Desktop 1' }];
 let currentDesktopId = 0;
 let nextDesktopId = 1;
@@ -733,7 +736,7 @@ function restoreDesktopState(dId) {
 // Sync dock active dots with current open windows
 function syncDockIndicators() {
   const dockItems = document.querySelectorAll('.dock-item');
-  const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake'];
+  const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake','flutter-course'];
   names.forEach((id, idx) => {
     if (!dockItems[idx]) return;
     if (openWindows[id]) {
