@@ -1652,7 +1652,7 @@ body {
 }
 
 /* ===== MOBILE APP STYLES ===== */
-@media (max-width: 768px) {
+@media (max-width: 768px), (max-width: 1024px) and (hover: none) and (pointer: coarse) {
   #menubar, #desktop, #dock-container, .window, #noise-overlay { display: none !important; }
   #mobile-app { display: block !important; }
   #particle-canvas { display: none; }
