@@ -597,6 +597,21 @@ function playMfcVideo(i) {
   c.innerHTML = '<div class="mfc-player"><iframe class="mfc-player-iframe" src="https://www.youtube.com/embed/' + v.id + '?autoplay=1&rel=0&playsinline=1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe><div class="mfc-player-title">' + v.t + '</div><div class="mfc-player-meta"><span class="mfc-badge mfc-badge-flutter">' + v.s + '</span><span class="mfc-player-counter">Video ' + (i + 1) + ' of ' + fcVideos.length + '</span></div></div><div class="mfc-player-nav"><button onclick="playMfcVideo(' + (i - 1) + ')"' + (i === 0 ? ' disabled' : '') + '>&#9664; Previous</button><button onclick="playMfcVideo(' + (i + 1) + ')"' + (i === fcVideos.length - 1 ? ' disabled' : '') + '>Next &#9654;</button></div>';
 }
 
+// Fix: YouTube fullscreen exit on mobile can break the expanded section view
+document.addEventListener('fullscreenchange', fcFullscreenFix);
+document.addEventListener('webkitfullscreenchange', fcFullscreenFix);
+function fcFullscreenFix() {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    var expanded = document.getElementById('mobile-flutter-course-expanded');
+    if (expanded && expanded.style.display === 'block') {
+      expanded.style.zIndex = '1001';
+      expanded.style.position = 'fixed';
+      expanded.style.inset = '0';
+      window.scrollTo(0, 0);
+    }
+  }
+}
+
 function mobileFlutterCourseBack() {
   if (fcCurrentVideo !== null) {
     fcCurrentVideo = null;
