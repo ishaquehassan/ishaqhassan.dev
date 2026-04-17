@@ -2481,6 +2481,23 @@ body {
 }
 .fc-badge-flutter { background: rgba(54,197,248,0.12); color: #54c5f8; border-color: rgba(54,197,248,0.25); }
 .fc-badge-urdu { background: rgba(168,85,247,0.12); color: #c4b5fd; border-color: rgba(168,85,247,0.2); }
+.fc-verified-link { text-decoration: none; display: block; margin-top: 12px; }
+.fc-verified {
+  display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(54,197,248,0.08), rgba(5,83,177,0.08));
+  border: 1px solid rgba(54,197,248,0.2); border-radius: 8px;
+  color: #54c5f8; font-size: 12px; font-weight: 600;
+  transition: all 0.2s;
+}
+.fc-verified:hover { background: linear-gradient(135deg, rgba(54,197,248,0.14), rgba(5,83,177,0.14)); border-color: rgba(54,197,248,0.35); }
+.mfc-verified-link { text-decoration: none; display: block; margin: 0 16px 12px; }
+.mfc-verified {
+  display: flex; align-items: center; gap: 8px; padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(54,197,248,0.08), rgba(5,83,177,0.08));
+  border: 1px solid rgba(54,197,248,0.2); border-radius: 10px;
+  color: #54c5f8; font-size: 12px; font-weight: 600;
+}
+.mfc-verified:active { background: linear-gradient(135deg, rgba(54,197,248,0.15), rgba(5,83,177,0.15)); }
 .fc-sections { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
 .fc-sections::-webkit-scrollbar { width: 6px; }
 .fc-sections::-webkit-scrollbar-track { background: transparent; }

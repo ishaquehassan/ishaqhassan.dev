@@ -578,7 +578,8 @@ function renderMobileFlutterCourseGrid() {
   const c = document.getElementById('mfc-content');
   if (!c) return;
   const g = fcGroupVideos();
-  c.innerHTML = '<div class="mfc-badges"><span class="mfc-badge">35 Videos</span><span class="mfc-badge mfc-badge-flutter">Official Flutter Docs</span><span class="mfc-badge mfc-badge-urdu">Urdu</span></div>' +
+  c.innerHTML = '<div class="mfc-badges"><span class="mfc-badge">35 Videos</span><span class="mfc-badge mfc-badge-urdu">Urdu</span></div>' +
+    '<a href="https://docs.flutter.dev/resources/courses" target="_blank" class="mfc-verified-link"><div class="mfc-verified"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#54c5f8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#54c5f8" stroke-width="2"/></svg><span>Listed on Official Flutter Documentation</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="opacity:0.5;"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></a>' +
     fcSectionOrder.filter(s => g[s]).map(s => {
       const vids = g[s];
       return '<div class="mfc-section"><div class="mfc-section-hdr" onclick="this.parentElement.classList.toggle(\'collapsed\')"><span>' + s + ' (' + vids.length + ')</span><span class="mfc-collapse">▼</span></div><div class="mfc-grid">' + vids.map(v =>
