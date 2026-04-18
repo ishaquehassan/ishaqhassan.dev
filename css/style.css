@@ -1624,7 +1624,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   #boot-logo img { width: 70px; height: 70px; }
   #boot-logo::before { width: 96px; height: 96px; margin: -48px 0 0 -48px; }
   #boot-logo::after { width: 120px; height: 120px; margin: -60px 0 0 -60px; }
-  #boot-monogram { font-size: 18px; letter-spacing: 4px; margin-top: 16px; }
+  #boot-monogram { font-size: 14px; letter-spacing: 5px; margin-top: 24px; }
   #boot-bar-container { width: 160px; }
   #boot-cta { display: none !important; }
 }
@@ -1711,9 +1711,9 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 #boot-monogram {
   position: relative; z-index: 1;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-  font-size: 22px; font-weight: 200; letter-spacing: 6px;
+  font-size: 20px; font-weight: 200; letter-spacing: 10px;
   color: rgba(125,211,252,0.6);
-  margin-top: 20px;
+  margin-top: 36px;
   text-shadow: 0 0 20px rgba(56,189,248,0.3);
   opacity: 0;
   animation: boot-logo-appear 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
