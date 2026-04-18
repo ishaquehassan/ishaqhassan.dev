@@ -1788,14 +1788,10 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   font-size: 36px; font-weight: 100; letter-spacing: 18px;
   text-transform: uppercase;
-  background: linear-gradient(90deg, #fff, #7afcff, #ffb6d9, #7dffb3, #ffd97a, #a8d8ff, #ffaa90, #c4b5fd, #7afcff, #ff9de2, #a0ffe0, #ffcc80, #b8f0ff, #ffa3a3, #c8ffb0, #fff);
-  background-size: 800% 100%;
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent;
-  will-change: background-position, opacity;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  animation: boot-cta-appear 1.5s ease-out forwards, boot-cta-breathe 25s ease-in-out 1.5s infinite, boot-cta-gradient 120s linear infinite;
+  color: #7dd3fc;
+  text-shadow: 0 0 10px rgba(56,189,248,0.6), 0 0 30px rgba(56,189,248,0.3), 0 0 60px rgba(14,165,233,0.15);
+  will-change: opacity;
+  animation: boot-cta-appear 1.5s ease-out forwards, boot-cta-breathe 4s ease-in-out 1.5s infinite;
 }
 
 /* ===== MOBILE APP STYLES ===== */
