@@ -232,7 +232,7 @@ window.addEventListener('load', () => {
         if (bootText) bootText.classList.add('boot-hide');
         var cta = document.getElementById('boot-cta');
         if (cta) {
-          cta.textContent = 'CLICK ANYWHERE TO ENTER';
+          cta.textContent = 'ENTER';
           setTimeout(function(){ cta.style.display = 'block'; }, 400);
         }
         screen.style.cursor = 'pointer';
