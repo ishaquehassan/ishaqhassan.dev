@@ -1621,7 +1621,10 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   }
 
   /* Boot screen adjustments */
-  #boot-logo svg { width: 44px; height: 44px; }
+  #boot-logo img { width: 70px; height: 70px; }
+  #boot-logo::before { width: 96px; height: 96px; margin: -48px 0 0 -48px; }
+  #boot-logo::after { width: 120px; height: 120px; margin: -60px 0 0 -60px; }
+  #boot-monogram { font-size: 18px; letter-spacing: 4px; margin-top: 16px; }
   #boot-bar-container { width: 160px; }
   #boot-cta { display: none !important; }
 }
@@ -1672,14 +1675,48 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   100% { transform: translate(-20px, -20px) scale(1.05); opacity: 1; }
 }
 
-/* IH Monogram Logo */
+/* Profile photo with blue neon rings */
 #boot-logo {
   position: relative; z-index: 1; margin-bottom: 0;
   opacity: 0;
   animation: boot-logo-appear 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
 }
-#boot-logo svg {
-  filter: drop-shadow(0 0 30px rgba(56,189,248,0.4)) drop-shadow(0 0 60px rgba(14,165,233,0.2));
+#boot-logo img {
+  width: 90px; height: 90px; border-radius: 50%; display: block;
+  border: 2px solid rgba(56,189,248,0.3);
+  box-shadow: 0 0 30px rgba(56,189,248,0.25), 0 0 60px rgba(14,165,233,0.12), 0 0 100px rgba(56,189,248,0.06);
+  filter: drop-shadow(0 0 15px rgba(56,189,248,0.3));
+  position: relative; z-index: 2;
+}
+#boot-logo::before {
+  content: ''; position: absolute;
+  top: 50%; left: 50%; width: 120px; height: 120px;
+  margin: -60px 0 0 -60px;
+  border-radius: 50%; border: 1px solid rgba(56,189,248,0.1);
+  animation: boot-ring-spin 20s linear infinite;
+  background: conic-gradient(from 0deg, transparent 0%, rgba(56,189,248,0.12) 25%, transparent 50%, rgba(125,211,252,0.08) 75%, transparent 100%);
+}
+#boot-logo::after {
+  content: ''; position: absolute;
+  top: 50%; left: 50%; width: 148px; height: 148px;
+  margin: -74px 0 0 -74px;
+  border-radius: 50%;
+  border: 1px dashed rgba(56,189,248,0.06);
+  animation: boot-ring-spin-r 30s linear infinite;
+}
+@keyframes boot-ring-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes boot-ring-spin-r { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+
+/* IH Monogram below photo */
+#boot-monogram {
+  position: relative; z-index: 1;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  font-size: 22px; font-weight: 200; letter-spacing: 6px;
+  color: rgba(125,211,252,0.6);
+  margin-top: 20px;
+  text-shadow: 0 0 20px rgba(56,189,248,0.3);
+  opacity: 0;
+  animation: boot-logo-appear 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
 }
 
 @keyframes boot-logo-appear {
@@ -1719,18 +1756,23 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 }
 
 /* CTA ready state */
+@keyframes boot-cta-gradient {
+  0% { background-position: 0% center; }
+  50% { background-position: 800% center; }
+  100% { background-position: 0% center; }
+}
 @keyframes boot-cta-appear {
-  0% { opacity: 0; transform: translateY(12px); }
-  100% { opacity: 0.4; transform: translateY(0); }
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 0.5; transform: translateY(0); }
 }
 @keyframes boot-cta-breathe {
   0%, 100% {
-    opacity: 0.2;
-    text-shadow: 0 0 10px rgba(56,189,248,0.1);
+    opacity: 0.25;
+    text-shadow: 0 0 15px rgba(56,189,248,0.08);
   }
   50% {
-    opacity: 0.7;
-    text-shadow: 0 0 20px rgba(56,189,248,0.3), 0 0 40px rgba(14,165,233,0.15);
+    opacity: 0.85;
+    text-shadow: 0 0 25px rgba(56,189,248,0.3), 0 0 50px rgba(14,165,233,0.15), 0 0 90px rgba(125,211,252,0.08);
   }
 }
 #boot-cta {
@@ -1738,11 +1780,16 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   z-index: 1; text-align: center; cursor: pointer;
   display: none;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-  font-size: 13px; font-weight: 300; letter-spacing: 8px;
+  font-size: 36px; font-weight: 100; letter-spacing: 18px;
   text-transform: uppercase;
-  color: rgba(125,211,252,0.5);
-  will-change: opacity;
-  animation: boot-cta-appear 1s ease-out forwards, boot-cta-breathe 4s ease-in-out 1s infinite;
+  background: linear-gradient(90deg, #fff, #7afcff, #ffb6d9, #7dffb3, #ffd97a, #a8d8ff, #ffaa90, #c4b5fd, #7afcff, #ff9de2, #a0ffe0, #ffcc80, #b8f0ff, #ffa3a3, #c8ffb0, #fff);
+  background-size: 800% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  will-change: background-position, opacity;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  animation: boot-cta-appear 1.5s ease-out forwards, boot-cta-breathe 25s ease-in-out 1.5s infinite, boot-cta-gradient 120s linear infinite;
 }
 
 /* ===== MOBILE APP STYLES ===== */
