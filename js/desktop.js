@@ -218,11 +218,17 @@ window.addEventListener('load', () => {
   }
 
   let progress = 0;
-  const bootInterval = setInterval(() => {
-    progress += Math.random() * 15 + 5;
-    if (progress >= 100) {
-      progress = 100;
-      clearInterval(bootInterval);
+  var bootDuration = 3000;
+  var bootStart = Date.now();
+  var bootDone = false;
+  function bootTick() {
+    if (bootDone) return;
+    var elapsed = Date.now() - bootStart;
+    var t = Math.min(elapsed / bootDuration, 1);
+    progress = t * t * (3 - 2 * t) * 100;
+    bar.style.width = progress + '%';
+    if (t >= 1) {
+      bootDone = true;
       var isMobile = window.innerWidth <= 768 || (window.innerWidth <= 1024 && 'ontouchstart' in window);
       if (isMobile) {
         setTimeout(finishBoot, 500);
@@ -240,9 +246,11 @@ window.addEventListener('load', () => {
         screen.addEventListener('touchstart', onBootClick);
         document.addEventListener('keydown', onBootClick);
       }
+    } else {
+      requestAnimationFrame(bootTick);
     }
-    bar.style.width = progress + '%';
-  }, 200);
+  }
+  requestAnimationFrame(bootTick);
 });
 
 // ===== WIDGET DRAG =====
