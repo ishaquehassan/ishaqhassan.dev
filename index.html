@@ -59,14 +59,13 @@
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
 <link rel="apple-touch-icon" href="/assets/profile-photo.png">
-<link rel="stylesheet" href="css/style.min.css?v=51">
+<link rel="stylesheet" href="css/style.min.css?v=52">
 
 <!-- JS: defer = parallel download during HTML parse, execute after DOM ready, in order -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-<script src="js/app.min.js?v=51" defer></script>
-<script src="js/widgets.min.js?v=51" defer></script>
-<script src="js/snake.min.js?v=51" defer></script>
-<script src="js/desktop.min.js?v=51" defer></script>
+<script src="js/app.min.js?v=52" defer></script>
+<script src="js/widgets.min.js?v=52" defer></script>
+<script src="js/snake.min.js?v=52" defer></script>
+<script src="js/desktop.min.js?v=52" defer></script>
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json">
@@ -411,7 +410,7 @@
 
 <!-- macOS NOTIFICATION -->
 <div id="macos-notif" onclick="dismissNotif()">
-  <img src="assets/profile-photo.webp" alt="">
+  <img src="assets/profile-photo.webp" alt="Ishaq Hassan">
   <div class="notif-text">
     <div class="notif-app" id="notif-app">Ishaq OS</div>
     <div class="notif-msg" id="notif-msg">Done playing? Now back to work 😂</div>
@@ -470,7 +469,7 @@
     <div class="boot-orb boot-orb-3"></div>
   </div>
   <div id="boot-logo">
-    <img src="./assets/profile-photo.webp" alt="">
+    <img src="./assets/profile-photo.webp" alt="Ishaq Hassan">
   </div>
   <div id="boot-name">ISHAQ HASSAN</div>
   <div id="boot-title">ENGINEERING MANAGER & FLUTTER FRAMEWORK CONTRIBUTOR</div>
@@ -696,55 +695,55 @@
 <!-- DOCK -->
 <div id="dock-container">
   <div id="dock">
-    <div class="dock-item" onclick="openWindow('about')">
+    <div class="dock-item" onclick="openWindow('about')" role="button" aria-label="Open About Me">
       <div class="dock-tooltip">About Me</div>
       <div class="dock-icon about"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M7 20h10M12 17v3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><text x="6" y="13" fill="#4ade80" font-size="7" font-family="monospace">&gt;_</text></svg></div>
     </div>
-    <div class="dock-item" onclick="openWindow('flutter')">
+    <div class="dock-item" onclick="openWindow('flutter')" role="button" aria-label="Open Flutter PRs">
       <div class="dock-tooltip">Flutter PRs</div>
       <div class="dock-icon flutter"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M14.314 0L2.3 12 6 15.7 21.684 0h-7.37zm0 11.066l-3.418 3.418 3.418 3.418 3.418-3.418-3.418-3.418z" fill="#54C5F8" transform="scale(0.8) translate(3,3)"/><path d="M14.314 11.066L10.896 14.484 14.314 17.902 17.732 14.484z" fill="#01579B" transform="scale(0.8) translate(3,3)"/></svg></div>
     </div>
-    <div class="dock-item" onclick="openWindow('speaking')">
+    <div class="dock-item" onclick="openWindow('speaking')" role="button" aria-label="Open Speaking Events">
       <div class="dock-tooltip">Speaking</div>
       <div class="dock-icon speaking"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3z" fill="#fff"/><path d="M19 10v1a7 7 0 01-14 0v-1M12 18v4m-4 0h8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
     </div>
-    <div class="dock-item" onclick="openWindow('experience')">
+    <div class="dock-item" onclick="openWindow('experience')" role="button" aria-label="Open Experience">
       <div class="dock-tooltip">Experience</div>
       <div class="dock-icon exp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#fff" stroke-width="1.5"/><path d="M12 12v2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></div>
     </div>
-    <div class="dock-item" onclick="openWindow('oss')">
+    <div class="dock-item" onclick="openWindow('oss')" role="button" aria-label="Open Open Source">
       <div class="dock-tooltip">Open Source</div>
       <div class="dock-icon oss"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7l9 5 9-5-9-5z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M3 17l9 5 9-5M3 12l9 5 9-5" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
     </div>
-    <div class="dock-item" onclick="openWindow('tech')">
+    <div class="dock-item" onclick="openWindow('tech')" role="button" aria-label="Open Tech Stack">
       <div class="dock-tooltip">Tech Stack</div>
       <div class="dock-icon tech"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#fff" stroke-width="1.5"/><path d="M12 1v2m0 18v2m11-11h-2M3 12H1m18.07-7.07l-1.41 1.41M6.34 17.66l-1.41 1.41m0-14.14l1.41 1.41m11.32 11.32l1.41 1.41" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
     </div>
-    <div class="dock-item" onclick="openWindow('articles')">
+    <div class="dock-item" onclick="openWindow('articles')" role="button" aria-label="Open Articles">
       <div class="dock-tooltip">Articles</div>
       <div class="dock-icon articles"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z" stroke="#fff" stroke-width="1.5"/><path d="M7 8h10M7 12h6" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
     </div>
-    <div class="dock-item" onclick="openWindow('contact')">
+    <div class="dock-item" onclick="openWindow('contact')" role="button" aria-label="Open Contact">
       <div class="dock-tooltip">Contact</div>
       <div class="dock-icon contact"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     </div>
-    <div class="dock-item" onclick="openWindow('github')">
+    <div class="dock-item" onclick="openWindow('github')" role="button" aria-label="Open GitHub">
       <div class="dock-tooltip">GitHub</div>
       <div class="dock-icon github"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></div>
     </div>
-    <div class="dock-item" onclick="openWindow('linkedin')">
+    <div class="dock-item" onclick="openWindow('linkedin')" role="button" aria-label="Open LinkedIn">
       <div class="dock-tooltip">LinkedIn</div>
       <div class="dock-icon linkedin"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
     </div>
-    <div class="dock-item" onclick="openWindow('snake')">
+    <div class="dock-item" onclick="openWindow('snake')" role="button" aria-label="Open Snake Game">
       <div class="dock-tooltip">Snake Game</div>
       <div class="dock-icon" style="background:linear-gradient(135deg,#0a2e1a,#0d3320);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 12h2v2H4v-2zm4 0h2v2H8v-2zm4-4h2v2h-2V8zm0 4h2v2h-2v-2zm4-4h2v2h-2V8zm0 8h2v2h-2v-2zm-4 0h2v2h-2v-2zm-4 0h2v2H8v-2z" fill="#39d353"/><circle cx="18" cy="8" r="1.5" fill="#39d353"/></svg></div>
     </div>
-    <div class="dock-item" onclick="openWindow('flutter-course')">
+    <div class="dock-item" onclick="openWindow('flutter-course')" role="button" aria-label="Open Flutter Course">
       <div class="dock-tooltip">Flutter Course</div>
       <div class="dock-icon" style="background:linear-gradient(135deg,#0553B1,#54c5f8);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 17l5-5-5-5v10z" fill="#fff"/><rect x="14" y="7" width="3" height="10" rx="1" fill="#fff"/></svg></div>
     </div>
-    <div class="dock-item" onclick="toggleMissionControl()">
+    <div class="dock-item" onclick="toggleMissionControl()" role="button" aria-label="Toggle Mission Control">
       <div class="dock-tooltip">Mission Control</div>
       <div class="dock-icon" style="background:linear-gradient(135deg,#2d2d44,#1a1a2e);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="8" height="7" rx="1.5" stroke="#fff" stroke-width="1.5"/><rect x="14" y="3" width="8" height="7" rx="1.5" stroke="#fff" stroke-width="1.5"/><rect x="2" y="14" width="8" height="7" rx="1.5" stroke="#fff" stroke-width="1.5"/><rect x="14" y="14" width="8" height="7" rx="1.5" stroke="#fff" stroke-width="1.5"/></svg></div>
     </div>
@@ -787,35 +786,35 @@
       </div>
     </div>
     <div class="section-header">Pull Requests</div>
-    <a href="https://github.com/flutter/flutter/pull/183081" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://github.com/flutter/flutter/pull/183081" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="pr-card" style="transition:all 0.3s;">
         <div class="pr-status pr-merged">✓ Merged</div>
         <div class="pr-title">Fix AnimatedCrossFade clipBehavior forwarding</div>
         <div class="pr-repo">flutter/flutter #183081</div>
       </div>
     </a>
-    <a href="https://github.com/flutter/flutter/pull/183097" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://github.com/flutter/flutter/pull/183097" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="pr-card" style="transition:all 0.3s;">
         <div class="pr-status pr-merged">✓ Merged</div>
         <div class="pr-title">Forward clipBehavior in AnimatedSize widget</div>
         <div class="pr-repo">flutter/flutter #183097</div>
       </div>
     </a>
-    <a href="https://github.com/flutter/flutter/pull/183109" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://github.com/flutter/flutter/pull/183109" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="pr-card" style="transition:all 0.3s;">
         <div class="pr-status pr-merged">✓ Merged</div>
         <div class="pr-title">Add clipBehavior to SizeTransition widget</div>
         <div class="pr-repo">flutter/flutter #183109</div>
       </div>
     </a>
-    <a href="https://github.com/flutter/flutter/pull/184545" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://github.com/flutter/flutter/pull/184545" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="pr-card" style="transition:all 0.3s;">
         <div class="pr-status pr-approved">✓ Approved</div>
         <div class="pr-title">Expose decoration properties in CupertinoTextField</div>
         <div class="pr-repo">flutter/flutter #184545</div>
       </div>
     </a>
-    <a href="https://github.com/flutter/flutter/pull/184569" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://github.com/flutter/flutter/pull/184569" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="pr-card" style="transition:all 0.3s;">
         <div class="pr-status pr-approved">✓ Approved</div>
         <div class="pr-title">Add missing property forwarding in Material widgets</div>
@@ -845,14 +844,14 @@
       </div>
     </div>
     <div class="section-header">Speaking Events</div>
-    <a href="https://x.com/GDGKolachi" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(99,102,241,0.3),rgba(139,92,246,0.3));">🎯</div><div class="event-info"><div class="event-name">DevFest Karachi: Scaling Products with Flutter 🔗</div><div class="event-venue">GDG Kolachi | Panel with Waleed Arshad & Sakina Abbas</div></div><div class="event-role">Panel Speaker</div></div></a>
-    <a href="https://www.facebook.com/GDGKolachi/posts/720743396758626/" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(6,182,212,0.3),rgba(34,197,94,0.3));">🌐</div><div class="event-info"><div class="event-name">Google I/O Extended Karachi 🔗</div><div class="event-venue">GDG Kolachi</div></div><div class="event-role">Speaker</div></div></a>
-    <a href="https://gdg.community.dev/events/details/google-gdg-kolachi-presents-flutter-bootcamp/" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(48,209,88,0.3),rgba(34,197,94,0.3));">🎓</div><div class="event-info"><div class="event-name">Flutter Bootcamp (Aug 2021) 🔗</div><div class="event-venue">GDG Kolachi</div></div><div class="event-role">Instructor</div></div></a>
-    <a href="https://www.facebook.com/GDGKolachi/posts/722626283237004/" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(255,159,10,0.3),rgba(255,193,7,0.3));">🚀</div><div class="event-info"><div class="event-name">Facebook Developer Circle (Inaugural) 🔗</div><div class="event-venue">The Nest I/O</div></div><div class="event-role">Inaugural Speaker</div></div></a>
-    <a href="https://www.linkedin.com/posts/gdgkolachi_codetocreate-roadtodevfest2025-gdgkolachi-activity-7400908378081767424-EB-7" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.3),rgba(168,85,247,0.3));">💻</div><div class="event-info"><div class="event-name">Code to Create 🔗</div><div class="event-venue">NIC Karachi | with Waleed Arshad</div></div><div class="event-role">Speaker</div></div></a>
-    <a href="https://www.linkedin.com/posts/itrathussainzaidi_flutter-iqrauniversity-seminar-activity-7192627199412232192-8t2X" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(255,69,58,0.3),rgba(244,63,94,0.3));">🏫</div><div class="event-info"><div class="event-name">Flutter Seminar 🔗</div><div class="event-venue">Iqra University</div></div><div class="event-role">Speaker</div></div></a>
-    <a href="https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(255,214,10,0.3),rgba(255,193,7,0.3));">🤖</div><div class="event-info"><div class="event-name">DevNCode Meetup IV: AI 🔗</div><div class="event-venue">The Nest I/O</div></div><div class="event-role">Speaker</div></div></a>
-    <a href="https://www.linkedin.com/company/31333300/" target="_blank" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(236,72,153,0.3),rgba(244,63,94,0.3));">👩‍💻</div><div class="event-info"><div class="event-name">Women Tech Makers (DHA Suffa University) 🔗</div><div class="event-venue">Karachi | "Building Basic Apps with Flutter"</div></div><div class="event-role">Speaker</div></div></a>
+    <a href="https://x.com/GDGKolachi" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(99,102,241,0.3),rgba(139,92,246,0.3));">🎯</div><div class="event-info"><div class="event-name">DevFest Karachi: Scaling Products with Flutter 🔗</div><div class="event-venue">GDG Kolachi | Panel with Waleed Arshad & Sakina Abbas</div></div><div class="event-role">Panel Speaker</div></div></a>
+    <a href="https://www.facebook.com/GDGKolachi/posts/720743396758626/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(6,182,212,0.3),rgba(34,197,94,0.3));">🌐</div><div class="event-info"><div class="event-name">Google I/O Extended Karachi 🔗</div><div class="event-venue">GDG Kolachi</div></div><div class="event-role">Speaker</div></div></a>
+    <a href="https://gdg.community.dev/events/details/google-gdg-kolachi-presents-flutter-bootcamp/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(48,209,88,0.3),rgba(34,197,94,0.3));">🎓</div><div class="event-info"><div class="event-name">Flutter Bootcamp (Aug 2021) 🔗</div><div class="event-venue">GDG Kolachi</div></div><div class="event-role">Instructor</div></div></a>
+    <a href="https://www.facebook.com/GDGKolachi/posts/722626283237004/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(255,159,10,0.3),rgba(255,193,7,0.3));">🚀</div><div class="event-info"><div class="event-name">Facebook Developer Circle (Inaugural) 🔗</div><div class="event-venue">The Nest I/O</div></div><div class="event-role">Inaugural Speaker</div></div></a>
+    <a href="https://www.linkedin.com/posts/gdgkolachi_codetocreate-roadtodevfest2025-gdgkolachi-activity-7400908378081767424-EB-7" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.3),rgba(168,85,247,0.3));">💻</div><div class="event-info"><div class="event-name">Code to Create 🔗</div><div class="event-venue">NIC Karachi | with Waleed Arshad</div></div><div class="event-role">Speaker</div></div></a>
+    <a href="https://www.linkedin.com/posts/itrathussainzaidi_flutter-iqrauniversity-seminar-activity-7192627199412232192-8t2X" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(255,69,58,0.3),rgba(244,63,94,0.3));">🏫</div><div class="event-info"><div class="event-name">Flutter Seminar 🔗</div><div class="event-venue">Iqra University</div></div><div class="event-role">Speaker</div></div></a>
+    <a href="https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(255,214,10,0.3),rgba(255,193,7,0.3));">🤖</div><div class="event-info"><div class="event-name">DevNCode Meetup IV: AI 🔗</div><div class="event-venue">The Nest I/O</div></div><div class="event-role">Speaker</div></div></a>
+    <a href="https://www.linkedin.com/company/31333300/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(236,72,153,0.3),rgba(244,63,94,0.3));">👩‍💻</div><div class="event-info"><div class="event-name">Women Tech Makers (DHA Suffa University) 🔗</div><div class="event-venue">Karachi | "Building Basic Apps with Flutter"</div></div><div class="event-role">Speaker</div></div></a>
     <div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(99,102,241,0.3),rgba(139,92,246,0.3));">🏆</div><div class="event-info"><div class="event-name">Pakistan's First Flutter Meetup (2018)</div><div class="event-venue">Karachi</div></div><div class="event-role">Speaker</div></div>
     <div class="event-row" style="padding-left:12px;"><div class="event-icon" style="background:linear-gradient(135deg,rgba(6,182,212,0.3),rgba(34,197,94,0.3));">🌐</div><div class="event-info"><div class="event-name">GDG Live Pakistan</div><div class="event-venue">Online</div></div><div class="event-role">Speaker</div></div>
   </div>
@@ -877,17 +876,17 @@
     </div>
     <div style="border-left:2px solid rgba(255,255,255,0.1);padding-left:16px;margin-left:8px;">
       <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.3);">
-</div><a href="https://www.linkedin.com/company/35951080/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;transition:all 0.3s;cursor:pointer;">🏢 DigitalHire</a><div class="exp-role">Engineering Manager → Technical Lead → Staff Engineer</div><div class="exp-date">Feb 2023 - Present · 3 yrs 3 mos | McLean, Virginia</div><div class="exp-desc">AI-based video job board. Flutter, Dart, Kotlin, Python, PostgreSQL, Next.js, React Native.</div></div>
+</div><a href="https://www.linkedin.com/company/35951080/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;transition:all 0.3s;cursor:pointer;">🏢 DigitalHire</a><div class="exp-role">Engineering Manager → Technical Lead → Staff Engineer</div><div class="exp-date">Feb 2023 - Present · 3 yrs 3 mos | McLean, Virginia</div><div class="exp-desc">AI-based video job board. Flutter, Dart, Kotlin, Python, PostgreSQL, Next.js, React Native.</div></div>
       <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.3);">
 </div><div class="exp-company" style="font-weight:600;">🎓 Tech Idara</div><div class="exp-role">Senior Instructor</div><div class="exp-date">Dec 2021 - Sep 2024 · 2 yrs 10 mos</div><div class="exp-desc">Flutter course on official Flutter docs.</div></div>
       <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.3);">
-</div><a href="https://www.linkedin.com/company/83530314/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;transition:all 0.3s;cursor:pointer;">✈️ AeroGlobe</a><div class="exp-role">Technical Lead</div><div class="exp-date">Jun 2022 - May 2024 · 2 yrs</div><div class="exp-desc">React Native, Python, front-end.</div></div>
+</div><a href="https://www.linkedin.com/company/83530314/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;transition:all 0.3s;cursor:pointer;">✈️ AeroGlobe</a><div class="exp-role">Technical Lead</div><div class="exp-date">Jun 2022 - May 2024 · 2 yrs</div><div class="exp-desc">React Native, Python, front-end.</div></div>
       <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.3);">
-</div><a href="https://www.linkedin.com/company/7969190/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;transition:all 0.3s;cursor:pointer;">🎫 Sastaticket.pk</a><div class="exp-role">Engineering Consultant</div><div class="exp-date">Jan 2022 - Mar 2024</div><div class="exp-desc">Architecture, Flutter, CI/CD, GitHub Actions.</div></div>
+</div><a href="https://www.linkedin.com/company/7969190/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;transition:all 0.3s;cursor:pointer;">🎫 Sastaticket.pk</a><div class="exp-role">Engineering Consultant</div><div class="exp-date">Jan 2022 - Mar 2024</div><div class="exp-desc">Architecture, Flutter, CI/CD, GitHub Actions.</div></div>
       <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.3);">
 </div><div class="exp-company" style="font-weight:600;">📱 Pocket Systems</div><div class="exp-role">Co-Founder</div><div class="exp-date">Jan 2020 - Dec 2022 · 3 yrs</div><div class="exp-desc">International market, React Native, Socket Programming.</div></div>
       <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.3);">
-</div><a href="https://www.linkedin.com/company/11753853/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;">🌍 Optimyse</a><div class="exp-role">Lead Software Engineer</div><div class="exp-date">Feb 2019 - Dec 2021 · 2 yrs 11 mos | Estonia</div><div class="exp-desc">Full stack teams, cross-platform mobile.</div></div>
+</div><a href="https://www.linkedin.com/company/11753853/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;">🌍 Optimyse</a><div class="exp-role">Lead Software Engineer</div><div class="exp-date">Feb 2019 - Dec 2021 · 2 yrs 11 mos | Estonia</div><div class="exp-desc">Full stack teams, cross-platform mobile.</div></div>
       <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.3);">
 </div><div class="exp-company" style="font-weight:600;">🚀 Cyber Avanza</div><div class="exp-role">Co-Founder</div><div class="exp-date">Sep 2016 - Dec 2018 · 2 yrs 4 mos</div><div class="exp-desc">Android/iOS native development.</div></div>
       <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.3);">
@@ -916,7 +915,7 @@
       </div>
     </div>
     <div class="section-header">Featured Repos</div>
-    <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="pr-card" style="position:relative;">
         <div style="position:absolute;right:12px;top:12px;display:flex;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#199881;box-shadow:0 0 8px rgba(25,152,129,0.6);">
 </span></div>
@@ -924,7 +923,7 @@
         <div class="pr-repo">Flutter plugin for document scanning | ⭐ 63 | 🍴 135</div>
       </div>
     </a>
-    <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="pr-card" style="position:relative;">
         <div style="position:absolute;right:12px;top:12px;display:flex;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#F7DF1E;box-shadow:0 0 8px rgba(247,223,30,0.6);">
 </span></div>
@@ -932,7 +931,7 @@
         <div class="pr-repo">Native Kotlin alarm plugin for Flutter | ⭐ 13</div>
       </div>
     </a>
-    <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="pr-card" style="position:relative;">
         <div style="position:absolute;right:12px;top:12px;display:flex;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#FF6B35;box-shadow:0 0 8px rgba(255,107,53,0.6);">
 </span></div>
@@ -940,7 +939,7 @@
         <div class="pr-repo">Auto-generate asset references for Flutter | ⭐ 9</div>
       </div>
     </a>
-    <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="pr-card" style="position:relative;">
         <div style="position:absolute;right:12px;top:12px;display:flex;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#199881;box-shadow:0 0 8px rgba(25,152,129,0.6);">
 </span></div>
@@ -948,7 +947,7 @@
         <div class="pr-repo">NADRA CNIC KYC verification for Flutter | ⭐ 3</div>
       </div>
     </a>
-    <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="pr-card" style="position:relative;">
         <div style="position:absolute;right:12px;top:12px;display:flex;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#6366f1;box-shadow:0 0 8px rgba(99,102,241,0.6);">
 </span></div>
@@ -977,37 +976,37 @@
   <div class="window-body">
     <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:8px;margin-bottom:16px;font-size:13px;font-weight:600;">Mobile</div>
     <div class="tech-grid" style="margin-bottom:24px;">
-      <a href="https://flutter.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/flutter.svg" width="36" height="36" alt="Flutter"></div><div class="tech-name">Flutter</div></div></a>
-      <a href="https://dart.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(6,182,212,0.15),rgba(34,197,94,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/dart.svg" width="36" height="36" alt="Dart"></div><div class="tech-name">Dart</div></div></a>
-      <a href="https://developer.android.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(52,168,83,0.15),rgba(76,175,80,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/android.svg" width="36" height="36" alt="Android"></div><div class="tech-name">Android</div></div></a>
-      <a href="https://developer.apple.com/ios/" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(100,100,100,0.15),rgba(150,150,150,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/ios.svg" width="36" height="36" alt="iOS"></div><div class="tech-name">iOS</div></div></a>
-      <a href="https://kotlinlang.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(139,92,246,0.15),rgba(168,85,247,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/kotlin.svg" width="36" height="36" alt="Kotlin"></div><div class="tech-name">Kotlin</div></div></a>
-      <a href="https://swift.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(255,165,0,0.15),rgba(255,192,0,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/swift.svg" width="36" height="36" alt="Swift"></div><div class="tech-name">Swift</div></div></a>
-      <a href="https://reactnative.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(97,194,247,0.15),rgba(100,150,200,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/react.svg" width="36" height="36" alt="React Native"></div><div class="tech-name">React Native</div></div></a>
+      <a href="https://flutter.dev" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/flutter.svg" width="36" height="36" alt="Flutter"></div><div class="tech-name">Flutter</div></div></a>
+      <a href="https://dart.dev" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(6,182,212,0.15),rgba(34,197,94,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/dart.svg" width="36" height="36" alt="Dart"></div><div class="tech-name">Dart</div></div></a>
+      <a href="https://developer.android.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(52,168,83,0.15),rgba(76,175,80,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/android.svg" width="36" height="36" alt="Android"></div><div class="tech-name">Android</div></div></a>
+      <a href="https://developer.apple.com/ios/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(100,100,100,0.15),rgba(150,150,150,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/ios.svg" width="36" height="36" alt="iOS"></div><div class="tech-name">iOS</div></div></a>
+      <a href="https://kotlinlang.org" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(139,92,246,0.15),rgba(168,85,247,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/kotlin.svg" width="36" height="36" alt="Kotlin"></div><div class="tech-name">Kotlin</div></div></a>
+      <a href="https://swift.org" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(255,165,0,0.15),rgba(255,192,0,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/swift.svg" width="36" height="36" alt="Swift"></div><div class="tech-name">Swift</div></div></a>
+      <a href="https://reactnative.dev" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(97,194,247,0.15),rgba(100,150,200,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/react.svg" width="36" height="36" alt="React Native"></div><div class="tech-name">React Native</div></div></a>
     </div>
     <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:8px;margin-bottom:16px;font-size:13px;font-weight:600;">Backend & Cloud</div>
     <div class="tech-grid" style="margin-bottom:24px;">
-      <a href="https://firebase.google.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(255,159,10,0.15),rgba(255,193,7,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/firebase.svg" width="36" height="36" alt="Firebase"></div><div class="tech-name">Firebase</div></div></a>
-      <a href="https://nodejs.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(51,153,51,0.15),rgba(102,204,0,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/nodejs.svg" width="36" height="36" alt="Node.js"></div><div class="tech-name">Node.js</div></div></a>
-      <a href="https://nestjs.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(226,39,39,0.15),rgba(229,57,53,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/nestjs.svg" width="36" height="36" alt="NestJS"></div><div class="tech-name">NestJS</div></div></a>
-      <a href="https://nextjs.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(255,255,255,0.15),rgba(220,220,220,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/nextjs.svg" width="36" height="36" alt="Next.js"></div><div class="tech-name">Next.js</div></div></a>
-      <a href="https://python.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(51,102,204,0.15),rgba(255,192,0,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/python.svg" width="36" height="36" alt="Python"></div><div class="tech-name">Python</div></div></a>
-      <a href="https://php.net" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(119,123,180,0.15),rgba(107,142,195,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/php.svg" width="36" height="36" alt="PHP"></div><div class="tech-name">PHP</div></div></a>
-      <a href="https://spring.io/projects/spring-boot" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(102,204,0,0.15),rgba(51,153,51,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/springboot.svg" width="36" height="36" alt="Spring Boot"></div><div class="tech-name">Spring Boot</div></div></a>
-      <a href="https://go.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,173,239,0.15),rgba(70,180,230,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/go.svg" width="36" height="36" alt="Go"></div><div class="tech-name">Go</div></div></a>
+      <a href="https://firebase.google.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(255,159,10,0.15),rgba(255,193,7,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/firebase.svg" width="36" height="36" alt="Firebase"></div><div class="tech-name">Firebase</div></div></a>
+      <a href="https://nodejs.org" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(51,153,51,0.15),rgba(102,204,0,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/nodejs.svg" width="36" height="36" alt="Node.js"></div><div class="tech-name">Node.js</div></div></a>
+      <a href="https://nestjs.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(226,39,39,0.15),rgba(229,57,53,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/nestjs.svg" width="36" height="36" alt="NestJS"></div><div class="tech-name">NestJS</div></div></a>
+      <a href="https://nextjs.org" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(255,255,255,0.15),rgba(220,220,220,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/nextjs.svg" width="36" height="36" alt="Next.js"></div><div class="tech-name">Next.js</div></div></a>
+      <a href="https://python.org" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(51,102,204,0.15),rgba(255,192,0,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/python.svg" width="36" height="36" alt="Python"></div><div class="tech-name">Python</div></div></a>
+      <a href="https://php.net" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(119,123,180,0.15),rgba(107,142,195,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/php.svg" width="36" height="36" alt="PHP"></div><div class="tech-name">PHP</div></div></a>
+      <a href="https://spring.io/projects/spring-boot" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(102,204,0,0.15),rgba(51,153,51,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/springboot.svg" width="36" height="36" alt="Spring Boot"></div><div class="tech-name">Spring Boot</div></div></a>
+      <a href="https://go.dev" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,173,239,0.15),rgba(70,180,230,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/go.svg" width="36" height="36" alt="Go"></div><div class="tech-name">Go</div></div></a>
     </div>
     <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:8px;margin-bottom:16px;font-size:13px;font-weight:600;">Database</div>
     <div class="tech-grid" style="margin-bottom:24px;">
-      <a href="https://postgresql.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(51,102,204,0.15),rgba(0,102,204,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/postgresql.svg" width="36" height="36" alt="PostgreSQL"></div><div class="tech-name">PostgreSQL</div></div></a>
-      <a href="https://mysql.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,102,153,0.15),rgba(51,153,204,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/mysql.svg" width="36" height="36" alt="MySQL"></div><div class="tech-name">MySQL</div></div></a>
+      <a href="https://postgresql.org" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(51,102,204,0.15),rgba(0,102,204,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/postgresql.svg" width="36" height="36" alt="PostgreSQL"></div><div class="tech-name">PostgreSQL</div></div></a>
+      <a href="https://mysql.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,102,153,0.15),rgba(51,153,204,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/mysql.svg" width="36" height="36" alt="MySQL"></div><div class="tech-name">MySQL</div></div></a>
     </div>
     <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:8px;margin-bottom:16px;font-size:13px;font-weight:600;">Tools & DevOps</div>
     <div class="tech-grid">
-      <a href="https://git-scm.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(244,77,33,0.15),rgba(240,80,35,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/git.svg" width="36" height="36" alt="Git"></div><div class="tech-name">Git</div></div></a>
-      <a href="https://github.com/features/actions" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(36,41,46,0.15),rgba(64,70,77,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/githubactions.svg" width="36" height="36" alt="GitHub Actions"></div><div class="tech-name">GitHub Actions</div></div></a>
-      <a href="https://docker.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,153,204,0.15),rgba(0,102,204,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/docker.svg" width="36" height="36" alt="Docker"></div><div class="tech-name">Docker</div></div></a>
-      <a href="https://kernel.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(255,165,0,0.15),rgba(255,192,0,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/linux.svg" width="36" height="36" alt="Linux"></div><div class="tech-name">Linux</div></div></a>
-      <a href="https://claude.ai" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/claude.svg" width="36" height="36" alt="Claude AI"></div><div class="tech-name">Claude AI</div></div></a>
+      <a href="https://git-scm.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(244,77,33,0.15),rgba(240,80,35,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/git.svg" width="36" height="36" alt="Git"></div><div class="tech-name">Git</div></div></a>
+      <a href="https://github.com/features/actions" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(36,41,46,0.15),rgba(64,70,77,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/githubactions.svg" width="36" height="36" alt="GitHub Actions"></div><div class="tech-name">GitHub Actions</div></div></a>
+      <a href="https://docker.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,153,204,0.15),rgba(0,102,204,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/docker.svg" width="36" height="36" alt="Docker"></div><div class="tech-name">Docker</div></div></a>
+      <a href="https://kernel.org" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(255,165,0,0.15),rgba(255,192,0,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/linux.svg" width="36" height="36" alt="Linux"></div><div class="tech-name">Linux</div></div></a>
+      <a href="https://claude.ai" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item" style="transition:all 0.3s;border-radius:10px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15))';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent';this.style.transform='translateY(0)'"><div class="tech-icon"><img src="assets/tech/claude.svg" width="36" height="36" alt="Claude AI"></div><div class="tech-name">Claude AI</div></div></a>
     </div>
   </div>
 </div>
@@ -1026,7 +1025,7 @@
     <div style="background:linear-gradient(135deg,rgba(248,113,113,0.1),rgba(236,72,153,0.1));padding:16px;border-radius:10px;margin-bottom:16px;border:1px solid rgba(236,72,153,0.2);">
       <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:20px;">📚</span><span style="font-size:14px;font-weight:600;">Latest Articles</span></div>
     </div>
-    <a href="https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="article-card" style="padding-left:12px;transition:all 0.3s;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <div class="article-title">🧩 Dart Isolates: The Missing Guide</div>
@@ -1035,7 +1034,7 @@
         <div class="article-meta">Concurrency, Performance</div>
       </div>
     </a>
-    <a href="https://medium.com/@ishaqhassan/how-flutters-three-tree-architecture-actually-works-953c8cc17226" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://medium.com/@ishaqhassan/how-flutters-three-tree-architecture-actually-works-953c8cc17226" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="article-card" style="padding-left:12px;transition:all 0.3s;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <div class="article-title">🌳 How Flutter's Three-Tree Architecture Works</div>
@@ -1044,7 +1043,7 @@
         <div class="article-meta">Flutter Internals</div>
       </div>
     </a>
-    <a href="https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="article-card" style="padding-left:12px;transition:all 0.3s;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <div class="article-title">🔀 PRs Merged Into Flutter's Repository</div>
@@ -1053,7 +1052,7 @@
         <div class="article-meta">52 claps | Open Source</div>
       </div>
     </a>
-    <a href="https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="article-card" style="padding-left:12px;transition:all 0.3s;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <div class="article-title">📱 Flutter Native Plugin Development</div>
@@ -1062,7 +1061,7 @@
         <div class="article-meta">67 claps | Nerd For Tech</div>
       </div>
     </a>
-    <a href="https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="article-card" style="padding-left:12px;transition:all 0.3s;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <div class="article-title">📁 Indexing Assets in a Dart Class</div>
@@ -1071,7 +1070,7 @@
         <div class="article-meta">Nerd For Tech</div>
       </div>
     </a>
-    <a href="https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67" target="_blank" style="text-decoration:none;color:inherit;">
+    <a href="https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
       <div class="article-card" style="padding-left:12px;transition:all 0.3s;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <div class="article-title">🔥 Firebase Cloud Functions Using Kotlin</div>
@@ -1081,7 +1080,7 @@
       </div>
     </a>
   </div>
-  <div class="window-footer"><a href="https://medium.com/@ishaqhassan" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#1a8917,#0d7a0d);color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;">View all on Medium →</a></div>
+  <div class="window-footer"><a href="https://medium.com/@ishaqhassan" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#1a8917,#0d7a0d);color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;">View all on Medium →</a></div>
 </div>
 
 <div class="window" id="win-contact" style="width:600px;height:520px;top:60px;left:calc(50% - 300px);">
@@ -1097,7 +1096,7 @@
   <div class="window-body" style="padding:0;">
     <!-- Profile header -->
     <div style="text-align:center;padding:24px 24px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(6,182,212,0.08));border-bottom:1px solid var(--border);">
-      <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:0 auto 12px;border:3px solid rgba(99,102,241,0.3);box-shadow:0 8px 24px rgba(99,102,241,0.2);"><img src="./assets/profile-photo.webp" style="width:100%;height:100%;object-fit:cover;"></div>
+      <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:0 auto 12px;border:3px solid rgba(99,102,241,0.3);box-shadow:0 8px 24px rgba(99,102,241,0.2);"><img src="./assets/profile-photo.webp" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>
       <div style="font-size:18px;font-weight:700;">Let's Build Something Together</div>
       <div style="font-size:12px;color:var(--text2);margin-top:4px;">Available for collaborations, speaking, and open source</div>
     </div>
@@ -1110,31 +1109,31 @@
             <div style="text-align:left;"><div class="contact-label">Email</div><div class="contact-value">hello@ishaqhassan.dev</div></div>
           </div>
         </a>
-        <a class="contact-card" href="https://github.com/ishaquehassan" target="_blank" style="transition:all 0.3s;">
+        <a class="contact-card" href="https://github.com/ishaquehassan" target="_blank" rel="noopener noreferrer" style="transition:all 0.3s;">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#24292e,#40464d);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></div>
             <div style="text-align:left;"><div class="contact-label">GitHub</div><div class="contact-value">@ishaquehassan</div></div>
           </div>
         </a>
-        <a class="contact-card" href="https://linkedin.com/in/ishaquehassan" target="_blank" style="transition:all 0.3s;">
+        <a class="contact-card" href="https://linkedin.com/in/ishaquehassan" target="_blank" rel="noopener noreferrer" style="transition:all 0.3s;">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0077B5,#00a0dc);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
             <div style="text-align:left;"><div class="contact-label">LinkedIn</div><div class="contact-value">@ishaquehassan</div></div>
           </div>
         </a>
-        <a class="contact-card" href="https://medium.com/@ishaqhassan" target="_blank" style="transition:all 0.3s;">
+        <a class="contact-card" href="https://medium.com/@ishaqhassan" target="_blank" rel="noopener noreferrer" style="transition:all 0.3s;">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#1a8917,#0d7a0d);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg></div>
             <div style="text-align:left;"><div class="contact-label">Medium</div><div class="contact-value">@ishaqhassan</div></div>
           </div>
         </a>
-        <a class="contact-card" href="https://stackoverflow.com/users/2094696/ishaq-hassan" target="_blank" style="transition:all 0.3s;">
+        <a class="contact-card" href="https://stackoverflow.com/users/2094696/ishaq-hassan" target="_blank" rel="noopener noreferrer" style="transition:all 0.3s;">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#F48024,#e7700d);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M15.725 0l-1.72 1.277 6.39 8.588 1.716-1.277L15.725 0zm-3.94 3.418l-1.369 1.644 8.225 6.85 1.369-1.644-8.225-6.85zm-3.15 4.465l-.905 1.94 9.702 4.517.904-1.94-9.701-4.517zm-1.85 4.86l-.44 2.093 10.473 2.201.44-2.092-10.473-2.203zM1.89 15.47V24h19.19v-8.53h-2.133v6.397H4.021v-6.396H1.89zm4.265 2.133v2.13h10.66v-2.13H6.154z"/></svg></div>
             <div style="text-align:left;"><div class="contact-label">Stack Overflow</div><div class="contact-value">ishaq-hassan</div></div>
           </div>
         </a>
-        <a class="contact-card" href="https://ishaqhassan.dev" target="_blank" style="transition:all 0.3s;">
+        <a class="contact-card" href="https://ishaqhassan.dev" target="_blank" rel="noopener noreferrer" style="transition:all 0.3s;">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="#fff" stroke-width="1.5"/></svg></div>
             <div style="text-align:left;"><div class="contact-label">Website</div><div class="contact-value">ishaqhassan.dev</div></div>
@@ -1157,7 +1156,7 @@
   <div class="window-loader" id="loader-github"><div class="loader-spinner"></div></div>
   <div class="window-body has-footer">
     <div style="text-align:center;padding:16px 0 12px;">
-      <div style="width:80px;height:80px;border-radius:50%;overflow:hidden;margin:0 auto 12px;border:3px solid rgba(99,102,241,0.5);box-shadow:0 8px 24px rgba(99,102,241,0.3);"><img src="./assets/github-avatar.webp" style="width:100%;height:100%;object-fit:cover;" alt="Ishaq Hassan"></div>
+      <div style="width:80px;height:80px;border-radius:50%;overflow:hidden;margin:0 auto 12px;border:3px solid rgba(99,102,241,0.5);box-shadow:0 8px 24px rgba(99,102,241,0.3);"><img src="./assets/github-avatar.webp" loading="lazy" style="width:100%;height:100%;object-fit:cover;" alt="Ishaq Hassan"></div>
       <div style="font-size:20px;font-weight:700;">ishaquehassan</div>
       <div style="color:var(--text2);font-size:12px;margin-top:4px;">Flutter Framework Contributor | Engineering Manager</div>
       <div style="display:flex;justify-content:center;gap:16px;margin-top:8px;font-size:12px;color:var(--text2);">
@@ -1177,15 +1176,15 @@
     </div>
     <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px;">📌 Pinned Repos</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-      <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">📸</span><span class="pr-title" style="font-size:12px;margin:0;">document_scanner_flutter</span></div><div class="pr-repo" style="margin-top:4px;">Dart | ⭐ 64 🍴 135</div></div></a>
-      <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">⏰</span><span class="pr-title" style="font-size:12px;margin:0;">alarm_background_trigger</span></div><div class="pr-repo" style="margin-top:4px;">Kotlin | ⭐ 13 🍴 3</div></div></a>
-      <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">📁</span><span class="pr-title" style="font-size:12px;margin:0;">assets_indexer</span></div><div class="pr-repo" style="margin-top:4px;">C++ | ⭐ 9 🍴 2</div></div></a>
-      <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">🪪</span><span class="pr-title" style="font-size:12px;margin:0;">nadra_verisys_flutter</span></div><div class="pr-repo" style="margin-top:4px;">Dart | ⭐ 3</div></div></a>
-      <a href="https://github.com/ishaquehassan/claude-remote-terminal" target="_blank" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">📱</span><span class="pr-title" style="font-size:12px;margin:0;">claude-remote-terminal</span></div><div class="pr-repo" style="margin-top:4px;">Dart | ⭐ 1</div></div></a>
-      <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">🎯</span><span class="pr-title" style="font-size:12px;margin:0;">goal-agent</span></div><div class="pr-repo" style="margin-top:4px;">JS | Claude Code Plugin</div></div></a>
+      <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">📸</span><span class="pr-title" style="font-size:12px;margin:0;">document_scanner_flutter</span></div><div class="pr-repo" style="margin-top:4px;">Dart | ⭐ 64 🍴 135</div></div></a>
+      <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">⏰</span><span class="pr-title" style="font-size:12px;margin:0;">alarm_background_trigger</span></div><div class="pr-repo" style="margin-top:4px;">Kotlin | ⭐ 13 🍴 3</div></div></a>
+      <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">📁</span><span class="pr-title" style="font-size:12px;margin:0;">assets_indexer</span></div><div class="pr-repo" style="margin-top:4px;">C++ | ⭐ 9 🍴 2</div></div></a>
+      <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">🪪</span><span class="pr-title" style="font-size:12px;margin:0;">nadra_verisys_flutter</span></div><div class="pr-repo" style="margin-top:4px;">Dart | ⭐ 3</div></div></a>
+      <a href="https://github.com/ishaquehassan/claude-remote-terminal" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">📱</span><span class="pr-title" style="font-size:12px;margin:0;">claude-remote-terminal</span></div><div class="pr-repo" style="margin-top:4px;">Dart | ⭐ 1</div></div></a>
+      <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">🎯</span><span class="pr-title" style="font-size:12px;margin:0;">goal-agent</span></div><div class="pr-repo" style="margin-top:4px;">JS | Claude Code Plugin</div></div></a>
     </div>
   </div>
-  <div class="window-footer"><a href="https://github.com/ishaquehassan" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#24292e,#40464d);color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.1);">Open GitHub Profile →</a></div>
+  <div class="window-footer"><a href="https://github.com/ishaquehassan" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#24292e,#40464d);color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.1);">Open GitHub Profile →</a></div>
 </div>
 
 <div class="window" id="win-linkedin" style="width:700px;height:620px;top:35px;left:calc(50% - 350px);">
@@ -1203,7 +1202,7 @@
     <div style="position:relative;border-bottom:1px solid var(--border);">
       <div style="height:180px;background:url('./assets/linkedin-banner.webp') center 30%/cover no-repeat;opacity:0.7;"></div>
       <div style="text-align:center;padding:0 24px 16px;">
-      <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:-32px auto 10px;border:3px solid rgba(30,30,46,0.95);box-shadow:0 4px 12px rgba(0,0,0,0.5);position:relative;z-index:2;"><img src="./assets/profile-photo.webp" style="width:100%;height:100%;object-fit:cover;" alt="Ishaq Hassan"></div>
+      <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:-32px auto 10px;border:3px solid rgba(30,30,46,0.95);box-shadow:0 4px 12px rgba(0,0,0,0.5);position:relative;z-index:2;"><img src="./assets/profile-photo.webp" loading="lazy" style="width:100%;height:100%;object-fit:cover;" alt="Ishaq Hassan"></div>
       <div style="font-size:20px;font-weight:700;background:linear-gradient(135deg,#0077B5,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Ishaq Hassan</div>
       <div style="color:var(--accent);font-size:13px;margin-top:4px;font-weight:500;">Flutter Framework Contributor | Engineering Manager @ DigitalHire | Open Source Author | Public Tech Speaker</div>
       <div style="color:var(--text2);font-size:12px;margin-top:6px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">
@@ -1226,48 +1225,48 @@
     <div class="li-tab-content" style="padding:20px;">
       <!-- Experience Tab -->
       <div class="li-panel" id="li-experience">
-        <div class="exp-item"><a href="https://www.linkedin.com/company/35951080/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🏢 DigitalHire</a><div class="exp-role">Engineering Manager</div><div class="exp-date">May 2024 - Present · 2 yrs | McLean, Virginia | Hybrid</div><div class="exp-desc">Leading AI-based video job board development. Managing engineering team. Flutter, Dart, Kotlin, Python, PostgreSQL, Next.js.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/35951080/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🏢 DigitalHire</a><div class="exp-role">Technical Lead</div><div class="exp-date">Oct 2023 - May 2024 · 8 mos | On-site</div><div class="exp-desc">Leading frontend team with NextJS for SSR, Flutter for web, desktop, and mobile apps.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/35951080/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🏢 DigitalHire</a><div class="exp-role">Staff Engineer</div><div class="exp-date">Feb 2023 - Oct 2023 · 9 mos | On-site</div><div class="exp-desc">Leading mobile team. React Native, Python, front-end development.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/76976404/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🎓 Tech Idara</a><div class="exp-role">Senior Instructor</div><div class="exp-date">Dec 2021 - Sep 2024 · 2 yrs 10 mos | Karachi</div><div class="exp-desc">Flutter course instructor. Course listed on official Flutter documentation.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/83530314/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">✈️ AeroGlobe</a><div class="exp-role">Technical Lead</div><div class="exp-date">Jun 2022 - May 2024 · 2 yrs | Karachi | Hybrid</div><div class="exp-desc">Leading engineering team. React Native, Python, JavaScript, front-end development.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/7969190/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🎫 Sastaticket.pk</a><div class="exp-role">Software Dev Consultant</div><div class="exp-date">Mar 2023 - Mar 2024 · 1 yr 1 mo | Remote</div><div class="exp-desc">Code quality, refactoring, architecture consultancy. Flutter, CI/CD, GitHub Actions.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/7969190/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🎫 Sastaticket.pk</a><div class="exp-role">Senior Engineering Consultant</div><div class="exp-date">Jan 2022 - Mar 2022 · 3 mos | Karachi</div><div class="exp-desc">App architecture and Flutter/Dart automation setup consulting.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/31333300/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">👩‍💻 Women Techmakers Kolachi</a><div class="exp-role">Speaker</div><div class="exp-date">Jun 2022 | DHA Suffa University, Karachi</div><div class="exp-desc">"Building Basic Apps with Flutter" workshop.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/53264096/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">📱 Pocket Systems</a><div class="exp-role">Co-Founder</div><div class="exp-date">Jan 2020 - Dec 2022 · 3 yrs | Karachi</div><div class="exp-desc">Founded software company. Technical engagements, international market. JavaScript, React Native, Socket Programming.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/11753853/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🌍 Optimyse (Mikaels Labs)</a><div class="exp-role">Lead Software Engineer</div><div class="exp-date">Feb 2019 - Dec 2021 · 2 yrs 11 mos | Tallinn, Estonia</div><div class="exp-desc">Managing full stack teams. Native and cross-platform mobile, web backend and frontend.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/1948911/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🎓 MAJU</a><div class="exp-role">Course Instructor</div><div class="exp-date">Mar 2019 - May 2019 · 3 mos | Karachi</div><div class="exp-desc">24 hours React Native Development training.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/3160421/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🎓 Habib University</a><div class="exp-role">Instructor</div><div class="exp-date">Nov 2018 | Karachi</div><div class="exp-desc">PhoneGap with Framework7 for hybrid mobile development.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/10205642/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🚀 Cyber Avanza</a><div class="exp-role">Co-Founder</div><div class="exp-date">Sep 2016 - Dec 2018 · 2 yrs 4 mos</div><div class="exp-desc">Native mobile development on Android/iOS and systems connectivity.</div></div>
-        <div class="exp-item"><a href="https://www.linkedin.com/company/13179768/" target="_blank" class="exp-company" style="color:var(--text);text-decoration:none;">🎓 Sir Syed University (SSUET)</a><div class="exp-role">Course Instructor</div><div class="exp-date">Jan 2017 - 2018 · 1 yr 1 mo | Karachi</div><div class="exp-desc">Android Development with Kotlin, Jetpack, ARCore. PanaCloud collaboration.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/35951080/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">🏢 DigitalHire</a><div class="exp-role">Engineering Manager</div><div class="exp-date">May 2024 - Present · 2 yrs | McLean, Virginia | Hybrid</div><div class="exp-desc">Leading AI-based video job board development. Managing engineering team. Flutter, Dart, Kotlin, Python, PostgreSQL, Next.js.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/35951080/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">🏢 DigitalHire</a><div class="exp-role">Technical Lead</div><div class="exp-date">Oct 2023 - May 2024 · 8 mos | On-site</div><div class="exp-desc">Leading frontend team with NextJS for SSR, Flutter for web, desktop, and mobile apps.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/35951080/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">🏢 DigitalHire</a><div class="exp-role">Staff Engineer</div><div class="exp-date">Feb 2023 - Oct 2023 · 9 mos | On-site</div><div class="exp-desc">Leading mobile team. React Native, Python, front-end development.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/76976404/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">🎓 Tech Idara</a><div class="exp-role">Senior Instructor</div><div class="exp-date">Dec 2021 - Sep 2024 · 2 yrs 10 mos | Karachi</div><div class="exp-desc">Flutter course instructor. Course listed on official Flutter documentation.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/83530314/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">✈️ AeroGlobe</a><div class="exp-role">Technical Lead</div><div class="exp-date">Jun 2022 - May 2024 · 2 yrs | Karachi | Hybrid</div><div class="exp-desc">Leading engineering team. React Native, Python, JavaScript, front-end development.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/7969190/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">🎫 Sastaticket.pk</a><div class="exp-role">Software Dev Consultant</div><div class="exp-date">Mar 2023 - Mar 2024 · 1 yr 1 mo | Remote</div><div class="exp-desc">Code quality, refactoring, architecture consultancy. Flutter, CI/CD, GitHub Actions.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/7969190/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">🎫 Sastaticket.pk</a><div class="exp-role">Senior Engineering Consultant</div><div class="exp-date">Jan 2022 - Mar 2022 · 3 mos | Karachi</div><div class="exp-desc">App architecture and Flutter/Dart automation setup consulting.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/31333300/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">👩‍💻 Women Techmakers Kolachi</a><div class="exp-role">Speaker</div><div class="exp-date">Jun 2022 | DHA Suffa University, Karachi</div><div class="exp-desc">"Building Basic Apps with Flutter" workshop.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/53264096/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">📱 Pocket Systems</a><div class="exp-role">Co-Founder</div><div class="exp-date">Jan 2020 - Dec 2022 · 3 yrs | Karachi</div><div class="exp-desc">Founded software company. Technical engagements, international market. JavaScript, React Native, Socket Programming.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/11753853/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">🌍 Optimyse (Mikaels Labs)</a><div class="exp-role">Lead Software Engineer</div><div class="exp-date">Feb 2019 - Dec 2021 · 2 yrs 11 mos | Tallinn, Estonia</div><div class="exp-desc">Managing full stack teams. Native and cross-platform mobile, web backend and frontend.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/1948911/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">🎓 MAJU</a><div class="exp-role">Course Instructor</div><div class="exp-date">Mar 2019 - May 2019 · 3 mos | Karachi</div><div class="exp-desc">24 hours React Native Development training.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/3160421/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">🎓 Habib University</a><div class="exp-role">Instructor</div><div class="exp-date">Nov 2018 | Karachi</div><div class="exp-desc">PhoneGap with Framework7 for hybrid mobile development.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/10205642/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">🚀 Cyber Avanza</a><div class="exp-role">Co-Founder</div><div class="exp-date">Sep 2016 - Dec 2018 · 2 yrs 4 mos</div><div class="exp-desc">Native mobile development on Android/iOS and systems connectivity.</div></div>
+        <div class="exp-item"><a href="https://www.linkedin.com/company/13179768/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;">🎓 Sir Syed University (SSUET)</a><div class="exp-role">Course Instructor</div><div class="exp-date">Jan 2017 - 2018 · 1 yr 1 mo | Karachi</div><div class="exp-desc">Android Development with Kotlin, Jetpack, ARCore. PanaCloud collaboration.</div></div>
         <div class="exp-item"><div class="exp-company">💻 VividVisionz</div><div class="exp-role">Mobile Developer</div><div class="exp-date">Jun 2013 - Feb 2019 · 5 yrs 9 mos | Karachi</div><div class="exp-desc">Android/iOS development and systems connectivity.</div></div>
         <div class="exp-item"><div class="exp-company">💻 VividVisionz</div><div class="exp-role">Web Developer</div><div class="exp-date">Feb 2013 - Jan 2019 · 6 yrs | Karachi</div><div class="exp-desc">Web applications with PHP, MySQL, JavaScript.</div></div>
       </div>
       <!-- Open Source Tab -->
       <div class="li-panel" id="li-opensource" style="display:none;">
         <div class="section-header" style="font-size:16px;margin-bottom:16px;">Flutter Framework (flutter/flutter)</div>
-        <a href="https://github.com/flutter/flutter/pull/183081" target="_blank" style="text-decoration:none;color:inherit;">
+        <a href="https://github.com/flutter/flutter/pull/183081" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
           <div class="pr-card">
             <div class="pr-status pr-merged">✓ Merged</div>
             <div class="pr-title">Fix AnimatedCrossFade clipBehavior forwarding</div>
             <div class="pr-repo">flutter/flutter #183081</div>
           </div>
         </a>
-        <a href="https://github.com/flutter/flutter/pull/183097" target="_blank" style="text-decoration:none;color:inherit;">
+        <a href="https://github.com/flutter/flutter/pull/183097" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
           <div class="pr-card">
             <div class="pr-status pr-merged">✓ Merged</div>
             <div class="pr-title">Forward clipBehavior in AnimatedSize widget</div>
             <div class="pr-repo">flutter/flutter #183097</div>
           </div>
         </a>
-        <a href="https://github.com/flutter/flutter/pull/183109" target="_blank" style="text-decoration:none;color:inherit;">
+        <a href="https://github.com/flutter/flutter/pull/183109" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
           <div class="pr-card">
             <div class="pr-status pr-merged">✓ Merged</div>
             <div class="pr-title">Add clipBehavior to SizeTransition widget</div>
             <div class="pr-repo">flutter/flutter #183109</div>
           </div>
         </a>
-        <a href="https://github.com/flutter/flutter/pull/184545" target="_blank" style="text-decoration:none;color:inherit;">
+        <a href="https://github.com/flutter/flutter/pull/184545" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
           <div class="pr-card">
             <div class="pr-status pr-approved">✓ Approved</div>
             <div class="pr-title">Expose decoration properties in CupertinoTextField</div>
@@ -1275,31 +1274,31 @@
           </div>
         </a>
         <div class="section-header" style="font-size:16px;margin:20px 0 16px;">Published Packages & Plugins</div>
-        <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" style="text-decoration:none;color:inherit;">
+        <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
           <div class="pr-card">
             <div class="pr-title">📸 document_scanner_flutter</div>
             <div class="pr-repo">Flutter document scanning plugin | ⭐ 63 | 🍴 135</div>
           </div>
         </a>
-        <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" style="text-decoration:none;color:inherit;">
+        <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
           <div class="pr-card">
             <div class="pr-title">⏰ flutter_alarm_background_trigger</div>
             <div class="pr-repo">Native Kotlin alarm plugin | ⭐ 13</div>
           </div>
         </a>
-        <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" style="text-decoration:none;color:inherit;">
+        <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
           <div class="pr-card">
             <div class="pr-title">📁 assets_indexer</div>
             <div class="pr-repo">Auto-generate asset references | ⭐ 9</div>
           </div>
         </a>
-        <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" style="text-decoration:none;color:inherit;">
+        <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
           <div class="pr-card">
             <div class="pr-title">🪪 nadra_verisys_flutter</div>
             <div class="pr-repo">NADRA CNIC KYC verification | ⭐ 3</div>
           </div>
         </a>
-        <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" style="text-decoration:none;color:inherit;">
+        <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
           <div class="pr-card">
             <div class="pr-title">🎯 goal-agent</div>
             <div class="pr-repo">Career goal tracking agent for Claude Code</div>
@@ -1333,40 +1332,40 @@
       <div class="li-panel" id="li-skills" style="display:none;">
         <div class="section-header" style="font-size:16px;margin-bottom:12px;">Top Skills (LinkedIn Verified)</div>
         <div class="tech-grid" style="margin-bottom:20px;">
-          <a href="https://flutter.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">💙</div><div class="tech-name">Flutter (4)</div></div></a>
-          <a href="https://kotlinlang.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/kotlin.svg" width="36" height="36" alt="Kotlin"></div><div class="tech-name">Kotlin</div></div></a>
-          <a href="https://developer.mozilla.org/en-US/docs/Learn/Front-end_web_developer" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🌐</div><div class="tech-name">Front-End</div></div></a>
-          <a href="https://flutter.dev/multi-platform" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">📱</div><div class="tech-name">Mobile Apps</div></div></a>
-          <a href="https://github.com/features/actions" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">⚡</div><div class="tech-name">CI/CD</div></div></a>
+          <a href="https://flutter.dev" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">💙</div><div class="tech-name">Flutter (4)</div></div></a>
+          <a href="https://kotlinlang.org" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/kotlin.svg" width="36" height="36" alt="Kotlin"></div><div class="tech-name">Kotlin</div></div></a>
+          <a href="https://developer.mozilla.org/en-US/docs/Learn/Front-end_web_developer" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🌐</div><div class="tech-name">Front-End</div></div></a>
+          <a href="https://flutter.dev/multi-platform" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">📱</div><div class="tech-name">Mobile Apps</div></div></a>
+          <a href="https://github.com/features/actions" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">⚡</div><div class="tech-name">CI/CD</div></div></a>
         </div>
         <div class="section-header" style="font-size:16px;margin-bottom:12px;">Languages & Frameworks</div>
         <div class="tech-grid" style="margin-bottom:20px;">
-          <a href="https://dart.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/dart.svg" width="36" height="36" alt="Dart"></div><div class="tech-name">Dart</div></div></a>
-          <a href="https://reactnative.dev" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/react.svg" width="36" height="36" alt="React Native"></div><div class="tech-name">React Native</div></div></a>
-          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">📜</div><div class="tech-name">JavaScript</div></div></a>
-          <a href="https://python.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/python.svg" width="36" height="36" alt="Python"></div><div class="tech-name">Python</div></div></a>
-          <a href="https://php.net" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🐘</div><div class="tech-name">PHP (13)</div></div></a>
-          <a href="https://dev.java" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">☕</div><div class="tech-name">Java (7)</div></div></a>
-          <a href="https://nextjs.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/nextjs.svg" width="36" height="36" alt="Next.js"></div><div class="tech-name">Next.js</div></div></a>
-          <a href="https://postgresql.org" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/postgresql.svg" width="36" height="36" alt="PostgreSQL"></div><div class="tech-name">PostgreSQL</div></div></a>
-          <a href="https://mysql.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/mysql.svg" width="36" height="36" alt="MySQL"></div><div class="tech-name">MySQL</div></div></a>
+          <a href="https://dart.dev" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/dart.svg" width="36" height="36" alt="Dart"></div><div class="tech-name">Dart</div></div></a>
+          <a href="https://reactnative.dev" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/react.svg" width="36" height="36" alt="React Native"></div><div class="tech-name">React Native</div></div></a>
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">📜</div><div class="tech-name">JavaScript</div></div></a>
+          <a href="https://python.org" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/python.svg" width="36" height="36" alt="Python"></div><div class="tech-name">Python</div></div></a>
+          <a href="https://php.net" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🐘</div><div class="tech-name">PHP (13)</div></div></a>
+          <a href="https://dev.java" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">☕</div><div class="tech-name">Java (7)</div></div></a>
+          <a href="https://nextjs.org" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/nextjs.svg" width="36" height="36" alt="Next.js"></div><div class="tech-name">Next.js</div></div></a>
+          <a href="https://postgresql.org" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/postgresql.svg" width="36" height="36" alt="PostgreSQL"></div><div class="tech-name">PostgreSQL</div></div></a>
+          <a href="https://mysql.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/mysql.svg" width="36" height="36" alt="MySQL"></div><div class="tech-name">MySQL</div></div></a>
         </div>
         <div class="section-header" style="font-size:16px;margin-bottom:12px;">Platform & Tools</div>
         <div class="tech-grid">
-          <a href="https://developer.android.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🤖</div><div class="tech-name">Android (4)</div></div></a>
-          <a href="https://developer.apple.com/ios/" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/ios.svg" width="36" height="36" alt="iOS"></div><div class="tech-name">iOS</div></div></a>
-          <a href="https://git-scm.com" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">📦</div><div class="tech-name">Git (16)</div></div></a>
-          <a href="https://github.com/features/actions" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/githubactions.svg" width="36" height="36" alt="GitHub Actions"></div><div class="tech-name">GitHub Actions</div></div></a>
-          <a href="https://en.wikipedia.org/wiki/Network_socket" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🔌</div><div class="tech-name">Socket Prog</div></div></a>
-          <a href="https://developer.mozilla.org/en-US/docs/Web" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🌐</div><div class="tech-name">Web Dev (11)</div></div></a>
-          <a href="https://en.wikipedia.org/wiki/Software_engineering" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">⚙️</div><div class="tech-name">Software Eng (7)</div></div></a>
-          <a href="https://en.wikipedia.org/wiki/Object-oriented_programming" target="_blank" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🎯</div><div class="tech-name">OOP ✓</div></div></a>
+          <a href="https://developer.android.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🤖</div><div class="tech-name">Android (4)</div></div></a>
+          <a href="https://developer.apple.com/ios/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/ios.svg" width="36" height="36" alt="iOS"></div><div class="tech-name">iOS</div></div></a>
+          <a href="https://git-scm.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">📦</div><div class="tech-name">Git (16)</div></div></a>
+          <a href="https://github.com/features/actions" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon"><img src="assets/tech/githubactions.svg" width="36" height="36" alt="GitHub Actions"></div><div class="tech-name">GitHub Actions</div></div></a>
+          <a href="https://en.wikipedia.org/wiki/Network_socket" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🔌</div><div class="tech-name">Socket Prog</div></div></a>
+          <a href="https://developer.mozilla.org/en-US/docs/Web" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🌐</div><div class="tech-name">Web Dev (11)</div></div></a>
+          <a href="https://en.wikipedia.org/wiki/Software_engineering" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">⚙️</div><div class="tech-name">Software Eng (7)</div></div></a>
+          <a href="https://en.wikipedia.org/wiki/Object-oriented_programming" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="tech-item"><div class="tech-icon">🎯</div><div class="tech-name">OOP ✓</div></div></a>
         </div>
         <div style="margin-top:12px;font-size:11px;color:var(--text2);">Numbers in parentheses = LinkedIn endorsements. ✓ = LinkedIn Skill Assessment passed.</div>
       </div>
     </div>
   </div>
-  <div class="window-footer"><a href="https://linkedin.com/in/ishaquehassan" target="_blank" style="display:inline-block;background:#0077B5;color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;">Open LinkedIn Profile →</a></div>
+  <div class="window-footer"><a href="https://linkedin.com/in/ishaquehassan" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:#0077B5;color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;">Open LinkedIn Profile →</a></div>
 </div>
 
 <div class="window" id="win-snake" style="width:640px;height:700px;top:40px;left:calc(50% - 320px);">
@@ -1447,7 +1446,7 @@
             <div class="fc-stat"><span class="fc-stat-num">Urdu</span><span class="fc-stat-label">Language</span></div>
           </div>
         </div>
-        <a href="https://docs.flutter.dev/resources/courses" target="_blank" class="fc-verified-link">
+        <a href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener noreferrer" class="fc-verified-link">
           <div class="fc-verified">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#54c5f8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#54c5f8" stroke-width="2"/></svg>
             <span>Listed on Official Flutter Documentation</span>
@@ -1677,7 +1676,7 @@
     </div>
     <div class="mobile-expanded-content">
       <div class="mobile-exp-item">
-        <a href="https://www.linkedin.com/company/35951080/" target="_blank" style="text-decoration: none; color: inherit;">
+        <a href="https://www.linkedin.com/company/35951080/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
           <div class="mobile-exp-company">🏢 DigitalHire</div>
         </a>
         <div class="mobile-exp-role">Engineering Manager → Technical Lead → Staff Engineer</div>
@@ -1691,7 +1690,7 @@
         <div class="mobile-exp-desc">Flutter course on official Flutter docs.</div>
       </div>
       <div class="mobile-exp-item">
-        <a href="https://www.linkedin.com/company/83530314/" target="_blank" style="text-decoration: none; color: inherit;">
+        <a href="https://www.linkedin.com/company/83530314/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
           <div class="mobile-exp-company">✈️ AeroGlobe</div>
         </a>
         <div class="mobile-exp-role">Technical Lead</div>
@@ -1699,7 +1698,7 @@
         <div class="mobile-exp-desc">React Native, Python, front-end.</div>
       </div>
       <div class="mobile-exp-item">
-        <a href="https://www.linkedin.com/company/7969190/" target="_blank" style="text-decoration: none; color: inherit;">
+        <a href="https://www.linkedin.com/company/7969190/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
           <div class="mobile-exp-company">🎫 Sastaticket.pk</div>
         </a>
         <div class="mobile-exp-role">Engineering Consultant</div>
@@ -1713,7 +1712,7 @@
         <div class="mobile-exp-desc">International market, React Native, Socket Programming.</div>
       </div>
       <div class="mobile-exp-item">
-        <a href="https://www.linkedin.com/company/11753853/" target="_blank" style="text-decoration: none; color: inherit;">
+        <a href="https://www.linkedin.com/company/11753853/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
           <div class="mobile-exp-company">🌍 Optimyse</div>
         </a>
         <div class="mobile-exp-role">Lead Software Engineer</div>
@@ -1749,34 +1748,34 @@
         <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 8px;text-align:center;"><div style="font-size:22px;font-weight:700;color:#60a5fa;">5</div><div style="font-size:10px;color:var(--text2);margin-top:2px;">Total</div></div>
       </div>
       <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;">Merged into flutter/flutter</div>
-      <a href="https://github.com/flutter/flutter/pull/183081" target="_blank" class="mobile-pr-card" style="">
+      <a href="https://github.com/flutter/flutter/pull/183081" target="_blank" rel="noopener noreferrer" class="mobile-pr-card" style="">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(139,92,246,0.2);font-size:10px;font-weight:600;color:#a78bfa;margin-bottom:6px;">✓ Merged</div>
         <div class="mobile-pr-title">Fix AnimatedCrossFade clipBehavior forwarding</div>
         <div class="mobile-pr-repo">flutter/flutter #183081</div>
       </a>
-      <a href="https://github.com/flutter/flutter/pull/183097" target="_blank" class="mobile-pr-card" style="">
+      <a href="https://github.com/flutter/flutter/pull/183097" target="_blank" rel="noopener noreferrer" class="mobile-pr-card" style="">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(139,92,246,0.2);font-size:10px;font-weight:600;color:#a78bfa;margin-bottom:6px;">✓ Merged</div>
         <div class="mobile-pr-title">Forward clipBehavior in AnimatedSize widget</div>
         <div class="mobile-pr-repo">flutter/flutter #183097</div>
       </a>
-      <a href="https://github.com/flutter/flutter/pull/183109" target="_blank" class="mobile-pr-card" style="">
+      <a href="https://github.com/flutter/flutter/pull/183109" target="_blank" rel="noopener noreferrer" class="mobile-pr-card" style="">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(139,92,246,0.2);font-size:10px;font-weight:600;color:#a78bfa;margin-bottom:6px;">✓ Merged</div>
         <div class="mobile-pr-title">Add clipBehavior to SizeTransition widget</div>
         <div class="mobile-pr-repo">flutter/flutter #183109</div>
       </a>
       <div style="font-size:13px;font-weight:600;color:var(--text2);margin:16px 0 10px;">Approved</div>
-      <a href="https://github.com/flutter/flutter/pull/184545" target="_blank" class="mobile-pr-card" style="">
+      <a href="https://github.com/flutter/flutter/pull/184545" target="_blank" rel="noopener noreferrer" class="mobile-pr-card" style="">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(48,209,88,0.2);font-size:10px;font-weight:600;color:#30D158;margin-bottom:6px;">✓ Approved</div>
         <div class="mobile-pr-title">Expose decoration properties in CupertinoTextField</div>
         <div class="mobile-pr-repo">flutter/flutter #184545</div>
       </a>
-      <a href="https://github.com/flutter/flutter/pull/184569" target="_blank" class="mobile-pr-card" style="">
+      <a href="https://github.com/flutter/flutter/pull/184569" target="_blank" rel="noopener noreferrer" class="mobile-pr-card" style="">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(48,209,88,0.2);font-size:10px;font-weight:600;color:#30D158;margin-bottom:6px;">✓ Approved</div>
         <div class="mobile-pr-title">Add missing property forwarding in Material widgets</div>
         <div class="mobile-pr-repo">flutter/flutter #184569</div>
       </a>
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);">
-        <a href="https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e" target="_blank" class="mobile-pr-card">
+        <a href="https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
           <div class="mobile-pr-title">📖 How I Got PRs Merged</div>
           <div class="mobile-pr-repo">Read the full story on Medium</div>
         </a>
@@ -1797,42 +1796,42 @@
         <div style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.2);border-radius:12px;padding:12px 8px;text-align:center;"><div style="font-size:22px;font-weight:700;color:#67e8f9;">GDG</div><div style="font-size:10px;color:var(--text2);margin-top:2px;">Mentor</div></div>
         <div style="background:rgba(255,159,10,0.15);border:1px solid rgba(255,159,10,0.2);border-radius:12px;padding:12px 8px;text-align:center;"><div style="font-size:22px;font-weight:700;color:#fbbf24;">🎤</div><div style="font-size:10px;color:var(--text2);margin-top:2px;">Speaker</div></div>
       </div>
-      <a href="https://x.com/GDGKolachi" target="_blank" class="mobile-pr-card">
+      <a href="https://x.com/GDGKolachi" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(99,102,241,0.2);font-size:10px;font-weight:600;color:#a5b4fc;margin-bottom:6px;">Panel Speaker</div>
         <div class="mobile-pr-title">🎯 DevFest Karachi: Scaling Products with Flutter</div>
         <div class="mobile-pr-repo">GDG Kolachi | Panel with Waleed Arshad & Sakina Abbas</div>
       </a>
-      <a href="https://www.facebook.com/GDGKolachi/posts/720743396758626/" target="_blank" class="mobile-pr-card">
+      <a href="https://www.facebook.com/GDGKolachi/posts/720743396758626/" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(6,182,212,0.2);font-size:10px;font-weight:600;color:#67e8f9;margin-bottom:6px;">Speaker</div>
         <div class="mobile-pr-title">🌐 Google I/O Extended Karachi</div>
         <div class="mobile-pr-repo">GDG Kolachi</div>
       </a>
-      <a href="https://gdg.community.dev/events/details/google-gdg-kolachi-presents-flutter-bootcamp/" target="_blank" class="mobile-pr-card">
+      <a href="https://gdg.community.dev/events/details/google-gdg-kolachi-presents-flutter-bootcamp/" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(48,209,88,0.2);font-size:10px;font-weight:600;color:#30D158;margin-bottom:6px;">Instructor</div>
         <div class="mobile-pr-title">🎓 Flutter Bootcamp (Aug 2021)</div>
         <div class="mobile-pr-repo">GDG Kolachi</div>
       </a>
-      <a href="https://www.facebook.com/GDGKolachi/posts/722626283237004/" target="_blank" class="mobile-pr-card">
+      <a href="https://www.facebook.com/GDGKolachi/posts/722626283237004/" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(255,159,10,0.2);font-size:10px;font-weight:600;color:#fbbf24;margin-bottom:6px;">Inaugural Speaker</div>
         <div class="mobile-pr-title">🚀 Facebook Developer Circle (Inaugural)</div>
         <div class="mobile-pr-repo">The Nest I/O</div>
       </a>
-      <a href="https://www.linkedin.com/posts/gdgkolachi_codetocreate-roadtodevfest2025-gdgkolachi-activity-7400908378081767424-EB-7" target="_blank" class="mobile-pr-card">
+      <a href="https://www.linkedin.com/posts/gdgkolachi_codetocreate-roadtodevfest2025-gdgkolachi-activity-7400908378081767424-EB-7" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(139,92,246,0.2);font-size:10px;font-weight:600;color:#c4b5fd;margin-bottom:6px;">Speaker</div>
         <div class="mobile-pr-title">💻 Code to Create</div>
         <div class="mobile-pr-repo">NIC Karachi | with Waleed Arshad</div>
       </a>
-      <a href="https://www.linkedin.com/posts/itrathussainzaidi_flutter-iqrauniversity-seminar-activity-7192627199412232192-8t2X" target="_blank" class="mobile-pr-card">
+      <a href="https://www.linkedin.com/posts/itrathussainzaidi_flutter-iqrauniversity-seminar-activity-7192627199412232192-8t2X" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(255,69,58,0.2);font-size:10px;font-weight:600;color:#fca5a5;margin-bottom:6px;">Speaker</div>
         <div class="mobile-pr-title">🏫 Flutter Seminar</div>
         <div class="mobile-pr-repo">Iqra University</div>
       </a>
-      <a href="https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5" target="_blank" class="mobile-pr-card">
+      <a href="https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(255,214,10,0.2);font-size:10px;font-weight:600;color:#fde047;margin-bottom:6px;">Speaker</div>
         <div class="mobile-pr-title">🤖 DevNCode Meetup IV: AI</div>
         <div class="mobile-pr-repo">The Nest I/O</div>
       </a>
-      <a href="https://www.linkedin.com/company/31333300/" target="_blank" class="mobile-pr-card">
+      <a href="https://www.linkedin.com/company/31333300/" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div style="display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(236,72,153,0.2);font-size:10px;font-weight:600;color:#f9a8d4;margin-bottom:6px;">Speaker</div>
         <div class="mobile-pr-title">👩‍💻 Women Tech Makers (DHA Suffa)</div>
         <div class="mobile-pr-repo">Karachi | "Building Basic Apps with Flutter"</div>
@@ -1858,23 +1857,23 @@
       <div style="width: 40px;"></div>
     </div>
     <div class="mobile-expanded-content">
-      <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" class="mobile-pr-card">
+      <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div class="mobile-pr-title">📸 document_scanner_flutter</div>
         <div class="mobile-pr-repo">Flutter plugin for document scanning | 63 stars | 135 forks</div>
       </a>
-      <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" class="mobile-pr-card">
+      <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div class="mobile-pr-title">⏰ flutter_alarm_background_trigger</div>
         <div class="mobile-pr-repo">Native Kotlin alarm plugin for Flutter | 13 stars</div>
       </a>
-      <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" class="mobile-pr-card">
+      <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div class="mobile-pr-title">📁 assets_indexer</div>
         <div class="mobile-pr-repo">Auto-generate asset references for Flutter | 9 stars</div>
       </a>
-      <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" class="mobile-pr-card">
+      <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div class="mobile-pr-title">🪪 nadra_verisys_flutter</div>
         <div class="mobile-pr-repo">NADRA CNIC KYC verification for Flutter | 3 stars</div>
       </a>
-      <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" class="mobile-pr-card">
+      <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" rel="noopener noreferrer" class="mobile-pr-card">
         <div class="mobile-pr-title">🎯 goal-agent</div>
         <div class="mobile-pr-repo">Career goal tracking agent for Claude Code</div>
       </a>
@@ -1891,100 +1890,100 @@
     <div class="mobile-expanded-content">
       <h3 style="font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text);">Mobile</h3>
       <div class="mobile-tech-grid">
-        <a href="https://flutter.dev" target="_blank" class="mobile-tech-item">
+        <a href="https://flutter.dev" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/flutter.svg" width="28" height="28" alt="Flutter"></div>
           <div class="mobile-tech-name">Flutter</div>
         </a>
-        <a href="https://dart.dev" target="_blank" class="mobile-tech-item">
+        <a href="https://dart.dev" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/dart.svg" width="28" height="28" alt="Dart"></div>
           <div class="mobile-tech-name">Dart</div>
         </a>
-        <a href="https://developer.android.com" target="_blank" class="mobile-tech-item">
+        <a href="https://developer.android.com" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/android.svg" width="28" height="28" alt="Android"></div>
           <div class="mobile-tech-name">Android</div>
         </a>
-        <a href="https://developer.apple.com/ios/" target="_blank" class="mobile-tech-item">
+        <a href="https://developer.apple.com/ios/" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/ios.svg" width="28" height="28" alt="iOS"></div>
           <div class="mobile-tech-name">iOS</div>
         </a>
-        <a href="https://kotlinlang.org" target="_blank" class="mobile-tech-item">
+        <a href="https://kotlinlang.org" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/kotlin.svg" width="28" height="28" alt="Kotlin"></div>
           <div class="mobile-tech-name">Kotlin</div>
         </a>
-        <a href="https://swift.org" target="_blank" class="mobile-tech-item">
+        <a href="https://swift.org" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/swift.svg" width="28" height="28" alt="Swift"></div>
           <div class="mobile-tech-name">Swift</div>
         </a>
-        <a href="https://reactnative.dev" target="_blank" class="mobile-tech-item">
+        <a href="https://reactnative.dev" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/react.svg" width="28" height="28" alt="React Native"></div>
           <div class="mobile-tech-name">React Native</div>
         </a>
       </div>
       <h3 style="font-size: 13px; font-weight: 600; margin: 20px 0 12px; color: var(--text);">Backend & Cloud</h3>
       <div class="mobile-tech-grid">
-        <a href="https://firebase.google.com" target="_blank" class="mobile-tech-item">
+        <a href="https://firebase.google.com" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/firebase.svg" width="28" height="28" alt="Firebase"></div>
           <div class="mobile-tech-name">Firebase</div>
         </a>
-        <a href="https://nodejs.org" target="_blank" class="mobile-tech-item">
+        <a href="https://nodejs.org" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/nodejs.svg" width="28" height="28" alt="Node.js"></div>
           <div class="mobile-tech-name">Node.js</div>
         </a>
-        <a href="https://nestjs.com" target="_blank" class="mobile-tech-item">
+        <a href="https://nestjs.com" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/nestjs.svg" width="28" height="28" alt="NestJS"></div>
           <div class="mobile-tech-name">NestJS</div>
         </a>
-        <a href="https://nextjs.org" target="_blank" class="mobile-tech-item">
+        <a href="https://nextjs.org" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/nextjs.svg" width="28" height="28" alt="Next.js"></div>
           <div class="mobile-tech-name">Next.js</div>
         </a>
-        <a href="https://python.org" target="_blank" class="mobile-tech-item">
+        <a href="https://python.org" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/python.svg" width="28" height="28" alt="Python"></div>
           <div class="mobile-tech-name">Python</div>
         </a>
-        <a href="https://php.net" target="_blank" class="mobile-tech-item">
+        <a href="https://php.net" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/php.svg" width="28" height="28" alt="PHP"></div>
           <div class="mobile-tech-name">PHP</div>
         </a>
-        <a href="https://spring.io/projects/spring-boot" target="_blank" class="mobile-tech-item">
+        <a href="https://spring.io/projects/spring-boot" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/springboot.svg" width="28" height="28" alt="Spring Boot"></div>
           <div class="mobile-tech-name">Spring Boot</div>
         </a>
-        <a href="https://go.dev" target="_blank" class="mobile-tech-item">
+        <a href="https://go.dev" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/go.svg" width="28" height="28" alt="Go"></div>
           <div class="mobile-tech-name">Go</div>
         </a>
       </div>
       <h3 style="font-size: 13px; font-weight: 600; margin: 20px 0 12px; color: var(--text);">Database</h3>
       <div class="mobile-tech-grid">
-        <a href="https://postgresql.org" target="_blank" class="mobile-tech-item">
+        <a href="https://postgresql.org" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/postgresql.svg" width="28" height="28" alt="PostgreSQL"></div>
           <div class="mobile-tech-name">PostgreSQL</div>
         </a>
-        <a href="https://mysql.com" target="_blank" class="mobile-tech-item">
+        <a href="https://mysql.com" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/mysql.svg" width="28" height="28" alt="MySQL"></div>
           <div class="mobile-tech-name">MySQL</div>
         </a>
       </div>
       <h3 style="font-size: 13px; font-weight: 600; margin: 20px 0 12px; color: var(--text);">Tools & DevOps</h3>
       <div class="mobile-tech-grid">
-        <a href="https://git-scm.com" target="_blank" class="mobile-tech-item">
+        <a href="https://git-scm.com" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/git.svg" width="28" height="28" alt="Git"></div>
           <div class="mobile-tech-name">Git</div>
         </a>
-        <a href="https://github.com/features/actions" target="_blank" class="mobile-tech-item">
+        <a href="https://github.com/features/actions" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/githubactions.svg" width="28" height="28" alt="GitHub Actions"></div>
           <div class="mobile-tech-name">GitHub Actions</div>
         </a>
-        <a href="https://docker.com" target="_blank" class="mobile-tech-item">
+        <a href="https://docker.com" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/docker.svg" width="28" height="28" alt="Docker"></div>
           <div class="mobile-tech-name">Docker</div>
         </a>
-        <a href="https://kernel.org" target="_blank" class="mobile-tech-item">
+        <a href="https://kernel.org" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/linux.svg" width="28" height="28" alt="Linux"></div>
           <div class="mobile-tech-name">Linux</div>
         </a>
-        <a href="https://claude.ai" target="_blank" class="mobile-tech-item">
+        <a href="https://claude.ai" target="_blank" rel="noopener noreferrer" class="mobile-tech-item">
           <div class="mobile-tech-icon"><img src="assets/tech/claude.svg" width="28" height="28" alt="Claude AI"></div>
           <div class="mobile-tech-name">Claude AI</div>
         </a>
@@ -2000,27 +1999,27 @@
       <div style="width: 40px;"></div>
     </div>
     <div class="mobile-expanded-content">
-      <a href="https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e" target="_blank" class="mobile-article-card">
+      <a href="https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e" target="_blank" rel="noopener noreferrer" class="mobile-article-card">
         <div class="mobile-article-title">🧩 Dart Isolates: The Missing Guide</div>
         <div class="mobile-article-meta">5 min | Concurrency, Performance</div>
       </a>
-      <a href="https://medium.com/@ishaqhassan/how-flutters-three-tree-architecture-actually-works-953c8cc17226" target="_blank" class="mobile-article-card">
+      <a href="https://medium.com/@ishaqhassan/how-flutters-three-tree-architecture-actually-works-953c8cc17226" target="_blank" rel="noopener noreferrer" class="mobile-article-card">
         <div class="mobile-article-title">🌳 How Flutter's Three-Tree Architecture Works</div>
         <div class="mobile-article-meta">4 min | Flutter Internals</div>
       </a>
-      <a href="https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e" target="_blank" class="mobile-article-card">
+      <a href="https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e" target="_blank" rel="noopener noreferrer" class="mobile-article-card">
         <div class="mobile-article-title">🔀 PRs Merged Into Flutter's Repository</div>
         <div class="mobile-article-meta">5 min | 52 claps | Open Source</div>
       </a>
-      <a href="https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061" target="_blank" class="mobile-article-card">
+      <a href="https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061" target="_blank" rel="noopener noreferrer" class="mobile-article-card">
         <div class="mobile-article-title">📱 Flutter Native Plugin Development</div>
         <div class="mobile-article-meta">3 min | 67 claps | Nerd For Tech</div>
       </a>
-      <a href="https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb" target="_blank" class="mobile-article-card">
+      <a href="https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb" target="_blank" rel="noopener noreferrer" class="mobile-article-card">
         <div class="mobile-article-title">📁 Indexing Assets in a Dart Class</div>
         <div class="mobile-article-meta">4 min | Nerd For Tech</div>
       </a>
-      <a href="https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67" target="_blank" class="mobile-article-card">
+      <a href="https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67" target="_blank" rel="noopener noreferrer" class="mobile-article-card">
         <div class="mobile-article-title">🔥 Firebase Cloud Functions Using Kotlin</div>
         <div class="mobile-article-meta">3 min | Firebase, Kotlin</div>
       </a>
@@ -2039,23 +2038,23 @@
         <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="#fff" stroke-width="1.5"/></svg></div>
         <div><div style="font-weight:600;font-size:15px;color:var(--text);">Email</div><div style="font-size:12px;color:var(--text2);margin-top:2px;">hello@ishaqhassan.dev</div></div>
       </a>
-      <a href="https://github.com/ishaquehassan" target="_blank" style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;">
+      <a href="https://github.com/ishaquehassan" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;">
         <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#24292e,#40464d);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></div>
         <div><div style="font-weight:600;font-size:15px;color:var(--text);">GitHub</div><div style="font-size:12px;color:var(--text2);margin-top:2px;">@ishaquehassan</div></div>
       </a>
-      <a href="https://linkedin.com/in/ishaquehassan" target="_blank" style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;">
+      <a href="https://linkedin.com/in/ishaquehassan" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;">
         <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0077B5,#00a0dc);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
         <div><div style="font-weight:600;font-size:15px;color:var(--text);">LinkedIn</div><div style="font-size:12px;color:var(--text2);margin-top:2px;">@ishaquehassan</div></div>
       </a>
-      <a href="https://medium.com/@ishaqhassan" target="_blank" style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;">
+      <a href="https://medium.com/@ishaqhassan" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;">
         <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#1a8917,#0d7a0d);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg></div>
         <div><div style="font-weight:600;font-size:15px;color:var(--text);">Medium</div><div style="font-size:12px;color:var(--text2);margin-top:2px;">@ishaqhassan</div></div>
       </a>
-      <a href="https://stackoverflow.com/users/2094696/ishaq-hassan" target="_blank" style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;">
+      <a href="https://stackoverflow.com/users/2094696/ishaq-hassan" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;">
         <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#F48024,#e7700d);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M15.725 0l-1.72 1.277 6.39 8.588 1.716-1.277L15.725 0zm-3.94 3.418l-1.369 1.644 8.225 6.85 1.369-1.644-8.225-6.85zm-3.15 4.465l-.905 1.94 9.702 4.517.904-1.94-9.701-4.517zm-1.85 4.86l-.44 2.093 10.473 2.201.44-2.092-10.473-2.203zM1.89 15.47V24h19.19v-8.53h-2.133v6.397H4.021v-6.396H1.89zm4.265 2.133v2.13h10.66v-2.13H6.154z"/></svg></div>
         <div><div style="font-weight:600;font-size:15px;color:var(--text);">Stack Overflow</div><div style="font-size:12px;color:var(--text2);margin-top:2px;">ishaq-hassan</div></div>
       </a>
-      <a href="https://ishaqhassan.dev" target="_blank" style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;">
+      <a href="https://ishaqhassan.dev" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;">
         <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="#fff" stroke-width="1.5"/></svg></div>
         <div><div style="font-weight:600;font-size:15px;color:var(--text);">Website</div><div style="font-size:12px;color:var(--text2);margin-top:2px;">ishaqhassan.dev</div></div>
       </a>
@@ -2124,7 +2123,7 @@
     </div>
     <div class="mobile-expanded-content">
       <div class="mobile-exp-item" style="text-align:center;">
-        <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:0 auto 10px;border:2px solid rgba(255,255,255,0.1);"><img src="./assets/github-avatar.webp" style="width:100%;height:100%;object-fit:cover;"></div>
+        <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:0 auto 10px;border:2px solid rgba(255,255,255,0.1);"><img src="./assets/github-avatar.webp" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>
         <div class="mobile-exp-company" style="margin-bottom:2px;">ishaquehassan</div>
         <div class="mobile-exp-desc" style="margin-bottom:8px;">Flutter Framework Contributor | Engineering Manager</div>
         <div style="display:flex;justify-content:center;gap:12px;font-size:12px;color:var(--text2);">
@@ -2143,25 +2142,25 @@
         <div class="mobile-exp-item" style="text-align:center;margin-bottom:0;"><div style="font-size:18px;font-weight:700;">135+</div><div class="mobile-exp-desc" style="font-size:10px;">Forks</div></div>
       </div>
       <div class="mobile-exp-company" style="font-size:13px;margin-bottom:8px;">📌 Pinned Repos</div>
-      <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" style="text-decoration:none;color:inherit;">
+      <a href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
         <div class="mobile-exp-item"><div class="mobile-exp-company">📸 document_scanner_flutter</div><div class="mobile-exp-role">Dart | ⭐ 64 🍴 135</div></div>
       </a>
-      <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" style="text-decoration:none;color:inherit;">
+      <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
         <div class="mobile-exp-item"><div class="mobile-exp-company">⏰ alarm_background_trigger</div><div class="mobile-exp-role">Kotlin | ⭐ 13 🍴 3</div></div>
       </a>
-      <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" style="text-decoration:none;color:inherit;">
+      <a href="https://github.com/ishaquehassan/assets_indexer" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
         <div class="mobile-exp-item"><div class="mobile-exp-company">📁 assets_indexer</div><div class="mobile-exp-role">C++ | ⭐ 9 🍴 2</div></div>
       </a>
-      <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" style="text-decoration:none;color:inherit;">
+      <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
         <div class="mobile-exp-item"><div class="mobile-exp-company">🪪 nadra_verisys_flutter</div><div class="mobile-exp-role">Dart | ⭐ 3</div></div>
       </a>
-      <a href="https://github.com/ishaquehassan/claude-remote-terminal" target="_blank" style="text-decoration:none;color:inherit;">
+      <a href="https://github.com/ishaquehassan/claude-remote-terminal" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
         <div class="mobile-exp-item"><div class="mobile-exp-company">📱 claude-remote-terminal</div><div class="mobile-exp-role">Dart | ⭐ 1</div></div>
       </a>
-      <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" style="text-decoration:none;color:inherit;">
+      <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
         <div class="mobile-exp-item"><div class="mobile-exp-company">🎯 goal-agent</div><div class="mobile-exp-role">JS | Claude Code Plugin</div></div>
       </a>
-      <a href="https://github.com/ishaquehassan" target="_blank" style="display:block;text-align:center;padding:14px;background:linear-gradient(135deg,#24292e,#40464d);border-radius:16px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:4px;">Open GitHub Profile →</a>
+      <a href="https://github.com/ishaquehassan" target="_blank" rel="noopener noreferrer" style="display:block;text-align:center;padding:14px;background:linear-gradient(135deg,#24292e,#40464d);border-radius:16px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:4px;">Open GitHub Profile →</a>
     </div>
   </div>
 
@@ -2175,7 +2174,7 @@
     <div class="mobile-expanded-content">
       <div style="height:80px;background:url('./assets/linkedin-banner.webp') center 30%/cover no-repeat;opacity:0.7;border-radius:8px;margin:0 12px 12px;"></div>
       <div class="mobile-exp-item" style="text-align:center;">
-        <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:-44px auto 10px;border:2px solid rgba(255,255,255,0.1);position:relative;z-index:1;"><img src="./assets/profile-photo.webp" style="width:100%;height:100%;object-fit:cover;"></div>
+        <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:-44px auto 10px;border:2px solid rgba(255,255,255,0.1);position:relative;z-index:1;"><img src="./assets/profile-photo.webp" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>
         <div class="mobile-exp-company" style="margin-bottom:2px;">Ishaq Hassan</div>
         <div class="mobile-exp-desc" style="margin-bottom:6px;">Flutter Framework Contributor | Engineering Manager @ DigitalHire</div>
         <div class="mobile-exp-date">Karachi, Pakistan 🇵🇰 • 3,051 followers • 500+ connections</div>
@@ -2191,7 +2190,7 @@
       <div class="mobile-exp-item"><div class="mobile-exp-company">🌍 Optimyse (Estonia)</div><div class="mobile-exp-role">Lead Software Engineer</div><div class="mobile-exp-date">Feb 2019 - Dec 2021</div></div>
       <div class="mobile-exp-item"><div class="mobile-exp-company">🚀 Cyber Avanza</div><div class="mobile-exp-role">Co-Founder</div><div class="mobile-exp-date">Sep 2016 - Dec 2018</div></div>
       <div class="mobile-exp-item"><div class="mobile-exp-company">💻 VividVisionz</div><div class="mobile-exp-role">Mobile & Web Developer</div><div class="mobile-exp-date">Feb 2013 - Feb 2019</div></div>
-      <a href="https://linkedin.com/in/ishaquehassan" target="_blank" style="display:block;text-align:center;padding:14px;background:#0077B5;border-radius:16px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:4px;">Open LinkedIn Profile →</a>
+      <a href="https://linkedin.com/in/ishaquehassan" target="_blank" rel="noopener noreferrer" style="display:block;text-align:center;padding:14px;background:#0077B5;border-radius:16px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:4px;">Open LinkedIn Profile →</a>
     </div>
   </div>
 
@@ -2208,16 +2207,16 @@
         <div class="mobile-exp-company" style="margin-top:8px;">@ishaqhassan</div>
         <div class="mobile-exp-desc">Technical articles on Flutter, Mobile Dev, and Engineering</div>
       </div>
-      <a href="https://medium.com/@ishaqhassan/multi-module-clean-architecture-in-flutter-24dcb82d7a15" target="_blank" style="text-decoration:none;color:inherit;">
+      <a href="https://medium.com/@ishaqhassan/multi-module-clean-architecture-in-flutter-24dcb82d7a15" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
         <div class="mobile-exp-item"><div class="mobile-exp-company">Multi Module Clean Architecture in Flutter</div><div class="mobile-exp-desc">Clean architecture guide for scalable Flutter apps</div></div>
       </a>
-      <a href="https://medium.com/@ishaqhassan/flutter-clean-architecture-with-riverpod-bfb1d7ce0408" target="_blank" style="text-decoration:none;color:inherit;">
+      <a href="https://medium.com/@ishaqhassan/flutter-clean-architecture-with-riverpod-bfb1d7ce0408" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
         <div class="mobile-exp-item"><div class="mobile-exp-company">Flutter Clean Architecture with Riverpod</div><div class="mobile-exp-desc">State management with clean separation</div></div>
       </a>
-      <a href="https://medium.com/@ishaqhassan/flutter-responsive-ui-the-right-way-327be3ed5da5" target="_blank" style="text-decoration:none;color:inherit;">
+      <a href="https://medium.com/@ishaqhassan/flutter-responsive-ui-the-right-way-327be3ed5da5" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
         <div class="mobile-exp-item"><div class="mobile-exp-company">Flutter Responsive UI the Right Way</div><div class="mobile-exp-desc">Adaptive layouts for all screen sizes</div></div>
       </a>
-      <a href="https://medium.com/@ishaqhassan" target="_blank" style="display:block;text-align:center;padding:14px;background:linear-gradient(135deg,#1a8917,#0d7a0d);border-radius:16px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:4px;">Read All Articles on Medium →</a>
+      <a href="https://medium.com/@ishaqhassan" target="_blank" rel="noopener noreferrer" style="display:block;text-align:center;padding:14px;background:linear-gradient(135deg,#1a8917,#0d7a0d);border-radius:16px;color:#fff;text-decoration:none;font-weight:600;font-size:13px;margin-top:4px;">Read All Articles on Medium →</a>
     </div>
   </div>
 
@@ -2260,7 +2259,7 @@
 
 <!-- SEO: Crawler-accessible content (visually hidden, fully indexable) -->
 <div id="seo-content" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
-  <h1>Ishaq Hassan</h1>
+  <h2>Ishaq Hassan</h2>
   <h2>Flutter Framework Contributor | Engineering Manager | Open Source Author | Public Tech Speaker</h2>
   <p>Ishaq Hassan is a Full Stack Developer and Engineering Manager at DigitalHire with over 13 years of professional software development experience, based in Karachi, Pakistan. He is a Flutter Framework Contributor with 3 Pull Requests merged into the official flutter/flutter repository and 2 more approved.</p>
 
@@ -2328,7 +2327,7 @@
 
 <noscript>
   <div style="padding:40px;max-width:800px;margin:auto;font-family:sans-serif;color:#e4e4e7;background:#0a0a1a;">
-    <h1>Ishaq Hassan</h1>
+    <h2>Ishaq Hassan</h2>
     <p>Flutter Framework Contributor | Engineering Manager at DigitalHire | Open Source Author | 13+ Years Experience</p>
     <p>Contact: <a href="mailto:hello@ishaqhassan.dev">hello@ishaqhassan.dev</a></p>
     <p>GitHub: <a href="https://github.com/ishaquehassan">ishaquehassan</a> | LinkedIn: <a href="https://linkedin.com/in/ishaquehassan">ishaquehassan</a></p>

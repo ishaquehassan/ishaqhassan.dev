@@ -74,21 +74,29 @@ function snakeGetComboMultiplier() {
   return 3;
 }
 
+var _hudScoreEl, _hudSpeedLabel, _hudSpeedFill;
+var _lastHudScore = -1, _lastHudLevel = -1;
 function snakeUpdateHUD() {
-  // Score
-  const scoreEl = document.getElementById('snake-score');
-  scoreEl.textContent = snakeScore;
-  // Speed
+  if (!_hudScoreEl) {
+    _hudScoreEl = document.getElementById('snake-score');
+    _hudSpeedLabel = document.getElementById('snake-speed-label');
+    _hudSpeedFill = document.getElementById('snake-speed-fill');
+  }
+  if (snakeScore !== _lastHudScore) {
+    _hudScoreEl.textContent = snakeScore;
+    _lastHudScore = snakeScore;
+  }
   const level = snakeGetSpeedLevel();
-  document.getElementById('snake-speed-label').textContent = level + 'x';
-  const fill = document.getElementById('snake-speed-fill');
-  const pct = ((level - 1) / 49) * 100;
-  fill.style.width = pct + '%';
-  // Speed bar color: green > yellow > orange > red
-  if (pct < 30) fill.style.background = '#39d353';
-  else if (pct < 55) fill.style.background = '#FFD60A';
-  else if (pct < 80) fill.style.background = '#FF9F0A';
-  else fill.style.background = '#FF453A';
+  if (level !== _lastHudLevel) {
+    _lastHudLevel = level;
+    _hudSpeedLabel.textContent = level + 'x';
+    const pct = ((level - 1) / 49) * 100;
+    _hudSpeedFill.style.width = pct + '%';
+    if (pct < 30) _hudSpeedFill.style.background = '#39d353';
+    else if (pct < 55) _hudSpeedFill.style.background = '#FFD60A';
+    else if (pct < 80) _hudSpeedFill.style.background = '#FF9F0A';
+    else _hudSpeedFill.style.background = '#FF453A';
+  }
 }
 
 // Speed HUD power-up glow (called every frame from render loop)

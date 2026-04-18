@@ -1,8 +1,24 @@
 // ===== DESKTOP SNAPSHOTS (for MC previews, LAZY) =====
 var desktopSnapshots = {};
 var snapshotBusy = false;
+var html2canvasLoading = false;
+
+function loadHtml2Canvas(cb) {
+  if (typeof html2canvas !== 'undefined') return cb();
+  if (html2canvasLoading) return;
+  html2canvasLoading = true;
+  var s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+  s.onload = function() { html2canvasLoading = false; cb(); };
+  s.onerror = function() { html2canvasLoading = false; };
+  document.head.appendChild(s);
+}
 
 function captureDesktopSnapshot() {
+  if (snapshotBusy || dragEl || resizeEl) return;
+  loadHtml2Canvas(function() { doCaptureSnapshot(); });
+}
+function doCaptureSnapshot() {
   if (typeof html2canvas === 'undefined' || snapshotBusy || dragEl || resizeEl) return;
   snapshotBusy = true;
   requestIdleCallback(function() {
@@ -460,7 +476,11 @@ if (window.innerWidth > 768) {
       canvas.height = window.innerHeight;
     }
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    var canvasResizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(canvasResizeTimer);
+      canvasResizeTimer = setTimeout(resizeCanvas, 150);
+    });
 
     document.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
@@ -561,7 +581,7 @@ if (window.innerWidth > 768) {
     }
 
     function animateParticles() {
-      if (!particleAnimRunning) return;
+      if (!particleAnimRunning || document.hidden) { animFrame = null; return; }
       const frameNow = Date.now();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => { p.update(); p.draw(frameNow); });
@@ -572,6 +592,13 @@ if (window.innerWidth > 768) {
     animateParticles();
     document.addEventListener('resume-particles', () => {
       if (particleAnimRunning) animateParticles();
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+      } else if (particleAnimRunning) {
+        animateParticles();
+      }
     });
   }
 }
@@ -1122,24 +1149,22 @@ function openMissionControl() {
   inMissionControl = true;
 
   // Always capture fresh snapshot, then show MC
-  if (typeof html2canvas !== 'undefined' && !snapshotBusy) {
-    snapshotBusy = true;
-    // Show MC immediately with shimmer (old/no snapshot)
-    showMC();
-    html2canvas(document.body, {
-      scale: 0.15, logging: false, useCORS: true, allowTaint: true, backgroundColor: '#0c0c0c',
-      ignoreElements: function(el) {
-        return el.id === 'mission-control' || el.id === 'boot-screen' || el.id === 'mobile-app' || el.classList.contains('fc-nav-preview') || el.classList.contains('spotlight-overlay');
-      }
-    }).then(function(canvas) {
-      desktopSnapshots[currentDesktopId] = canvas.toDataURL('image/jpeg', 0.5);
-      snapshotBusy = false;
-      // Re-render strip with fresh snapshot
-      if (inMissionControl) renderMissionControl();
-    }).catch(function() { snapshotBusy = false; });
-  } else {
-    showMC();
-  }
+  showMC();
+  loadHtml2Canvas(function() {
+    if (!snapshotBusy) {
+      snapshotBusy = true;
+      html2canvas(document.body, {
+        scale: 0.15, logging: false, useCORS: true, allowTaint: true, backgroundColor: '#0c0c0c',
+        ignoreElements: function(el) {
+          return el.id === 'mission-control' || el.id === 'boot-screen' || el.id === 'mobile-app' || el.classList.contains('fc-nav-preview') || el.classList.contains('spotlight-overlay');
+        }
+      }).then(function(canvas) {
+        desktopSnapshots[currentDesktopId] = canvas.toDataURL('image/jpeg', 0.5);
+        snapshotBusy = false;
+        if (inMissionControl) renderMissionControl();
+      }).catch(function() { snapshotBusy = false; });
+    }
+  });
 }
 
 function closeMissionControl(focusWinId) {

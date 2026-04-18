@@ -12,7 +12,13 @@ function initMusicPlayer() {
   musicAudio.preload = 'none';
   musicAudio.volume = 0.1;
   musicAudio.addEventListener('ended', () => nextTrack());
-  musicAudio.addEventListener('timeupdate', updateMusicProgress);
+  var lastMusicUpdate = 0;
+  musicAudio.addEventListener('timeupdate', function() {
+    var now = Date.now();
+    if (now - lastMusicUpdate < 250) return;
+    lastMusicUpdate = now;
+    updateMusicProgress();
+  });
 
   // Sync UI when media keys or OS controls play/pause
   musicAudio.addEventListener('play', () => {
@@ -157,6 +163,27 @@ function requestWeatherLocation() {
   );
 }
 
+function renderWeatherData(data, fallbackCity, lat, lon) {
+  const cw = data.current_weather;
+  document.getElementById('weather-temp').textContent = Math.round(cw.temperature);
+  document.getElementById('weather-wind').textContent = '💨 ' + Math.round(cw.windspeed) + ' km/h';
+  document.getElementById('weather-icon').textContent = getWeatherIcon(cw.weathercode);
+  const hIdx = data.hourly.time.findIndex(t => t >= cw.time.substring(0, 13));
+  if (hIdx >= 0) document.getElementById('weather-humidity').textContent = '💧 ' + data.hourly.relative_humidity_2m[hIdx] + '%';
+  if (fallbackCity) {
+    document.getElementById('weather-city').textContent = fallbackCity;
+  } else {
+    fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json')
+      .then(r => r.json())
+      .then(geo => {
+        const city = geo.address.city || geo.address.town || geo.address.state || 'Unknown';
+        const country = geo.address.country_code ? geo.address.country_code.toUpperCase() : '';
+        document.getElementById('weather-city').textContent = city + (country ? ', ' + country : '');
+      })
+      .catch(() => document.getElementById('weather-city').textContent = 'Your Location');
+  }
+}
+
 function fetchWeatherFallback() {
   fetchWeather(24.86, 67.01, 'Karachi, PK');
 }
@@ -167,28 +194,21 @@ function fetchWeather(lat, lon, fallbackCity) {
   const wd = document.getElementById('weather-data');
   if (wd) wd.classList.add('show');
 
+  var cacheKey = 'weather_cache', cacheTimeKey = 'weather_time';
+  try {
+    var cached = localStorage.getItem(cacheKey);
+    var cacheTime = localStorage.getItem(cacheTimeKey);
+    if (cached && cacheTime && (Date.now() - parseInt(cacheTime)) < 30 * 60 * 1000) {
+      renderWeatherData(JSON.parse(cached), fallbackCity, lat, lon);
+      return;
+    }
+  } catch(e) {}
+
   fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true&hourly=relative_humidity_2m')
     .then(r => r.json())
     .then(data => {
-      const cw = data.current_weather;
-      document.getElementById('weather-temp').textContent = Math.round(cw.temperature);
-      document.getElementById('weather-wind').textContent = '💨 ' + Math.round(cw.windspeed) + ' km/h';
-      document.getElementById('weather-icon').textContent = getWeatherIcon(cw.weathercode);
-      const hIdx = data.hourly.time.findIndex(t => t >= cw.time.substring(0, 13));
-      if (hIdx >= 0) document.getElementById('weather-humidity').textContent = '💧 ' + data.hourly.relative_humidity_2m[hIdx] + '%';
-
-      if (fallbackCity) {
-        document.getElementById('weather-city').textContent = fallbackCity;
-      } else {
-        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json')
-          .then(r => r.json())
-          .then(geo => {
-            const city = geo.address.city || geo.address.town || geo.address.state || 'Unknown';
-            const country = geo.address.country_code ? geo.address.country_code.toUpperCase() : '';
-            document.getElementById('weather-city').textContent = city + (country ? ', ' + country : '');
-          })
-          .catch(() => document.getElementById('weather-city').textContent = 'Your Location');
-      }
+      try { localStorage.setItem(cacheKey, JSON.stringify(data)); localStorage.setItem(cacheTimeKey, Date.now().toString()); } catch(e) {}
+      renderWeatherData(data, fallbackCity, lat, lon);
     })
     .catch(() => {
       document.getElementById('weather-temp').textContent = '--';

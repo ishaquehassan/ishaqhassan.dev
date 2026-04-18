@@ -448,20 +448,27 @@ function startDrag(e, winId) {
   e.preventDefault();
 }
 
+var dragRafId = null;
 document.addEventListener('mousemove', (e) => {
   if (!dragEl) return;
-  var newLeft = e.clientX - dragOffX;
-  var newTop = e.clientY - dragOffY;
-  var w = dragEl.offsetWidth;
-  var h = dragEl.offsetHeight;
-  var dockH = 80, menuH = 28;
-  if (newLeft < 0) newLeft = 0;
-  if (newLeft + w > window.innerWidth) newLeft = window.innerWidth - w;
-  if (newTop < menuH) newTop = menuH;
-  if (newTop + h > window.innerHeight - dockH) newTop = window.innerHeight - dockH - h;
-  dragEl.style.left = newLeft + 'px';
-  dragEl.style.top = newTop + 'px';
-  updateSnapPreview(e.clientX, e.clientY);
+  if (dragRafId) return;
+  var ex = e.clientX, ey = e.clientY;
+  dragRafId = requestAnimationFrame(function() {
+    dragRafId = null;
+    if (!dragEl) return;
+    var newLeft = ex - dragOffX;
+    var newTop = ey - dragOffY;
+    var w = dragEl.offsetWidth;
+    var h = dragEl.offsetHeight;
+    var dockH = 80, menuH = 28;
+    if (newLeft < 0) newLeft = 0;
+    if (newLeft + w > window.innerWidth) newLeft = window.innerWidth - w;
+    if (newTop < menuH) newTop = menuH;
+    if (newTop + h > window.innerHeight - dockH) newTop = window.innerHeight - dockH - h;
+    dragEl.style.left = newLeft + 'px';
+    dragEl.style.top = newTop + 'px';
+    updateSnapPreview(ex, ey);
+  });
 });
 
 document.addEventListener('mouseup', (e) => {

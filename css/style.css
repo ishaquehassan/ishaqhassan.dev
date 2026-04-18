@@ -13,7 +13,7 @@
   --surface: rgba(18,18,18,0.92);
   --glass: rgba(255,255,255,0.04);
   --text: #fafafa;
-  --text2: rgba(255,255,255,0.4);
+  --text2: rgba(255,255,255,0.55);
   --border: rgba(255,255,255,0.06);
 }
 
@@ -58,14 +58,14 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 #about-dialog-overlay.show { display: flex; }
 #about-dialog {
   background: rgba(36,36,36,0.95);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 12px;
   padding: 32px 40px;
@@ -149,8 +149,9 @@ body {
   top: 0; left: 0; right: 0;
   height: 28px;
   background: rgba(0,0,0,0.25);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  contain: layout style paint;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -196,8 +197,8 @@ body {
   left: 0;
   min-width: 220px;
   background: rgba(36,36,36,0.95);
-  backdrop-filter: saturate(180%) blur(30px);
-  -webkit-backdrop-filter: saturate(180%) blur(30px);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 8px;
   padding: 4px 0;
@@ -275,8 +276,9 @@ body {
 
 .widget {
   background: rgba(24,24,24,0.7);
-  backdrop-filter: saturate(180%) blur(40px);
-  -webkit-backdrop-filter: saturate(180%) blur(40px);
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  contain: layout style paint;
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 16px;
   padding: 16px;
@@ -418,10 +420,11 @@ body {
   background: rgba(255,214,10,0.1);
   box-shadow: 0 0 24px rgba(255,214,10,0.2), inset 0 0 20px rgba(255,214,10,0.05);
   animation: newRecordPulse 0.6s ease infinite alternate;
+  will-change: transform;
 }
 @keyframes newRecordPulse {
-  from { box-shadow: 0 0 16px rgba(255,214,10,0.15); }
-  to { box-shadow: 0 0 32px rgba(255,214,10,0.35); }
+  from { transform: scale(1); filter: brightness(1); }
+  to { transform: scale(1.03); filter: brightness(1.15); }
 }
 .snake-hud-speed .snake-hud-value { color: #00D4FF; font-size: 18px; transition: transform 0.15s, color 0.15s, text-shadow 0.15s; }
 .snake-speed-bar {
@@ -613,8 +616,8 @@ body {
   right: 16px;
   width: 340px;
   background: rgba(36,36,36,0.92);
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 14px;
   padding: 14px 16px;
@@ -677,8 +680,8 @@ body {
   gap: 4px;
   padding: 6px 10px;
   background: rgba(24,24,24,0.8);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 18px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.4);
@@ -786,8 +789,9 @@ body {
 .window {
   position: absolute;
   background: rgba(24,24,24,0.92);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  contain: layout style paint;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--win-radius);
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
@@ -964,8 +968,8 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   justify-content: center;
   border-top: 1px solid var(--border);
   background: rgba(24,24,24,0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .window-body::-webkit-scrollbar { width: 6px; }
@@ -1356,7 +1360,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
     gap: 0;
     justify-content: space-around;
     background: rgba(30,30,46,0.92);
-    backdrop-filter: blur(40px);
+    backdrop-filter: blur(12px);
     border-top: 1px solid rgba(255,255,255,0.06);
     display: flex;
     align-items: center;
@@ -2087,7 +2091,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   right: 0;
   height: 56px;
   background: rgba(12, 12, 12, 0.9);
-  backdrop-filter: blur(40px);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2306,7 +2310,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   right: 0;
   height: 64px;
   background: rgba(12, 12, 12, 0.85);
-  backdrop-filter: blur(40px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
@@ -2486,7 +2490,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   min-width: 160px;
   display: none;
   z-index: 10001;
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(10px);
   box-shadow: 0 8px 30px rgba(0,0,0,0.5);
 }
 .snap-menu.show { display: block; }
@@ -2520,7 +2524,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   gap: 12px;
   padding: 0 20px;
   overflow: hidden;
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(10px);
   transition: height 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s;
 }
 #desktop-strip.visible {
@@ -2819,7 +2823,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 .fc-vid-badge {
   position: absolute; top: 6px; left: 6px; z-index: 2;
   font-size: 10px; font-weight: 700; color: #fff;
-  background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);
   padding: 2px 7px; border-radius: 6px;
   border: 1px solid rgba(255,255,255,0.08);
 }
@@ -2831,7 +2835,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 .fc-video-card:hover .fc-play-overlay { opacity: 1; }
 .fc-play-icon {
   width: 44px; height: 44px; border-radius: 50%;
-  background: rgba(255,255,255,0.85); backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.85); backdrop-filter: blur(6px);
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 20px rgba(54,197,248,0.15);
   transition: transform 0.25s cubic-bezier(0.16,1,0.3,1);
@@ -2861,7 +2865,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 .fc-pw-bar {
   position: relative !important; z-index: 5;
   background: rgba(12,13,16,0.95) !important;
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(54,197,248,0.06);
 }
 .fc-pw-title {
@@ -2888,7 +2892,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 .fc-pw-controls {
   position: absolute; bottom: 0; left: 0; right: 0; z-index: 5;
   height: 46px; padding: 0 16px;
-  background: rgba(12,13,16,0.95); backdrop-filter: blur(20px);
+  background: rgba(12,13,16,0.95); backdrop-filter: blur(10px);
   border-top: 1px solid rgba(54,197,248,0.06);
   display: flex; align-items: center; justify-content: center; gap: 8px;
 }
@@ -2916,7 +2920,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 .fc-nav-preview {
   position: fixed;
   width: 200px; padding: 8px;
-  background: rgba(20,20,24,0.95); backdrop-filter: blur(20px);
+  background: rgba(20,20,24,0.95); backdrop-filter: blur(10px);
   border: 1px solid rgba(54,197,248,0.15);
   border-radius: 10px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 20px rgba(54,197,248,0.05);
@@ -3198,7 +3202,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   transition: opacity 0.3s ease;
   display: flex;
   flex-direction: column;
-  backdrop-filter: blur(30px);
+  backdrop-filter: blur(12px);
 }
 #mission-control.active {
   opacity: 1;
@@ -3320,8 +3324,8 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 .spotlight-overlay {
   position: fixed; inset: 0; z-index: 999999;
   background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(12px) saturate(120%);
-  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
   display: none; align-items: flex-start; justify-content: center;
   padding-top: 18vh;
 }
@@ -3329,8 +3333,9 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 .spotlight-container {
   width: 680px; max-height: 520px;
   background: rgba(30,30,30,0.92);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  contain: layout style paint;
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 12px;
   box-shadow: 0 25px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.05) inset;
