@@ -59,13 +59,13 @@
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
 <link rel="apple-touch-icon" href="/assets/profile-photo.png">
-<link rel="stylesheet" href="css/style.min.css?v=57">
+<link rel="stylesheet" href="css/style.min.css?v=58">
 
 <!-- JS: defer = parallel download during HTML parse, execute after DOM ready, in order -->
-<script src="js/app.min.js?v=57" defer></script>
-<script src="js/widgets.min.js?v=57" defer></script>
-<script src="js/snake.min.js?v=57" defer></script>
-<script src="js/desktop.min.js?v=57" defer></script>
+<script src="js/app.min.js?v=58" defer></script>
+<script src="js/widgets.min.js?v=58" defer></script>
+<script src="js/snake.min.js?v=58" defer></script>
+<script src="js/desktop.min.js?v=58" defer></script>
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json">
@@ -410,7 +410,7 @@
 
 <!-- macOS NOTIFICATION -->
 <div id="macos-notif">
-  <div class="notif-close" onclick="dismissNotif()" aria-label="Dismiss notification">&times;</div>
+  <div class="notif-close" onclick="event.stopPropagation();dismissNotif()" aria-label="Dismiss notification">&times;</div>
   <img src="assets/profile-photo.webp" alt="Ishaq Hassan">
   <div class="notif-text" onclick="dismissNotif()">
     <div class="notif-app" id="notif-app">Ishaq OS</div>
