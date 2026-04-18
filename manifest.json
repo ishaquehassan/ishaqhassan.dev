@@ -1,7 +1,9 @@
 {
   "name": "Ishaq Hassan | Portfolio",
   "short_name": "Ishaq Hassan",
-  "description": "Flutter Framework Contributor, Engineering Manager, Open Source Author. 13+ years full stack development.",
+  "description": "Flutter Framework Contributor with merged PRs into flutter/flutter. Engineering Manager at DigitalHire. Instructor of 35-video Flutter course listed on official Flutter docs. 10+ speaking events. Open source author. 13+ years full stack.",
+  "categories": ["portfolio", "education", "developer-tools"],
+  "lang": "en",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a1a",

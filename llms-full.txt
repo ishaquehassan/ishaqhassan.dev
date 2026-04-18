@@ -1,0 +1,139 @@
+# Ishaq Hassan - Full Profile
+
+> Flutter Framework Contributor | Engineering Manager at DigitalHire | Open Source Author | Public Tech Speaker | GDG Kolachi Mentor
+
+## About
+Ishaq Hassan is a Full Stack Developer and Engineering Manager based in Karachi, Pakistan, with over 13 years of professional software development experience. He is one of the few Pakistani developers to have Pull Requests merged into the official Flutter framework repository (flutter/flutter). He specializes in Flutter, Dart, mobile development, and cross-platform engineering.
+
+## Professional Experience
+
+### DigitalHire (Feb 2023 - Present)
+- Role: Engineering Manager, Technical Lead, Staff Engineer
+- Location: McLean, Virginia (Remote)
+- Description: AI-based video job board, world's first integrated talent engine
+- Technologies: Flutter, Dart, Kotlin, Python, PostgreSQL, Next.js, React Native
+
+### Tech Idara (Dec 2021 - Sep 2024)
+- Role: Senior Instructor
+- Description: Created and taught a comprehensive Flutter development course (35 videos, Urdu) that is listed on the official Flutter documentation at docs.flutter.dev/resources/courses
+
+### AeroGlobe (Jun 2022 - May 2024)
+- Role: Technical Lead
+- Technologies: React Native, Python, front-end development
+
+### Sastaticket.pk (Jan 2022 - Mar 2024)
+- Role: Engineering Consultant
+- Technologies: Architecture, Flutter, CI/CD, GitHub Actions
+
+### Pocket Systems (Jan 2020 - Dec 2022)
+- Role: Co-Founder
+- Technologies: React Native, Socket Programming, international market
+
+### Optimyse, Estonia (Feb 2019 - Dec 2021)
+- Role: Lead Software Engineer
+- Description: Full stack teams, cross-platform mobile development
+
+### Cyber Avanza (Sep 2016 - Dec 2018)
+- Role: Co-Founder
+- Technologies: Android/iOS native development
+
+### VividVisionz (Feb 2013 - Feb 2019)
+- Role: Mobile + Web Developer (6 years)
+- Technologies: Android, iOS, PHP, MySQL, JavaScript
+
+## Flutter Framework Contributions
+Ishaq Hassan has contributed directly to the Flutter framework (flutter/flutter):
+
+1. PR #183081: Fix AnimatedCrossFade clipBehavior forwarding (MERGED)
+   https://github.com/flutter/flutter/pull/183081
+
+2. PR #183097: Forward clipBehavior in AnimatedSize widget (MERGED)
+   https://github.com/flutter/flutter/pull/183097
+
+3. PR #183109: Add clipBehavior to SizeTransition widget (MERGED)
+   https://github.com/flutter/flutter/pull/183109
+
+4. PR #184545: Expose decoration properties in CupertinoTextField (APPROVED)
+   https://github.com/flutter/flutter/pull/184545
+
+5. PR #184569: Add missing property forwarding in Material widgets (APPROVED)
+   https://github.com/flutter/flutter/pull/184569
+
+## Flutter Course: Basic to Advanced (Urdu)
+A comprehensive 35-video Flutter development course in Urdu, published through Tech Idara. This course is officially listed on the Flutter documentation (docs.flutter.dev/resources/courses).
+
+YouTube Playlist: https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5
+Channel: https://www.youtube.com/@ishaquehassan
+
+### Sections:
+1. Dart Basics (7 videos): Computers & Why Flutter, Variables & Types, Lists/Maps/Control Flow, Loops/Scope/Break, Loops/Continue/Labels/Functions, Functions/Arguments/By Ref/By Value, Higher Order Functions/const/final/typedef
+2. OOP (5 videos): Arrow Functions/Class/Constructors, Factory Constructor/Static/Get/Set, Inheritance/Super/Overriding/Polymorphism, Encapsulation/Abstraction, Mixins/Enums/Exception Handling
+3. Foundation (1 video): Git Basics
+4. Flutter UI (6 videos): Flutter Intro, Widgets Composition, Flex Layout, Stateful Widgets, Stateful Assignment, Complex Data/Null Safety
+5. State Management (4 videos): Navigator/Future, Future Builder/Form/Context, Inherited Widget, Generics/Provider
+6. API & Network (5 videos): HTTP/DNS/API/JSON, REST API/JSON Parsing, Assets/Theme/Dialog, Complex JSON/Models, Deep JSON/Debugging
+7. Advanced (6 videos): Access Token/SharedPreferences, Stacked/Generator, Unit Test/CI-CD/GitHub Actions, UX/UI/Figma, SQLite/ORM/Floor, Deploying Flutter Web
+
+## Speaking Events (10+)
+1. DevFest Karachi: Scaling Products with Flutter (Panel with Waleed Arshad & Sakina Abbas) - GDG Kolachi
+2. Google I/O Extended Karachi - GDG Kolachi
+3. Flutter Bootcamp (Aug 2021) - GDG Kolachi (Lead Instructor)
+4. Facebook Developer Circle Inaugural Event - The Nest I/O
+5. Code to Create - NIC Karachi (with Waleed Arshad, Flutter GDE)
+6. Flutter Seminar - Iqra University
+7. Women Tech Makers Workshop - DHA Suffa University ("Building Basic Apps with Flutter")
+8. DevNCode Meetup IV: AI - The Nest I/O
+9. Pakistan's First Flutter Meetup (2018) - Karachi
+10. GDG Live Pakistan - Online
+
+## Open Source Projects
+1. document_scanner_flutter - Flutter plugin for document scanning with edge detection (63 stars, 135 forks)
+   https://github.com/ishaquehassan/document_scanner_flutter
+
+2. flutter_alarm_background_trigger - Native Kotlin alarm plugin for Flutter (13 stars)
+   https://github.com/ishaquehassan/flutter_alarm_background_trigger
+
+3. assets_indexer - Auto-generate asset references for Flutter projects (9 stars)
+   https://github.com/ishaquehassan/assets_indexer
+
+4. nadra_verisys_flutter - NADRA CNIC KYC verification for Flutter (3 stars)
+   https://github.com/ishaquehassan/nadra_verisys_flutter
+
+5. goal-agent - AI-powered career goal tracking agent
+   https://github.com/ishaquehassan/goal-agent
+
+GitHub Stats: 9,800+ contributions, 64 total stars, 135+ forks, 170 repositories, 213 followers
+
+## Technical Articles (Medium)
+1. Dart Isolates: The Missing Guide for Production Flutter Apps (5 min)
+   https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e
+
+2. How Flutter's Three-Tree Architecture Actually Works (4 min)
+   https://medium.com/@ishaqhassan/how-flutters-three-tree-architecture-actually-works-953c8cc17226
+
+3. How I Got My Pull Requests Merged Into Flutter's Official Repository (5 min, 52 claps)
+   https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e
+
+4. Flutter Native Plugin Development for iOS & Android (3 min, 67 claps)
+   https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061
+
+5. Indexing Assets in a Dart Class Just Like R.java (4 min)
+   https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb
+
+6. Firebase Cloud Functions Using Kotlin (3 min)
+   https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67
+
+## Technical Skills
+- Mobile: Flutter, Dart, Android, iOS, Kotlin, Swift, React Native
+- Backend & Cloud: Firebase, Node.js, NestJS, Next.js, Python, PHP, Spring Boot, Go
+- Database: PostgreSQL, MySQL
+- Tools & DevOps: Git, GitHub Actions, Docker, Linux, Claude AI, CI/CD
+
+## Contact
+- Email: hello@ishaqhassan.dev
+- GitHub: https://github.com/ishaquehassan
+- LinkedIn: https://linkedin.com/in/ishaquehassan
+- Medium: https://medium.com/@ishaqhassan
+- Stack Overflow: https://stackoverflow.com/users/2094696/ishaq-hassan
+- Website: https://ishaqhassan.dev
+- Location: Karachi, Pakistan
