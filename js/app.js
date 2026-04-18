@@ -1,11 +1,13 @@
 // ===== macOS NOTIFICATION =====
 let notifTimeout = null;
 function showNotif(msg, app) {
-  const notif = document.getElementById('macos-notif');
+  var notif = document.getElementById('macos-notif');
   document.getElementById('notif-msg').textContent = msg;
   document.getElementById('notif-app').textContent = app || 'Ishaq OS';
+  notif.style.transform = '';
+  notif.style.opacity = '';
   notif.classList.add('show');
-  playSfx(sfxClick);
+  try { playSfx(sfxClick); } catch(e) {}
   clearTimeout(notifTimeout);
   notifTimeout = setTimeout(dismissNotif, 5000);
 }
