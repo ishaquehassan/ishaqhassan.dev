@@ -1,23 +1,32 @@
 # ishaqhassan.dev
 
-Personal portfolio website with a macOS-inspired desktop UI on larger screens and a native mobile app experience on phones.
+Personal portfolio website that replicates a full macOS desktop environment in the browser, with a native mobile app experience on phones.
 
 <p align="center">
   <img src="assets/desktop-preview.png" alt="ishaqhassan.dev Desktop Preview" width="100%">
 </p>
 
+> **What's New** - Spotlight Search, Fullscreen Spaces, QuickTime Video Player, Show Desktop, Dynamic Menubar, Smart Window Tiling, and more. See the full [Changelog](CHANGELOG.md).
+
 ## Features
 
 **Desktop (macOS Style)**
-- Draggable, resizable windows with traffic light controls
-- Interactive dock with magnification effect and colored glow
+- Draggable, resizable windows with traffic light controls (all-edge resize, 8 directions)
+- Spotlight Search (`Cmd+K`) across all windows, content, and 35 course videos
+- Fullscreen Spaces with Mission Control integration (separate desktops per fullscreen app)
+- Show Desktop (click wallpaper or F11, windows slide to nearest edge)
+- Dynamic Menubar that updates per focused window (app name, contextual links)
+- Smart window positioning (empty space first, auto-tile, cascade fallback)
+- QuickTime-style video player with hover preview tooltips
+- Interactive dock with magnification effect, auto-hide in fullscreen
 - Live desktop widgets (clock, GitHub activity, stats)
 - Terminal-style About window with typing animation
 - Animated aurora borealis wallpaper with particle system
 - Cursor spotlight that follows mouse movement
 - 3D tilt effect and shine sweep on cards
 - Noise texture overlay for depth
-- Menu bar with dropdown navigation
+- Window state persistence (positions restored on reload)
+- Video progress saved per video (resumes where you left off)
 
 **Mobile (App Style)**
 - Staggered hero entrance animation

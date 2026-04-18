@@ -376,6 +376,13 @@ function snakeTogglePause() {
 document.addEventListener('keydown', (e) => {
   const win = document.getElementById('win-snake');
   if (!win || !win.classList.contains('open')) return;
+  // Only when snake window is topmost (focused)
+  var topZ = 0;
+  document.querySelectorAll('.window.open').forEach(function(w) {
+    var z = parseInt(w.style.zIndex) || 0;
+    if (z > topZ) topZ = z;
+  });
+  if ((parseInt(win.style.zIndex) || 0) < topZ) return;
   if (e.key === 'Escape') { e.preventDefault(); snakeTogglePause(); return; }
   if (snakePaused) return;
   if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') { e.preventDefault(); snakeSetDir(0,-1); }

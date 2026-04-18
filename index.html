@@ -58,13 +58,14 @@
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
 <link rel="apple-touch-icon" href="/assets/profile-photo.png">
-<link rel="stylesheet" href="css/style.min.css?v=14">
+<link rel="stylesheet" href="css/style.min.css?v=51">
 
 <!-- JS: defer = parallel download during HTML parse, execute after DOM ready, in order -->
-<script src="js/app.min.js?v=14" defer></script>
-<script src="js/widgets.min.js?v=14" defer></script>
-<script src="js/snake.min.js?v=14" defer></script>
-<script src="js/desktop.min.js?v=14" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<script src="js/app.min.js?v=51" defer></script>
+<script src="js/widgets.min.js?v=51" defer></script>
+<script src="js/snake.min.js?v=51" defer></script>
+<script src="js/desktop.min.js?v=51" defer></script>
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json">
@@ -367,10 +368,19 @@
 
 <!-- BOOT SCREEN -->
 <div id="boot-screen">
-  <div id="boot-logo" style="font-size:0;"><img src="./assets/profile-photo.webp" style="width:80px;height:80px;border-radius:50%;box-shadow:0 0 40px rgba(99,102,241,0.4), 0 0 80px rgba(6,182,212,0.2);"></div>
-  <div style="margin-top:20px;font-size:14px;color:rgba(255,255,255,0.4);font-weight:300;letter-spacing:3px;position:relative;z-index:1;">ishaqhassan.dev</div>
+  <div id="boot-bg">
+    <div class="boot-orb boot-orb-1"></div>
+    <div class="boot-orb boot-orb-2"></div>
+    <div class="boot-orb boot-orb-3"></div>
+  </div>
+  <div id="boot-logo">
+    <img src="./assets/profile-photo.webp" alt="">
+  </div>
+  <div id="boot-name">ISHAQ HASSAN</div>
+  <div id="boot-title">ENGINEERING MANAGER & FLUTTER FRAMEWORK CONTRIBUTOR</div>
   <div id="boot-bar-container"><div id="boot-bar"></div></div>
-  <div id="boot-text">initializing...</div>
+  <div id="boot-text">initializing system...</div>
+  <div id="boot-cta"></div>
 </div>
 
 <!-- PARTICLE CANVAS -->
@@ -460,7 +470,24 @@
   <div class="right">
     <span id="menubar-battery">🔋 --%</span>
     <span>📶</span>
+    <span id="spotlight-trigger" onclick="openSpotlight()" style="cursor:pointer;padding:0 8px;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.08);border-radius:5px;height:22px;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'" title="Search (⌘K)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" style="opacity:0.7;"><circle cx="10.5" cy="10.5" r="7.5"/><path d="M21 21l-4.35-4.35"/></svg><span style="font-size:11px;color:rgba(255,255,255,0.5);font-weight:500;">⌘K</span></span>
     <span id="menubar-time"></span>
+  </div>
+</div>
+
+<!-- SPOTLIGHT SEARCH -->
+<div id="spotlight-overlay" class="spotlight-overlay" onclick="if(event.target===this)closeSpotlight()">
+  <div class="spotlight-container">
+    <div class="spotlight-input-row">
+      <svg class="spotlight-search-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="7.5"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="spotlight-input" placeholder="Search" autocomplete="off" spellcheck="false" oninput="spotlightSearch(this.value)" onkeydown="spotlightKeydown(event)">
+    </div>
+    <div id="spotlight-results" class="spotlight-results"></div>
+    <div class="spotlight-footer">
+      <span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span>
+      <span><kbd>&crarr;</kbd> open</span>
+      <span><kbd>esc</kbd> close</span>
+    </div>
   </div>
 </div>
 
@@ -1078,7 +1105,7 @@
   <div class="window-body has-footer" style="padding:0;">
     <!-- Profile Header -->
     <div style="position:relative;border-bottom:1px solid var(--border);">
-      <div style="height:120px;background:url('./assets/linkedin-banner.webp') center 30%/cover no-repeat;opacity:0.7;"></div>
+      <div style="height:180px;background:url('./assets/linkedin-banner.webp') center 30%/cover no-repeat;opacity:0.7;"></div>
       <div style="text-align:center;padding:0 24px 16px;">
       <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:-32px auto 10px;border:3px solid rgba(30,30,46,0.95);box-shadow:0 4px 12px rgba(0,0,0,0.5);position:relative;z-index:2;"><img src="./assets/profile-photo.webp" style="width:100%;height:100%;object-fit:cover;" alt="Ishaq Hassan"></div>
       <div style="font-size:20px;font-weight:700;background:linear-gradient(135deg,#0077B5,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Ishaq Hassan</div>
@@ -1308,11 +1335,21 @@
     <!-- Grid View -->
     <div id="fc-grid-view" class="fc-grid-view">
       <div class="fc-header">
-        <h2>Flutter: Basic to Advanced</h2>
-        <div class="fc-header-sub">Tech Idara Flutter Sessions 2022</div>
-        <div class="fc-badges">
-          <span class="fc-badge">35 Videos</span>
-          <span class="fc-badge fc-badge-urdu">Urdu</span>
+        <div class="fc-header-content">
+          <div class="fc-header-left">
+            <div class="fc-course-icon"><img src="assets/tech/flutter.svg" width="24" height="24" alt=""></div>
+            <div>
+              <h2>Flutter: Basic to Advanced</h2>
+              <div class="fc-header-sub">Tech Idara Flutter Sessions 2022</div>
+            </div>
+          </div>
+          <div class="fc-header-stats">
+            <div class="fc-stat"><span class="fc-stat-num">35</span><span class="fc-stat-label">Videos</span></div>
+            <div class="fc-stat-divider"></div>
+            <div class="fc-stat"><span class="fc-stat-num">7</span><span class="fc-stat-label">Sections</span></div>
+            <div class="fc-stat-divider"></div>
+            <div class="fc-stat"><span class="fc-stat-num">Urdu</span><span class="fc-stat-label">Language</span></div>
+          </div>
         </div>
         <a href="https://docs.flutter.dev/resources/courses" target="_blank" class="fc-verified-link">
           <div class="fc-verified">
@@ -1322,27 +1359,43 @@
           </div>
         </a>
       </div>
+      <div class="fc-search-bar" id="fc-search-bar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(84,197,248,0.5)" stroke-width="2.5" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="7.5"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" id="fc-search-input" placeholder="Search 35 videos..." autocomplete="off" spellcheck="false" oninput="fcDesktopSearch(this.value)">
+        <kbd class="fc-search-kbd">⌘F</kbd>
+      </div>
       <div class="fc-sections" id="fc-sections-container"></div>
-    </div>
-    <!-- Player View -->
-    <div id="fc-player-view" class="fc-player-view">
-      <div class="fc-player-header">
-        <button class="fc-back-btn" onclick="fcBackToList()">← Library</button>
-        <div class="fc-player-title" id="fc-ptitle"></div>
-      </div>
-      <div class="fc-player-container">
-        <iframe id="fc-youtube-player" class="fc-youtube-iframe" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-      </div>
-      <div class="fc-player-footer">
-        <div class="fc-vid-counter" id="fc-counter"></div>
-        <div class="fc-nav-btns">
-          <button class="fc-nav-btn" id="fc-prev" onclick="fcPrev()">◀ Previous</button>
-          <button class="fc-nav-btn" id="fc-next" onclick="fcNext()">Next ▶</button>
-        </div>
-      </div>
+      <div class="fc-search-results" id="fc-search-results" style="display:none;"></div>
     </div>
   </div>
 </div>
+
+<!-- FC PLAYER WINDOW (QuickTime Style) -->
+<div class="window fc-pw" id="win-fc-player" style="width:854px;height:520px;top:60px;left:calc(50% - 427px);">
+  <div class="fc-pw-top-grad"></div>
+  <div class="window-toolbar fc-pw-bar" onmousedown="startDrag(event,'win-fc-player')">
+    <div class="traffic-lights">
+      <div class="traffic-light tl-close" onclick="closeFcPlayer()">&#x2715;</div>
+      <div class="traffic-light tl-minimize" onclick="minimizeWindow('fc-player')">&#x2212;</div>
+      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'fc-player')">+<div class="snap-menu" id="sm-fc-player"><div class="snap-menu-item" onclick="snapWindow('fc-player','left-half',event)">&#x2B05; Tile Left</div><div class="snap-menu-item" onclick="snapWindow('fc-player','right-half',event)">&#x27A1; Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('fc-player','top-full',event)">&#x2B06; Full Screen</div></div></div>
+    </div>
+    <span class="fc-pw-section" id="fc-pw-section"></span>
+    <div class="fc-pw-title" id="fc-pw-title"></div>
+    <div class="fc-pw-right">
+      <span class="fc-pw-counter" id="fc-pw-counter"></span>
+    </div>
+  </div>
+  <iframe id="fc-pw-iframe" class="fc-pw-iframe" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+  <div class="fc-pw-controls">
+    <button class="fc-nav-btn" id="fc-pw-prev" onclick="fcPrev()" onmouseenter="fcShowPreview('prev')" onmouseleave="fcHidePreview('prev')">&#9664; Prev</button>
+    <button class="fc-nav-btn" id="fc-pw-next" onclick="fcNext()" onmouseenter="fcShowPreview('next')" onmouseleave="fcHidePreview('next')">Next &#9654;</button>
+  </div>
+  <div class="exit-fullscreen" onclick="maximizeWindow('fc-player')">Exit Full Screen</div>
+</div>
+
+<!-- FC Player Hover Previews (body level, outside overflow:hidden) -->
+<div class="fc-nav-preview" id="fc-preview-prev"></div>
+<div class="fc-nav-preview" id="fc-preview-next"></div>
 
 <!-- MOBILE APP -->
 <div id="mobile-app">
@@ -1428,7 +1481,7 @@
     <!-- SECTIONS -->
     <div class="mobile-sections">
       <!-- Experience -->
-      <div class="mobile-section-card" onclick="expandMobileSection('experience')">
+      <div class="mobile-section-card" onclick="expandMobileSection(event,'experience')">
         <div class="mobile-section-header">
           <span class="mobile-section-icon">💼</span>
           <div>
@@ -1439,7 +1492,7 @@
       </div>
 
       <!-- Flutter PRs -->
-      <div class="mobile-section-card" onclick="expandMobileSection('prs')">
+      <div class="mobile-section-card" onclick="expandMobileSection(event,'prs')">
         <div class="mobile-section-header">
           <span class="mobile-section-icon">💙</span>
           <div>
@@ -1450,7 +1503,7 @@
       </div>
 
       <!-- Speaking -->
-      <div class="mobile-section-card" onclick="expandMobileSection('speaking')">
+      <div class="mobile-section-card" onclick="expandMobileSection(event,'speaking')">
         <div class="mobile-section-header">
           <span class="mobile-section-icon">🎤</span>
           <div>
@@ -1461,7 +1514,7 @@
       </div>
 
       <!-- Open Source -->
-      <div class="mobile-section-card" onclick="expandMobileSection('oss')">
+      <div class="mobile-section-card" onclick="expandMobileSection(event,'oss')">
         <div class="mobile-section-header">
           <span class="mobile-section-icon">🚀</span>
           <div>
@@ -1472,7 +1525,7 @@
       </div>
 
       <!-- Tech Stack -->
-      <div class="mobile-section-card" onclick="expandMobileSection('tech')">
+      <div class="mobile-section-card" onclick="expandMobileSection(event,'tech')">
         <div class="mobile-section-header">
           <span class="mobile-section-icon">⚙️</span>
           <div>
@@ -1483,7 +1536,7 @@
       </div>
 
       <!-- Articles -->
-      <div class="mobile-section-card" onclick="expandMobileSection('articles')">
+      <div class="mobile-section-card" onclick="expandMobileSection(event,'articles')">
         <div class="mobile-section-header">
           <span class="mobile-section-icon">📝</span>
           <div>
@@ -1494,7 +1547,7 @@
       </div>
 
       <!-- Flutter Course -->
-      <div class="mobile-section-card" onclick="expandMobileSection('flutter-course')">
+      <div class="mobile-section-card" onclick="expandMobileSection(event,'flutter-course')">
         <div class="mobile-section-header">
           <span class="mobile-section-icon">🎬</span>
           <div>
@@ -1505,7 +1558,7 @@
       </div>
 
       <!-- Connect -->
-      <div class="mobile-section-card" onclick="expandMobileSection('connect')">
+      <div class="mobile-section-card" onclick="expandMobileSection(event,'connect')">
         <div class="mobile-section-header">
           <span class="mobile-section-icon">🔗</span>
           <div>
@@ -2024,8 +2077,9 @@
       <div style="width:40px;"></div>
     </div>
     <div class="mobile-expanded-content">
+      <div style="height:80px;background:url('./assets/linkedin-banner.webp') center 30%/cover no-repeat;opacity:0.7;border-radius:8px;margin:0 12px 12px;"></div>
       <div class="mobile-exp-item" style="text-align:center;">
-        <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:0 auto 10px;border:2px solid rgba(255,255,255,0.1);"><img src="./assets/profile-photo.webp" style="width:100%;height:100%;object-fit:cover;"></div>
+        <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:-44px auto 10px;border:2px solid rgba(255,255,255,0.1);position:relative;z-index:1;"><img src="./assets/profile-photo.webp" style="width:100%;height:100%;object-fit:cover;"></div>
         <div class="mobile-exp-company" style="margin-bottom:2px;">Ishaq Hassan</div>
         <div class="mobile-exp-desc" style="margin-bottom:6px;">Flutter Framework Contributor | Engineering Manager @ DigitalHire</div>
         <div class="mobile-exp-date">Karachi, Pakistan 🇵🇰 • 3,051 followers • 500+ connections</div>
@@ -2076,26 +2130,33 @@
     <div class="mobile-expanded-header">
       <button class="mobile-back-btn" onclick="mobileFlutterCourseBack()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
       <div class="mobile-expanded-title" id="mfc-title">Flutter Course</div>
-      <div style="width:40px;"></div>
+      <button class="mfc-search-btn" onclick="openMfcSearch()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
     </div>
     <div class="mobile-expanded-content" id="mfc-content"></div>
+    <div id="mfc-search-screen" class="mfc-search-screen" style="display:none;">
+      <div class="mfc-search-header">
+        <button class="mobile-back-btn" onclick="closeMfcSearch()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+        <input type="text" id="mfc-search-input" class="mfc-search-input" placeholder="Search videos..." oninput="filterMfcSearch(this.value)" autocomplete="off">
+      </div>
+      <div id="mfc-search-results" class="mfc-search-results"></div>
+    </div>
   </div>
 
   <!-- BOTTOM NAV BAR -->
   <div class="mobile-social-bottom">
-    <div class="mobile-social-icon" style="background:linear-gradient(135deg,#24292e,#40464d);cursor:pointer;" onclick="expandMobileSection('github')">
+    <div class="mobile-social-icon" style="background:linear-gradient(135deg,#24292e,#40464d);cursor:pointer;" onclick="expandMobileSection(event,'github')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
     </div>
-    <div class="mobile-social-icon" style="background:linear-gradient(135deg,#0077B5,#00a0dc);cursor:pointer;" onclick="expandMobileSection('linkedin')">
+    <div class="mobile-social-icon" style="background:linear-gradient(135deg,#0077B5,#00a0dc);cursor:pointer;" onclick="expandMobileSection(event,'linkedin')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
     </div>
-    <div class="mobile-social-icon" style="background:linear-gradient(135deg,#1a8917,#0d7a0d);cursor:pointer;" onclick="expandMobileSection('medium')">
+    <div class="mobile-social-icon" style="background:linear-gradient(135deg,#1a8917,#0d7a0d);cursor:pointer;" onclick="expandMobileSection(event,'medium')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
     </div>
     <a href="mailto:hello@ishaqhassan.dev" class="mobile-social-icon" style="background:linear-gradient(135deg,#30D158,#34d399);">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="#fff" stroke-width="1.5"/></svg>
     </a>
-    <div class="mobile-social-icon" style="background:linear-gradient(135deg,#0a2e1a,#0d3320);cursor:pointer;" onclick="expandMobileSection('snake')">
+    <div class="mobile-social-icon" style="background:linear-gradient(135deg,#0a2e1a,#0d3320);cursor:pointer;" onclick="expandMobileSection(event,'snake')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12h2v2H4v-2zm4 0h2v2H8v-2zm4-4h2v2h-2V8zm0 4h2v2h-2v-2zm4-4h2v2h-2V8zm0 8h2v2h-2v-2zm-4 0h2v2h-2v-2zm-4 0h2v2H8v-2z" fill="#39d353"/><circle cx="18" cy="8" r="1.5" fill="#39d353"/></svg>
     </div>
   </div>

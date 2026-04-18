@@ -1,32 +1,80 @@
-// ===== WINDOW RESIZE =====
+// ===== DESKTOP SNAPSHOTS (for MC previews, LAZY) =====
+var desktopSnapshots = {};
+var snapshotBusy = false;
+
+function captureDesktopSnapshot() {
+  if (typeof html2canvas === 'undefined' || snapshotBusy || dragEl || resizeEl) return;
+  snapshotBusy = true;
+  requestIdleCallback(function() {
+    html2canvas(document.body, {
+      scale: 0.15,
+      logging: false,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#0c0c0c',
+      ignoreElements: function(el) {
+        return el.id === 'mission-control' || el.id === 'boot-screen' || el.id === 'mobile-app' || el.classList.contains('fc-nav-preview') || el.classList.contains('spotlight-overlay');
+      }
+    }).then(function(canvas) {
+      desktopSnapshots[currentDesktopId] = canvas.toDataURL('image/jpeg', 0.5);
+      snapshotBusy = false;
+    }).catch(function() { snapshotBusy = false; });
+  });
+}
+
+// Only capture on: MC open (before render), desktop switch, fullscreen enter/exit
+// No periodic, no scroll, no drag. Zero background cost.
+function triggerSnapshot() {} // kept for existing calls, does nothing now
+
+// ===== WINDOW RESIZE (all edges + corners, macOS style) =====
 let resizeEl = null, resizeStartX = 0, resizeStartY = 0, resizeStartW = 0, resizeStartH = 0;
+let resizeStartTop = 0, resizeStartLeft = 0, resizeDir = '';
 
 function initResize() {
-  document.querySelectorAll('.window').forEach(win => {
-    const handle = document.createElement('div');
-    handle.className = 'window-resize';
-    handle.addEventListener('mousedown', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      resizeEl = win;
-      resizeStartX = e.clientX;
-      resizeStartY = e.clientY;
-      resizeStartW = win.offsetWidth;
-      resizeStartH = win.offsetHeight;
-      win.classList.add('resizing');
-    });
-    win.appendChild(handle);
+  var edges = ['n','s','e','w','ne','nw','se','sw'];
+  var cursors = {n:'ns-resize',s:'ns-resize',e:'ew-resize',w:'ew-resize',ne:'nesw-resize',nw:'nwse-resize',se:'nwse-resize',sw:'nesw-resize'};
 
-    const exitBtn = document.createElement('button');
+  document.querySelectorAll('.window').forEach(win => {
+    edges.forEach(dir => {
+      var handle = document.createElement('div');
+      handle.className = 'win-edge win-edge-' + dir;
+      handle.style.cssText = 'position:absolute;z-index:11;cursor:' + cursors[dir] + ';';
+      if (dir === 'n') handle.style.cssText += 'top:-3px;left:8px;right:8px;height:6px;';
+      else if (dir === 's') handle.style.cssText += 'bottom:-3px;left:8px;right:8px;height:6px;';
+      else if (dir === 'e') handle.style.cssText += 'right:-3px;top:8px;bottom:8px;width:6px;';
+      else if (dir === 'w') handle.style.cssText += 'left:-3px;top:8px;bottom:8px;width:6px;';
+      else if (dir === 'se') handle.style.cssText += 'right:-3px;bottom:-3px;width:12px;height:12px;';
+      else if (dir === 'sw') handle.style.cssText += 'left:-3px;bottom:-3px;width:12px;height:12px;';
+      else if (dir === 'ne') handle.style.cssText += 'right:-3px;top:-3px;width:12px;height:12px;';
+      else if (dir === 'nw') handle.style.cssText += 'left:-3px;top:-3px;width:12px;height:12px;';
+      handle.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        resizeEl = win;
+        resizeDir = dir;
+        resizeStartX = e.clientX;
+        resizeStartY = e.clientY;
+        resizeStartW = win.offsetWidth;
+        resizeStartH = win.offsetHeight;
+        resizeStartTop = win.offsetTop;
+        resizeStartLeft = win.offsetLeft;
+        win.classList.add('resizing');
+      });
+      win.appendChild(handle);
+    });
+
+    var exitBtn = document.createElement('button');
     exitBtn.className = 'exit-fullscreen';
     exitBtn.textContent = 'Exit Full Screen';
     exitBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const winId = win.id.replace('win-', '');
-      if (win.classList.contains('maximized')) {
+      var winId = win.id.replace('win-', '');
+      if (typeof fullscreenState !== 'undefined' && fullscreenState[winId]) {
+        exitFullscreen(winId);
+      } else if (win.classList.contains('maximized')) {
         maximizeWindow(winId);
       } else if (win.dataset.snapped) {
-        const saved = windowStates[winId + '_snap'];
+        var saved = windowStates[winId + '_snap'];
         if (saved) {
           win.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
           Object.assign(win.style, saved);
@@ -42,21 +90,116 @@ function initResize() {
 
 document.addEventListener('mousemove', (e) => {
   if (!resizeEl) return;
-  const w = Math.max(380, resizeStartW + (e.clientX - resizeStartX));
-  const h = Math.max(280, resizeStartH + (e.clientY - resizeStartY));
+  var dx = e.clientX - resizeStartX;
+  var dy = e.clientY - resizeStartY;
+  var d = resizeDir;
+  var w = resizeStartW, h = resizeStartH, t = resizeStartTop, l = resizeStartLeft;
+
+  if (d.indexOf('e') !== -1) w = Math.max(380, resizeStartW + dx);
+  if (d.indexOf('w') !== -1) { w = Math.max(380, resizeStartW - dx); l = resizeStartLeft + (resizeStartW - w); }
+  if (d.indexOf('s') !== -1) h = Math.max(280, resizeStartH + dy);
+  if (d.indexOf('n') !== -1) { h = Math.max(280, resizeStartH - dy); t = resizeStartTop + (resizeStartH - h); }
+
   resizeEl.style.width = w + 'px';
   resizeEl.style.height = h + 'px';
+  resizeEl.style.top = t + 'px';
+  resizeEl.style.left = l + 'px';
 });
 
 document.addEventListener('mouseup', () => {
   if (resizeEl) resizeEl.classList.remove('resizing');
   resizeEl = null;
+  resizeDir = '';
 });
 
 // ===== BOOT SEQUENCE =====
 window.addEventListener('load', () => {
   const bar = document.getElementById('boot-bar');
   const screen = document.getElementById('boot-screen');
+  const bootText = document.getElementById('boot-text');
+  var swoosh = new Audio('assets/swoosh.mp3');
+  swoosh.volume = 1.0;
+  swoosh.preload = 'auto';
+
+  // Pre-load everything during splash
+  initResize();
+  initMusicPlayer();
+  // Auto-load weather if permission already granted
+  if (navigator.permissions && navigator.permissions.query) {
+    navigator.permissions.query({name:'geolocation'}).then(function(p) {
+      if (p.state === 'granted') {
+        if (typeof requestMobWeather === 'function') requestMobWeather();
+        if (typeof requestWeatherLocation === 'function') requestWeatherLocation();
+      }
+    }).catch(function(){});
+  }
+  fetch('assets/github-contributions.json')
+    .then(r => r.json())
+    .then(data => {
+      const graph = document.getElementById('gh-graph');
+      const total = document.getElementById('gh-total');
+      if (graph) {
+        const weeks = data.weeks.slice(-26);
+        weeks.forEach(week => {
+          week.contributionDays.forEach(day => {
+            const cell = document.createElement('div');
+            cell.className = 'gh-cell';
+            const c = day.contributionCount;
+            if (c > 0) cell.dataset.level = c >= 30 ? 4 : c >= 15 ? 3 : c >= 5 ? 2 : 1;
+            cell.title = day.date + ': ' + c + ' contributions';
+            graph.appendChild(cell);
+          });
+        });
+        if (total) total.textContent = data.totalContributions.toLocaleString() + ' contributions this year';
+      }
+      const mobGraph = document.getElementById('mob-gh-graph');
+      const mobTotal = document.getElementById('mob-gh-total');
+      if (mobGraph) {
+        mobGraph.innerHTML = '';
+        const graphW = mobGraph.parentElement.clientWidth - 24;
+        const cellSize = 6;
+        const gap = 2;
+        const colW = cellSize + gap;
+        const maxWeeks = Math.floor(graphW / colW);
+        const mobWeeks = data.weeks.slice(-maxWeeks);
+        mobWeeks.forEach(week => {
+          const col = document.createElement('div');
+          col.style.cssText = 'display:flex;flex-direction:column;gap:'+gap+'px;';
+          week.contributionDays.forEach(day => {
+            const cell = document.createElement('div');
+            cell.style.cssText = 'width:'+cellSize+'px;height:'+cellSize+'px;border-radius:2px;background:rgba(255,255,255,0.04);';
+            const c = day.contributionCount;
+            if (c >= 30) cell.style.background = '#39d353';
+            else if (c >= 15) cell.style.background = '#26a641';
+            else if (c >= 5) cell.style.background = '#006d32';
+            else if (c > 0) cell.style.background = '#0e4429';
+            col.appendChild(cell);
+          });
+          mobGraph.appendChild(col);
+        });
+        if (mobTotal) mobTotal.textContent = data.totalContributions.toLocaleString() + ' contributions';
+      }
+    });
+
+  function finishBoot() {
+    screen.classList.add('fade-out');
+    try { swoosh.currentTime = 0; swoosh.play().catch(function(){}); } catch(e){}
+    setTimeout(() => {
+      screen.style.display = 'none';
+      var dockC = document.getElementById('dock-container');
+      if (dockC) setTimeout(function(){ dockC.classList.add('dock-ready'); }, 100);
+      var widgetCols = document.querySelectorAll('.widget-col');
+      widgetCols.forEach(function(col, i) { setTimeout(function(){ col.classList.add('widgets-ready'); }, 200 + i * 100); });
+      if (window.innerWidth > 768) setTimeout(() => showNotif('Welcome to Ishaq OS ✨'), 500);
+    }, 800);
+  }
+
+  function onBootClick() {
+    screen.removeEventListener('click', onBootClick);
+    screen.removeEventListener('touchstart', onBootClick);
+    document.removeEventListener('keydown', onBootClick);
+    finishBoot();
+  }
 
   let progress = 0;
   const bootInterval = setInterval(() => {
@@ -64,63 +207,23 @@ window.addEventListener('load', () => {
     if (progress >= 100) {
       progress = 100;
       clearInterval(bootInterval);
-      setTimeout(() => {
-        screen.classList.add('fade-out');
-        setTimeout(() => {
-          screen.style.display = 'none';
-          initResize();
-          initMusicPlayer();
-          if (window.innerWidth > 768) setTimeout(() => showNotif('Welcome to Ishaq OS ✨'), 500);
-          // GitHub contribution graph
-          fetch('assets/github-contributions.json')
-            .then(r => r.json())
-            .then(data => {
-              const graph = document.getElementById('gh-graph');
-              const total = document.getElementById('gh-total');
-              if (!graph) return;
-              const weeks = data.weeks.slice(-26);
-              weeks.forEach(week => {
-                week.contributionDays.forEach(day => {
-                  const cell = document.createElement('div');
-                  cell.className = 'gh-cell';
-                  const c = day.contributionCount;
-                  if (c > 0) cell.dataset.level = c >= 30 ? 4 : c >= 15 ? 3 : c >= 5 ? 2 : 1;
-                  cell.title = day.date + ': ' + c + ' contributions';
-                  graph.appendChild(cell);
-                });
-              });
-              if (total) total.textContent = data.totalContributions.toLocaleString() + ' contributions this year';
-              // Mobile graph: calculate how many weeks fit
-              const mobGraph = document.getElementById('mob-gh-graph');
-              const mobTotal = document.getElementById('mob-gh-total');
-              if (mobGraph) {
-                mobGraph.innerHTML = '';
-                const graphW = mobGraph.parentElement.clientWidth - 24;
-                const cellSize = 6;
-                const gap = 2;
-                const colW = cellSize + gap;
-                const maxWeeks = Math.floor(graphW / colW);
-                const mobWeeks = data.weeks.slice(-maxWeeks);
-                mobWeeks.forEach(week => {
-                  const col = document.createElement('div');
-                  col.style.cssText = 'display:flex;flex-direction:column;gap:'+gap+'px;';
-                  week.contributionDays.forEach(day => {
-                    const cell = document.createElement('div');
-                    cell.style.cssText = 'width:'+cellSize+'px;height:'+cellSize+'px;border-radius:2px;background:rgba(255,255,255,0.04);';
-                    const c = day.contributionCount;
-                    if (c >= 30) cell.style.background = '#39d353';
-                    else if (c >= 15) cell.style.background = '#26a641';
-                    else if (c >= 5) cell.style.background = '#006d32';
-                    else if (c > 0) cell.style.background = '#0e4429';
-                    col.appendChild(cell);
-                  });
-                  mobGraph.appendChild(col);
-                });
-                if (mobTotal) mobTotal.textContent = data.totalContributions.toLocaleString() + ' contributions';
-              }
-            });
-        }, 800);
-      }, 300);
+      var isMobile = window.innerWidth <= 768 || (window.innerWidth <= 1024 && 'ontouchstart' in window);
+      if (isMobile) {
+        setTimeout(finishBoot, 500);
+      } else {
+        var barC = document.getElementById('boot-bar-container');
+        if (barC) barC.classList.add('boot-hide');
+        if (bootText) bootText.classList.add('boot-hide');
+        var cta = document.getElementById('boot-cta');
+        if (cta) {
+          cta.textContent = 'CLICK ANYWHERE TO ENTER';
+          setTimeout(function(){ cta.style.display = 'block'; }, 400);
+        }
+        screen.style.cursor = 'pointer';
+        screen.addEventListener('click', onBootClick);
+        screen.addEventListener('touchstart', onBootClick);
+        document.addEventListener('keydown', onBootClick);
+      }
     }
     bar.style.width = progress + '%';
   }, 200);
@@ -214,7 +317,9 @@ if (window.innerWidth > 768) {
 }
 
 
-function expandMobileSection(section) {
+var activeMobileSection = null;
+
+function expandMobileSection(evt, section) {
   const map = {
     'experience': 'mobile-experience-expanded',
     'prs': 'mobile-prs-expanded',
@@ -231,11 +336,56 @@ function expandMobileSection(section) {
   };
   const elem = document.getElementById(map[section]);
   if (elem) {
+    // Shared element transition from tap point
+    if (evt) {
+      var src = evt.currentTarget || evt.target.closest('.mobile-section-card');
+      if (src) {
+        var r = src.getBoundingClientRect();
+        var cx = r.left + r.width / 2;
+        var cy = r.top + r.height / 2;
+        elem.style.transformOrigin = cx + 'px ' + cy + 'px';
+      }
+    }
     elem.style.display = 'block';
+    activeMobileSection = section;
+    history.pushState({mobileSection: section}, '');
     if (section === 'snake') initMobSnake();
     if (section === 'flutter-course') renderMobileFlutterCourseGrid();
   }
 }
+
+window.addEventListener('popstate', function(e) {
+  // Search screen open, close it
+  var searchScreen = document.getElementById('mfc-search-screen');
+  if (searchScreen && searchScreen.style.display !== 'none') {
+    closeMfcSearch();
+    return;
+  }
+  // Flutter course video playing, go back to grid
+  if (typeof fcCurrentVideo !== 'undefined' && fcCurrentVideo !== null && activeMobileSection === 'flutter-course') {
+    // Reverse animation on content
+    var c = document.getElementById('mfc-content');
+    if (c) {
+      c.style.animation = 'mfcPlayerOut 0.3s cubic-bezier(0.4,0,0.2,1) forwards';
+      setTimeout(function() {
+        fcCurrentVideo = null;
+        document.getElementById('mfc-title').textContent = 'Flutter Course';
+        renderMobileFlutterCourseGrid();
+        c.style.animation = '';
+        c.style.transformOrigin = '';
+      }, 300);
+    } else {
+      fcCurrentVideo = null;
+      document.getElementById('mfc-title').textContent = 'Flutter Course';
+      renderMobileFlutterCourseGrid();
+    }
+    return;
+  }
+  if (activeMobileSection) {
+    closeMobileSection(activeMobileSection);
+    activeMobileSection = null;
+  }
+});
 
 function closeMobileSection(section) {
   const map = {
@@ -252,11 +402,13 @@ function closeMobileSection(section) {
     'medium': 'mobile-medium-expanded',
     'flutter-course': 'mobile-flutter-course-expanded'
   };
+  if (section === 'flutter-course' && typeof stopAllFlutterCourseVideos === 'function') stopAllFlutterCourseVideos();
   const elem = document.getElementById(map[section]);
   if (elem) {
     elem.classList.add('closing');
-    setTimeout(() => { elem.style.display = 'none'; elem.classList.remove('closing'); }, 250);
+    setTimeout(() => { elem.style.display = 'none'; elem.classList.remove('closing'); }, 350);
   }
+  activeMobileSection = null;
 }
 
 // Update time on mobile status bar
@@ -429,11 +581,11 @@ if (window.innerWidth > 768) {
   const bootText = document.getElementById('boot-text');
   if (!bootText) return;
   const messages = [
-    'initializing...',
-    'loading modules...',
-    'compiling experience...',
-    'rendering portfolio...',
-    'almost there...'
+    'initializing system...',
+    'loading portfolio...',
+    'compiling 13 years of code...',
+    'rendering experience...',
+    'system ready'
   ];
   let msgIdx = 0;
   const bootTextInterval = setInterval(() => {
@@ -601,6 +753,12 @@ function updateSnapPreview(mx, my) {
 
 function snapWindow(winId, zone, event) {
   if (event) { event.stopPropagation(); event.preventDefault(); }
+  // Full Screen snap = enter fullscreen space
+  if (zone === 'top-full') {
+    document.querySelectorAll('.snap-menu').forEach(m => m.classList.remove('show'));
+    enterFullscreen(winId);
+    return;
+  }
   const win = document.getElementById('win-' + winId);
   if (!win) return;
   const g = snapGeometry(zone);
@@ -626,19 +784,98 @@ function snapWindow(winId, zone, event) {
   setTimeout(() => { win.style.transition = ''; }, 350);
 }
 
+// Fullscreen = new space with only this window (macOS style)
+var fullscreenState = {}; // { winId: { fromDesktop, savedState } }
+
+function enterFullscreen(winId) {
+  var win = document.getElementById('win-' + winId);
+  if (!win) return;
+  // Already fullscreen? exit
+  if (fullscreenState[winId]) { exitFullscreen(winId); return; }
+  // Save current state
+  fullscreenState[winId] = {
+    fromDesktop: currentDesktopId,
+    top: win.style.top, left: win.style.left,
+    width: win.style.width, height: win.style.height,
+    zIndex: win.style.zIndex
+  };
+  // Create new space with only this window
+  saveDesktopState();
+  var d = { id: nextDesktopId++, name: winId + ' (Full Screen)' };
+  d.fullscreenWin = winId;
+  desktops.push(d);
+  // Set up the space state: only this window, maximized
+  desktopState[d.id] = {};
+  desktopState[d.id][winId] = {
+    open: true, top: '28px', left: '0px',
+    width: '100vw', height: 'calc(100vh - 28px)',
+    zIndex: '999'
+  };
+  currentDesktopId = d.id;
+  restoreDesktopState(d.id);
+  // Apply maximized style
+  // Smooth enter: window expands to fullscreen
+  win.style.transition = 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+  win.classList.add('fullscreen-space');
+  document.body.classList.add('has-fullscreen');
+  setTimeout(function() { win.style.transition = ''; }, 550);
+  if (inMissionControl) closeMissionControl();
+}
+
+function exitFullscreen(winId) {
+  var fs = fullscreenState[winId];
+  if (!fs) return;
+  var win = document.getElementById('win-' + winId);
+
+  // Remove fullscreen space from desktops
+  var fsDesktop = desktops.find(function(d) { return d.fullscreenWin === winId; });
+  if (fsDesktop) {
+    delete desktopState[fsDesktop.id];
+    desktops = desktops.filter(function(x) { return x.id !== fsDesktop.id; });
+  }
+
+  // Switch back to original desktop
+  document.body.classList.remove('has-fullscreen');
+  currentDesktopId = fs.fromDesktop;
+  restoreDesktopState(fs.fromDesktop);
+
+  // Animate window back to original size
+  if (win) {
+    win.classList.remove('fullscreen-space');
+    win.classList.add('open');
+    openWindows[winId] = true;
+    win.style.transition = 'all 0.45s cubic-bezier(0.25, 1, 0.5, 1)';
+    // Force reflow then apply saved dimensions
+    win.offsetHeight;
+    win.style.top = fs.top;
+    win.style.left = fs.left;
+    win.style.width = fs.width;
+    win.style.height = fs.height;
+    win.style.zIndex = fs.zIndex;
+    setTimeout(function() { win.style.transition = ''; }, 500);
+  }
+
+  delete fullscreenState[winId];
+  if (typeof syncDockIndicators === 'function') syncDockIndicators();
+  if (inMissionControl) renderMissionControl();
+}
+
 function toggleSnapMenu(event, winId) {
   event.stopPropagation();
   event.preventDefault();
-  const win = document.getElementById('win-' + winId);
+  var win = document.getElementById('win-' + winId);
+  // If fullscreen, exit fullscreen
+  if (fullscreenState[winId]) { exitFullscreen(winId); return; }
+  // If maximized or snapped, restore
   if (win && (win.classList.contains('maximized') || win.dataset.snapped)) {
     if (win.classList.contains('maximized')) {
       maximizeWindow(winId);
     } else if (win.dataset.snapped) {
-      const saved = windowStates[winId + '_snap'];
+      var saved = windowStates[winId + '_snap'];
       if (saved) {
         win.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
         Object.assign(win.style, saved);
-        setTimeout(() => win.style.transition = '', 300);
+        setTimeout(function() { win.style.transition = ''; }, 300);
         delete windowStates[winId + '_snap'];
       }
       delete win.dataset.snapped;
@@ -646,17 +883,49 @@ function toggleSnapMenu(event, winId) {
     document.querySelectorAll('.snap-menu').forEach(m => m.classList.remove('show'));
     return;
   }
-  const menu = document.getElementById('sm-' + winId);
-  if (!menu) return;
-  document.querySelectorAll('.snap-menu').forEach(m => { if (m !== menu) m.classList.remove('show'); });
-  menu.classList.toggle('show');
+  // Direct click = fullscreen
+  document.querySelectorAll('.snap-menu').forEach(m => m.classList.remove('show'));
+  enterFullscreen(winId);
 }
 
-// Close snap menus on outside click
+// Show snap menu on hover (not click)
+document.querySelectorAll('.tl-maximize').forEach(function(btn) {
+  btn.addEventListener('mouseenter', function() {
+    var win = btn.closest('.window');
+    if (!win) return;
+    var winId = win.id.replace('win-', '');
+    if (fullscreenState[winId] || win.classList.contains('maximized') || win.dataset.snapped) return;
+    var menu = document.getElementById('sm-' + winId);
+    if (menu) {
+      document.querySelectorAll('.snap-menu').forEach(m => m.classList.remove('show'));
+      menu.classList.add('show');
+    }
+  });
+});
+
+// Close snap menus on outside click or mouseleave
 document.addEventListener('mousedown', (e) => {
-  if (!e.target.closest('.tl-maximize')) {
+  if (!e.target.closest('.tl-maximize') && !e.target.closest('.snap-menu')) {
     document.querySelectorAll('.snap-menu').forEach(m => m.classList.remove('show'));
   }
+});
+document.querySelectorAll('.snap-menu').forEach(function(menu) {
+  menu.addEventListener('mouseleave', function() {
+    menu.classList.remove('show');
+  });
+});
+
+// Fullscreen: show dock when mouse at bottom edge
+document.addEventListener('mousemove', function(e) {
+  if (!document.body.classList.contains('has-fullscreen')) return;
+  var dock = document.getElementById('dock-container');
+  if (!dock) return;
+  if (e.clientY >= window.innerHeight - 5) {
+    dock.classList.add('fs-dock-peek');
+  }
+});
+document.getElementById('dock-container').addEventListener('mouseleave', function() {
+  this.classList.remove('fs-dock-peek');
 });
 
 // Double-click titlebar to maximize
@@ -673,7 +942,7 @@ document.querySelectorAll('.window-toolbar').forEach(toolbar => {
 // ===== MULTIPLE DESKTOPS (SPACES) =====
 // Each desktop saves/restores FULL window state independently.
 // Same app can be open on multiple desktops. No cross-contamination.
-const allWindowIds = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake','flutter-course'];
+const allWindowIds = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake','flutter-course','fc-player'];
 let desktops = [{ id: 0, name: 'Desktop 1' }];
 let currentDesktopId = 0;
 let nextDesktopId = 1;
@@ -774,7 +1043,8 @@ function switchDesktop(dId, direction) {
   const newIdx = desktops.findIndex(x => x.id === dId);
   const dir = direction || (newIdx > oldIdx ? 'left' : 'right');
 
-  // Save current state
+  // Save current state + snapshot
+  captureDesktopSnapshot();
   saveDesktopState();
 
   // Switch
@@ -837,22 +1107,81 @@ function toggleMissionControl() {
   else openMissionControl();
 }
 
-function openMissionControl() {
-  inMissionControl = true;
+var mcWasFullscreen = false;
+
+function showMC() {
   renderMissionControl();
-  const mc = document.getElementById('mission-control');
+  var mc = document.getElementById('mission-control');
   mc.classList.add('active');
-  mc.onclick = (e) => {
-    if (e.target === mc || e.target.id === 'mc-window-grid') closeMissionControl();
-  };
+  mc.onclick = function(e) { if (e.target === mc || e.target.id === 'mc-window-grid') closeMissionControl(); };
+}
+
+function openMissionControl() {
+  mcWasFullscreen = document.body.classList.contains('has-fullscreen');
+  if (mcWasFullscreen) document.body.classList.remove('has-fullscreen');
+  inMissionControl = true;
+
+  // Always capture fresh snapshot, then show MC
+  if (typeof html2canvas !== 'undefined' && !snapshotBusy) {
+    snapshotBusy = true;
+    // Show MC immediately with shimmer (old/no snapshot)
+    showMC();
+    html2canvas(document.body, {
+      scale: 0.15, logging: false, useCORS: true, allowTaint: true, backgroundColor: '#0c0c0c',
+      ignoreElements: function(el) {
+        return el.id === 'mission-control' || el.id === 'boot-screen' || el.id === 'mobile-app' || el.classList.contains('fc-nav-preview') || el.classList.contains('spotlight-overlay');
+      }
+    }).then(function(canvas) {
+      desktopSnapshots[currentDesktopId] = canvas.toDataURL('image/jpeg', 0.5);
+      snapshotBusy = false;
+      // Re-render strip with fresh snapshot
+      if (inMissionControl) renderMissionControl();
+    }).catch(function() { snapshotBusy = false; });
+  } else {
+    showMC();
+  }
 }
 
 function closeMissionControl(focusWinId) {
   inMissionControl = false;
   document.getElementById('mission-control').classList.remove('active');
+  // Capture snapshot after MC closes for next time
+  setTimeout(captureDesktopSnapshot, 500);
+  // Restore fullscreen if it was active
+  if (mcWasFullscreen && Object.keys(fullscreenState).length > 0) {
+    document.body.classList.add('has-fullscreen');
+  }
+  mcWasFullscreen = false;
   if (focusWinId) {
-    const win = document.getElementById('win-' + focusWinId);
-    if (win) win.style.zIndex = ++activeZ;
+    // If clicking a fullscreen space preview, switch to that space
+    if (fullscreenState[focusWinId]) {
+      var fsDesktop = desktops.find(function(d) { return d.fullscreenWin === focusWinId; });
+      if (fsDesktop) {
+        saveDesktopState();
+        currentDesktopId = fsDesktop.id;
+        restoreDesktopState(fsDesktop.id);
+        var win = document.getElementById('win-' + focusWinId);
+        if (win) {
+          win.classList.add('fullscreen-space', 'open');
+          openWindows[focusWinId] = true;
+        }
+        document.body.classList.add('has-fullscreen');
+        return;
+      }
+    }
+    var win = document.getElementById('win-' + focusWinId);
+    if (win) {
+      win.style.zIndex = ++activeZ;
+      // Animate to center of screen
+      var w = win.offsetWidth;
+      var h = win.offsetHeight;
+      var centerLeft = Math.max(0, Math.round((window.innerWidth - w) / 2));
+      var centerTop = Math.max(28, Math.round((window.innerHeight - 80 - h) / 2) + 28);
+      win.style.transition = 'top 0.4s cubic-bezier(0.25, 1, 0.5, 1), left 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+      win.style.top = centerTop + 'px';
+      win.style.left = centerLeft + 'px';
+      setTimeout(function() { win.style.transition = ''; }, 450);
+    }
   }
 }
 
@@ -867,63 +1196,31 @@ function renderMissionControl() {
     t.style.overflow = 'hidden';
     t.style.position = 'relative';
 
-    // Create mini desktop preview
-    const dOpenWins = getDesktopOpenWindows(d.id);
-    if (dOpenWins.length > 0) {
-      const desktopW = window.innerWidth;
-      const desktopH = window.innerHeight - 28 - 80;
-      const thumbW = 140;
-      const thumbH = 70;
-      const dScale = Math.min(thumbW / desktopW, thumbH / desktopH) * 0.85;
-
-      const thumbContent = document.createElement('div');
-      thumbContent.style.cssText = 'position:absolute;top:0;left:0;width:' + desktopW + 'px;height:' + desktopH + 'px;transform:scale(' + dScale + ');transform-origin:top left;pointer-events:none;';
-
-      if (d.id === currentDesktopId) {
-        // Current desktop: clone live windows
-        dOpenWins.forEach(wId => {
-          const win = document.getElementById('win-' + wId);
-          if (!win) return;
-          const clone = win.cloneNode(true);
-          clone.removeAttribute('id');
-          clone.classList.remove('open','closing','minimizing','hidden-desktop');
-          clone.style.display = 'block';
-          clone.style.position = 'absolute';
-          clone.style.left = (parseInt(win.style.left) || 0) + 'px';
-          clone.style.top = ((parseInt(win.style.top) || 28) - 28) + 'px';
-          clone.style.width = win.offsetWidth + 'px';
-          clone.style.height = win.offsetHeight + 'px';
-          clone.style.zIndex = win.style.zIndex || '100';
-          clone.style.pointerEvents = 'none';
-          clone.style.opacity = '1';
-          clone.querySelectorAll('.snap-menu, .window-resize').forEach(el => el.remove());
-          thumbContent.appendChild(clone);
-        });
-      } else {
-        // Other desktop: use saved state to show positioned rectangles with titles
-        const state = desktopState[d.id] || {};
-        dOpenWins.forEach(wId => {
-          const s = state[wId];
-          if (!s) return;
-          const win = document.getElementById('win-' + wId);
-          if (!win) return;
-          const clone = win.cloneNode(true);
-          clone.removeAttribute('id');
-          clone.classList.remove('open','closing','minimizing','hidden-desktop');
-          clone.style.display = 'block';
-          clone.style.position = 'absolute';
-          clone.style.left = s.left;
-          clone.style.top = ((parseInt(s.top) || 28) - 28) + 'px';
-          clone.style.width = s.width;
-          clone.style.height = s.height;
-          clone.style.zIndex = s.zIndex || '100';
-          clone.style.pointerEvents = 'none';
-          clone.style.opacity = '1';
-          clone.querySelectorAll('.snap-menu, .window-resize').forEach(el => el.remove());
-          thumbContent.appendChild(clone);
-        });
-      }
-      t.appendChild(thumbContent);
+    // Snapshot thumbnail with shimmer loading
+    var shimmer = document.createElement('div');
+    shimmer.className = 'mc-thumb-shimmer';
+    t.appendChild(shimmer);
+    if (desktopSnapshots[d.id]) {
+      var img = document.createElement('img');
+      img.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none;border-radius:6px;';
+      img.onload = function() { img.classList.add('loaded'); shimmer.remove(); };
+      img.src = desktopSnapshots[d.id];
+      t.appendChild(img);
+    } else {
+      // No snapshot yet, capture async and update when ready
+      (function(thumb, dId) {
+        var check = setInterval(function() {
+          if (desktopSnapshots[dId]) {
+            clearInterval(check);
+            var im = document.createElement('img');
+            im.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none;border-radius:6px;';
+            im.onload = function() { im.classList.add('loaded'); var sh = thumb.querySelector('.mc-thumb-shimmer'); if(sh) sh.remove(); };
+            im.src = desktopSnapshots[dId];
+            thumb.appendChild(im);
+          }
+        }, 200);
+        setTimeout(function() { clearInterval(check); }, 5000); // give up after 5s
+      })(t, d.id);
     }
 
     const label = document.createElement('div');
@@ -968,18 +1265,22 @@ function renderMissionControl() {
   const maxH = Math.min(availH * 0.7, 400);
   const maxW = Math.min(500, (window.innerWidth - 80) / Math.min(openWins.length, 3) - 28);
 
+  if (openWins.length === 0) {
+    grid.innerHTML = '<div style="color:var(--text2);font-size:14px;">No windows open on this desktop</div>';
+    return;
+  }
+
   openWins.forEach(wId => {
-    const win = document.getElementById('win-' + wId);
+    var win = document.getElementById('win-' + wId);
     if (!win) return;
+    var isFs = win.classList.contains('fullscreen-space');
+    var winW = isFs ? window.innerWidth : (win.offsetWidth || 700);
+    var winH = isFs ? window.innerHeight : (win.offsetHeight || 500);
+    var scale = Math.min(maxW / winW, maxH / winH, 0.45);
+    var pW = Math.round(winW * scale);
+    var pH = Math.round(winH * scale);
 
-    // Dynamic size: scale window to fit within max bounds, keeping aspect ratio
-    const winW = win.offsetWidth || 700;
-    const winH = win.offsetHeight || 500;
-    const scale = Math.min(maxW / winW, maxH / winH, 0.45);
-    const pW = Math.round(winW * scale);
-    const pH = Math.round(winH * scale);
-
-    const wrapper = document.createElement('div');
+    var wrapper = document.createElement('div');
     wrapper.className = 'mc-win-preview';
     wrapper.style.width = pW + 'px';
     wrapper.style.height = pH + 'px';
@@ -987,25 +1288,22 @@ function renderMissionControl() {
     wrapper.style.position = 'relative';
     wrapper.onclick = (e) => { e.stopPropagation(); closeMissionControl(wId); };
 
-    // Clone window content and scale it down
-    const clone = win.cloneNode(true);
+    var clone = win.cloneNode(true);
     clone.removeAttribute('id');
-    clone.classList.remove('open', 'closing', 'minimizing', 'hidden-desktop');
-    clone.style.cssText = 'position:absolute;top:0;left:0;display:block;pointer-events:none;opacity:1;';
+    clone.classList.remove('open','closing','minimizing','hidden-desktop','fullscreen-space');
+    clone.style.cssText = 'position:absolute;top:0;left:0;display:block;pointer-events:none;opacity:1;border-radius:12px;';
     clone.style.width = winW + 'px';
     clone.style.height = winH + 'px';
     clone.style.transform = 'scale(' + scale + ')';
     clone.style.transformOrigin = 'top left';
-    clone.querySelectorAll('.snap-menu, .window-resize').forEach(el => el.remove());
+    clone.querySelectorAll('.snap-menu,.win-edge,iframe,canvas').forEach(el => el.remove());
     wrapper.appendChild(clone);
 
-    // Title label below
-    const title = win.querySelector('.window-title')?.textContent || wId;
-    const label = document.createElement('div');
+    var title = win.querySelector('.window-title,.fc-pw-title');
+    var label = document.createElement('div');
     label.style.cssText = 'position:absolute;bottom:0;left:0;right:0;padding:6px 10px;font-size:11px;font-weight:600;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,0.7));text-align:center;z-index:2;border-radius:0 0 12px 12px;';
-    label.textContent = title;
+    label.textContent = title ? title.textContent : wId;
     wrapper.appendChild(label);
-
     grid.appendChild(wrapper);
   });
 }
