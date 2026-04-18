@@ -7,10 +7,13 @@ function showNotif(msg, app) {
   notif.classList.add('show');
   playSfx(sfxClick);
   clearTimeout(notifTimeout);
-  notifTimeout = setTimeout(() => notif.classList.remove('show'), 5000);
+  notifTimeout = setTimeout(dismissNotif, 5000);
 }
 function dismissNotif() {
-  document.getElementById('macos-notif').classList.remove('show');
+  var notif = document.getElementById('macos-notif');
+  notif.classList.remove('show');
+  notif.style.transform = '';
+  notif.style.opacity = '';
   clearTimeout(notifTimeout);
 }
 
@@ -41,7 +44,7 @@ function dismissNotif() {
     if (Math.abs(dx) > 80) {
       notif.style.transform = 'translateX(' + (dx > 0 ? '120%' : '-120%') + ')';
       notif.style.opacity = '0';
-      setTimeout(() => { notif.classList.remove('show'); notif.style.opacity = ''; }, 300);
+      setTimeout(() => { notif.classList.remove('show'); notif.style.opacity = ''; notif.style.transform = ''; }, 300);
       clearTimeout(notifTimeout);
     } else {
       notif.style.transform = 'translateX(0)';
