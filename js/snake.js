@@ -1242,7 +1242,7 @@ function mobSnakeTick() {
       closeMobileSection('snake');
       mobSnakeReset();
       showNotif('Done playing? Now back to work 😂', 'Snake Neon');
-      setTimeout(() => expandMobileSection('github'), 300);
+      setTimeout(() => expandMobileSection(null, 'github'), 300);
     }, 3000);
     return;
   }
