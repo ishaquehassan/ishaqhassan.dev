@@ -1,70 +1,48 @@
 // ===== macOS NOTIFICATION =====
-var notifTimeout = null;
-var notifDismissed = false;
-
+let notifTimeout = null;
 function showNotif(msg, app) {
-  var notif = document.getElementById('macos-notif');
+  const notif = document.getElementById('macos-notif');
   document.getElementById('notif-msg').textContent = msg;
   document.getElementById('notif-app').textContent = app || 'Ishaq OS';
-  clearTimeout(notifTimeout);
-  notifDismissed = false;
-  notif.style.transition = '';
-  notif.style.transform = '';
-  notif.style.opacity = '';
   notif.classList.add('show');
-  try { playSfx(sfxClick); } catch(e) {}
-  notifTimeout = setTimeout(dismissNotif, 5000);
-}
-
-function dismissNotif() {
-  if (notifDismissed) return;
-  notifDismissed = true;
+  playSfx(sfxClick);
   clearTimeout(notifTimeout);
-  notifTimeout = null;
-  var notif = document.getElementById('macos-notif');
-  notif.style.transition = '';
-  notif.classList.remove('show');
-  setTimeout(function() {
-    notif.style.transform = '';
-    notif.style.opacity = '';
-  }, 500);
+  notifTimeout = setTimeout(() => notif.classList.remove('show'), 5000);
+}
+function dismissNotif() {
+  document.getElementById('macos-notif').classList.remove('show');
+  clearTimeout(notifTimeout);
 }
 
 // Swipe to dismiss notification
 (function() {
-  var notif = document.getElementById('macos-notif');
-  var startX = 0, currentX = 0, swiping = false;
-  notif.addEventListener('touchstart', function(e) {
+  const notif = document.getElementById('macos-notif');
+  let startX = 0, currentX = 0, swiping = false;
+  notif.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX;
     currentX = startX;
     swiping = true;
     notif.style.transition = 'none';
   });
-  notif.addEventListener('touchmove', function(e) {
+  notif.addEventListener('touchmove', (e) => {
     if (!swiping) return;
     currentX = e.touches[0].clientX;
-    var dx = currentX - startX;
+    const dx = currentX - startX;
     if (Math.abs(dx) > 10) {
       notif.style.transform = 'translateX(' + dx + 'px)';
       notif.style.opacity = Math.max(0, 1 - Math.abs(dx) / 200);
     }
   });
-  notif.addEventListener('touchend', function() {
+  notif.addEventListener('touchend', () => {
     if (!swiping) return;
     swiping = false;
-    var dx = currentX - startX;
+    const dx = currentX - startX;
     notif.style.transition = '';
     if (Math.abs(dx) > 80) {
       notif.style.transform = 'translateX(' + (dx > 0 ? '120%' : '-120%') + ')';
       notif.style.opacity = '0';
-      setTimeout(function() {
-        notif.classList.remove('show');
-        notif.style.transform = '';
-        notif.style.opacity = '';
-        notifDismissed = true;
-        clearTimeout(notifTimeout);
-        notifTimeout = null;
-      }, 300);
+      setTimeout(() => { notif.classList.remove('show'); notif.style.opacity = ''; }, 300);
+      clearTimeout(notifTimeout);
     } else {
       notif.style.transform = 'translateX(0)';
       notif.style.opacity = '1';

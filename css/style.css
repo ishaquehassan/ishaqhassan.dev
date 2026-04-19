@@ -630,20 +630,17 @@ body {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
   cursor: pointer;
   touch-action: pan-x;
-  overflow: visible;
 }
 #macos-notif.show { transform: translateX(0); }
 .notif-close {
-  position: absolute; top: -8px; left: -8px;
-  width: 22px; height: 22px; border-radius: 50%;
-  background: rgba(80,80,80,0.9);
-  color: rgba(255,255,255,0.9);
-  font-size: 14px; line-height: 22px; text-align: center;
-  cursor: pointer; opacity: 0; transition: opacity 0.2s;
-  z-index: 99999;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  position: absolute; top: 4px; right: 6px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5);
+  font-size: 13px; line-height: 17px; text-align: center;
+  cursor: pointer; opacity: 0; transition: opacity 0.15s;
 }
-.notif-close:hover { background: rgba(255,255,255,0.25); color: #fff; }
+.notif-close:hover { background: rgba(255,255,255,0.2); color: #fff; }
 #macos-notif:hover .notif-close { opacity: 1; }
 #macos-notif img { width: 38px; height: 38px; border-radius: 8px; }
 .notif-text { flex: 1; }
