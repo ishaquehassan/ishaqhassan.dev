@@ -602,27 +602,32 @@ body {
 
 /* Virtual Joystick + Action Buttons */
 .mob-snake-controls {
-  padding: 4px 0 0; display: flex; flex-direction: column; align-items: center;
-  gap: 0; flex-shrink: 0;
-}
-.mob-snake-control-main {
-  display: flex; justify-content: center; align-items: center; width: 100%;
-}
-.mob-snake-action-row {
-  display: flex; justify-content: center; align-items: center; gap: 48px;
-  padding: 4px 0; padding-bottom: max(10px, env(safe-area-inset-bottom));
+  padding: 8px 0 14px; padding-bottom: max(14px, env(safe-area-inset-bottom));
+  display: flex; justify-content: center; align-items: center; flex-shrink: 0;
 }
 .mob-snake-action-btn {
   width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.25);
   display: flex; align-items: center; justify-content: center; cursor: pointer;
   -webkit-tap-highlight-color: transparent; touch-action: manipulation;
-  transition: all 0.15s;
+  transition: all 0.15s; flex-shrink: 0;
 }
 .mob-snake-action-btn svg { width: 16px; height: 16px; }
+#mob-snake-restart { margin-right: auto; margin-left: 20px; }
+#mob-snake-pause { margin-left: auto; margin-right: 20px; }
 .mob-snake-action-btn:active {
   background: rgba(57,211,83,0.15); border-color: rgba(57,211,83,0.3); color: #39d353;
   box-shadow: 0 0 14px rgba(57,211,83,0.2);
+}
+.mob-snake-action-btn.paused-active {
+  color: #FEBC2E; border-color: rgba(254,188,46,0.4);
+  background: rgba(254,188,46,0.12);
+  box-shadow: 0 0 16px rgba(254,188,46,0.2);
+  animation: pauseBtnPulse 2s ease infinite;
+}
+@keyframes pauseBtnPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(254,188,46,0.15); }
+  50% { box-shadow: 0 0 20px rgba(254,188,46,0.35); }
 }
 .joystick-base {
   width: 130px; height: 130px; position: relative; border-radius: 50%;

@@ -365,15 +365,75 @@ function snakeSetDir(dx, dy) {
   }
 }
 
+var _deskPauseFrame = null;
+
+function snakeDrawPause() {
+  var canvas = document.getElementById('snake-canvas');
+  if (!canvas || !snakePaused) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var now = performance.now();
+
+  snakeDraw(1);
+
+  var vg = ctx.createRadialGradient(W/2, H/2, W*0.15, W/2, H/2, W*0.7);
+  vg.addColorStop(0, 'rgba(0,0,0,0.5)');
+  vg.addColorStop(1, 'rgba(0,0,0,0.8)');
+  ctx.fillStyle = vg;
+  ctx.fillRect(0, 0, W, H);
+
+  var breath = Math.sin(now * 0.003) * 0.5 + 0.5;
+  var iconSize = 36 + breath * 5;
+
+  ctx.beginPath();
+  ctx.arc(W/2, H/2 - 12, 52 + breath * 7, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(254,188,46,' + (0.12 + breath * 0.1).toFixed(2) + ')';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(W/2, H/2 - 12, 42 + breath * 4, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(254,188,46,' + (0.05 + breath * 0.04).toFixed(2) + ')';
+  ctx.fill();
+
+  ctx.shadowColor = '#FEBC2E';
+  ctx.shadowBlur = 18 + breath * 10;
+  ctx.fillStyle = '#FEBC2E';
+  var barW = iconSize * 0.28, barH = iconSize * 0.75, gap = iconSize * 0.2;
+  var bx = W/2 - gap/2 - barW, by = H/2 - 12 - barH/2;
+  ctx.beginPath(); ctx.roundRect(bx, by, barW, barH, 4); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(W/2 + gap/2, by, barW, barH, 4); ctx.fill();
+  ctx.shadowBlur = 0;
+
+  ctx.font = 'bold 18px -apple-system, sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#FEBC2E'; ctx.globalAlpha = 0.9;
+  ctx.fillText('PAUSED', W/2, H/2 + 46);
+  ctx.globalAlpha = 1;
+
+  ctx.font = '12px -apple-system, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,' + (0.2 + breath * 0.12).toFixed(2) + ')';
+  ctx.fillText('Press Esc to resume', W/2, H/2 + 68);
+
+  var elapsed = snakeStartTime > 0 ? Math.round((now - snakeStartTime) / 1000) : 0;
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.font = '11px -apple-system, sans-serif';
+  ctx.fillText('Score ' + snakeScore + '  ·  Length ' + snakeBody.length + '  ·  ' + elapsed + 's', W/2, H/2 + 90);
+
+  _deskPauseFrame = requestAnimationFrame(snakeDrawPause);
+}
+
 function snakeTogglePause() {
   if (snakeGameOver || !snakeRunning) return;
   snakePaused = !snakePaused;
-  const overlay = document.getElementById('snake-overlay');
+  var overlay = document.getElementById('snake-overlay');
   if (snakePaused) {
     clearTimeout(snakeInterval);
     cancelAnimationFrame(snakeAnimFrame);
-    if (overlay) { overlay.style.display = 'block'; overlay.innerHTML = '<div style="font-size:28px;font-weight:700;color:#FEBC2E;text-shadow:0 0 20px rgba(254,188,46,0.4);">PAUSED</div><div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px;">Press Esc to resume</div>'; }
+    if (overlay) overlay.style.display = 'none';
+    snakeDrawPause();
   } else {
+    cancelAnimationFrame(_deskPauseFrame);
     if (overlay) overlay.style.display = 'none';
     snakeLastTick = performance.now();
     snakeScheduleNext();
@@ -1139,19 +1199,95 @@ function initMobSnake() {
   initControlSelector();
 }
 
+var _pauseAnimFrame = null;
+
+function mobSnakeDrawPause() {
+  var canvas = document.getElementById('mob-snake-canvas');
+  if (!canvas || !mobSnake.paused) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var now = performance.now();
+
+  // Redraw game state underneath
+  mobSnakeDraw(1);
+
+  // Dark overlay with vignette
+  var vg = ctx.createRadialGradient(W/2, H/2, W*0.15, W/2, H/2, W*0.7);
+  vg.addColorStop(0, 'rgba(0,0,0,0.55)');
+  vg.addColorStop(1, 'rgba(0,0,0,0.82)');
+  ctx.fillStyle = vg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Breathing pulse for pause icon
+  var breath = Math.sin(now * 0.003) * 0.5 + 0.5;
+  var iconSize = 28 + breath * 4;
+
+  // Outer glow ring
+  var ringR = 44 + breath * 6;
+  ctx.beginPath();
+  ctx.arc(W/2, H/2 - 10, ringR, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(254,188,46,' + (0.15 + breath * 0.1).toFixed(2) + ')';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Inner glow circle
+  ctx.beginPath();
+  ctx.arc(W/2, H/2 - 10, 36 + breath * 3, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(254,188,46,' + (0.06 + breath * 0.04).toFixed(2) + ')';
+  ctx.fill();
+
+  // Pause bars icon
+  ctx.shadowColor = '#FEBC2E';
+  ctx.shadowBlur = 16 + breath * 8;
+  ctx.fillStyle = '#FEBC2E';
+  var barW = iconSize * 0.28, barH = iconSize * 0.75, gap = iconSize * 0.18;
+  var bx = W/2 - gap/2 - barW, by = H/2 - 10 - barH/2;
+  ctx.beginPath(); ctx.roundRect(bx, by, barW, barH, 3); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(W/2 + gap/2, by, barW, barH, 3); ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // "PAUSED" text
+  ctx.font = 'bold 15px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#FEBC2E';
+  ctx.globalAlpha = 0.9;
+  ctx.fillText('PAUSED', W/2, H/2 + 40);
+  ctx.globalAlpha = 1;
+
+  // Subtitle
+  ctx.font = '10px -apple-system, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,' + (0.2 + breath * 0.1).toFixed(2) + ')';
+  ctx.fillText('tap play to resume', W/2, H/2 + 58);
+
+  // Stats while paused
+  var elapsed = mobSnake.startTime > 0 ? Math.round((now - mobSnake.startTime) / 1000) : 0;
+  ctx.font = '10px -apple-system, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.fillText('Score ' + mobSnake.score + '  ·  Length ' + mobSnake.body.length + '  ·  ' + elapsed + 's', W/2, H/2 + 78);
+
+  _pauseAnimFrame = requestAnimationFrame(mobSnakeDrawPause);
+}
+
 function mobSnakeTogglePause() {
-  const S = mobSnake;
+  var S = mobSnake;
   if (!S.running || S.over) return;
   S.paused = !S.paused;
-  const ov = document.getElementById('mob-snake-overlay');
-  const icon = document.getElementById('mob-pause-icon');
+  var ov = document.getElementById('mob-snake-overlay');
+  var icon = document.getElementById('mob-pause-icon');
+  var pauseBtn = document.getElementById('mob-snake-pause');
   if (S.paused) {
     clearTimeout(S.interval); cancelAnimationFrame(S.animFrame);
-    if (ov) { ov.style.display = 'block'; ov.innerHTML = '<div style="font-size:22px;font-weight:700;color:#FEBC2E;text-shadow:0 0 16px rgba(254,188,46,0.3);">PAUSED</div><div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px;">Tap play to resume</div>'; }
+    if (ov) ov.style.display = 'none';
     if (icon) icon.innerHTML = '<polygon points="5,3 19,12 5,21" fill="currentColor"/>';
+    if (pauseBtn) pauseBtn.classList.add('paused-active');
+    // Start pause animation loop on canvas
+    mobSnakeDrawPause();
   } else {
+    cancelAnimationFrame(_pauseAnimFrame);
     if (ov) ov.style.display = 'none';
     if (icon) icon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor"/><rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor"/>';
+    if (pauseBtn) pauseBtn.classList.remove('paused-active');
     S.lastTick = performance.now();
     mobSnakeSchedule();
     mobSnakeRenderLoop();
