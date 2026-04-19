@@ -1661,11 +1661,20 @@ function initDPad() {
 }
 
 function initSwipeGestures() {
-  var canvas = document.getElementById('mob-snake-canvas');
-  if (!canvas) return null;
+  var screen = document.getElementById('mobile-snake-expanded');
+  if (!screen) return null;
   var startX = 0, startY = 0, tracking = false;
   var deadZone = 25;
+  // Elements that handle their own touch (buttons, selectors)
+  function isInteractive(el) {
+    while (el && el !== screen) {
+      if (el.tagName === 'BUTTON' || el.classList.contains('mob-control-selector')) return true;
+      el = el.parentElement;
+    }
+    return false;
+  }
   var onStart = function(e) {
+    if (isInteractive(e.target)) return;
     e.preventDefault();
     if (mobSnake.locked) return;
     var t = e.touches[0];
@@ -1673,6 +1682,7 @@ function initSwipeGestures() {
     if (!mobSnake.running && !mobSnake.starting) mobSnakeStart();
   };
   var onMove = function(e) {
+    if (isInteractive(e.target)) return;
     e.preventDefault();
     if (!tracking || !mobSnake.running) return;
     var t = e.touches[0];
@@ -1685,22 +1695,22 @@ function initSwipeGestures() {
       } else {
         mobSnakeDir(0, dy > 0 ? 1 : -1);
       }
-      // Reset origin for continuous swiping
       startX = t.clientX; startY = t.clientY;
     }
   };
   var onEnd = function(e) {
+    if (isInteractive(e.target)) return;
     e.preventDefault();
     tracking = false;
   };
-  canvas.addEventListener('touchstart', onStart, { passive: false });
-  canvas.addEventListener('touchmove', onMove, { passive: false });
-  canvas.addEventListener('touchend', onEnd, { passive: false });
-  canvas.addEventListener('touchcancel', onEnd, { passive: false });
+  screen.addEventListener('touchstart', onStart, { passive: false });
+  screen.addEventListener('touchmove', onMove, { passive: false });
+  screen.addEventListener('touchend', onEnd, { passive: false });
+  screen.addEventListener('touchcancel', onEnd, { passive: false });
   return function() {
-    canvas.removeEventListener('touchstart', onStart);
-    canvas.removeEventListener('touchmove', onMove);
-    canvas.removeEventListener('touchend', onEnd);
-    canvas.removeEventListener('touchcancel', onEnd);
+    screen.removeEventListener('touchstart', onStart);
+    screen.removeEventListener('touchmove', onMove);
+    screen.removeEventListener('touchend', onEnd);
+    screen.removeEventListener('touchcancel', onEnd);
   };
 }
