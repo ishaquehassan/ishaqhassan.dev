@@ -1026,7 +1026,7 @@ document.getElementById('snake-high').textContent = snakeHighScore;
 // ===== MOBILE SNAKE =====
 let MOB_SNAKE_COLS = 25;
 let MOB_SNAKE_ROWS = 25;
-let mobSnake = { body: [{x:12,y:12}], prevBody: [{x:12,y:12}], dir: {x:1,y:0}, nextDir: {x:1,y:0}, food: {x:18,y:12}, score: 0, running: false, over: false, paused: false, locked: false, interval: null, particles: [], cellSize: 14, lastTick: 0, animFrame: null, eatCount: 0, bonus: null, bonusTimer: null, combo: 0, lastEatTime: 0, comboTimer: null, popups: [], comboBanner: null, startTime: 0 };
+let mobSnake = { body: [{x:12,y:12}], prevBody: [{x:12,y:12}], dir: {x:1,y:0}, nextDir: {x:1,y:0}, food: {x:18,y:12}, score: 0, running: false, starting: false, over: false, paused: false, locked: false, interval: null, particles: [], cellSize: 14, lastTick: 0, animFrame: null, eatCount: 0, bonus: null, bonusTimer: null, combo: 0, lastEatTime: 0, comboTimer: null, popups: [], comboBanner: null, startTime: 0 };
 
 // Virtual Joystick
 function initJoystick() {
@@ -1160,15 +1160,19 @@ function mobSnakeTogglePause() {
 function mobSnakeDir(dx, dy) {
   if (mobSnake.locked) return;
   if (mobSnake.over) { mobSnakeReset(); return; }
-  if (!mobSnake.running) mobSnakeStart();
+  if (!mobSnake.running && !mobSnake.starting) { mobSnakeStart(); return; }
+  if (!mobSnake.running) return;
   if (mobSnake.dir.x === -dx && mobSnake.dir.y === -dy) return;
   mobSnake.nextDir = {x:dx, y:dy};
 }
 
 function mobSnakeStart() {
+  if (mobSnake.starting || mobSnake.running) return;
+  mobSnake.starting = true;
   document.getElementById('mob-snake-overlay').style.display = 'none';
   const canvas = document.getElementById('mob-snake-canvas');
   snakeCountdown(canvas, () => {
+    mobSnake.starting = false;
     mobSnake.running = true;
     mobSnake.startTime = performance.now();
     mobSnake.prevBody = mobSnake.body.map(s => ({x:s.x,y:s.y}));
@@ -1198,7 +1202,7 @@ function mobSnakeReset() {
   cancelAnimationFrame(mobSnake.animFrame);
   clearInterval(mobSnake.comboTimer);
   mobSnake.body = [{x:12,y:12}]; mobSnake.prevBody = [{x:12,y:12}]; mobSnake.dir = {x:1,y:0}; mobSnake.nextDir = {x:1,y:0};
-  mobSnake.score = 0; mobSnake.over = false; mobSnake.running = false; mobSnake.paused = false; mobSnake.locked = false; mobSnake.particles = []; mobSnake.popups = [];
+  mobSnake.score = 0; mobSnake.over = false; mobSnake.running = false; mobSnake.starting = false; mobSnake.paused = false; mobSnake.locked = false; mobSnake.particles = []; mobSnake.popups = [];
   mobSnake.eatCount = 0; mobSnake.bonus = null; mobSnake.combo = 0; mobSnake.lastEatTime = 0; mobSnake.comboBanner = null;
   clearTimeout(mobSnake.bonusTimer); snakeColor = '#39d353'; snakeColorSecondary = '#26a641';
   mobSnake.food = {x: Math.floor(Math.random()*MOB_SNAKE_COLS), y: Math.floor(Math.random()*MOB_SNAKE_ROWS)};
