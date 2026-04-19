@@ -1,20 +1,16 @@
 // ===== macOS NOTIFICATION =====
 let notifTimeout = null;
 function showNotif(msg, app) {
-  var notif = document.getElementById('macos-notif');
+  const notif = document.getElementById('macos-notif');
   document.getElementById('notif-msg').textContent = msg;
   document.getElementById('notif-app').textContent = app || 'Ishaq OS';
   notif.classList.add('show');
+  playSfx(sfxClick);
   clearTimeout(notifTimeout);
-  notifTimeout = setTimeout(function() { dismissNotif(); }, 5000);
-  try { playSfx(sfxClick); } catch(e) {}
+  notifTimeout = setTimeout(() => notif.classList.remove('show'), 5000);
 }
 function dismissNotif() {
-  var n = document.getElementById('macos-notif');
-  n.classList.remove('show');
-  n.style.transform = '';
-  n.style.opacity = '';
-  n.style.transition = '';
+  document.getElementById('macos-notif').classList.remove('show');
   clearTimeout(notifTimeout);
 }
 
