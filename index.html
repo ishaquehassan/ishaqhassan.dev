@@ -59,12 +59,12 @@
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
 <link rel="apple-touch-icon" href="/assets/profile-photo.png">
-<link rel="stylesheet" href="css/style.min.css?v=63">
+<link rel="stylesheet" href="css/style.min.css?v=65">
 
 <!-- JS: defer = parallel download during HTML parse, execute after DOM ready, in order -->
 <script src="js/app.min.js?v=63" defer></script>
 <script src="js/widgets.min.js?v=63" defer></script>
-<script src="js/snake.min.js?v=64" defer></script>
+<script src="js/snake.min.js?v=65" defer></script>
 <script src="js/desktop.min.js?v=63" defer></script>
 
 <!-- JSON-LD Structured Data -->
@@ -2091,11 +2091,27 @@
           <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Tap anywhere to play</div>
         </div>
       </div>
-      <!-- Controls: Restart + Joystick + Pause -->
-      <div class="mob-snake-controls">
+      <!-- Control Mode Selector -->
+      <div class="mob-control-selector" id="mob-control-selector">
+        <button class="ctrl-mode-btn active" data-mode="wheel">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>
+          <span>Wheel</span>
+        </button>
+        <button class="ctrl-mode-btn" data-mode="dpad">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z" opacity="0.85"/></svg>
+          <span>D-Pad</span>
+        </button>
+        <button class="ctrl-mode-btn" data-mode="swipe">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span>Swipe</span>
+        </button>
+      </div>
+      <!-- Controls: Restart + Control Area + Pause -->
+      <div class="mob-snake-controls" id="mob-snake-controls">
         <button class="mob-snake-action-btn" id="mob-snake-restart" ontouchstart="event.preventDefault();if(mobSnake.locked)return;mobSnakeReset();">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
         </button>
+        <!-- Joystick Wheel (default) -->
         <div class="joystick-base" id="joystick-base">
           <div class="joystick-ring" id="joystick-ring"></div>
           <div class="joystick-arrows">
@@ -2105,6 +2121,27 @@
             <span class="joystick-arrow ja-left">◀</span>
           </div>
           <div class="joystick-knob" id="joystick-knob"></div>
+        </div>
+        <!-- D-Pad -->
+        <div class="mob-dpad" id="mob-dpad" style="display:none;">
+          <button class="dpad-btn dpad-up" data-dir="up">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l8 10H4z"/></svg>
+          </button>
+          <button class="dpad-btn dpad-left" data-dir="left">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 12l10-8v16z"/></svg>
+          </button>
+          <div class="dpad-center"></div>
+          <button class="dpad-btn dpad-right" data-dir="right">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 12l-10 8V4z"/></svg>
+          </button>
+          <button class="dpad-btn dpad-down" data-dir="down">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20l-8-10h16z"/></svg>
+          </button>
+        </div>
+        <!-- Swipe indicator (minimal) -->
+        <div class="mob-swipe-hint" id="mob-swipe-hint" style="display:none;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.25"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span>Swipe on canvas</span>
         </div>
         <button class="mob-snake-action-btn" id="mob-snake-pause" ontouchstart="event.preventDefault();mobSnakeTogglePause();">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" id="mob-pause-icon"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>

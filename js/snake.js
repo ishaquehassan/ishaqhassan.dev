@@ -1026,7 +1026,7 @@ document.getElementById('snake-high').textContent = snakeHighScore;
 // ===== MOBILE SNAKE =====
 let MOB_SNAKE_COLS = 25;
 let MOB_SNAKE_ROWS = 25;
-let mobSnake = { body: [{x:12,y:12}], prevBody: [{x:12,y:12}], dir: {x:1,y:0}, nextDir: {x:1,y:0}, food: {x:18,y:12}, score: 0, running: false, starting: false, over: false, paused: false, locked: false, interval: null, particles: [], cellSize: 14, lastTick: 0, animFrame: null, eatCount: 0, bonus: null, bonusTimer: null, combo: 0, lastEatTime: 0, comboTimer: null, popups: [], comboBanner: null, startTime: 0 };
+let mobSnake = { body: [{x:12,y:12}], prevBody: [{x:12,y:12}], dir: {x:1,y:0}, nextDir: {x:1,y:0}, dirQueue: [], food: {x:18,y:12}, score: 0, running: false, starting: false, over: false, paused: false, locked: false, interval: null, particles: [], cellSize: 14, lastTick: 0, animFrame: null, eatCount: 0, bonus: null, bonusTimer: null, combo: 0, lastEatTime: 0, comboTimer: null, popups: [], comboBanner: null, startTime: 0, controlMode: localStorage.getItem('snakeControlType') || 'wheel' };
 
 // Virtual Joystick
 function initJoystick() {
@@ -1132,10 +1132,11 @@ function initMobSnake() {
   canvas.ontouchstart = (e) => {
     e.preventDefault();
     if (mobSnake.locked) return;
-    if (!mobSnake.running) mobSnakeDir(1, 0);
+    if (mobSnake.controlMode === 'swipe') return; // swipe handler manages this
+    if (!mobSnake.running && !mobSnake.starting) mobSnakeDir(1, 0);
   };
   document.getElementById('mob-snake-best').textContent = snakeHighScore;
-  initJoystick();
+  initControlSelector();
 }
 
 function mobSnakeTogglePause() {
@@ -1158,12 +1159,28 @@ function mobSnakeTogglePause() {
 }
 
 function mobSnakeDir(dx, dy) {
-  if (mobSnake.locked) return;
-  if (mobSnake.over) { mobSnakeReset(); return; }
-  if (!mobSnake.running && !mobSnake.starting) { mobSnakeStart(); return; }
-  if (!mobSnake.running) return;
-  if (mobSnake.dir.x === -dx && mobSnake.dir.y === -dy) return;
-  mobSnake.nextDir = {x:dx, y:dy};
+  var S = mobSnake;
+  if (S.locked) return;
+  if (S.over) { mobSnakeReset(); return; }
+  if (!S.running && !S.starting) { mobSnakeStart(); return; }
+  if (!S.running) return;
+  // Queue-based direction with 2-move buffer (matches desktop responsiveness)
+  var ref = S.dirQueue.length > 0 ? S.dirQueue[S.dirQueue.length - 1] : S.dir;
+  if (ref.x === -dx && ref.y === -dy) return;
+  if (ref.x === dx && ref.y === dy) return;
+  if (dx !== 0 || dy !== 0) {
+    S.dirQueue.push({x:dx, y:dy});
+    if (S.dirQueue.length > 2) S.dirQueue.shift();
+    // Instant tick if 25%+ of interval elapsed for snappy response
+    var speed = Math.max(20, snakeBaseSpeed - Math.floor(S.score / 3) * 2.65);
+    var elapsed = performance.now() - S.lastTick;
+    if (elapsed > speed * 0.25) {
+      clearTimeout(S.interval);
+      S.lastTick = performance.now();
+      mobSnakeTick();
+      if (S.running && !S.paused) mobSnakeSchedule();
+    }
+  }
 }
 
 function mobSnakeStart() {
@@ -1201,7 +1218,7 @@ function mobSnakeReset() {
   clearTimeout(mobSnake.interval);
   cancelAnimationFrame(mobSnake.animFrame);
   clearInterval(mobSnake.comboTimer);
-  mobSnake.body = [{x:12,y:12}]; mobSnake.prevBody = [{x:12,y:12}]; mobSnake.dir = {x:1,y:0}; mobSnake.nextDir = {x:1,y:0};
+  mobSnake.body = [{x:12,y:12}]; mobSnake.prevBody = [{x:12,y:12}]; mobSnake.dir = {x:1,y:0}; mobSnake.nextDir = {x:1,y:0}; mobSnake.dirQueue = [];
   mobSnake.score = 0; mobSnake.over = false; mobSnake.running = false; mobSnake.starting = false; mobSnake.paused = false; mobSnake.locked = false; mobSnake.particles = []; mobSnake.popups = [];
   mobSnake.eatCount = 0; mobSnake.bonus = null; mobSnake.combo = 0; mobSnake.lastEatTime = 0; mobSnake.comboBanner = null;
   clearTimeout(mobSnake.bonusTimer); snakeColor = '#39d353'; snakeColorSecondary = '#26a641';
@@ -1218,7 +1235,8 @@ function mobSnakeReset() {
 function mobSnakeTick() {
   const S = mobSnake;
   S.prevBody = S.body.map(s => ({x:s.x,y:s.y}));
-  S.dir = S.nextDir;
+  if (S.dirQueue.length > 0) { S.dir = S.dirQueue.shift(); S.nextDir = S.dir; }
+  else S.dir = S.nextDir;
   S.lastTick = performance.now();
   const head = { x: S.body[0].x + S.dir.x, y: S.body[0].y + S.dir.y };
   // Wrap around edges
@@ -1424,4 +1442,129 @@ function mobSnakeDrawGameOver(isNewHigh) {
   }
   ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.font = '10px -apple-system,sans-serif'; ctx.textAlign = 'center';
   ctx.fillText('Reopen Snake to play again', W/2, cy + cardH - 12);
+}
+
+// ===== MOBILE CONTROL SYSTEM =====
+var _swipeCleanup = null; // stores swipe listener removal function
+var _dpadCleanup = null;  // stores dpad listener removal function
+
+function initControlSelector() {
+  var selector = document.getElementById('mob-control-selector');
+  if (!selector) return;
+  var btns = selector.querySelectorAll('.ctrl-mode-btn');
+  var saved = mobSnake.controlMode;
+  btns.forEach(function(btn) {
+    var mode = btn.dataset.mode;
+    btn.classList.toggle('active', mode === saved);
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (mode === mobSnake.controlMode) return;
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      switchControlMode(mode);
+    });
+  });
+  switchControlMode(saved);
+}
+
+function switchControlMode(mode) {
+  mobSnake.controlMode = mode;
+  localStorage.setItem('snakeControlType', mode);
+  // Cleanup previous control listeners
+  if (_swipeCleanup) { _swipeCleanup(); _swipeCleanup = null; }
+  if (_dpadCleanup) { _dpadCleanup(); _dpadCleanup = null; }
+  // Hide all control containers
+  var joystick = document.getElementById('joystick-base');
+  var dpad = document.getElementById('mob-dpad');
+  var swipeHint = document.getElementById('mob-swipe-hint');
+  if (joystick) joystick.style.display = 'none';
+  if (dpad) dpad.style.display = 'none';
+  if (swipeHint) swipeHint.style.display = 'none';
+  // Show + init selected control
+  if (mode === 'wheel') {
+    if (joystick) joystick.style.display = '';
+    initJoystick();
+  } else if (mode === 'dpad') {
+    if (dpad) dpad.style.display = 'grid';
+    _dpadCleanup = initDPad();
+  } else if (mode === 'swipe') {
+    if (swipeHint) swipeHint.style.display = 'flex';
+    _swipeCleanup = initSwipeGestures();
+  }
+}
+
+function initDPad() {
+  var dpad = document.getElementById('mob-dpad');
+  if (!dpad) return null;
+  var dirMap = { up: [0,-1], down: [0,1], left: [-1,0], right: [1,0] };
+  var btns = dpad.querySelectorAll('.dpad-btn');
+  var handlers = [];
+  btns.forEach(function(btn) {
+    var dir = btn.dataset.dir;
+    if (!dir || !dirMap[dir]) return;
+    var onStart = function(e) {
+      e.preventDefault();
+      btn.classList.add('pressed');
+      mobSnakeDir(dirMap[dir][0], dirMap[dir][1]);
+    };
+    var onEnd = function(e) {
+      e.preventDefault();
+      btn.classList.remove('pressed');
+    };
+    btn.addEventListener('touchstart', onStart, { passive: false });
+    btn.addEventListener('touchend', onEnd, { passive: false });
+    btn.addEventListener('touchcancel', onEnd, { passive: false });
+    handlers.push(function() {
+      btn.removeEventListener('touchstart', onStart);
+      btn.removeEventListener('touchend', onEnd);
+      btn.removeEventListener('touchcancel', onEnd);
+      btn.classList.remove('pressed');
+    });
+  });
+  return function() { handlers.forEach(function(h) { h(); }); };
+}
+
+function initSwipeGestures() {
+  var canvas = document.getElementById('mob-snake-canvas');
+  if (!canvas) return null;
+  var startX = 0, startY = 0, tracking = false;
+  var deadZone = 25;
+  var onStart = function(e) {
+    e.preventDefault();
+    if (mobSnake.locked) return;
+    var t = e.touches[0];
+    startX = t.clientX; startY = t.clientY; tracking = true;
+    if (!mobSnake.running && !mobSnake.starting) mobSnakeStart();
+  };
+  var onMove = function(e) {
+    e.preventDefault();
+    if (!tracking || !mobSnake.running) return;
+    var t = e.touches[0];
+    var dx = t.clientX - startX;
+    var dy = t.clientY - startY;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist > deadZone) {
+      if (Math.abs(dx) > Math.abs(dy)) {
+        mobSnakeDir(dx > 0 ? 1 : -1, 0);
+      } else {
+        mobSnakeDir(0, dy > 0 ? 1 : -1);
+      }
+      // Reset origin for continuous swiping
+      startX = t.clientX; startY = t.clientY;
+    }
+  };
+  var onEnd = function(e) {
+    e.preventDefault();
+    tracking = false;
+  };
+  canvas.addEventListener('touchstart', onStart, { passive: false });
+  canvas.addEventListener('touchmove', onMove, { passive: false });
+  canvas.addEventListener('touchend', onEnd, { passive: false });
+  canvas.addEventListener('touchcancel', onEnd, { passive: false });
+  return function() {
+    canvas.removeEventListener('touchstart', onStart);
+    canvas.removeEventListener('touchmove', onMove);
+    canvas.removeEventListener('touchend', onEnd);
+    canvas.removeEventListener('touchcancel', onEnd);
+  };
 }
