@@ -2137,6 +2137,12 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   padding-top: 60px;
 }
+#mobile-snake-expanded {
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+}
 
 @keyframes slideUp {
   from { transform: scale(0); opacity: 0; border-radius: 24px; }

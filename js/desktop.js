@@ -427,6 +427,7 @@ function closeMobileSection(section) {
     'flutter-course': 'mobile-flutter-course-expanded'
   };
   if (section === 'flutter-course' && typeof stopAllFlutterCourseVideos === 'function') stopAllFlutterCourseVideos();
+  if (section === 'snake' && typeof mobSnakeUnlockScroll === 'function') mobSnakeUnlockScroll();
   const elem = document.getElementById(map[section]);
   if (elem) {
     elem.classList.add('closing');

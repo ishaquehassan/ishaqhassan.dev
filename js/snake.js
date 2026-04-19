@@ -1166,9 +1166,28 @@ function initJoystick() {
   base.addEventListener('touchcancel', resetKnob);
 }
 
+var _mobSnakeScrollLock = null;
+function mobSnakeLockScroll() {
+  if (_mobSnakeScrollLock) return;
+  var screen = document.getElementById('mobile-snake-expanded');
+  if (!screen) return;
+  var prevent = function(e) { e.preventDefault(); };
+  screen.addEventListener('touchmove', prevent, { passive: false });
+  document.body.style.overflow = 'hidden';
+  _mobSnakeScrollLock = function() {
+    screen.removeEventListener('touchmove', prevent);
+    document.body.style.overflow = '';
+    _mobSnakeScrollLock = null;
+  };
+}
+function mobSnakeUnlockScroll() {
+  if (_mobSnakeScrollLock) _mobSnakeScrollLock();
+}
+
 function initMobSnake() {
   const canvas = document.getElementById('mob-snake-canvas');
   if (!canvas) return;
+  mobSnakeLockScroll();
   // Use actual rendered container size (flex layout calculates it for us)
   const canvasArea = canvas.parentElement;
   // Force a layout reflow so clientHeight is accurate
