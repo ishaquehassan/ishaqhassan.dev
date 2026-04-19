@@ -595,10 +595,27 @@ body {
 
 /* Swipe hint */
 .mob-swipe-hint {
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  width: 130px; height: 130px; justify-content: center; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  width: 130px; height: 130px; flex-shrink: 0;
 }
-.mob-swipe-hint span { font-size: 10px; color: rgba(255,255,255,0.2); letter-spacing: 0.5px; }
+.swipe-arrows {
+  display: grid; grid-template-columns: 24px auto 24px; grid-template-rows: 24px auto 24px;
+  align-items: center; justify-items: center; gap: 2px;
+}
+.swipe-arrow { color: rgba(74,222,128,0.25); transition: opacity 0.3s; }
+.swipe-up { grid-column: 2; grid-row: 1; animation: swipePulse 2s ease-in-out infinite; }
+.swipe-left { grid-column: 1; grid-row: 2; animation: swipePulse 2s ease-in-out 0.5s infinite; }
+.swipe-right { grid-column: 3; grid-row: 2; animation: swipePulse 2s ease-in-out 1s infinite; }
+.swipe-down { grid-column: 2; grid-row: 3; animation: swipePulse 2s ease-in-out 1.5s infinite; }
+.swipe-label {
+  grid-column: 2; grid-row: 2;
+  font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 0.5px;
+  white-space: nowrap; text-align: center;
+}
+@keyframes swipePulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
 
 /* Virtual Joystick + Action Buttons */
 .mob-snake-controls {
