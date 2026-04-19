@@ -603,10 +603,8 @@ body {
 /* Virtual Joystick + Action Buttons */
 .mob-snake-controls {
   padding: 8px 0 14px; padding-bottom: max(14px, env(safe-area-inset-bottom));
-  display: flex; justify-content: center; align-items: center; flex-shrink: 0;
+  display: flex; justify-content: space-evenly; align-items: center; flex-shrink: 0;
 }
-#mob-snake-restart { flex: 1; display: flex; justify-content: center; }
-#mob-snake-pause { flex: 1; display: flex; justify-content: center; }
 .mob-snake-action-btn {
   width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.1);
   background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.35);
