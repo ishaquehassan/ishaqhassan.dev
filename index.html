@@ -521,7 +521,6 @@
         <div class="menu-dd-sep"></div>
         <div class="menu-dd-item" onclick="openWindow('tech')">Tech Stack</div>
         <div class="menu-dd-item" onclick="openWindow('speaking')">Speaking Events</div>
-        <div class="menu-dd-item" onclick="openWindow('experience')">Experience</div>
         <div class="menu-dd-sep"></div>
         <div class="menu-dd-item" onclick="closeAllWindows()">Close All Windows<span class="shortcut">⌘W</span></div>
       </div>
@@ -646,11 +645,6 @@
         <div><div class="widget-value" style="font-size:28px;">2</div><div class="widget-sub">Approved</div></div>
       </div>
     </div>
-    <div class="widget" onclick="openWindow('about')">
-      <div class="widget-title">Experience</div>
-      <div class="widget-value">13+</div>
-      <div class="widget-sub">Years building software</div>
-    </div>
     <div class="widget" onclick="openWindow('speaking')">
       <div class="widget-title">Community</div>
       <div style="display:flex;gap:16px;margin-top:6px;">
@@ -705,10 +699,6 @@
     <div class="dock-item" onclick="openWindow('speaking')" role="button" aria-label="Open Speaking Events">
       <div class="dock-tooltip">Speaking</div>
       <div class="dock-icon speaking"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3z" fill="#fff"/><path d="M19 10v1a7 7 0 01-14 0v-1M12 18v4m-4 0h8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-    </div>
-    <div class="dock-item" onclick="openWindow('experience')" role="button" aria-label="Open Experience">
-      <div class="dock-tooltip">Experience</div>
-      <div class="dock-icon exp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#fff" stroke-width="1.5"/><path d="M12 12v2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></div>
     </div>
     <div class="dock-item" onclick="openWindow('oss')" role="button" aria-label="Open Open Source">
       <div class="dock-tooltip">Open Source</div>
@@ -856,43 +846,6 @@
   </div>
 </div>
 
-<div class="window" id="win-experience" style="width:700px;height:600px;top:40px;left:calc(50% - 350px);">
-  <div class="window-toolbar" onmousedown="startDrag(event,'win-experience')">
-    <div class="traffic-lights">
-      <div class="traffic-light tl-close" onclick="closeWindow('experience')">✕</div>
-      <div class="traffic-light tl-minimize" onclick="minimizeWindow('experience')">−</div>
-      <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'experience')">+<div class="snap-menu" id="sm-experience"><div class="snap-menu-item" onclick="snapWindow('experience','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('experience','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('experience','top-full',event)">⬆ Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('experience','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('experience','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('experience','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('experience','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
-    </div>
-    <div class="window-title">Experience</div>
-  </div>
-  <div class="window-loader" id="loader-experience"><div class="loader-spinner"></div></div>
-  <div class="window-body">
-    <div style="background:rgba(255,255,255,0.04);padding:16px;border-radius:10px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.06);">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:20px;">📈</span><span style="font-size:14px;font-weight:600;">Career Timeline</span></div>
-        <div style="font-size:12px;color:var(--text2);">16 roles across 13+ years</div>
-      </div>
-    </div>
-    <div style="border-left:2px solid rgba(125,211,252,0.2);padding-left:16px;margin-left:8px;">
-      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:rgba(125,211,252,0.6);box-shadow:0 0 8px rgba(125,211,252,0.4);">
-</div><a href="https://www.linkedin.com/company/35951080/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;transition:all 0.3s;cursor:pointer;">🏢 DigitalHire</a><div class="exp-role">Engineering Manager → Technical Lead → Staff Engineer</div><div class="exp-date">Feb 2023 - Present · 3 yrs 3 mos | McLean, Virginia</div><div class="exp-desc">AI-based video job board. Flutter, Dart, Kotlin, Python, PostgreSQL, Next.js, React Native.</div></div>
-      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:rgba(125,211,252,0.6);box-shadow:0 0 8px rgba(125,211,252,0.4);">
-</div><div class="exp-company" style="font-weight:600;">🎓 Tech Idara</div><div class="exp-role">Senior Instructor</div><div class="exp-date">Dec 2021 - Sep 2024 · 2 yrs 10 mos</div><div class="exp-desc">Flutter course on official Flutter docs.</div></div>
-      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:rgba(125,211,252,0.6);box-shadow:0 0 8px rgba(125,211,252,0.4);">
-</div><a href="https://www.linkedin.com/company/83530314/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;transition:all 0.3s;cursor:pointer;">✈️ AeroGlobe</a><div class="exp-role">Technical Lead</div><div class="exp-date">Jun 2022 - May 2024 · 2 yrs</div><div class="exp-desc">React Native, Python, front-end.</div></div>
-      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:rgba(125,211,252,0.6);box-shadow:0 0 8px rgba(125,211,252,0.4);">
-</div><a href="https://www.linkedin.com/company/7969190/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;transition:all 0.3s;cursor:pointer;">🎫 Sastaticket.pk</a><div class="exp-role">Engineering Consultant</div><div class="exp-date">Jan 2022 - Mar 2024</div><div class="exp-desc">Architecture, Flutter, CI/CD, GitHub Actions.</div></div>
-      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:rgba(125,211,252,0.6);box-shadow:0 0 8px rgba(125,211,252,0.4);">
-</div><div class="exp-company" style="font-weight:600;">📱 Pocket Systems</div><div class="exp-role">Co-Founder</div><div class="exp-date">Jan 2020 - Dec 2022 · 3 yrs</div><div class="exp-desc">International market, React Native, Socket Programming.</div></div>
-      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:rgba(125,211,252,0.6);box-shadow:0 0 8px rgba(125,211,252,0.4);">
-</div><a href="https://www.linkedin.com/company/11753853/" target="_blank" rel="noopener noreferrer" class="exp-company" style="color:var(--text);text-decoration:none;font-weight:600;">🌍 Optimyse</a><div class="exp-role">Lead Software Engineer</div><div class="exp-date">Feb 2019 - Dec 2021 · 2 yrs 11 mos | Estonia</div><div class="exp-desc">Full stack teams, cross-platform mobile.</div></div>
-      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:rgba(125,211,252,0.6);box-shadow:0 0 8px rgba(125,211,252,0.4);">
-</div><div class="exp-company" style="font-weight:600;">🚀 Cyber Avanza</div><div class="exp-role">Co-Founder</div><div class="exp-date">Sep 2016 - Dec 2018 · 2 yrs 4 mos</div><div class="exp-desc">Android/iOS native development.</div></div>
-      <div class="exp-item" style="position:relative;padding-left:16px;"><div style="position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:rgba(125,211,252,0.6);box-shadow:0 0 8px rgba(125,211,252,0.4);">
-</div><div class="exp-company" style="font-weight:600;">💻 VividVisionz</div><div class="exp-role">Mobile + Web Developer</div><div class="exp-date">Feb 2013 - Feb 2019 · 6 yrs</div><div class="exp-desc">Android, iOS, PHP, MySQL, JavaScript.</div></div>
-    </div>
-  </div>
-</div>
 
 <div class="window" id="win-oss" style="width:700px;height:580px;top:40px;left:calc(50% - 350px);">
   <div class="window-toolbar" onmousedown="startDrag(event,'win-oss')">
@@ -1581,14 +1534,6 @@
 
     <!-- SECTIONS: Bento Grid -->
     <div class="mobile-sections">
-      <div class="mob-bento mob-bento-wide mobile-section-card" onclick="expandMobileSection(event,'experience')" data-accent="cyan">
-        <div class="mob-card-glow"></div>
-        <span class="mob-bento-badge">13+ yrs</span>
-        <span class="mob-bento-icon">💼</span>
-        <span class="mob-bento-title">Experience</span>
-        <svg class="mob-card-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-
       <div class="mob-bento mobile-section-card" onclick="expandMobileSection(event,'prs')" data-accent="purple">
         <div class="mob-card-glow"></div>
         <span class="mob-bento-badge">5</span>
@@ -1648,73 +1593,6 @@
   </div>
 
   <!-- EXPANDED SECTIONS -->
-
-  <!-- EXPERIENCE EXPANDED -->
-  <div id="mobile-experience-expanded" class="mobile-expanded" style="display: none;">
-    <div class="mobile-expanded-header">
-      <button class="mobile-back-btn" onclick="closeMobileSection('experience')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
-      <div class="mobile-expanded-title">Experience</div>
-      <div style="width: 40px;"></div>
-    </div>
-    <div class="mobile-expanded-content">
-      <div class="mobile-exp-item">
-        <a href="https://www.linkedin.com/company/35951080/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-          <div class="mobile-exp-company">🏢 DigitalHire</div>
-        </a>
-        <div class="mobile-exp-role">Engineering Manager → Technical Lead → Staff Engineer</div>
-        <div class="mobile-exp-date">Feb 2023 - Present · 3 yrs 3 mos | McLean, Virginia</div>
-        <div class="mobile-exp-desc">AI-based video job board. Flutter, Dart, Kotlin, Python, PostgreSQL, Next.js, React Native.</div>
-      </div>
-      <div class="mobile-exp-item">
-        <div class="mobile-exp-company">🎓 Tech Idara</div>
-        <div class="mobile-exp-role">Senior Instructor</div>
-        <div class="mobile-exp-date">Dec 2021 - Sep 2024 · 2 yrs 10 mos</div>
-        <div class="mobile-exp-desc">Flutter course on official Flutter docs.</div>
-      </div>
-      <div class="mobile-exp-item">
-        <a href="https://www.linkedin.com/company/83530314/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-          <div class="mobile-exp-company">✈️ AeroGlobe</div>
-        </a>
-        <div class="mobile-exp-role">Technical Lead</div>
-        <div class="mobile-exp-date">Jun 2022 - May 2024 · 2 yrs</div>
-        <div class="mobile-exp-desc">React Native, Python, front-end.</div>
-      </div>
-      <div class="mobile-exp-item">
-        <a href="https://www.linkedin.com/company/7969190/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-          <div class="mobile-exp-company">🎫 Sastaticket.pk</div>
-        </a>
-        <div class="mobile-exp-role">Engineering Consultant</div>
-        <div class="mobile-exp-date">Jan 2022 - Mar 2024</div>
-        <div class="mobile-exp-desc">Architecture, Flutter, CI/CD, GitHub Actions.</div>
-      </div>
-      <div class="mobile-exp-item">
-        <div class="mobile-exp-company">📱 Pocket Systems</div>
-        <div class="mobile-exp-role">Co-Founder</div>
-        <div class="mobile-exp-date">Jan 2020 - Dec 2022 · 3 yrs</div>
-        <div class="mobile-exp-desc">International market, React Native, Socket Programming.</div>
-      </div>
-      <div class="mobile-exp-item">
-        <a href="https://www.linkedin.com/company/11753853/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-          <div class="mobile-exp-company">🌍 Optimyse</div>
-        </a>
-        <div class="mobile-exp-role">Lead Software Engineer</div>
-        <div class="mobile-exp-date">Feb 2019 - Dec 2021 · 2 yrs 11 mos | Estonia</div>
-        <div class="mobile-exp-desc">Full stack teams, cross-platform mobile.</div>
-      </div>
-      <div class="mobile-exp-item">
-        <div class="mobile-exp-company">🚀 Cyber Avanza</div>
-        <div class="mobile-exp-role">Co-Founder</div>
-        <div class="mobile-exp-date">Sep 2016 - Dec 2018 · 2 yrs 4 mos</div>
-        <div class="mobile-exp-desc">Android/iOS native development.</div>
-      </div>
-      <div class="mobile-exp-item">
-        <div class="mobile-exp-company">💻 VividVisionz</div>
-        <div class="mobile-exp-role">Mobile + Web Developer</div>
-        <div class="mobile-exp-date">Feb 2013 - Feb 2019 · 6 yrs</div>
-        <div class="mobile-exp-desc">Android, iOS, PHP, MySQL, JavaScript.</div>
-      </div>
-    </div>
-  </div>
 
   <!-- FLUTTER PRs EXPANDED -->
   <div id="mobile-prs-expanded" class="mobile-expanded" style="display: none;">
@@ -2327,20 +2205,6 @@
           <div class="mob-stat-sep" style="height:24px;"></div>
           <div class="mob-li-stat"><span class="mob-li-stat-num">500+</span><span class="mob-li-stat-label">Connections</span></div>
         </div>
-      </div>
-
-      <h3 class="mob-section-heading">Experience</h3>
-      <div class="mob-timeline">
-        <div class="mob-tl-item mob-tl-active"><div class="mob-tl-dot"></div><div class="mob-tl-content"><div class="mob-tl-company">DigitalHire</div><div class="mob-tl-role">Engineering Manager</div><div class="mob-tl-date">May 2024 ‑ Present</div></div></div>
-        <div class="mob-tl-item"><div class="mob-tl-dot"></div><div class="mob-tl-content"><div class="mob-tl-company">DigitalHire</div><div class="mob-tl-role">Technical Lead</div><div class="mob-tl-date">Oct 2023 ‑ May 2024</div></div></div>
-        <div class="mob-tl-item"><div class="mob-tl-dot"></div><div class="mob-tl-content"><div class="mob-tl-company">DigitalHire</div><div class="mob-tl-role">Staff Engineer</div><div class="mob-tl-date">Feb 2023 ‑ Oct 2023</div></div></div>
-        <div class="mob-tl-item"><div class="mob-tl-dot"></div><div class="mob-tl-content"><div class="mob-tl-company">Tech Idara</div><div class="mob-tl-role">Senior Instructor</div><div class="mob-tl-date">Dec 2021 ‑ Sep 2024</div></div></div>
-        <div class="mob-tl-item"><div class="mob-tl-dot"></div><div class="mob-tl-content"><div class="mob-tl-company">AeroGlobe</div><div class="mob-tl-role">Technical Lead</div><div class="mob-tl-date">Jun 2022 ‑ May 2024</div></div></div>
-        <div class="mob-tl-item"><div class="mob-tl-dot"></div><div class="mob-tl-content"><div class="mob-tl-company">Sastaticket.pk</div><div class="mob-tl-role">Engineering Consultant</div><div class="mob-tl-date">Jan 2022 ‑ Mar 2024</div></div></div>
-        <div class="mob-tl-item"><div class="mob-tl-dot"></div><div class="mob-tl-content"><div class="mob-tl-company">Pocket Systems</div><div class="mob-tl-role">Co-Founder</div><div class="mob-tl-date">Jan 2020 ‑ Dec 2022</div></div></div>
-        <div class="mob-tl-item"><div class="mob-tl-dot"></div><div class="mob-tl-content"><div class="mob-tl-company">Optimyse (Estonia)</div><div class="mob-tl-role">Lead Software Engineer</div><div class="mob-tl-date">Feb 2019 ‑ Dec 2021</div></div></div>
-        <div class="mob-tl-item"><div class="mob-tl-dot"></div><div class="mob-tl-content"><div class="mob-tl-company">Cyber Avanza</div><div class="mob-tl-role">Co-Founder</div><div class="mob-tl-date">Sep 2016 ‑ Dec 2018</div></div></div>
-        <div class="mob-tl-item"><div class="mob-tl-dot"></div><div class="mob-tl-content"><div class="mob-tl-company">VividVisionz</div><div class="mob-tl-role">Mobile & Web Developer</div><div class="mob-tl-date">Feb 2013 ‑ Feb 2019</div></div></div>
       </div>
 
       <a href="https://linkedin.com/in/ishaquehassan" target="_blank" rel="noopener noreferrer" class="mob-li-cta">

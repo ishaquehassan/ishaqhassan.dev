@@ -158,7 +158,7 @@ document.addEventListener('click', function(e) {
 });
 
 function openAllWindows() {
-  ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin'].forEach((id, i) => {
+  ['about','flutter','speaking','oss','tech','articles','contact','github','linkedin'].forEach((id, i) => {
     setTimeout(() => openWindow(id), i * 150);
   });
 }
@@ -340,7 +340,7 @@ function openWindow(id) {
 
   // Bounce dock icon
   const dockItems = document.querySelectorAll('.dock-item');
-  const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake','flutter-course'];
+  const names = ['about','flutter','speaking','oss','tech','articles','contact','github','linkedin','snake','flutter-course'];
   const idx = names.indexOf(id);
   if (idx >= 0 && dockItems[idx]) {
     dockItems[idx].querySelector('.dock-icon').classList.add('dock-bounce');
@@ -504,7 +504,7 @@ function startTerminal() {
     { type: 'out', text: '  <span class="str">role</span>      : Full Stack Developer & Engineering Manager' },
     { type: 'out', text: '  <span class="str">focus</span>     : Flutter Framework | Mobile Development' },
     { type: 'out', text: '  <span class="str">company</span>   : DigitalHire (world\'s first integrated talent engine)' },
-    { type: 'out', text: '  <span class="str">experience</span>: 13+ years in software development' },
+    { type: 'out', text: '  <span class="str">years</span>     : 13+ years in software development' },
     { type: 'out', text: '  <span class="str">location</span>  : Karachi, Pakistan 🇵🇰' },
     { type: 'out', text: '' },
     { type: 'cmd', text: '<span class="prompt">ishaq@dev</span> <span class="cmd">~</span> $ <span class="cmd">cat</span> <span class="flag">achievements.md</span>' },
@@ -940,7 +940,6 @@ var spotlightIndex = [
   {t:'About Me',s:'Terminal, Profile, System Info',w:'about',cat:'Applications',icon:'💻',p:100},
   {t:'Flutter PRs',s:'Framework Contributions, Merged Pull Requests',w:'flutter',cat:'Applications',icon:'💙',p:100},
   {t:'Speaking & Community',s:'Events, Conferences, GDG',w:'speaking',cat:'Applications',icon:'🎤',p:100},
-  {t:'Experience',s:'Career Timeline, Work History',w:'experience',cat:'Applications',icon:'💼',p:100},
   {t:'Open Source',s:'GitHub Repos, Packages, Plugins',w:'oss',cat:'Applications',icon:'📦',p:100},
   {t:'Tech Stack',s:'Technologies, Skills, Languages',w:'tech',cat:'Applications',icon:'⚙️',p:100},
   {t:'Articles',s:'Blog Posts, Medium, Writing',w:'articles',cat:'Applications',icon:'📝',p:100},
@@ -949,16 +948,6 @@ var spotlightIndex = [
   {t:'LinkedIn',s:'Professional Profile, Network',w:'linkedin',cat:'Applications',icon:'💼',p:100},
   {t:'Snake Game',s:'Neon Arcade Game',w:'snake',cat:'Applications',icon:'🎮',p:100},
   {t:'Flutter Course',s:'35 Videos, Urdu, Tech Idara',w:'flutter-course',cat:'Applications',icon:'🎬',p:100},
-
-  // Experience
-  {t:'DigitalHire',s:'Engineering Manager, Technical Lead, Staff Engineer',w:'experience',cat:'Experience',icon:'🏢',el:'#win-experience .exp-item:nth-child(1)',p:80},
-  {t:'Tech Idara',s:'Senior Instructor, Flutter Course',w:'experience',cat:'Experience',icon:'🎓',el:'#win-experience .exp-item:nth-child(2)',p:80},
-  {t:'AeroGlobe',s:'Technical Lead, React Native, Python',w:'experience',cat:'Experience',icon:'✈️',el:'#win-experience .exp-item:nth-child(3)',p:80},
-  {t:'Sastaticket.pk',s:'Engineering Consultant, Flutter, CI/CD',w:'experience',cat:'Experience',icon:'🎫',el:'#win-experience .exp-item:nth-child(4)',p:80},
-  {t:'Pocket Systems',s:'Co-Founder, React Native',w:'experience',cat:'Experience',icon:'📱',el:'#win-experience .exp-item:nth-child(5)',p:80},
-  {t:'Optimyse',s:'Lead Software Engineer, Estonia',w:'experience',cat:'Experience',icon:'🌍',el:'#win-experience .exp-item:nth-child(6)',p:80},
-  {t:'Cyber Avanza',s:'Co-Founder, Android, iOS',w:'experience',cat:'Experience',icon:'🚀',el:'#win-experience .exp-item:nth-child(7)',p:80},
-  {t:'VividVisionz',s:'Mobile + Web Developer, 6 years',w:'experience',cat:'Experience',icon:'💻',el:'#win-experience .exp-item:nth-child(8)',p:80},
 
   // Flutter PRs
   {t:'Fix AnimatedCrossFade clipBehavior forwarding',s:'flutter/flutter #183081, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(1)',p:70},
@@ -1186,7 +1175,7 @@ function activateSpotlightItem(idx) {
         }, 400);
       }
     } else {
-      var mobileMap = {about:'experience',flutter:'prs',speaking:'speaking',experience:'experience',oss:'oss',tech:'tech',articles:'articles',contact:'connect',github:'github',linkedin:'linkedin',snake:'snake','flutter-course':'flutter-course'};
+      var mobileMap = {about:'about',flutter:'prs',speaking:'speaking',oss:'oss',tech:'tech',articles:'articles',contact:'connect',github:'github',linkedin:'linkedin',snake:'snake','flutter-course':'flutter-course'};
       var section = mobileMap[item.w] || item.w;
       if (typeof expandMobileSection === 'function') expandMobileSection(null, section);
     }
@@ -1320,7 +1309,7 @@ var winStateKey = 'ishaq_win_state';
 
 function saveWindowStates() {
   var state = {};
-  var allIds = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake','flutter-course','fc-player'];
+  var allIds = ['about','flutter','speaking','oss','tech','articles','contact','github','linkedin','snake','flutter-course','fc-player'];
   allIds.forEach(function(id) {
     var win = document.getElementById('win-' + id);
     if (!win) return;
@@ -1389,7 +1378,7 @@ window.addEventListener('beforeunload', saveWindowStates);
 
 // Clamp all windows on resize
 window.addEventListener('resize', function() {
-  var allIds = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake','flutter-course','fc-player'];
+  var allIds = ['about','flutter','speaking','oss','tech','articles','contact','github','linkedin','snake','flutter-course','fc-player'];
   allIds.forEach(function(id) {
     if (!openWindows[id]) return;
     var win = document.getElementById('win-' + id);
@@ -1433,13 +1422,7 @@ var appMenus = {
     name: 'Speaking',
     nameMenu: '<div class="menu-dd-item disabled">10+ Events, GDG Mentor</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://x.com/GDGKolachi\')">GDG Kolachi</div>',
     file: '<div class="menu-dd-item" onclick="window.open(\'https://www.facebook.com/GDGKolachi/posts/720743396758626/\')">Google I/O Extended</div><div class="menu-dd-item" onclick="window.open(\'https://gdg.community.dev/events/details/google-gdg-kolachi-presents-flutter-bootcamp/\')">Flutter Bootcamp</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5\')">DevNCode Meetup IV</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'speaking\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="window.open(\'https://linkedin.com/in/ishaquehassan\')">LinkedIn</div><div class="menu-dd-item" onclick="openWindow(\'experience\')">Experience</div>'
-  },
-  experience: {
-    name: 'Experience',
-    nameMenu: '<div class="menu-dd-item disabled">16 Roles, 13+ Years</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://linkedin.com/in/ishaquehassan\')">View Full on LinkedIn</div>',
-    file: '<div class="menu-dd-item" onclick="window.open(\'https://www.linkedin.com/company/35951080/\')">DigitalHire</div><div class="menu-dd-item" onclick="window.open(\'https://www.linkedin.com/company/83530314/\')">AeroGlobe</div><div class="menu-dd-item" onclick="window.open(\'https://www.linkedin.com/company/7969190/\')">Sastaticket.pk</div><div class="menu-dd-item" onclick="window.open(\'https://www.linkedin.com/company/11753853/\')">Optimyse</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'experience\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="openWindow(\'tech\')">Tech Stack</div><div class="menu-dd-item" onclick="openWindow(\'speaking\')">Speaking</div>'
+    go: '<div class="menu-dd-item" onclick="window.open(\'https://linkedin.com/in/ishaquehassan\')">LinkedIn</div>'
   },
   oss: {
     name: 'Open Source',
@@ -1475,7 +1458,7 @@ var appMenus = {
     name: 'LinkedIn',
     nameMenu: '<div class="menu-dd-item disabled">@ishaquehassan</div><div class="menu-dd-item disabled">Engineering Manager</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://linkedin.com/in/ishaquehassan\')">Open in Browser</div>',
     file: '<div class="menu-dd-item" onclick="window.open(\'https://linkedin.com/in/ishaquehassan\')">View Profile</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'linkedin\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="openWindow(\'experience\')">Experience</div><div class="menu-dd-item" onclick="openWindow(\'speaking\')">Speaking</div>'
+    go: '<div class="menu-dd-item" onclick="openWindow(\'speaking\')">Speaking</div>'
   },
   snake: {
     name: 'Snake Neon',

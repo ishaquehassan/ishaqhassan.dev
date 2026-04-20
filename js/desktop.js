@@ -345,7 +345,6 @@ var activeMobileSection = null;
 
 function expandMobileSection(evt, section) {
   const map = {
-    'experience': 'mobile-experience-expanded',
     'prs': 'mobile-prs-expanded',
     'speaking': 'mobile-speaking-expanded',
     'oss': 'mobile-oss-expanded',
@@ -413,7 +412,6 @@ window.addEventListener('popstate', function(e) {
 
 function closeMobileSection(section) {
   const map = {
-    'experience': 'mobile-experience-expanded',
     'prs': 'mobile-prs-expanded',
     'speaking': 'mobile-speaking-expanded',
     'oss': 'mobile-oss-expanded',
@@ -978,7 +976,7 @@ document.querySelectorAll('.window-toolbar').forEach(toolbar => {
 // ===== MULTIPLE DESKTOPS (SPACES) =====
 // Each desktop saves/restores FULL window state independently.
 // Same app can be open on multiple desktops. No cross-contamination.
-const allWindowIds = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake','flutter-course','fc-player'];
+const allWindowIds = ['about','flutter','speaking','oss','tech','articles','contact','github','linkedin','snake','flutter-course','fc-player'];
 let desktops = [{ id: 0, name: 'Desktop 1' }];
 let currentDesktopId = 0;
 let nextDesktopId = 1;
@@ -1041,7 +1039,7 @@ function restoreDesktopState(dId) {
 // Sync dock active dots with current open windows
 function syncDockIndicators() {
   const dockItems = document.querySelectorAll('.dock-item');
-  const names = ['about','flutter','speaking','experience','oss','tech','articles','contact','github','linkedin','snake','flutter-course'];
+  const names = ['about','flutter','speaking','oss','tech','articles','contact','github','linkedin','snake','flutter-course'];
   names.forEach((id, idx) => {
     if (!dockItems[idx]) return;
     if (openWindows[id]) {
@@ -1133,7 +1131,7 @@ document.addEventListener('keydown', (e) => {
 let inMissionControl = false;
 
 const winIcons = {
-  about: '💻', flutter: '💙', speaking: '🎤', experience: '💼',
+  about: '💻', flutter: '💙', speaking: '🎤',
   oss: '🔓', tech: '⚙️', articles: '📝', contact: '✉️',
   github: '🐙', linkedin: '💼'
 };
