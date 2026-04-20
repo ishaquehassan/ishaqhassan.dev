@@ -1241,11 +1241,11 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #0b1120;
+  background: #181818;
   border: 2px solid rgba(125,211,252,0.55);
   box-shadow: 0 0 8px rgba(125,211,252,0.25);
   transition: all 0.25s ease;
-  z-index: 1;
+  z-index: 2;
 }
 .li-tl-item:hover .li-tl-dot {
   border-color: #7dd3fc;
