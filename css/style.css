@@ -3058,7 +3058,7 @@ a.li-tl-company:hover { color: #7dd3fc; }
 .mob-timeline::before {
   content: '';
   position: absolute;
-  left: 9px;
+  left: 10px;
   top: 22px;
   bottom: 22px;
   width: 2px;
