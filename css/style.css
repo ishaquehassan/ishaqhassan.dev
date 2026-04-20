@@ -1215,9 +1215,18 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 /* LinkedIn Timeline Tree */
 .li-timeline {
   position: relative;
-  padding-left: 28px;
-  margin-left: 6px;
-  border-left: 2px solid rgba(125,211,252,0.25);
+  padding: 4px 0 4px 36px;
+  margin: 0;
+}
+.li-timeline::before {
+  content: "";
+  position: absolute;
+  left: 11px;
+  top: 16px;
+  bottom: 16px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(125,211,252,0.6) 0%, rgba(125,211,252,0.3) 55%, rgba(125,211,252,0.1) 100%);
+  border-radius: 2px;
 }
 .li-tl-item {
   position: relative;
@@ -1227,25 +1236,32 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 .li-tl-item:last-child { border-bottom: none; }
 .li-tl-dot {
   position: absolute;
-  left: -35px;
+  left: -30px;
   top: 20px;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: rgba(125,211,252,0.5);
-  border: 2px solid rgba(125,211,252,0.3);
-  box-shadow: 0 0 8px rgba(125,211,252,0.2);
+  background: #0b1120;
+  border: 2px solid rgba(125,211,252,0.55);
+  box-shadow: 0 0 8px rgba(125,211,252,0.25);
+  transition: all 0.25s ease;
+  z-index: 1;
+}
+.li-tl-item:hover .li-tl-dot {
+  border-color: #7dd3fc;
+  background: rgba(125,211,252,0.25);
+  box-shadow: 0 0 14px rgba(125,211,252,0.5);
 }
 .li-tl-active .li-tl-dot {
   background: #7dd3fc;
   border-color: #7dd3fc;
-  box-shadow: 0 0 14px rgba(125,211,252,0.6);
-  width: 12px;
-  height: 12px;
-  left: -36px;
+  box-shadow: 0 0 18px rgba(125,211,252,0.7), 0 0 4px rgba(125,211,252,0.9);
+  width: 14px;
+  height: 14px;
+  left: -31px;
   top: 19px;
 }
-.li-tl-content { padding-left: 4px; }
+.li-tl-content { padding-left: 6px; }
 .li-tl-company {
   font-size: 15px;
   font-weight: 700;
