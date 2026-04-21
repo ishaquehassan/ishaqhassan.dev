@@ -111,6 +111,26 @@ function closeAboutDialog() {
 let activeMenu = null;
 let activeParent = null;
 
+// Detach all menu dropdowns to body at init so they escape widget backdrop-filter
+// stacking contexts (widgets' blur creates a paint layer that covers menus even at z:99999)
+const menuDropdownMap = new Map(); // parent → dropdown
+document.querySelectorAll('.menu-parent[data-menu]').forEach(parent => {
+  const dd = parent.querySelector(':scope > .menu-dropdown');
+  if (dd) {
+    menuDropdownMap.set(parent, dd);
+    document.body.appendChild(dd);
+    dd.dataset.anchorMenu = parent.dataset.menu;
+    dd.style.position = 'fixed';
+    dd.style.zIndex = '9999999';
+  }
+});
+
+function positionDropdown(parent, menu) {
+  const r = parent.getBoundingClientRect();
+  menu.style.top = r.bottom + 'px';
+  menu.style.left = r.left + 'px';
+}
+
 function closeActiveMenu() {
   if (activeMenu) activeMenu.classList.remove('show');
   if (activeParent) activeParent.classList.remove('open');
@@ -119,10 +139,11 @@ function closeActiveMenu() {
 }
 
 function openMenu(parent) {
-  const menu = parent.querySelector('.menu-dropdown');
+  const menu = menuDropdownMap.get(parent) || parent.querySelector('.menu-dropdown');
   if (!menu) return;
   if (activeMenu === menu) { closeActiveMenu(); return; }
   closeActiveMenu();
+  positionDropdown(parent, menu);
   menu.classList.add('show');
   parent.classList.add('open');
   activeMenu = menu;
@@ -141,9 +162,14 @@ document.querySelectorAll('.menu-parent[data-menu]').forEach(parent => {
   // Hover switch when a menu is already open
   parent.addEventListener('mouseenter', () => {
     if (!activeMenu) return;
-    const menu = parent.querySelector('.menu-dropdown');
+    const menu = menuDropdownMap.get(parent) || parent.querySelector('.menu-dropdown');
     if (menu && menu !== activeMenu) openMenu(parent);
   });
+});
+
+// Re-position active menu on window resize
+window.addEventListener('resize', () => {
+  if (activeMenu && activeParent) positionDropdown(activeParent, activeMenu);
 });
 
 // Click outside to close
@@ -570,7 +596,7 @@ document.addEventListener('mouseenter', (e) => {
 
 // ===== FLUTTER COURSE =====
 const fcVideos = [
-  {id:'DB51xmXlaX4',t:'Basics Of Computers & Why Flutter',s:'Dart Basics'},
+  {id:'DB51xmXlaX4',t:'Basics Of Computers & Why Flutter',s:'Foundation'},
   {id:'i6NyxOIDPAg',t:'Variables & Types',s:'Dart Basics'},
   {id:'EwfsrybbU20',t:'Lists / Maps / Control Flow',s:'Dart Basics'},
   {id:'GJpmATFL3JQ',t:'Loops / Scope / break',s:'Dart Basics'},
@@ -606,7 +632,7 @@ const fcVideos = [
   {id:'414Ulz9HjMs',t:'Local Database / SQLite / ORM / Floor',s:'Advanced'},
   {id:'b_MPN5n8g6o',t:'Deploying Flutter Web / Github Actions',s:'Advanced'}
 ];
-const fcSectionOrder = ['Dart Basics','OOP','Foundation','Flutter UI','State Management','API & Network','Advanced'];
+const fcSectionOrder = ['Foundation','Dart Basics','OOP','Flutter UI','State Management','API & Network','Advanced'];
 let fcCurrentVideo = null;
 let fcGridRendered = false;
 
@@ -615,6 +641,51 @@ function initFlutterCourse() {
     renderFlutterCourseGrid();
     fcGridRendered = true;
   }
+  fcInitHeroScroll();
+}
+
+/* Hero scroll-collapse: listens to .fc-sections scroll, toggles .fc-header-compact
+   with hysteresis (collapse at 28px, expand at 8px). Drives --fc-scroll CSS var
+   for parallax orb AND scroll-progress bar (0→1 mapped to full scroll range). */
+function fcInitHeroScroll() {
+  var win = document.getElementById('win-flutter-course');
+  if (!win) return;
+  var sections = win.querySelector('.fc-sections');
+  var header = win.querySelector('.fc-header');
+  if (!sections || !header || sections._fcHeroBound) return;
+  sections._fcHeroBound = true;
+
+  // Inject scroll progress bar (thin cyan neon line at bottom of header)
+  if (!header.querySelector('.fc-header-progress')) {
+    var bar = document.createElement('div');
+    bar.className = 'fc-header-progress';
+    header.appendChild(bar);
+  }
+
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    setTimeout(function() {
+      var st = sections.scrollTop;
+      var maxScroll = Math.max(1, sections.scrollHeight - sections.clientHeight);
+      // Parallax ratio (0-120px range, for orb)
+      var orbRatio = Math.min(1, Math.max(0, st / 120));
+      // Progress ratio (full scroll range, for progress bar)
+      var progressRatio = Math.min(1, Math.max(0, st / maxScroll));
+      header.style.setProperty('--fc-scroll', orbRatio.toFixed(3));
+      var progressEl = header.querySelector('.fc-header-progress');
+      if (progressEl) progressEl.style.setProperty('--fc-scroll', progressRatio.toFixed(3));
+      var compact = header.classList.contains('fc-header-compact');
+      if (!compact && st > 28) {
+        header.classList.add('fc-header-compact');
+      } else if (compact && st < 8) {
+        header.classList.remove('fc-header-compact');
+      }
+      ticking = false;
+    }, 16);
+  }
+  sections.addEventListener('scroll', onScroll, { passive: true });
 }
 
 function fcGroupVideos() {
@@ -662,13 +733,14 @@ function playFcVideo(i) {
 
   // Update player content
   var startTime = getVideoProgress(i);
-  document.getElementById('fc-pw-iframe').src = 'https://www.youtube.com/embed/' + v.id + '?autoplay=1&rel=0&enablejsapi=1' + (startTime > 5 ? '&start=' + Math.floor(startTime) : '');
-  document.getElementById('fc-pw-title').textContent = v.t;
-  document.getElementById('fc-pw-counter').textContent = (i + 1) + ' / ' + fcVideos.length;
-  document.getElementById('fc-pw-section').textContent = v.s;
-  document.getElementById('fc-pw-vidnum').textContent = v.t;
-  document.getElementById('fc-pw-prev').disabled = i === 0;
-  document.getElementById('fc-pw-next').disabled = i === fcVideos.length - 1;
+  var $ = function(id) { return document.getElementById(id); };
+  if ($('fc-pw-iframe')) $('fc-pw-iframe').src = 'https://www.youtube.com/embed/' + v.id + '?autoplay=1&rel=0&enablejsapi=1' + (startTime > 5 ? '&start=' + Math.floor(startTime) : '');
+  if ($('fc-pw-title')) $('fc-pw-title').textContent = v.t;
+  if ($('fc-pw-counter')) $('fc-pw-counter').textContent = (i + 1) + ' / ' + fcVideos.length;
+  if ($('fc-pw-section')) $('fc-pw-section').textContent = v.s;
+  if ($('fc-pw-vidnum')) $('fc-pw-vidnum').textContent = v.t;
+  if ($('fc-pw-prev')) $('fc-pw-prev').disabled = i === 0;
+  if ($('fc-pw-next')) $('fc-pw-next').disabled = i === fcVideos.length - 1;
 }
 
 function closeFcPlayer() {
@@ -1270,32 +1342,67 @@ function saveVideoProgress(idx, seconds) {
   } catch(e) {}
 }
 
-// Poll YouTube iframe for current time via postMessage
+// Poll YouTube iframe for current time via postMessage.
+// Flow: on iframe load send "listening" + subscribe to onStateChange events,
+// then poll getCurrentTime every 3s. YouTube responds with infoDelivery events.
 var fcProgressInterval = null;
+var fcProgressHandshakeTimeout = null;
+
+function fcYTHandshake(iframe) {
+  if (!iframe || !iframe.contentWindow) return;
+  try {
+    // Start handshake: tell YT iframe we're listening
+    iframe.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'fc-player', channel: 'widget' }), '*');
+    // Subscribe to state + info change events (triggers infoDelivery broadcasts)
+    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'addEventListener', args: ['onStateChange'] }), '*');
+    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'addEventListener', args: ['onReady'] }), '*');
+  } catch(e) {}
+}
+
 function startProgressTracking() {
   clearInterval(fcProgressInterval);
+  clearTimeout(fcProgressHandshakeTimeout);
+  // Give iframe time to load, then handshake
+  fcProgressHandshakeTimeout = setTimeout(function() {
+    var iframe = document.getElementById('fc-pw-iframe');
+    if (!iframe || !iframe.src) iframe = document.querySelector('.mfc-player-iframe');
+    fcYTHandshake(iframe);
+  }, 800);
+  // Poll currentTime every 3s
   fcProgressInterval = setInterval(function() {
     if (fcCurrentVideo === null) { clearInterval(fcProgressInterval); return; }
     var iframe = document.getElementById('fc-pw-iframe');
-    if (!iframe) iframe = document.querySelector('.mfc-player-iframe');
+    if (!iframe || !iframe.src) iframe = document.querySelector('.mfc-player-iframe');
     if (iframe && iframe.contentWindow) {
       try {
-        iframe.contentWindow.postMessage('{"event":"command","func":"getCurrentTime","args":""}', '*');
+        iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'getCurrentTime', args: '' }), '*');
       } catch(e) {}
     }
-  }, 5000);
+  }, 3000);
 }
 
 window.addEventListener('message', function(e) {
   if (!e.data || typeof e.data !== 'string') return;
   try {
     var msg = JSON.parse(e.data);
-    if (msg.event === 'infoDelivery' && msg.info && typeof msg.info.currentTime === 'number') {
-      if (fcCurrentVideo !== null && msg.info.currentTime > 0) {
-        saveVideoProgress(fcCurrentVideo, msg.info.currentTime);
+    if ((msg.event === 'infoDelivery' || msg.event === 'onStateChange') && msg.info) {
+      var t = null;
+      if (typeof msg.info === 'number') t = msg.info; // onStateChange sometimes sends number
+      if (msg.info && typeof msg.info.currentTime === 'number') t = msg.info.currentTime;
+      if (fcCurrentVideo !== null && t !== null && t > 0) {
+        saveVideoProgress(fcCurrentVideo, t);
       }
     }
-  } catch(e) {}
+  } catch(err) {}
+});
+
+// Also save progress when window/tab unloads
+window.addEventListener('beforeunload', function() {
+  // Attempt one last getCurrentTime; browser may not deliver before unload but no harm
+  var iframe = document.getElementById('fc-pw-iframe') || document.querySelector('.mfc-player-iframe');
+  if (iframe && iframe.contentWindow) {
+    try { iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'getCurrentTime', args: '' }), '*'); } catch(e) {}
+  }
 });
 
 // Start tracking when video plays
@@ -1396,6 +1503,632 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }, 500);
 });
+
+/* ===== FINDER SHELL (native macOS Finder layout: sidebar + content) =====
+   Runs on DOMContentLoaded. Reshapes eligible windows into:
+   .window-toolbar -> .wt-left (traffic lights) + .wt-right (nav/title/actions)
+   .window-body -> .fshell-sidebar + .fshell-content (wraps existing content)
+   Drag binding (.window-toolbar onmousedown), traffic-light guard, resize handles,
+   all smart features untouched. */
+var FSHELL_ICONS = {
+  all:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+  check:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>',
+  clock:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  eye:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>',
+  star:      '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>',
+  mic:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v3"/></svg>',
+  university:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 4 2 10l10 6 10-6z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>',
+  globe:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>',
+  code:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+  package:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.3 7 12 12 20.7 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>',
+  mobile:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>',
+  browser:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/></svg>',
+  server:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="8" rx="1"/><rect x="2" y="13" width="20" height="8" rx="1"/><line x1="6" y1="7" x2="6" y2="7"/><line x1="6" y1="17" x2="6" y2="17"/></svg>',
+  settings:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>',
+  briefcase: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>',
+  mail:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+  link:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>',
+  article:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>',
+  user:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  heart:     '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>',
+  git:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 012 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg>',
+  school:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V6a2 2 0 012-2h12a2 2 0 012 2v16"/><path d="M8 22v-5M16 22v-5M12 22V10"/></svg>',
+  book:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>',
+  play:      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l15 8-15 8z"/></svg>',
+  folder:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>'
+};
+
+var WIN_SIDEBAR = {
+  flutter: {
+    accent: 'cyan',
+    title: 'Flutter Framework',
+    mode: 'filter',
+    sections: [
+      { label: 'Contributions', items: [
+        { target: 'all',      icon: 'all',    text: 'All PRs' },
+        { target: 'merged',   icon: 'check',  text: 'Merged' },
+        { target: 'approved', icon: 'eye',    text: 'Approved' },
+      ]},
+      { label: 'Links', items: [
+        { href: 'https://github.com/flutter/flutter/pulls?q=author:ishaquehassan', icon: 'git', text: 'On GitHub' },
+        { href: 'https://flutter.dev', icon: 'globe', text: 'flutter.dev' },
+      ]}
+    ]
+  },
+  speaking: {
+    accent: 'amber',
+    title: 'Speaking & Community',
+    mode: 'filter',
+    sections: [
+      { label: 'Events', items: [
+        { target: 'all',         icon: 'all',        text: 'All Events' },
+        { target: 'gdg',         icon: 'mic',        text: 'GDG / Google' },
+        { target: 'university',  icon: 'university', text: 'Universities' },
+        { target: 'online',      icon: 'globe',      text: 'Online' },
+      ]}
+    ]
+  },
+  oss: {
+    accent: 'green',
+    title: 'Open Source',
+    mode: 'filter',
+    sections: [
+      { label: 'Projects', items: [
+        { target: 'all',     icon: 'all',     text: 'All Projects' },
+        { target: 'flutter', icon: 'mobile',  text: 'Flutter / Dart' },
+        { target: 'js',      icon: 'code',    text: 'JavaScript' },
+        { target: 'tool',    icon: 'package', text: 'Tools' },
+      ]}
+    ]
+  },
+  tech: {
+    accent: 'slate',
+    title: 'Tech Stack',
+    mode: 'scroll',
+    sections: [
+      { label: 'Categories', items: [
+        { target: 'all',      icon: 'all',     text: 'All' },
+        { target: 'mobile',   icon: 'mobile',  text: 'Mobile' },
+        { target: 'frontend', icon: 'browser', text: 'Frontend' },
+        { target: 'backend',  icon: 'server',  text: 'Backend' },
+        { target: 'tools',    icon: 'settings',text: 'Tools' },
+      ]}
+    ]
+  },
+  articles: {
+    accent: 'green',
+    title: 'Articles',
+    mode: 'filter',
+    sections: [
+      { label: 'Topics', items: [
+        { target: 'all',          icon: 'all',          text: 'All Articles' },
+        { target: 'flutter',      icon: 'mobile',       text: 'Flutter' },
+        { target: 'architecture', icon: 'package',      text: 'Architecture' },
+        { target: 'tutorial',     icon: 'book',         text: 'Tutorials' },
+        { target: 'tip',          icon: 'star',         text: 'Tips' },
+      ]}
+    ]
+  },
+  contact: {
+    accent: 'blue',
+    title: 'Contact',
+    mode: 'scroll',
+    sections: [
+      { label: 'Reach Out', items: [
+        { target: 'direct',       icon: 'mail',      text: 'Direct' },
+        { target: 'professional', icon: 'briefcase', text: 'Professional' },
+        { target: 'social',       icon: 'globe',     text: 'Social' },
+        { target: 'code',         icon: 'code',      text: 'Code' },
+      ]}
+    ]
+  },
+  github: {
+    accent: 'purple',
+    title: 'GitHub Profile',
+    mode: 'scroll',
+    sections: [
+      { label: 'Profile', items: [
+        { target: 'overview',      icon: 'user',     text: 'Overview' },
+        { target: 'pinned',        icon: 'star',     text: 'Pinned' },
+        { target: 'contributions', icon: 'git',      text: 'Contributions' },
+      ]},
+      { label: 'External', items: [
+        { href: 'https://github.com/ishaquehassan', icon: 'link', text: 'Open GitHub' },
+      ]}
+    ]
+  },
+  linkedin: {
+    accent: 'blue',
+    title: 'LinkedIn',
+    mode: 'swap-li-tab',
+    sections: [
+      { label: 'Profile', items: [
+        { target: 'experience', icon: 'briefcase', text: 'Experience' },
+        { target: 'opensource', icon: 'code',      text: 'Open Source' },
+        { target: 'education',  icon: 'school',    text: 'Education' },
+        { target: 'skills',     icon: 'star',      text: 'Skills' },
+      ]},
+      { label: 'External', items: [
+        { href: 'https://linkedin.com/in/ishaquehassan', icon: 'link', text: 'Open LinkedIn' },
+      ]}
+    ]
+  },
+  'flutter-course': {
+    accent: 'cyan',
+    title: 'Flutter: Basic to Advanced',
+    mode: 'scroll',
+    dynamic: 'fcSections',
+    sections: [
+      { label: 'Sections', items: [] }
+    ]
+  }
+};
+
+/* Build a sidebar <aside> element from config */
+function fshellRenderSidebar(winId, cfg) {
+  var aside = document.createElement('aside');
+  aside.className = 'fshell-sidebar';
+  aside.dataset.winId = winId;
+  aside.dataset.mode = cfg.mode;
+  var html = '';
+  // Search input at top (macOS Settings style)
+  html += '<div class="sb-search-wrap">';
+  html += '<div class="sb-search">';
+  html += '<svg class="sb-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>';
+  html += '<input type="text" class="sb-search-input" placeholder="Search" spellcheck="false" autocomplete="off">';
+  html += '</div>';
+  html += '<div class="sb-suggest" hidden><div class="sb-suggest-label">Suggestions</div><div class="sb-suggest-list"></div></div>';
+  html += '</div>';
+  cfg.sections.forEach(function(sec) {
+    html += '<div class="sb-section">';
+    if (sec.label) html += '<div class="sb-label">' + sec.label + '</div>';
+    sec.items.forEach(function(it, i) {
+      if (it.href) {
+        html += '<a class="sb-item" href="' + it.href + '" target="_blank" rel="noopener noreferrer" data-search="' + it.text.toLowerCase() + '">';
+        html += '<span class="sb-icon">' + (FSHELL_ICONS[it.icon] || '') + '</span>';
+        html += '<span class="sb-text">' + it.text + '</span>';
+        if (it.badge) html += '<span class="sb-badge">' + it.badge + '</span>';
+        html += '</a>';
+      } else {
+        var activeCls = (i === 0 && sec.items === cfg.sections[0].items) ? ' sb-active' : '';
+        html += '<button class="sb-item' + activeCls + '" data-target="' + it.target + '" data-search="' + it.text.toLowerCase() + '" type="button">';
+        html += '<span class="sb-icon">' + (FSHELL_ICONS[it.icon] || '') + '</span>';
+        html += '<span class="sb-text">' + it.text + '</span>';
+        if (it.badge) html += '<span class="sb-badge">' + it.badge + '</span>';
+        html += '</button>';
+      }
+    });
+    html += '</div>';
+  });
+  aside.innerHTML = html;
+  return aside;
+}
+
+/* Sidebar search: delegated input handler across all sidebars */
+document.addEventListener('input', function(e) {
+  if (!e.target.classList || !e.target.classList.contains('sb-search-input')) return;
+  var sidebar = e.target.closest('.fshell-sidebar');
+  if (!sidebar) return;
+  var q = e.target.value.trim().toLowerCase();
+  var suggest = sidebar.querySelector('.sb-suggest');
+  var list = sidebar.querySelector('.sb-suggest-list');
+  if (!q) {
+    suggest.hidden = true;
+    list.innerHTML = '';
+    return;
+  }
+  var winId = sidebar.dataset.winId;
+  var matches = [];
+  // For flutter-course, skip sidebar-category matches — only show video matches
+  if (winId !== 'flutter-course') {
+    var items = sidebar.querySelectorAll('.sb-item[data-search]');
+    items.forEach(function(it) {
+      var txt = it.dataset.search || '';
+      if (txt.indexOf(q) >= 0) {
+        matches.push({
+          text: it.querySelector('.sb-text').textContent,
+          icon: it.querySelector('.sb-icon').innerHTML,
+          target: it.dataset.target || null,
+          href: it.tagName === 'A' ? it.href : null,
+          score: (txt.indexOf(q) === 0 ? 10 : 1) + (txt === q ? 20 : 0)
+        });
+      }
+    });
+  }
+  // Also search the window's primary content cards for richer matches
+  var content = document.querySelector('#win-' + winId + ' .fshell-content');
+  if (content) {
+    // PRs / events / repos / articles / videos
+    var extra = content.querySelectorAll('.pr-card, .event-row, .fc-video-card, .article-card');
+    extra.forEach(function(el) {
+      var t = (el.textContent || '').trim().toLowerCase();
+      if (t.indexOf(q) >= 0) {
+        var title = el.querySelector('.pr-title, .event-name, .fc-video-title, .article-title');
+        var label = title ? title.textContent.trim() : t.slice(0, 50);
+        var match = {
+          text: label,
+          icon: FSHELL_ICONS.article,
+          scrollTo: el,
+          score: (t.indexOf(q) === 0 ? 8 : 0.5)
+        };
+        // If it's a Flutter Course video card, extract the video index so Enter plays it
+        if (el.classList.contains('fc-video-card')) {
+          var onclickAttr = el.getAttribute('onclick') || '';
+          var m = onclickAttr.match(/playFcVideo\s*\(\s*(\d+)\s*\)/);
+          if (m) {
+            match.playVideoIdx = parseInt(m[1], 10);
+            match.icon = FSHELL_ICONS.play;
+            match.score += 2;
+          }
+        }
+        matches.push(match);
+      }
+    });
+  }
+  matches.sort(function(a, b) { return b.score - a.score; });
+  matches = matches.slice(0, 6);
+  if (!matches.length) {
+    list.innerHTML = '<div class="sb-suggest-empty">No results</div>';
+  } else {
+    list.innerHTML = matches.map(function(m, i) {
+      return '<button type="button" class="sb-suggest-item' + (i === 0 ? ' sb-suggest-active' : '') + '" data-idx="' + i + '">' +
+        '<span class="sb-suggest-icon">' + m.icon + '</span>' +
+        '<span class="sb-suggest-text">' + m.text + '</span></button>';
+    }).join('');
+    // Store matches on the list for click resolution
+    list._fshellMatches = matches;
+  }
+  suggest.hidden = false;
+});
+
+/* Focus: show suggestions for empty search as "recent-like" preview (first 5 sidebar items) */
+document.addEventListener('focus', function(e) {
+  if (!e.target.classList || !e.target.classList.contains('sb-search-input')) return;
+  var sidebar = e.target.closest('.fshell-sidebar');
+  if (!sidebar) return;
+  if (e.target.value.trim()) return;
+  var items = Array.from(sidebar.querySelectorAll('.sb-item[data-target]')).slice(0, 5);
+  var suggest = sidebar.querySelector('.sb-suggest');
+  var list = sidebar.querySelector('.sb-suggest-list');
+  if (!items.length) return;
+  var matches = items.map(function(it) {
+    return {
+      text: it.querySelector('.sb-text').textContent,
+      icon: it.querySelector('.sb-icon').innerHTML,
+      target: it.dataset.target
+    };
+  });
+  list.innerHTML = matches.map(function(m, i) {
+    return '<button type="button" class="sb-suggest-item' + (i === 0 ? ' sb-suggest-active' : '') + '" data-idx="' + i + '">' +
+      '<span class="sb-suggest-icon">' + m.icon + '</span>' +
+      '<span class="sb-suggest-text">' + m.text + '</span></button>';
+  }).join('');
+  list._fshellMatches = matches;
+  suggest.hidden = false;
+}, true);
+
+/* Blur (with small delay so clicks register) */
+document.addEventListener('blur', function(e) {
+  if (!e.target.classList || !e.target.classList.contains('sb-search-input')) return;
+  var sidebar = e.target.closest('.fshell-sidebar');
+  setTimeout(function() {
+    var suggest = sidebar && sidebar.querySelector('.sb-suggest');
+    if (suggest) suggest.hidden = true;
+  }, 180);
+}, true);
+
+/* Click on suggestion */
+document.addEventListener('click', function(e) {
+  var sug = e.target.closest && e.target.closest('.sb-suggest-item');
+  if (!sug) return;
+  var list = sug.parentElement;
+  var matches = list._fshellMatches || [];
+  var m = matches[parseInt(sug.dataset.idx, 10)];
+  if (!m) return;
+  var sidebar = sug.closest('.fshell-sidebar');
+  var winId = sidebar.dataset.winId;
+  if (typeof m.playVideoIdx === 'number' && typeof playFcVideo === 'function') {
+    playFcVideo(m.playVideoIdx);
+  } else if (m.target) {
+    // simulate click on matching sidebar item
+    var btn = sidebar.querySelector('.sb-item[data-target="' + m.target + '"]');
+    if (btn) btn.click();
+  } else if (m.href) {
+    window.open(m.href, '_blank', 'noopener,noreferrer');
+  } else if (m.scrollTo) {
+    m.scrollTo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    m.scrollTo.style.transition = 'outline 0.2s';
+    m.scrollTo.style.outline = '2px solid rgba(125,211,252,0.8)';
+    setTimeout(function() { m.scrollTo.style.outline = ''; }, 1500);
+  }
+  // Hide suggestions
+  sidebar.querySelector('.sb-suggest').hidden = true;
+  // Clear input
+  var input = sidebar.querySelector('.sb-search-input');
+  if (input) input.value = '';
+});
+
+/* Keyboard nav in search */
+document.addEventListener('keydown', function(e) {
+  if (!e.target.classList || !e.target.classList.contains('sb-search-input')) return;
+  var sidebar = e.target.closest('.fshell-sidebar');
+  if (!sidebar) return;
+  var items = sidebar.querySelectorAll('.sb-suggest-item');
+  if (!items.length) return;
+  var activeIdx = Array.from(items).findIndex(function(x) { return x.classList.contains('sb-suggest-active'); });
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (activeIdx >= 0) items[activeIdx].classList.remove('sb-suggest-active');
+    var next = Math.min(items.length - 1, activeIdx + 1);
+    items[next].classList.add('sb-suggest-active');
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (activeIdx >= 0) items[activeIdx].classList.remove('sb-suggest-active');
+    var prev = Math.max(0, activeIdx - 1);
+    items[prev].classList.add('sb-suggest-active');
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    var active = sidebar.querySelector('.sb-suggest-item.sb-suggest-active');
+    if (active) active.click();
+  } else if (e.key === 'Escape') {
+    sidebar.querySelector('.sb-suggest').hidden = true;
+    e.target.value = '';
+    e.target.blur();
+  }
+});
+
+/* Populate Flutter Course sections from fcSectionOrder */
+function fshellBuildFcSections() {
+  if (typeof fcSectionOrder === 'undefined') return null;
+  var items = [{ target: 'all', icon: 'all', text: 'All Sections' }];
+  fcSectionOrder.forEach(function(s) {
+    items.push({ target: 'sec-' + s.replace(/\s+/g, '-'), icon: 'play', text: s });
+  });
+  return [{ label: 'Course', items: items }];
+}
+
+/* Reshape a single window */
+function fshellReshapeWindow(win) {
+  var rawId = win.id.replace('win-', '');
+  var cfg = WIN_SIDEBAR[rawId];
+  if (!cfg) return;
+  if (win.dataset.fshellDone === '1') return;
+
+  // dynamic sections for Flutter Course
+  if (cfg.dynamic === 'fcSections') {
+    var secs = fshellBuildFcSections();
+    if (secs) cfg.sections = secs;
+  }
+
+  // 1) Toolbar restructure: wrap traffic-lights in .wt-left, build .wt-right
+  var toolbar = win.querySelector(':scope > .window-toolbar');
+  if (!toolbar) return;
+  var tl = toolbar.querySelector(':scope > .traffic-lights');
+  var existingTitle = toolbar.querySelector(':scope > .window-title');
+  if (tl && !toolbar.querySelector(':scope > .wt-left')) {
+    var wtLeft = document.createElement('div');
+    wtLeft.className = 'wt-left';
+    wtLeft.appendChild(tl);
+
+    var wtRight = document.createElement('div');
+    wtRight.className = 'wt-right';
+    wtRight.innerHTML =
+      '<div class="wt-nav">' +
+        '<button class="wt-nav-btn" type="button" disabled aria-label="Back">&#10094;</button>' +
+        '<button class="wt-nav-btn" type="button" disabled aria-label="Forward">&#10095;</button>' +
+      '</div>' +
+      '<div class="wt-title">' + (cfg.title || (existingTitle ? existingTitle.textContent.trim() : '')) + '</div>' +
+      '<div class="wt-actions"></div>';
+
+    // Remove the old absolute-positioned title (we replaced it in wt-right)
+    if (existingTitle) existingTitle.remove();
+
+    toolbar.insertBefore(wtLeft, toolbar.firstChild);
+    toolbar.appendChild(wtRight);
+  }
+
+  // 2) Body restructure: wrap content in .fshell-content, prepend sidebar
+  var body = win.querySelector(':scope > .window-body');
+  if (!body || body.classList.contains('iframe-body')) return;
+  if (body.querySelector(':scope > .fshell-sidebar')) return;
+
+  var content = document.createElement('div');
+  content.className = 'fshell-content';
+  content.dataset.winId = rawId;
+  // Copy inline style from body (padding was 24px default; our .fshell-content has 20/22 padding)
+  while (body.firstChild) content.appendChild(body.firstChild);
+  // Strip any inline padding/background from body that would fight our layout
+  body.style.padding = '0';
+  body.style.background = 'transparent';
+
+  var sidebar = fshellRenderSidebar(rawId, cfg);
+  body.appendChild(sidebar);
+  body.appendChild(content);
+
+  // 3) Mark window
+  win.classList.add('has-fshell');
+  if (cfg.accent) win.dataset.accent = cfg.accent;
+  win.dataset.fshellDone = '1';
+
+  // 4) Mode-specific post-processing
+  if (cfg.mode === 'filter') {
+    fshellTagFilterCards(rawId, content);
+  } else if (cfg.mode === 'scroll') {
+    fshellTagScrollAnchors(rawId, content);
+  }
+}
+
+/* Tag existing cards with data-filter-val for CSS filter matching */
+function fshellTagFilterCards(winId, content) {
+  if (winId === 'flutter') {
+    // PR cards: pick up status from .pr-status class text
+    content.querySelectorAll('.pr-card').forEach(function(c) {
+      var status = '';
+      var s = c.querySelector('.pr-status');
+      if (s) {
+        var t = s.textContent.toLowerCase();
+        if (t.indexOf('merged') >= 0) status = 'merged';
+        else if (t.indexOf('approved') >= 0) status = 'approved';
+        else if (t.indexOf('open') >= 0) status = 'open';
+      }
+      c.parentElement && c.parentElement.setAttribute('data-filter-val', 'all ' + status);
+    });
+  } else if (winId === 'speaking') {
+    content.querySelectorAll('.event-row').forEach(function(ev) {
+      var text = (ev.textContent || '').toLowerCase();
+      var tags = 'all';
+      if (text.indexOf('gdg') >= 0 || text.indexOf('google') >= 0 || text.indexOf('devfest') >= 0) tags += ' gdg';
+      if (text.indexOf('university') >= 0 || text.indexOf('iqra') >= 0 || text.indexOf('suffa') >= 0 || text.indexOf('nic karachi') >= 0) tags += ' university';
+      if (text.indexOf('online') >= 0 || text.indexOf('live') >= 0) tags += ' online';
+      // Wrap link parent if exists
+      var wrap = ev.closest('a') || ev;
+      wrap.setAttribute('data-filter-val', tags);
+    });
+  } else if (winId === 'oss') {
+    content.querySelectorAll('.repo-card, [class*="repo"]').forEach(function(r) {
+      var text = (r.textContent || '').toLowerCase();
+      var tags = 'all';
+      if (text.indexOf('flutter') >= 0 || text.indexOf('dart') >= 0) tags += ' flutter';
+      if (text.indexOf('javascript') >= 0 || text.indexOf('node') >= 0 || text.indexOf('typescript') >= 0 || text.indexOf('react') >= 0) tags += ' js';
+      if (text.indexOf('cli') >= 0 || text.indexOf('tool') >= 0 || text.indexOf('package') >= 0) tags += ' tool';
+      var wrap = r.closest('a') || r;
+      wrap.setAttribute('data-filter-val', tags);
+    });
+  } else if (winId === 'articles') {
+    content.querySelectorAll('.article-card, [class*="article"]').forEach(function(a) {
+      var text = (a.textContent || '').toLowerCase();
+      var tags = 'all';
+      if (text.indexOf('flutter') >= 0) tags += ' flutter';
+      if (text.indexOf('architecture') >= 0 || text.indexOf('pattern') >= 0 || text.indexOf('clean') >= 0) tags += ' architecture';
+      if (text.indexOf('tutorial') >= 0 || text.indexOf('step') >= 0) tags += ' tutorial';
+      if (text.indexOf('tip') >= 0 || text.indexOf('trick') >= 0) tags += ' tip';
+      var wrap = a.closest('a') || a;
+      wrap.setAttribute('data-filter-val', tags);
+    });
+  }
+}
+
+/* Register anchor IDs for scroll-mode windows */
+function fshellTagScrollAnchors(winId, content) {
+  if (winId === 'tech') {
+    // Find tech-grid categories via section headers
+    content.querySelectorAll('.section-header').forEach(function(h) {
+      var t = h.textContent.trim().toLowerCase();
+      if (t.indexOf('mobile') >= 0)  h.id = 'anchor-mobile';
+      else if (t.indexOf('front') >= 0) h.id = 'anchor-frontend';
+      else if (t.indexOf('back') >= 0)  h.id = 'anchor-backend';
+      else if (t.indexOf('tool') >= 0 || t.indexOf('dev') >= 0) h.id = 'anchor-tools';
+    });
+  } else if (winId === 'contact') {
+    content.querySelectorAll('.section-header').forEach(function(h) {
+      var t = h.textContent.trim().toLowerCase();
+      if (t.indexOf('direct') >= 0 || t.indexOf('email') >= 0) h.id = 'anchor-direct';
+      else if (t.indexOf('profess') >= 0) h.id = 'anchor-professional';
+      else if (t.indexOf('social') >= 0) h.id = 'anchor-social';
+      else if (t.indexOf('code') >= 0 || t.indexOf('github') >= 0) h.id = 'anchor-code';
+    });
+  } else if (winId === 'github') {
+    content.querySelectorAll('.section-header, h2, h3').forEach(function(h) {
+      var t = h.textContent.trim().toLowerCase();
+      if (t.indexOf('pinned') >= 0) h.id = 'anchor-pinned';
+      else if (t.indexOf('contrib') >= 0) h.id = 'anchor-contributions';
+      else if (t.indexOf('overview') >= 0 || t.indexOf('profile') >= 0) h.id = 'anchor-overview';
+    });
+  } else if (winId === 'flutter-course') {
+    // Will be tagged by initFlutterCourse since sections render dynamically
+  }
+}
+
+/* Delegated click on .sb-item across all sidebars */
+document.addEventListener('click', function(e) {
+  var item = e.target.closest && e.target.closest('.sb-item[data-target]');
+  if (!item) return;
+  var sidebar = item.closest('.fshell-sidebar');
+  if (!sidebar) return;
+  var mode = sidebar.dataset.mode;
+  var winId = sidebar.dataset.winId;
+  var target = item.dataset.target;
+  var win = document.getElementById('win-' + winId);
+  if (!win) return;
+  var content = win.querySelector('.fshell-content');
+  if (!content) return;
+
+  // Update active state (buttons only, not anchor links)
+  sidebar.querySelectorAll('.sb-item[data-target]').forEach(function(x) { x.classList.remove('sb-active'); });
+  item.classList.add('sb-active');
+
+  if (mode === 'filter') {
+    if (target === 'all') content.removeAttribute('data-filter');
+    else content.setAttribute('data-filter', target);
+    content.scrollTop = 0;
+  } else if (mode === 'scroll') {
+    if (winId === 'flutter-course') {
+      var fcSections = content.querySelector('.fc-sections');
+      if (target === 'all') {
+        if (fcSections) fcSections.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        var secName = target.replace(/^sec-/, '').replace(/-/g, ' ').toLowerCase();
+        var sections = content.querySelectorAll('.fc-section');
+        for (var i = 0; i < sections.length; i++) {
+          var hdr = sections[i].querySelector('.fc-section-header span');
+          if (hdr && hdr.textContent.trim().toLowerCase() === secName) {
+            sections[i].classList.remove('collapsed');
+            if (fcSections) {
+              var sr = sections[i].getBoundingClientRect();
+              var cr = fcSections.getBoundingClientRect();
+              var delta = sr.top - cr.top;
+              var targetTop = Math.max(0, fcSections.scrollTop + delta - 4);
+              fshellSmoothScroll(fcSections, targetTop, 350);
+            } else {
+              sections[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            break;
+          }
+        }
+      }
+    } else if (target === 'all') {
+      content.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      var anchor = content.querySelector('#anchor-' + target);
+      if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      else content.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  } else if (mode === 'swap-li-tab') {
+    // LinkedIn: invoke switchLiTab() with mapped key
+    var liTabKey = { experience:'experience', education:'education', skills:'skills', opensource:'opensource' }[target] || target;
+    if (typeof switchLiTab === 'function') switchLiTab(liTabKey);
+  }
+});
+
+/* Smooth scroll a specific scrollable element via setTimeout loop
+   (rAF can be throttled in iframes/previews; setTimeout is reliable) */
+function fshellSmoothScroll(el, to, duration) {
+  var start = el.scrollTop;
+  var diff = to - start;
+  if (!diff) return;
+  var startTime = Date.now();
+  function step() {
+    var t = Math.min(1, (Date.now() - startTime) / duration);
+    var eased = 1 - Math.pow(1 - t, 3);
+    el.scrollTop = start + diff * eased;
+    if (t < 1) setTimeout(step, 16);
+  }
+  step();
+}
+
+/* Initialize Finder shell on all eligible windows after DOM ready */
+function fshellInitAll() {
+  Object.keys(WIN_SIDEBAR).forEach(function(id) {
+    var win = document.getElementById('win-' + id);
+    if (win) fshellReshapeWindow(win);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Wait for fcSectionOrder / dynamic data then reshape
+  setTimeout(fshellInitAll, 80);
+});
+
 
 /* ===== DYNAMIC MENUBAR (per-window, macOS style) ===== */
 var menuBarDefault = {
