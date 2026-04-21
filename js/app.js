@@ -193,6 +193,34 @@ function closeAllWindows() {
   Object.keys(openWindows).forEach(id => closeWindow(id));
 }
 
+function forceCloseAllWindows() {
+  if (document.body.classList.contains('has-fullscreen') && typeof fullscreenState !== 'undefined') {
+    Object.keys(fullscreenState).forEach(function(id) {
+      if (typeof exitFullscreen === 'function') { try { exitFullscreen(id); } catch(e){} }
+    });
+  }
+  document.querySelectorAll('.window.open, .window.minimizing, .window.show').forEach(function(win) {
+    var id = win.id.replace(/^win-/, '');
+    win.classList.remove('open','closing','minimizing','show','maximized','hidden-desktop','fullscreen-space');
+    win.style.display = 'none';
+    delete openWindows[id];
+    if (id === 'fc-player') { var pif = document.getElementById('fc-pw-iframe'); if (pif) pif.src = ''; }
+    if (id === 'snake' && typeof snakeReset === 'function') { try { snakeReset(); } catch(e){} }
+    if (id === 'flutter-course' && typeof stopAllFlutterCourseVideos === 'function') { try { stopAllFlutterCourseVideos(); } catch(e){} }
+  });
+  document.body.classList.remove('has-fullscreen');
+  if (typeof syncDockIndicators === 'function') syncDockIndicators();
+  if (typeof updateMenuBarForWindow === 'function') updateMenuBarForWindow(null);
+}
+
+function forceMinimizeAllWindows() {
+  document.querySelectorAll('.window.open').forEach(function(win) {
+    var id = win.id.replace(/^win-/, '');
+    if (typeof minimizeWindow === 'function') { try { minimizeWindow(id); } catch(e){} }
+  });
+  if (typeof updateMenuBarForWindow === 'function') updateMenuBarForWindow(null);
+}
+
 // ===== CLOCK =====
 function updateClock() {
   const now = new Date();
@@ -703,7 +731,9 @@ function renderFlutterCourseGrid() {
   const g = fcGroupVideos();
   c.innerHTML = fcSectionOrder.filter(s => g[s]).map(s => {
     const vids = g[s];
-    return '<div class="fc-section"><div class="fc-section-header" onclick="this.parentElement.classList.toggle(\'collapsed\')"><span>' + s + '</span><div class="fc-section-right"><span class="fc-section-count">' + vids.length + ' videos</span><span class="fc-collapse-icon">▼</span></div></div><div class="fc-videos-grid">' + vids.map(v =>
+    const iconKey = (typeof FC_SECTION_ICONS !== 'undefined' && FC_SECTION_ICONS[s]) || 'play';
+    const iconSvg = (typeof FSHELL_ICONS !== 'undefined' && FSHELL_ICONS[iconKey]) || '';
+    return '<div class="fc-section"><div class="fc-section-header" onclick="this.parentElement.classList.toggle(\'collapsed\')"><div class="fc-sh-left"><span class="fc-sh-icon">' + iconSvg + '</span><span class="fc-sh-title">' + s + '</span></div><div class="fc-section-right"><span class="fc-section-count"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="margin-right:4px;vertical-align:-1px;"><polygon points="6 4 20 12 6 20 6 4"/></svg>' + vids.length + ' videos</span><span class="fc-collapse-icon"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div></div><div class="fc-videos-grid">' + vids.map(v =>
       '<div class="fc-video-card" onclick="playFcVideo(' + v.idx + ')"><div class="fc-thumb-wrap"><img class="fc-video-thumbnail" src="https://img.youtube.com/vi/' + v.id + '/mqdefault.jpg" alt="" loading="lazy"><span class="fc-vid-badge">#' + (v.idx + 1) + '</span><div class="fc-play-overlay"><div class="fc-play-icon"></div></div></div><div class="fc-video-info"><div class="fc-video-num">Video ' + (v.idx + 1) + '</div><div class="fc-video-title">' + v.t + '</div></div></div>'
     ).join('') + '</div></div>';
   }).join('');

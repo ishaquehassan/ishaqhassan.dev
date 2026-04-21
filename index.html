@@ -59,10 +59,10 @@
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
 <link rel="apple-touch-icon" href="/assets/profile-photo.png">
-<link rel="stylesheet" href="css/style.min.css?v=150">
+<link rel="stylesheet" href="css/style.min.css?v=152">
 
 <!-- JS: defer = parallel download during HTML parse, execute after DOM ready, in order -->
-<script src="js/app.min.js?v=89" defer></script>
+<script src="js/app.min.js?v=91" defer></script>
 <script src="js/widgets.min.js?v=63" defer></script>
 <script src="js/snake.min.js?v=68" defer></script>
 <script src="js/desktop.min.js?v=69" defer></script>
@@ -497,6 +497,9 @@
         <div class="menu-dd-sep"></div>
         <div class="menu-dd-item" onclick="openWindow('about')">Terminal<span class="shortcut">⌘T</span></div>
         <div class="menu-dd-item" onclick="openWindow('contact')">Contact<span class="shortcut">⌘K</span></div>
+        <div class="menu-dd-sep"></div>
+        <div class="menu-dd-item" onclick="forceMinimizeAllWindows()">Force Minimize All<span class="shortcut">⌥⌘M</span></div>
+        <div class="menu-dd-item danger" onclick="forceCloseAllWindows()">Force Close All<span class="shortcut">⌥⌘Q</span></div>
         <div class="menu-dd-sep"></div>
         <div class="menu-dd-item" onclick="window.open('mailto:hello@ishaqhassan.dev')">Send Email...</div>
       </div>
