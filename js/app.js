@@ -174,7 +174,10 @@ window.addEventListener('resize', () => {
 
 // Click outside to close
 document.addEventListener('mousedown', (e) => {
-  if (activeMenu && !e.target.closest('.menu-parent')) closeActiveMenu();
+  if (!activeMenu) return;
+  if (e.target.closest('.menu-parent')) return;
+  if (e.target.closest('.menu-dropdown')) return;
+  closeActiveMenu();
 });
 
 // Click any dropdown item to close menu (event delegation for dynamic items)
