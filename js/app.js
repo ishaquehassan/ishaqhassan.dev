@@ -414,6 +414,10 @@ function openWindow(id, skipPosition) {
     if (typeof snakeResizeCanvas === 'function') setTimeout(snakeResizeCanvas, 50);
   }
   if (id === 'flutter-course' && typeof initFlutterCourse === 'function') setTimeout(initFlutterCourse, 50);
+  if (id === 'wisesend') {
+    var wif = document.getElementById('wisesend-iframe');
+    if (wif && wif.dataset.src && wif.src !== wif.dataset.src) wif.src = wif.dataset.src;
+  }
 
   win.addEventListener('mousedown', () => { win.style.zIndex = ++activeZ; updateMenuBarForWindow(id); });
 
@@ -678,12 +682,6 @@ function fcInitHeroScroll() {
       header.style.setProperty('--fc-scroll', orbRatio.toFixed(3));
       var progressEl = header.querySelector('.fc-header-progress');
       if (progressEl) progressEl.style.setProperty('--fc-scroll', progressRatio.toFixed(3));
-      var compact = header.classList.contains('fc-header-compact');
-      if (!compact && st > 28) {
-        header.classList.add('fc-header-compact');
-      } else if (compact && st < 8) {
-        header.classList.remove('fc-header-compact');
-      }
       ticking = false;
     }, 16);
   }
