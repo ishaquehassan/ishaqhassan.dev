@@ -350,7 +350,7 @@ function findSmartPosition(win) {
   return {top: cy, left: cx};
 }
 
-function openWindow(id) {
+function openWindow(id, skipPosition) {
   const win = document.getElementById('win-' + id);
   if (!win) return;
 
@@ -383,13 +383,15 @@ function openWindow(id) {
     return;
   }
 
-  // Smart position: find empty space or offset stack
-  const pos = findSmartPosition(win);
-  win.style.top = pos.top + 'px';
-  win.style.left = pos.left + 'px';
-  if (pos.tileW && pos.tileH) {
-    win.style.width = pos.tileW + 'px';
-    win.style.height = pos.tileH + 'px';
+  // Smart position: find empty space or offset stack (skipped on state restore)
+  if (!skipPosition) {
+    const pos = findSmartPosition(win);
+    win.style.top = pos.top + 'px';
+    win.style.left = pos.left + 'px';
+    if (pos.tileW && pos.tileH) {
+      win.style.width = pos.tileW + 'px';
+      win.style.height = pos.tileH + 'px';
+    }
   }
 
   win.classList.remove('closing','minimizing','hidden-desktop');
@@ -1014,7 +1016,7 @@ var spotlightIndex = [
   {t:'Speaking & Community',s:'Events, Conferences, GDG',w:'speaking',cat:'Applications',icon:'🎤',p:100},
   {t:'Open Source',s:'GitHub Repos, Packages, Plugins',w:'oss',cat:'Applications',icon:'📦',p:100},
   {t:'Tech Stack',s:'Technologies, Skills, Languages',w:'tech',cat:'Applications',icon:'⚙️',p:100},
-  {t:'Articles',s:'Blog Posts, Medium, Writing',w:'articles',cat:'Applications',icon:'📝',p:100},
+  {t:'Medium',s:'Blog Posts, Articles, Writing',w:'articles',cat:'Applications',icon:'📝',p:100},
   {t:'Contact',s:'Email, Social Links',w:'contact',cat:'Applications',icon:'✉️',p:100},
   {t:'GitHub',s:'Profile, Repositories, Contributions',w:'github',cat:'Applications',icon:'🐙',p:100},
   {t:'LinkedIn',s:'Professional Profile, Network',w:'linkedin',cat:'Applications',icon:'💼',p:100},
@@ -1412,22 +1414,55 @@ var origPlayMfcVideo = playMfcVideo;
 playMfcVideo = function(i, evt) { origPlayMfcVideo(i, evt); startProgressTracking(); };
 
 /* ===== WINDOW STATE PERSISTENCE (localStorage) ===== */
-var winStateKey = 'ishaq_win_state';
+var winStateKey = 'user_win_state';
+var winStateRestored = false; // guard: don't save until we've hydrated from storage (prevents boot-time {} overwrite)
+
+// Scroll selectors per window — captures the actual inner scroll container(s).
+// First-match wins; if none, fallback to .window-body or .fshell-content.
+function getWindowScrollTargets(win) {
+  var targets = [];
+  // Flutter Course has .fc-sections as main scroller
+  var fc = win.querySelector('.fc-sections');
+  if (fc) targets.push({ sel: '.fc-sections', el: fc });
+  // All fshell content panels
+  var fshell = win.querySelector('.fshell-content');
+  if (fshell) targets.push({ sel: '.fshell-content', el: fshell });
+  // Fallback: standard body
+  if (!targets.length) {
+    var body = win.querySelector('.window-body');
+    if (body) targets.push({ sel: '.window-body', el: body });
+  }
+  return targets;
+}
+
+function isDesktopViewport() {
+  return window.innerWidth > 768;
+}
 
 function saveWindowStates() {
+  if (!isDesktopViewport()) return;
+  if (!winStateRestored) return; // don't overwrite saved state before restore has run
   var state = {};
   var allIds = ['about','flutter','speaking','oss','tech','articles','contact','github','linkedin','snake','flutter-course','fc-player'];
   allIds.forEach(function(id) {
     var win = document.getElementById('win-' + id);
     if (!win) return;
     if (openWindows[id]) {
+      // Capture scroll positions per scroll target selector
+      var scrolls = {};
+      getWindowScrollTargets(win).forEach(function(t) {
+        if (t.el.scrollTop > 0) scrolls[t.sel] = t.el.scrollTop;
+      });
       state[id] = {
         open: true,
         top: win.style.top,
         left: win.style.left,
         width: win.style.width,
         height: win.style.height,
-        z: win.style.zIndex
+        z: win.style.zIndex,
+        scrolls: scrolls,
+        maximized: win.classList.contains('maximized'),
+        fullscreenSpace: win.classList.contains('fullscreen-space')
       };
     }
   });
@@ -1435,56 +1470,101 @@ function saveWindowStates() {
 }
 
 function restoreWindowStates() {
+  if (!isDesktopViewport()) return;
   try {
     var state = JSON.parse(localStorage.getItem(winStateKey));
     if (!state) return;
-    Object.keys(state).forEach(function(id) {
-      var s = state[id];
+    // Sort by z-index ascending so highest-z opens last (keeps focus order)
+    var entries = Object.keys(state).map(function(id) { return { id: id, s: state[id] }; });
+    entries.sort(function(a, b) { return (parseInt(a.s.z) || 0) - (parseInt(b.s.z) || 0); });
+    entries.forEach(function(entry) {
+      var id = entry.id, s = entry.s;
       if (!s.open) return;
+      // Skip fc-player — transient player window, needs a video to make sense
+      if (id === 'fc-player') return;
       var win = document.getElementById('win-' + id);
       if (!win) return;
-      // Restore position, clamp to viewport
       if (s.top) win.style.top = s.top;
       if (s.left) win.style.left = s.left;
       if (s.width) win.style.width = s.width;
       if (s.height) win.style.height = s.height;
-      clampWindowToViewport(win);
-      openWindow(id);
+      // Strict clamp so saved positions/sizes fit current viewport (no transition during restore)
+      clampWindowToViewport(win, true);
+      openWindow(id, true); // skipPosition = true; use our clamped restored coords
       if (s.z) win.style.zIndex = s.z;
+      // Restore maximized / fullscreen state
+      if (s.maximized) win.classList.add('maximized');
+      if (s.fullscreenSpace) {
+        win.classList.add('fullscreen-space');
+        document.body.classList.add('has-fullscreen');
+      }
+      // Replay scroll positions after layout settles + async renderers (Flutter Course grid)
+      if (s.scrolls) {
+        var applyScroll = function(attempt) {
+          var anyMissed = false;
+          Object.keys(s.scrolls).forEach(function(sel) {
+            var el = win.querySelector(sel);
+            if (!el) { anyMissed = true; return; }
+            if (el.scrollHeight > el.clientHeight) {
+              el.scrollTop = s.scrolls[sel];
+              // Trigger scroll handlers (fc hero collapse, etc.)
+              el.dispatchEvent(new Event('scroll'));
+            } else {
+              // Element exists but not scrollable yet (grid not rendered); retry
+              anyMissed = true;
+            }
+          });
+          if (anyMissed && attempt < 10) setTimeout(function() { applyScroll(attempt + 1); }, 200);
+        };
+        setTimeout(function() { applyScroll(0); }, 200);
+      }
     });
   } catch(e) {}
+  winStateRestored = true;
 }
 
-function clampWindowToViewport(win) {
+function clampWindowToViewport(win, skipTransition) {
   var menuH = 28;
   var dockH = 80;
+  var minW = 400, minH = 300;
   var t = parseInt(win.style.top) || 0;
   var l = parseInt(win.style.left) || 0;
-  var w = win.offsetWidth || parseInt(win.style.width) || 400;
-  var h = win.offsetHeight || parseInt(win.style.height) || 300;
+  var w = win.offsetWidth || parseInt(win.style.width) || minW;
+  var h = win.offsetHeight || parseInt(win.style.height) || minH;
 
-  // Shrink window if larger than viewport
-  if (w > window.innerWidth) { w = window.innerWidth - 20; win.style.width = w + 'px'; }
-  if (h > window.innerHeight - menuH - dockH) { h = window.innerHeight - menuH - dockH; win.style.height = h + 'px'; }
+  // Available vertical band
+  var availH = Math.max(minH, window.innerHeight - menuH - dockH);
+  var availW = Math.max(minW, window.innerWidth - 20);
+
+  // Shrink window if larger than viewport (respect minimums)
+  if (w > availW) { w = availW; win.style.width = w + 'px'; }
+  if (h > availH) { h = availH; win.style.height = h + 'px'; }
 
   // Keep fully inside viewport
   if (l < 0) l = 0;
-  if (l + w > window.innerWidth) l = window.innerWidth - w;
+  if (l + w > window.innerWidth) l = Math.max(0, window.innerWidth - w);
   if (t < menuH) t = menuH;
-  if (t + h > window.innerHeight - dockH) t = window.innerHeight - dockH - h;
+  if (t + h > window.innerHeight - dockH) t = Math.max(menuH, window.innerHeight - dockH - h);
 
-  win.style.transition = 'top 0.3s, left 0.3s, width 0.3s, height 0.3s';
+  // Edge case: window still exceeds (e.g. viewport < minW); accept overflow but clamp top-left to origin
+  if (l + w > window.innerWidth && l === 0) { /* leave, width cap already applied */ }
+  if (t + h > window.innerHeight - dockH && t === menuH) { /* leave */ }
+
+  if (!skipTransition) {
+    win.style.transition = 'top 0.3s, left 0.3s, width 0.3s, height 0.3s';
+    setTimeout(function() { win.style.transition = ''; }, 350);
+  }
   win.style.top = t + 'px';
   win.style.left = l + 'px';
-  setTimeout(function() { win.style.transition = ''; }, 350);
 }
 
 // Save state periodically and on close/open
 setInterval(saveWindowStates, 3000);
 window.addEventListener('beforeunload', saveWindowStates);
 
-// Clamp all windows on resize
+// Clamp all windows on resize (desktop-only; mobile uses its own layout)
 window.addEventListener('resize', function() {
+  if (!isDesktopViewport()) return;
   var allIds = ['about','flutter','speaking','oss','tech','articles','contact','github','linkedin','snake','flutter-course','fc-player'];
   allIds.forEach(function(id) {
     if (!openWindows[id]) return;
@@ -1493,16 +1573,16 @@ window.addEventListener('resize', function() {
   });
 });
 
-// Restore windows after boot
-document.addEventListener('DOMContentLoaded', function() {
-  var checkBoot = setInterval(function() {
-    var boot = document.getElementById('boot-screen');
-    if (!boot || boot.style.display === 'none' || boot.classList.contains('hidden') || getComputedStyle(boot).display === 'none') {
-      clearInterval(checkBoot);
-      setTimeout(restoreWindowStates, 500);
-    }
-  }, 500);
-});
+// Restore windows EARLY (during boot, hidden behind splash).
+// User wants them ready before splash completes so entering desktop feels instant.
+(function earlyRestore() {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', earlyRestore);
+    return;
+  }
+  // Run as soon as DOM is ready. Windows render behind the boot screen (higher z).
+  setTimeout(restoreWindowStates, 0);
+})();
 
 /* ===== FINDER SHELL (native macOS Finder layout: sidebar + content) =====
    Runs on DOMContentLoaded. Reshapes eligible windows into:
@@ -1535,7 +1615,25 @@ var FSHELL_ICONS = {
   school:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V6a2 2 0 012-2h12a2 2 0 012 2v16"/><path d="M8 22v-5M16 22v-5M12 22V10"/></svg>',
   book:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>',
   play:      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l15 8-15 8z"/></svg>',
-  folder:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>'
+  folder:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>',
+  /* Flutter Course per-section unique icons */
+  foundation:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M3 21h18"/><rect x="9" y="13" width="6" height="8"/></svg>',
+  dart:      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-2 8 9-12h-7l2-8z"/></svg>',
+  oop:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><path d="M8.5 7.5l2 8M15.5 7.5l-2 8"/></svg>',
+  ui:        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5"/></svg>',
+  state:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>',
+  network:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg>',
+  advanced:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" fill="currentColor" fill-opacity="0.3"/><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>'
+};
+/* Map Flutter Course section name → icon key */
+var FC_SECTION_ICONS = {
+  'Foundation':        'foundation',
+  'Dart Basics':       'dart',
+  'OOP':               'oop',
+  'Flutter UI':        'ui',
+  'State Management':  'state',
+  'API & Network':     'network',
+  'Advanced':          'advanced'
 };
 
 var WIN_SIDEBAR = {
@@ -1597,28 +1695,18 @@ var WIN_SIDEBAR = {
   },
   articles: {
     accent: 'green',
-    title: 'Articles',
+    title: 'Medium',
     mode: 'filter',
     sections: [
-      { label: 'Topics', items: [
-        { target: 'all',          icon: 'all',          text: 'All Articles' },
+      { label: 'Library', items: [
+        { target: 'all',          icon: 'all',          text: 'All Stories' },
         { target: 'flutter',      icon: 'mobile',       text: 'Flutter' },
         { target: 'architecture', icon: 'package',      text: 'Architecture' },
         { target: 'tutorial',     icon: 'book',         text: 'Tutorials' },
-        { target: 'tip',          icon: 'star',         text: 'Tips' },
-      ]}
-    ]
-  },
-  contact: {
-    accent: 'blue',
-    title: 'Contact',
-    mode: 'scroll',
-    sections: [
-      { label: 'Reach Out', items: [
-        { target: 'direct',       icon: 'mail',      text: 'Direct' },
-        { target: 'professional', icon: 'briefcase', text: 'Professional' },
-        { target: 'social',       icon: 'globe',     text: 'Social' },
-        { target: 'code',         icon: 'code',      text: 'Code' },
+        { target: 'tip',          icon: 'star',         text: 'Tips & Tricks' },
+      ]},
+      { label: 'External', items: [
+        { href: 'https://medium.com/@ishaqhassan', icon: 'link', text: 'Read on Medium' },
       ]}
     ]
   },
@@ -1882,7 +1970,7 @@ function fshellBuildFcSections() {
   if (typeof fcSectionOrder === 'undefined') return null;
   var items = [{ target: 'all', icon: 'all', text: 'All Sections' }];
   fcSectionOrder.forEach(function(s) {
-    items.push({ target: 'sec-' + s.replace(/\s+/g, '-'), icon: 'play', text: s });
+    items.push({ target: 'sec-' + s.replace(/\s+/g, '-'), icon: (FC_SECTION_ICONS[s] || 'play'), text: s });
   });
   return [{ label: 'Course', items: items }];
 }
@@ -1913,10 +2001,6 @@ function fshellReshapeWindow(win) {
     var wtRight = document.createElement('div');
     wtRight.className = 'wt-right';
     wtRight.innerHTML =
-      '<div class="wt-nav">' +
-        '<button class="wt-nav-btn" type="button" disabled aria-label="Back">&#10094;</button>' +
-        '<button class="wt-nav-btn" type="button" disabled aria-label="Forward">&#10095;</button>' +
-      '</div>' +
       '<div class="wt-title">' + (cfg.title || (existingTitle ? existingTitle.textContent.trim() : '')) + '</div>' +
       '<div class="wt-actions"></div>';
 
@@ -2134,7 +2218,7 @@ document.addEventListener('DOMContentLoaded', function() {
 var menuBarDefault = {
   name: 'Ishaq Hassan',
   nameMenu: '<div class="menu-dd-item disabled">Flutter Framework Contributor</div><div class="menu-dd-item disabled">Engineering Manager @ DigitalHire</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan\')">GitHub Profile</div><div class="menu-dd-item" onclick="window.open(\'https://linkedin.com/in/ishaquehassan\')">LinkedIn Profile</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Medium Blog</div>',
-  file: '<div class="menu-dd-item" onclick="openWindow(\'flutter\')">Flutter Contributions<span class="shortcut">⌘1</span></div><div class="menu-dd-item" onclick="openWindow(\'oss\')">Open Source Projects<span class="shortcut">⌘2</span></div><div class="menu-dd-item" onclick="openWindow(\'articles\')">Articles & Writing<span class="shortcut">⌘3</span></div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="openWindow(\'tech\')">Tech Stack</div><div class="menu-dd-item" onclick="openWindow(\'speaking\')">Speaking Events</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeAllWindows()">Close All Windows<span class="shortcut">⌘W</span></div>',
+  file: '<div class="menu-dd-item" onclick="openWindow(\'flutter\')">Flutter Contributions<span class="shortcut">⌘1</span></div><div class="menu-dd-item" onclick="openWindow(\'oss\')">Open Source Projects<span class="shortcut">⌘2</span></div><div class="menu-dd-item" onclick="openWindow(\'articles\')">Medium Articles<span class="shortcut">⌘3</span></div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="openWindow(\'tech\')">Tech Stack</div><div class="menu-dd-item" onclick="openWindow(\'speaking\')">Speaking Events</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeAllWindows()">Close All Windows<span class="shortcut">⌘W</span></div>',
   view: '<div class="menu-dd-item" onclick="openAllWindows()">Open All Windows</div><div class="menu-dd-item" onclick="toggleMissionControl()">Mission Control<span class="shortcut">F3</span></div>'
 };
 
@@ -2170,8 +2254,8 @@ var appMenus = {
     go: '<div class="menu-dd-item" onclick="openWindow(\'oss\')">Open Source</div><div class="menu-dd-item" onclick="openWindow(\'flutter\')">Flutter PRs</div>'
   },
   articles: {
-    name: 'Articles',
-    nameMenu: '<div class="menu-dd-item disabled">Published on Medium</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">View All on Medium</div>',
+    name: 'Medium',
+    nameMenu: '<div class="menu-dd-item disabled">@ishaqhassan on Medium</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Visit Profile on Medium</div>',
     file: '<div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e\')">Dart Isolates: The Missing Guide</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan/how-flutters-three-tree-architecture-actually-works-953c8cc17226\')">Flutter Three-Tree Architecture</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e\')">PRs Merged Into Flutter</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061\')">Flutter Native Plugin Dev</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb\')">Indexing Assets in Dart</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67\')">Firebase Cloud Functions</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'articles\')">Close Window<span class="shortcut">⌘W</span></div>',
     go: '<div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Medium Profile</div><div class="menu-dd-item" onclick="openWindow(\'flutter\')">Flutter PRs</div>'
   },

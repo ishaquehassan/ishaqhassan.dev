@@ -206,7 +206,13 @@ window.addEventListener('load', () => {
       if (dockC) setTimeout(function(){ dockC.classList.add('dock-ready'); }, 100);
       var widgetCols = document.querySelectorAll('.widget-col');
       widgetCols.forEach(function(col, i) { setTimeout(function(){ col.classList.add('widgets-ready'); }, 200 + i * 100); });
-      if (window.innerWidth > 768) setTimeout(() => showNotif('Welcome to Ishaq OS ✨'), 500);
+      if (window.innerWidth > 768) {
+        var visited = false;
+        try { visited = !!localStorage.getItem('already_visited'); } catch(e) {}
+        var welcomeMsg = visited ? 'Welcome back to Ishaq OS 👋' : 'Welcome to Ishaq OS ✨';
+        setTimeout(function() { showNotif(welcomeMsg); }, 500);
+        try { localStorage.setItem('already_visited', '1'); } catch(e) {}
+      }
     }, 800);
   }
 
@@ -922,31 +928,12 @@ function toggleSnapMenu(event, winId) {
   enterFullscreen(winId);
 }
 
-// Show snap menu on hover (not click)
-document.querySelectorAll('.tl-maximize').forEach(function(btn) {
-  btn.addEventListener('mouseenter', function() {
-    var win = btn.closest('.window');
-    if (!win) return;
-    var winId = win.id.replace('win-', '');
-    if (fullscreenState[winId] || win.classList.contains('maximized') || win.dataset.snapped) return;
-    var menu = document.getElementById('sm-' + winId);
-    if (menu) {
-      document.querySelectorAll('.snap-menu').forEach(m => m.classList.remove('show'));
-      menu.classList.add('show');
-    }
-  });
-});
-
-// Close snap menus on outside click or mouseleave
+// Snap menu is now CSS :hover driven (no JS show-class needed).
+// Only still clear any stale .show class on outside click for safety.
 document.addEventListener('mousedown', (e) => {
   if (!e.target.closest('.tl-maximize') && !e.target.closest('.snap-menu')) {
     document.querySelectorAll('.snap-menu').forEach(m => m.classList.remove('show'));
   }
-});
-document.querySelectorAll('.snap-menu').forEach(function(menu) {
-  menu.addEventListener('mouseleave', function() {
-    menu.classList.remove('show');
-  });
 });
 
 // Fullscreen: show dock when mouse at bottom edge
