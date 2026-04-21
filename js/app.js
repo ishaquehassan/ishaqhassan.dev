@@ -1470,57 +1470,82 @@ function saveWindowStates() {
 }
 
 function restoreWindowStates() {
-  if (!isDesktopViewport()) return;
+  // Always mark "restored" at the end so subsequent saves are allowed,
+  // even on first-visit (no state) or non-desktop viewports.
   try {
-    var state = JSON.parse(localStorage.getItem(winStateKey));
-    if (!state) return;
+    // Clean up legacy key from older builds
+    try { localStorage.removeItem('ishaq_win_state'); } catch(e) {}
+
+    if (!isDesktopViewport()) return;
+
+    var raw = localStorage.getItem(winStateKey);
+    var state = null;
+    try { state = raw ? JSON.parse(raw) : null; } catch(e) { state = null; }
+    if (!state || typeof state !== 'object') return;
+
     // Sort by z-index ascending so highest-z opens last (keeps focus order)
     var entries = Object.keys(state).map(function(id) { return { id: id, s: state[id] }; });
     entries.sort(function(a, b) { return (parseInt(a.s.z) || 0) - (parseInt(b.s.z) || 0); });
+
+    // Track restored windows that should enter fullscreen AFTER all opens,
+    // so the has-fullscreen body class doesn't make later openWindow calls bail.
+    var fsRestore = [];
+    var maxZ = 0;
+
     entries.forEach(function(entry) {
       var id = entry.id, s = entry.s;
-      if (!s.open) return;
+      if (!s || !s.open) return;
       // Skip fc-player — transient player window, needs a video to make sense
       if (id === 'fc-player') return;
       var win = document.getElementById('win-' + id);
       if (!win) return;
-      if (s.top) win.style.top = s.top;
-      if (s.left) win.style.left = s.left;
-      if (s.width) win.style.width = s.width;
+      if (s.top)    win.style.top    = s.top;
+      if (s.left)   win.style.left   = s.left;
+      if (s.width)  win.style.width  = s.width;
       if (s.height) win.style.height = s.height;
       // Strict clamp so saved positions/sizes fit current viewport (no transition during restore)
-      clampWindowToViewport(win, true);
-      openWindow(id, true); // skipPosition = true; use our clamped restored coords
-      if (s.z) win.style.zIndex = s.z;
-      // Restore maximized / fullscreen state
+      try { clampWindowToViewport(win, true); } catch(e) {}
+      try { openWindow(id, true); } catch(e) {}
+      var zVal = parseInt(s.z) || 0;
+      if (zVal) { win.style.zIndex = zVal; if (zVal > maxZ) maxZ = zVal; }
+      // Restore maximized immediately; defer fullscreen so later opens aren't blocked
       if (s.maximized) win.classList.add('maximized');
-      if (s.fullscreenSpace) {
-        win.classList.add('fullscreen-space');
-        document.body.classList.add('has-fullscreen');
-      }
-      // Replay scroll positions after layout settles + async renderers (Flutter Course grid)
+      if (s.fullscreenSpace) fsRestore.push(win);
+      // Replay scroll positions after layout settles + async renderers
       if (s.scrolls) {
-        var applyScroll = function(attempt) {
-          var anyMissed = false;
-          Object.keys(s.scrolls).forEach(function(sel) {
-            var el = win.querySelector(sel);
-            if (!el) { anyMissed = true; return; }
-            if (el.scrollHeight > el.clientHeight) {
-              el.scrollTop = s.scrolls[sel];
-              // Trigger scroll handlers (fc hero collapse, etc.)
-              el.dispatchEvent(new Event('scroll'));
-            } else {
-              // Element exists but not scrollable yet (grid not rendered); retry
-              anyMissed = true;
-            }
-          });
-          if (anyMissed && attempt < 10) setTimeout(function() { applyScroll(attempt + 1); }, 200);
-        };
-        setTimeout(function() { applyScroll(0); }, 200);
+        (function(win, scrolls) {
+          var applyScroll = function(attempt) {
+            var anyMissed = false;
+            Object.keys(scrolls).forEach(function(sel) {
+              var el = win.querySelector(sel);
+              if (!el) { anyMissed = true; return; }
+              if (el.scrollHeight > el.clientHeight) {
+                el.scrollTop = scrolls[sel];
+                el.dispatchEvent(new Event('scroll'));
+              } else {
+                anyMissed = true;
+              }
+            });
+            if (anyMissed && attempt < 15) setTimeout(function() { applyScroll(attempt + 1); }, 250);
+          };
+          setTimeout(function() { applyScroll(0); }, 150);
+        })(win, s.scrolls);
       }
     });
-  } catch(e) {}
-  winStateRestored = true;
+
+    // Keep activeZ ahead of restored windows so newly opened windows stack above
+    if (typeof activeZ !== 'undefined' && maxZ >= activeZ) activeZ = maxZ + 1;
+
+    // Now apply deferred fullscreen state
+    if (fsRestore.length) {
+      fsRestore.forEach(function(w) { w.classList.add('fullscreen-space'); });
+      document.body.classList.add('has-fullscreen');
+    }
+  } catch(e) {
+    // swallow — never block the save loop from turning on
+  } finally {
+    winStateRestored = true;
+  }
 }
 
 function clampWindowToViewport(win, skipTransition) {
