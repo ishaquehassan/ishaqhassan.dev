@@ -1727,26 +1727,9 @@ var WIN_SIDEBAR = {
         { target: 'all',          icon: 'all',          text: 'All Stories' },
         { target: 'flutter',      icon: 'mobile',       text: 'Flutter' },
         { target: 'architecture', icon: 'package',      text: 'Architecture' },
-        { target: 'tutorial',     icon: 'book',         text: 'Tutorials' },
-        { target: 'tip',          icon: 'star',         text: 'Tips & Tricks' },
       ]},
       { label: 'External', items: [
         { href: 'https://medium.com/@ishaqhassan', icon: 'link', text: 'Read on Medium' },
-      ]}
-    ]
-  },
-  github: {
-    accent: 'purple',
-    title: 'GitHub Profile',
-    mode: 'scroll',
-    sections: [
-      { label: 'Profile', items: [
-        { target: 'overview',      icon: 'user',     text: 'Overview' },
-        { target: 'pinned',        icon: 'star',     text: 'Pinned' },
-        { target: 'contributions', icon: 'git',      text: 'Contributions' },
-      ]},
-      { label: 'External', items: [
-        { href: 'https://github.com/ishaquehassan', icon: 'link', text: 'Open GitHub' },
       ]}
     ]
   },
