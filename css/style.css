@@ -135,6 +135,33 @@ body {
   margin-top: 14px;
   border-top: 1px solid rgba(255,255,255,0.08);
   padding-top: 12px;
+  line-height: 1.7;
+}
+.about-author-link {
+  color: #7dd3fc;
+  text-decoration: none;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(125,211,252,0.45), 0 0 20px rgba(84,197,248,0.22);
+  background: linear-gradient(90deg, transparent, transparent);
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: color 0.2s, text-shadow 0.2s, background-size 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.about-author-link:hover {
+  color: #bae6fd;
+  text-shadow: 0 0 14px rgba(125,211,252,0.7), 0 0 28px rgba(84,197,248,0.5);
+  background: linear-gradient(90deg, rgba(125,211,252,0.9), rgba(84,197,248,0.6));
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+}
+.about-copyright {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 10px;
+  opacity: 0.75;
+  letter-spacing: 0.2px;
 }
 #about-dialog .about-close {
   margin-top: 20px;
@@ -1028,12 +1055,33 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 
 .window-toolbar {
   height: var(--toolbar-h);
-  background: rgba(30,30,30,0.6);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: transparent;
+  border-bottom: none;
   display: flex;
   align-items: center;
   padding: 0 16px;
   cursor: grab;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 5;
+  transition: background 0.25s ease, backdrop-filter 0.25s ease,
+              -webkit-backdrop-filter 0.25s ease, box-shadow 0.25s ease;
+}
+/* Frosted glass toolbar — for windows that have a hero extending under it */
+#win-flutter-course .window-toolbar,
+#win-linkedin .window-toolbar {
+  backdrop-filter: blur(22px) saturate(200%);
+  -webkit-backdrop-filter: blur(22px) saturate(200%);
+}
+#win-flutter-course .window-toolbar { background: rgba(14,18,32,0.55); }
+#win-linkedin .window-toolbar { background: rgba(18,24,36,0.5); }
+#win-flutter-course.is-scrolled .window-toolbar,
+#win-linkedin.is-scrolled .window-toolbar {
+  box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 6px 18px -6px rgba(0,0,0,0.55);
+}
+#win-flutter-course.is-scrolled .window-toolbar { background: rgba(10,14,24,0.72); }
+#win-linkedin.is-scrolled .window-toolbar { background: rgba(14,18,28,0.7); }
+.window-body {
   position: relative;
 }
 
@@ -1051,14 +1099,33 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   border-radius: 50%;
   cursor: pointer;
   transition: filter 0.15s;
+  position: relative;
+  font-size: 0;
+  line-height: 0;
+  color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+.traffic-light::after {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  font-weight: 900;
+  line-height: 1;
   color: transparent;
+  transition: color 0.15s;
+  pointer-events: none;
 }
+.tl-close::after    { content: '\2715'; font-size: 8px; }
+.tl-minimize::after { content: '\2212'; font-size: 13px; margin-top: -1px; }
+.tl-maximize::after { content: '\002B'; font-size: 12px; }
 
-.traffic-light:hover { color: rgba(0,0,0,0.6); }
+/* Hover ANY traffic light → reveal glyphs on ALL three */
+.traffic-lights:hover .traffic-light::after,
+.traffic-light:hover::after { color: rgba(0,0,0,0.82); }
+
 .tl-close { background: #FF5F57; }
 .tl-minimize { background: #FEBC2E; }
 .tl-maximize { background: #28C840; }
@@ -1074,10 +1141,10 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 }
 
 .window-body {
-  height: calc(100% - var(--toolbar-h));
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 24px;
+  padding: calc(var(--toolbar-h) + 14px) 24px 24px;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.1) transparent;
 }
@@ -1338,12 +1405,12 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 .window[data-accent="slate"]  { --sb-accent: 148, 163, 184; }
 .window[data-accent="rose"]   { --sb-accent: 251, 113, 133; }
 .window[data-accent="indigo"] { --sb-accent: 129, 140, 248; }
+.window[data-accent="medium"] { --sb-accent: 0, 171, 108; }
 .window[data-accent="orange"] { --sb-accent: 251, 146, 60; }
 
 /* Toolbar becomes 2-column: dark sidebar-width wt-left + lighter wt-right */
 .window.has-fshell .window-toolbar {
   padding: 0;
-  background: transparent;
   border-bottom: none;
 }
 .wt-left {
@@ -1447,7 +1514,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 10px 8px 14px 8px;
+  padding: calc(10px + var(--toolbar-h)) 8px 14px 8px;
   border-right: 1px solid var(--sb-divider);
   box-sizing: border-box;
   scrollbar-width: thin;
@@ -1463,7 +1530,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 20px 22px 0;
+  padding: var(--toolbar-h) 22px 0;
   min-width: 0;
   box-sizing: border-box;
   scrollbar-width: thin;
@@ -2501,6 +2568,51 @@ a.li-tl-company:hover { color: #7dd3fc; }
   text-shadow: 0 0 10px rgba(56,189,248,0.6), 0 0 30px rgba(56,189,248,0.3), 0 0 60px rgba(14,165,233,0.15);
   will-change: opacity;
   animation: boot-cta-appear 1.5s ease-out forwards, boot-cta-breathe 4s ease-in-out 1.5s infinite;
+}
+
+#boot-credit {
+  position: absolute; left: 0; right: 0; bottom: 28px;
+  z-index: 2; text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 2.4px; text-transform: uppercase;
+  color: rgba(186,230,253,0.55);
+  opacity: 0;
+  animation: boot-credit-fade-in 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+  pointer-events: auto;
+}
+#boot-credit .boot-heart {
+  display: inline-block;
+  margin: 0 4px;
+  font-size: 12px;
+  filter: drop-shadow(0 0 6px rgba(244,114,182,0.7)) drop-shadow(0 0 12px rgba(236,72,153,0.4));
+  animation: boot-heart-beat 1.4s ease-in-out infinite;
+}
+#boot-credit .boot-credit-link {
+  color: #7dd3fc;
+  text-decoration: none;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(125,211,252,0.55), 0 0 18px rgba(84,197,248,0.25);
+  transition: color 0.2s, text-shadow 0.2s;
+}
+#boot-credit .boot-credit-link:hover {
+  color: #bae6fd;
+  text-shadow: 0 0 12px rgba(125,211,252,0.9), 0 0 24px rgba(84,197,248,0.5);
+}
+@keyframes boot-credit-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes boot-heart-beat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.22); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.14); }
+  60% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #boot-credit .boot-heart { animation: none; }
+  #boot-credit { animation: none; opacity: 1; }
 }
 
 /* ===== MOBILE APP STYLES ===== */
@@ -3947,10 +4059,9 @@ a.li-tl-company:hover { color: #7dd3fc; }
   50% { background-position: 100% 50%; }
 }
 
-/* ===== WINDOW ACTIVE INDICATOR ===== */
-.window.open .window-toolbar {
-  background: rgba(30,30,30,0.7);
-}
+/* ===== WINDOW ACTIVE INDICATOR =====
+   (removed background override — base .window-toolbar bg handles default, .is-scrolled handles frosted state) */
+
 
 /* ===== WINDOW SNAPPING ===== */
 .snap-preview {
@@ -3967,36 +4078,98 @@ a.li-tl-company:hover { color: #7dd3fc; }
 
 .snap-menu {
   position: absolute;
-  top: 20px;
-  left: -4px;
-  background: rgba(36, 36, 36, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 4px 0;
-  min-width: 160px;
+  top: 22px;
+  left: -8px;
+  background: rgba(40, 40, 44, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 12px 12px 10px;
+  width: 232px;
   display: none;
   z-index: 10001;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.55), 0 0 0 0.5px rgba(255,255,255,0.04) inset;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
 }
 /* Invisible bridge so moving mouse from green button into menu doesn't break hover */
 .snap-menu::before {
   content: '';
   position: absolute;
-  top: -10px;
+  top: -12px;
   left: 0;
   right: 0;
-  height: 10px;
+  height: 12px;
   background: transparent;
 }
 /* Hover-show ONLY on the green (maximize) button; close/min buttons unaffected */
 .tl-maximize:hover .snap-menu,
 .snap-menu:hover { display: block; }
-/* Legacy .show class kept for programmatic states; still scoped to green btn only */
 .tl-maximize .snap-menu.show { display: block; }
 .tl-maximize { position: relative; }
+
+.snap-menu-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.1px;
+  padding: 0 2px 6px;
+  user-select: none;
+}
+.snap-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.snap-menu-tile {
+  aspect-ratio: 1.15 / 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.15s, border-color 0.15s, transform 0.12s;
+}
+.snap-menu-tile:hover {
+  background: rgba(10, 132, 255, 0.22);
+  border-color: rgba(10, 132, 255, 0.55);
+  transform: translateY(-1px);
+}
+.snap-menu-tile svg {
+  width: 70%; height: 70%;
+  color: rgba(255,255,255,0.88);
+}
+.snap-menu-sep {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 4px 2px 6px;
+}
+.snap-menu-fullscreen {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: rgba(255,255,255,0.92);
+  transition: background 0.15s;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+.snap-menu-fullscreen:hover { background: rgba(10, 132, 255, 0.22); }
+.snap-menu-fullscreen svg { color: rgba(255,255,255,0.85); flex-shrink: 0; }
+.snap-menu-fullscreen .snap-menu-chevron { margin-left: auto; opacity: 0.45; }
+
+/* Legacy support — keep list-style items still work if injected */
 .snap-menu-item {
-  padding: 6px 14px;
+  padding: 6px 10px;
   font-size: 12px;
   cursor: pointer;
   color: var(--text);
@@ -4006,9 +4179,10 @@ a.li-tl-company:hover { color: #7dd3fc; }
   background: none;
   border: none;
   transition: background 0.15s;
+  border-radius: 6px;
 }
-.snap-menu-item:hover { background: rgba(0, 122, 255, 0.2); }
-.snap-menu-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 4px 0; }
+.snap-menu-item:hover { background: rgba(10, 132, 255, 0.22); }
+.snap-menu-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 6px 2px; }
 
 /* ===== MULTIPLE DESKTOPS ===== */
 #desktop-strip {
@@ -4124,10 +4298,15 @@ a.li-tl-company:hover { color: #7dd3fc; }
   100% { background-position: 200% center; }
 }
 
-/* Edge-to-edge heroes inside fshell-content */
+/* LinkedIn hero extends under glass toolbar — inner banner padding-top keeps profile content below toolbar */
 .window.has-fshell .fshell-content > .li-hero {
-  margin: -20px -22px 18px;
+  margin: calc(var(--toolbar-h) * -1) -22px 18px;
+  padding-top: var(--toolbar-h);
 }
+
+/* Some windows need a minimum width to render their hero/grid/timeline cleanly */
+#win-linkedin { min-width: 910px; }
+#win-flutter-course { min-width: 780px; }
 
 /* LinkedIn Education cards */
 .edu-section-title {
@@ -4210,13 +4389,14 @@ a.li-tl-company:hover { color: #7dd3fc; }
 
 /* ====== FC HERO V2 — premium YouTube channel banner ====== */
 .fc-hero-v2 {
-  padding: 18px 26px 16px !important;
+  padding: calc(var(--toolbar-h) + 18px) 26px 18px !important;
   background:
     radial-gradient(1100px 360px at 85% -10%, rgba(5,83,177,0.42) 0%, transparent 60%),
     radial-gradient(800px 280px at 5% 120%, rgba(167,139,250,0.25) 0%, transparent 55%),
     linear-gradient(165deg, #050a18 0%, #080f22 50%, #0a0e1c 100%) !important;
   border-bottom: 1px solid rgba(84,197,248,0.18) !important;
-  display: flex; flex-direction: column; gap: 14px;
+  display: flex; flex-direction: column;
+  position: relative;
 }
 .fc-hero-orb {
   position: absolute;
@@ -4252,11 +4432,7 @@ a.li-tl-company:hover { color: #7dd3fc; }
   opacity: 0.5;
 }
 
-.fc-hero-top {
-  position: relative; z-index: 2;
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; flex-wrap: wrap;
-}
+.fc-hero-top { display: none; }
 .fc-hero-chips { display: flex; gap: 8px; flex-wrap: wrap; }
 .fc-hero-chip {
   display: inline-flex; align-items: center; gap: 6px;
@@ -4296,28 +4472,26 @@ a.li-tl-company:hover { color: #7dd3fc; }
 .fc-yt-sub {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 12px 5px 10px;
-  background: linear-gradient(135deg, #ff0033 0%, #cc0000 100%);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.45px;
-  text-transform: uppercase;
+  justify-content: center;
+  gap: 7px;
+  padding: 7px 14px;
+  background: #f1f1f1;
+  color: #0f0f0f;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
   text-decoration: none;
   border-radius: 999px;
   line-height: 1;
-  box-shadow: 0 4px 14px -4px rgba(255,0,51,0.55), 0 0 0 1px rgba(255,255,255,0.08) inset;
-  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.18s;
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  transition: background 0.15s ease;
+  margin-left: auto;
 }
+.fc-yt-sub svg { display: block; color: #0f0f0f; flex-shrink: 0; }
 .fc-yt-sub:hover {
-  transform: translateY(-1px);
-  background: linear-gradient(135deg, #ff1a47 0%, #e60000 100%);
-  box-shadow: 0 8px 20px -4px rgba(255,0,51,0.65), 0 0 0 1px rgba(255,255,255,0.12) inset;
+  background: #d9d9d9;
+  color: #0f0f0f;
 }
-.fc-yt-sub svg { display: block; }
 
 /* Main hero row */
 .fc-hero-main {
@@ -4353,9 +4527,40 @@ a.li-tl-company:hover { color: #7dd3fc; }
 }
 
 .fc-hero-body { flex: 1; min-width: 0; }
+.fc-hero-badge {
+  display: inline-flex; align-items: stretch;
+  margin: 0 0 12px;
+  border-radius: 6px;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: opacity 0.15s ease;
+}
+.fc-hero-badge-label {
+  padding: 4px 9px;
+  background: #2a2f3a;
+  color: #d8dbe0;
+}
+.fc-hero-badge-value {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 9px;
+  background: #0553B1;
+  color: #fff;
+}
+.fc-hero-badge-value svg,
+.fc-hero-badge-value img {
+  display: block;
+  flex-shrink: 0;
+  filter: brightness(10);
+}
+.fc-hero-badge:hover { opacity: 0.88; }
+
 .fc-hero-title {
   font-size: 24px; font-weight: 800; line-height: 1.15;
-  margin: 0 0 6px;
+  margin: 0 0 10px;
   background: linear-gradient(110deg, #fff 0%, #bae6fd 25%, #54c5f8 50%, #fff 75%, #bae6fd 100%);
   background-size: 240% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -4389,7 +4594,8 @@ a.li-tl-company:hover { color: #7dd3fc; }
 }
 
 .fc-hero-statpills {
-  display: flex; gap: 8px; flex-wrap: wrap;
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  width: 100%;
 }
 .fc-hero-pill {
   display: inline-flex; align-items: center; gap: 6px;
@@ -4427,10 +4633,10 @@ a.li-tl-company:hover { color: #7dd3fc; }
   }
 }
 
-/* Hero Header */
+/* Hero Header — extends upward behind glass toolbar, inner content stays below via padding */
 .fc-header {
-  padding: 24px 24px 18px; position: relative; overflow: hidden;
-  margin: -20px -22px 0;
+  padding: calc(var(--toolbar-h) + 14px) 24px 18px; position: relative; overflow: hidden;
+  margin: calc(var(--toolbar-h) * -1) -22px 0;
   background: #050508;
   border-bottom: 1px solid rgba(54,197,248,0.1);
   transition: padding 0.32s cubic-bezier(0.16, 1, 0.3, 1),
@@ -4926,9 +5132,8 @@ a.li-tl-company:hover { color: #7dd3fc; }
 /* Toolbar (always visible, own space) */
 .fc-pw-bar {
   position: relative !important; z-index: 5;
-  background: rgba(12,13,16,0.95) !important;
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(54,197,248,0.06);
+  background: transparent !important;
+  border-bottom: none;
 }
 .fc-pw-title {
   flex: 1; font-size: 13px; font-weight: 600; color: #EDEDEF;

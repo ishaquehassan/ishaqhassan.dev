@@ -211,6 +211,9 @@ window.addEventListener('load', () => {
         try { visited = !!localStorage.getItem('already_visited'); } catch(e) {}
         var welcomeMsg = visited ? 'Welcome back to Ishaq OS 👋' : 'Welcome to Ishaq OS ✨';
         setTimeout(function() { showNotif(welcomeMsg); }, 500);
+        if (!visited) {
+          setTimeout(autoOpenWelcomeWindows, 700);
+        }
         try { localStorage.setItem('already_visited', '1'); } catch(e) {}
       }
     }, 800);
@@ -222,6 +225,65 @@ window.addEventListener('load', () => {
     document.removeEventListener('keydown', onBootClick);
     finishBoot();
   }
+
+  // First-visit: auto-arrange GitHub (top) + LinkedIn (behind) + Contact (side)
+  window.autoOpenWelcomeWindows = function() {
+    var W = window.innerWidth;
+    var H = window.innerHeight;
+    if (W <= 768) return;
+    var topBar = 28;
+    var dockH = 80;
+    var usableH = Math.max(380, H - topBar - dockH);
+    var ghW = Math.min(680, W - 80);
+    var ghH = Math.min(600, usableH - 20);
+    var liW = Math.min(700, W - 80);
+    var liH = Math.min(620, usableH - 20);
+    var ctW = Math.min(520, W - 80);
+    var ctH = Math.min(520, usableH - 20);
+    var layout;
+    if (W >= 1400) {
+      var liLeft = W - liW - 80;
+      var liTop = topBar + Math.max(18, (usableH - liH) / 2);
+      var ghLeft = liLeft - 52;
+      var ghTop = Math.max(topBar + 18, liTop - 40);
+      var ctLeft = 72;
+      var ctTop = topBar + Math.max(18, (usableH - ctH) / 2);
+      layout = {
+        contact:  { left: ctLeft, top: ctTop, w: ctW, h: ctH },
+        linkedin: { left: liLeft, top: liTop, w: liW, h: liH },
+        github:   { left: ghLeft, top: ghTop, w: ghW, h: ghH }
+      };
+    } else if (W >= 1100) {
+      var liL = Math.max(340, W - liW - 40);
+      var liT = topBar + 34;
+      var ghL = Math.max(300, liL - 56);
+      var ghT = Math.max(topBar + 18, liT - 32);
+      layout = {
+        contact:  { left: 30, top: topBar + 34, w: ctW, h: ctH },
+        linkedin: { left: liL, top: liT, w: liW, h: liH },
+        github:   { left: ghL, top: ghT, w: ghW, h: ghH }
+      };
+    } else {
+      var base = Math.max(24, Math.round((W - ghW) / 2) - 20);
+      layout = {
+        contact:  { left: Math.max(10, base - 40), top: topBar + 18, w: ctW, h: ctH },
+        linkedin: { left: base + 60, top: topBar + 32, w: liW, h: liH },
+        github:   { left: base + 24, top: topBar + 58, w: ghW, h: ghH }
+      };
+    }
+    var id = 'contact';
+    var win = document.getElementById('win-' + id);
+    if (!win || (typeof openWindows !== 'undefined' && openWindows[id])) return;
+    var ctW = Math.min(560, W - 60);
+    var ctH = Math.min(560, usableH - 30);
+    var ctLeft = Math.round((W - ctW) / 2);
+    var ctTop = topBar + Math.round((usableH - ctH) / 2);
+    win.style.left = ctLeft + 'px';
+    win.style.top = ctTop + 'px';
+    win.style.width = ctW + 'px';
+    win.style.height = ctH + 'px';
+    if (typeof openWindow === 'function') openWindow(id, true);
+  };
 
   let progress = 0;
   var bootDuration = 3000;
@@ -235,23 +297,7 @@ window.addEventListener('load', () => {
     bar.style.width = progress + '%';
     if (t >= 1) {
       bootDone = true;
-      var isMobile = window.innerWidth <= 768 || (window.innerWidth <= 1024 && 'ontouchstart' in window);
-      if (isMobile) {
-        setTimeout(finishBoot, 500);
-      } else {
-        var barC = document.getElementById('boot-bar-container');
-        if (barC) barC.classList.add('boot-hide');
-        if (bootText) bootText.classList.add('boot-hide');
-        var cta = document.getElementById('boot-cta');
-        if (cta) {
-          cta.textContent = 'CLICK ANYWHERE TO ENTER';
-          setTimeout(function(){ cta.style.display = 'block'; }, 400);
-        }
-        screen.style.cursor = 'pointer';
-        screen.addEventListener('click', onBootClick);
-        screen.addEventListener('touchstart', onBootClick);
-        document.addEventListener('keydown', onBootClick);
-      }
+      setTimeout(finishBoot, 500);
     } else {
       requestAnimationFrame(bootTick);
     }
@@ -721,14 +767,93 @@ function getSnapZone(mx, my) {
   const nearTop = my < menuH + SNAP_EDGE;
   const nearBottom = my > H - dockH - SNAP_EDGE;
 
-  if (nearLeft && nearTop) return 'topleft-quarter';
-  if (nearRight && nearTop) return 'topright-quarter';
   if (nearLeft && nearBottom) return 'bottomleft-quarter';
   if (nearRight && nearBottom) return 'bottomright-quarter';
   if (nearLeft) return 'left-half';
   if (nearRight) return 'right-half';
-  if (nearTop) return 'top-full';
   return null;
+}
+
+// Rebuild all snap menus with the new grid-style layout (macOS 15 / Sequoia style)
+function snapMenuTemplate(winId) {
+  var esc = function(s){ return s.replace(/'/g, '&apos;'); };
+  var wi = esc(winId);
+  var tile = function(zone, svg, label) {
+    return '<button type="button" class="snap-menu-tile" title="' + label +
+           '" onclick="snapWindow(\'' + wi + '\',\'' + zone + '\',event)">' + svg + '</button>';
+  };
+  // Icon SVGs — minimal "window inside a rectangle" style
+  var svgLeftHalf   = '<svg viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.25"><rect x="1" y="1.5" width="22" height="15" rx="2"/><rect x="1" y="1.5" width="11" height="15" rx="2" fill="currentColor" fill-opacity="0.82" stroke="none"/></svg>';
+  var svgRightHalf  = '<svg viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.25"><rect x="1" y="1.5" width="22" height="15" rx="2"/><rect x="12" y="1.5" width="11" height="15" rx="2" fill="currentColor" fill-opacity="0.82" stroke="none"/></svg>';
+  var svgTopHalf    = '<svg viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.25"><rect x="1" y="1.5" width="22" height="15" rx="2"/><rect x="1" y="1.5" width="22" height="7.5" rx="2" fill="currentColor" fill-opacity="0.82" stroke="none"/></svg>';
+  var svgBottomHalf = '<svg viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.25"><rect x="1" y="1.5" width="22" height="15" rx="2"/><rect x="1" y="9" width="22" height="7.5" rx="2" fill="currentColor" fill-opacity="0.82" stroke="none"/></svg>';
+  var svgFill       = '<svg viewBox="0 0 24 18" fill="currentColor" fill-opacity="0.82" stroke="currentColor" stroke-width="1.25"><rect x="1" y="1.5" width="22" height="15" rx="2"/></svg>';
+  var svgSplit      = '<svg viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.25"><rect x="1" y="1.5" width="10.5" height="15" rx="1.8" fill="currentColor" fill-opacity="0.7" stroke="none"/><rect x="12.5" y="1.5" width="10.5" height="15" rx="1.8" fill="currentColor" fill-opacity="0.45" stroke="none"/></svg>';
+  var svgThreeUp    = '<svg viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.25"><rect x="1" y="1.5" width="13" height="15" rx="1.8" fill="currentColor" fill-opacity="0.7" stroke="none"/><rect x="15" y="1.5" width="8" height="7" rx="1.5" fill="currentColor" fill-opacity="0.45" stroke="none"/><rect x="15" y="9.5" width="8" height="7" rx="1.5" fill="currentColor" fill-opacity="0.45" stroke="none"/></svg>';
+  var svgGrid4      = '<svg viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.25"><rect x="1" y="1.5" width="10.5" height="7" rx="1.5" fill="currentColor" fill-opacity="0.55" stroke="none"/><rect x="12.5" y="1.5" width="10.5" height="7" rx="1.5" fill="currentColor" fill-opacity="0.55" stroke="none"/><rect x="1" y="9.5" width="10.5" height="7" rx="1.5" fill="currentColor" fill-opacity="0.55" stroke="none"/><rect x="12.5" y="9.5" width="10.5" height="7" rx="1.5" fill="currentColor" fill-opacity="0.55" stroke="none"/></svg>';
+
+  return (
+    '<div class="snap-menu-section-label">Move &amp; Resize</div>' +
+    '<div class="snap-menu-grid">' +
+      tile('left-half',    svgLeftHalf,   'Tile Left') +
+      tile('right-half',   svgRightHalf,  'Tile Right') +
+      tile('top-half',     svgTopHalf,    'Tile Top') +
+      tile('bottom-half',  svgBottomHalf, 'Tile Bottom') +
+    '</div>' +
+    '<div class="snap-menu-section-label">Fill &amp; Arrange</div>' +
+    '<div class="snap-menu-grid" style="margin-bottom:6px;">' +
+      tile('maximize-fill',   svgFill,    'Fill') +
+      tile('topleft-quarter', svgSplit,   'Tile Left (Small)') +
+      tile('bottomleft-quarter', svgThreeUp, 'Left + Right Split') +
+      tile('topright-quarter', svgGrid4,  'Quarter Grid') +
+    '</div>' +
+    '<div class="snap-menu-sep"></div>' +
+    '<button type="button" class="snap-menu-fullscreen" onclick="snapWindow(\'' + wi + '\',\'top-full\',event)">' +
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 H5 a2 2 0 00-2 2 v3 M21 8 V5 a2 2 0 00-2-2 h-3 M3 16 v3 a2 2 0 002 2 h3 M16 21 h3 a2 2 0 002-2 v-3"/></svg>' +
+      '<span>Full Screen</span>' +
+      '<svg class="snap-menu-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>' +
+    '</button>'
+  );
+}
+
+function rebuildAllSnapMenus() {
+  document.querySelectorAll('.snap-menu').forEach(function(menu) {
+    var id = (menu.id || '').replace(/^sm-/, '');
+    if (!id) {
+      var parent = menu.closest('.tl-maximize');
+      var onc = parent && parent.getAttribute('onclick');
+      var m = onc && onc.match(/toggleSnapMenu\(event,'([^']+)'\)/);
+      if (m) id = m[1];
+    }
+    if (!id) return;
+    menu.innerHTML = snapMenuTemplate(id);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  try { rebuildAllSnapMenus(); } catch (e) { console.warn('snap menu rebuild failed', e); }
+  try { initWindowScrollGlass(); } catch (e) { console.warn('scroll glass init failed', e); }
+});
+
+// Toggle .is-scrolled on each window when its scrollable content is scrolled past top.
+// Drives the frosted-glass toolbar effect.
+function initWindowScrollGlass() {
+  document.querySelectorAll('.window').forEach(function(win) {
+    var scrollables = [];
+    var body = win.querySelector('.window-body');
+    if (body && (body.scrollHeight > body.clientHeight || getComputedStyle(body).overflowY !== 'visible')) {
+      scrollables.push(body);
+    }
+    win.querySelectorAll('.fshell-content, .fc-sections, .fshell-sidebar, .terminal-scroll').forEach(function(el) {
+      scrollables.push(el);
+    });
+    if (!scrollables.length) return;
+    var onScroll = function() {
+      var anyScrolled = scrollables.some(function(s) { return s.scrollTop > 4; });
+      win.classList.toggle('is-scrolled', anyScrolled);
+    };
+    scrollables.forEach(function(s) { s.addEventListener('scroll', onScroll, { passive: true }); });
+  });
 }
 
 function snapGeometry(zone) {
@@ -769,6 +894,16 @@ function snapGeometry(zone) {
       g.width = W / 2 - p * 1.5;
       g.top = menuH + areaH / 2 + p / 2;
       g.height = areaH / 2 - p * 1.5;
+      break;
+    case 'top-half':
+      g.height = areaH / 2 - p * 1.5;
+      break;
+    case 'bottom-half':
+      g.top = menuH + areaH / 2 + p / 2;
+      g.height = areaH / 2 - p * 1.5;
+      break;
+    case 'maximize-fill':
+      // Fill entire working area of current desktop (no fullscreen space)
       break;
   }
   return g;

@@ -59,13 +59,13 @@
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
 <link rel="apple-touch-icon" href="/assets/profile-photo.png">
-<link rel="stylesheet" href="css/style.min.css?v=152">
+<link rel="stylesheet" href="css/style.min.css?v=179">
 
 <!-- JS: defer = parallel download during HTML parse, execute after DOM ready, in order -->
-<script src="js/app.min.js?v=94" defer></script>
+<script src="js/app.min.js?v=102" defer></script>
 <script src="js/widgets.min.js?v=63" defer></script>
 <script src="js/snake.min.js?v=68" defer></script>
-<script src="js/desktop.min.js?v=69" defer></script>
+<script src="js/desktop.min.js?v=76" defer></script>
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json">
@@ -445,10 +445,6 @@
         <span class="about-spec-value" id="about-gpu">Detecting...</span>
       </div>
       <div class="about-spec-row">
-        <span class="about-spec-label">Storage</span>
-        <span class="about-spec-value" id="about-disk">Detecting...</span>
-      </div>
-      <div class="about-spec-row">
         <span class="about-spec-label">Display</span>
         <span class="about-spec-value" id="about-display">Detecting...</span>
       </div>
@@ -457,7 +453,7 @@
         <span class="about-spec-value" id="about-browser">Detecting...</span>
       </div>
     </div>
-    <div class="about-footer-text">Made by Ishaq Hassan</div>
+    <div class="about-footer-text">Made by <a href="https://github.com/ishaquehassan" target="_blank" rel="noopener noreferrer" class="about-author-link">Ishaq Hassan</a><br><span class="about-copyright">&copy; <span id="about-year"></span> All rights reserved.</span></div>
     <button class="about-close" onclick="closeAboutDialog()">OK</button>
   </div>
 </div>
@@ -475,6 +471,7 @@
   <div id="boot-monogram">ISHAQ HASSAN</div>
   <div id="boot-bar-container"><div id="boot-bar"></div></div>
   <div id="boot-cta"></div>
+  <div id="boot-credit">Made with <span class="boot-heart">&#x2764;&#xFE0F;</span> by <a href="https://github.com/ishaquehassan" target="_blank" rel="noopener noreferrer" class="boot-credit-link">Ishaq Hassan</a></div>
 </div>
 
 <!-- PARTICLE CANVAS -->
@@ -830,15 +827,15 @@
         <img src="assets/wisesend-logo.jpg" alt="WiseSend" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">
       </div>
     </div>
-    <!-- Mission Control — 4 colored windows grid -->
+    <!-- Mission Control — 4 window grid -->
     <div class="dock-item" onclick="toggleMissionControl()" role="button" aria-label="Toggle Mission Control">
       <div class="dock-tooltip">Mission Control</div>
       <div class="dock-icon mission" style="background:linear-gradient(135deg,#1a1a2e,#0f0f1e);">
         <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-          <rect x="4" y="4" width="14" height="12" rx="1.8" fill="#60a5fa"/>
-          <rect x="22" y="4" width="14" height="12" rx="1.8" fill="#f472b6"/>
-          <rect x="4" y="20" width="14" height="12" rx="1.8" fill="#4ade80"/>
-          <rect x="22" y="20" width="14" height="12" rx="1.8" fill="#fbbf24"/>
+          <rect x="4" y="4" width="14" height="12" rx="1.8" fill="#fff"/>
+          <rect x="22" y="4" width="14" height="12" rx="1.8" fill="#fff"/>
+          <rect x="4" y="20" width="14" height="12" rx="1.8" fill="#fff"/>
+          <rect x="22" y="20" width="14" height="12" rx="1.8" fill="#fff"/>
         </svg>
       </div>
     </div>
@@ -853,10 +850,10 @@
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('about')">−</div>
       <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'about')">+<div class="snap-menu" id="sm-about"><div class="snap-menu-item" onclick="snapWindow('about','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('about','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('about','top-full',event)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:8px;"><path d="M8 3 H5 a2 2 0 00-2 2 v3 M21 8 V5 a2 2 0 00-2-2 h-3 M3 16 v3 a2 2 0 002 2 h3 M16 21 h3 a2 2 0 002-2 v-3"/></svg>Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('about','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('about','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('about','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('about','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
-    <div class="window-title">Terminal — ishaq@dev: ~</div>
+    <div class="window-title">Terminal</div>
   </div>
   <div class="window-loader" id="loader-about"><div class="loader-spinner"></div></div>
-  <div class="window-body" style="background:#0d1117;padding:20px;">
+  <div class="window-body" style="background:#0d1117;padding:calc(var(--toolbar-h) + 14px) 20px 20px;">
     <div class="terminal" id="terminal-content"></div>
   </div>
 </div>
@@ -1203,7 +1200,7 @@
   <div class="window-loader" id="loader-contact"><div class="loader-spinner"></div></div>
   <div class="window-body" style="padding:0;">
     <!-- Profile header -->
-    <div style="text-align:center;padding:24px 24px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(6,182,212,0.08));border-bottom:1px solid var(--border);">
+    <div style="text-align:center;padding:calc(var(--toolbar-h) + 16px) 24px 16px;">
       <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin:0 auto 12px;border:3px solid rgba(99,102,241,0.3);box-shadow:0 8px 24px rgba(99,102,241,0.2);"><img src="./assets/profile-photo.webp" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>
       <div style="font-size:18px;font-weight:700;">Let's Build Something Together</div>
       <div style="font-size:12px;color:var(--text2);margin-top:4px;">Available for collaborations, speaking, and open source</div>
@@ -1229,22 +1226,28 @@
             <div style="text-align:left;"><div class="contact-label">LinkedIn</div><div class="contact-value">@ishaquehassan</div></div>
           </div>
         </a>
+        <a class="contact-card" href="https://www.youtube.com/@ishaquehassan" target="_blank" rel="noopener noreferrer" style="transition:all 0.3s;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#ff0033,#cc0000);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 00.5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 002.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 002.1-2.1C24 16 24 12 24 12s0-4-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg></div>
+            <div style="text-align:left;"><div class="contact-label">YouTube</div><div class="contact-value">@ishaquehassan</div></div>
+          </div>
+        </a>
         <a class="contact-card" href="https://medium.com/@ishaqhassan" target="_blank" rel="noopener noreferrer" style="transition:all 0.3s;">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#1a8917,#0d7a0d);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg></div>
             <div style="text-align:left;"><div class="contact-label">Medium</div><div class="contact-value">@ishaqhassan</div></div>
           </div>
         </a>
+        <a class="contact-card" href="https://x.com/ishaquehassan" target="_blank" rel="noopener noreferrer" style="transition:all 0.3s;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#000,#1a1a1a);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,255,255,0.14);"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+            <div style="text-align:left;"><div class="contact-label">X (Twitter)</div><div class="contact-value">@ishaquehassan</div></div>
+          </div>
+        </a>
         <a class="contact-card" href="https://stackoverflow.com/users/2094696/ishaq-hassan" target="_blank" rel="noopener noreferrer" style="transition:all 0.3s;">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#F48024,#e7700d);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M15.725 0l-1.72 1.277 6.39 8.588 1.716-1.277L15.725 0zm-3.94 3.418l-1.369 1.644 8.225 6.85 1.369-1.644-8.225-6.85zm-3.15 4.465l-.905 1.94 9.702 4.517.904-1.94-9.701-4.517zm-1.85 4.86l-.44 2.093 10.473 2.201.44-2.092-10.473-2.203zM1.89 15.47V24h19.19v-8.53h-2.133v6.397H4.021v-6.396H1.89zm4.265 2.133v2.13h10.66v-2.13H6.154z"/></svg></div>
             <div style="text-align:left;"><div class="contact-label">Stack Overflow</div><div class="contact-value">ishaq-hassan</div></div>
-          </div>
-        </a>
-        <a class="contact-card" href="https://ishaqhassan.dev" target="_blank" rel="noopener noreferrer" style="transition:all 0.3s;">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="#fff" stroke-width="1.5"/></svg></div>
-            <div style="text-align:left;"><div class="contact-label">Website</div><div class="contact-value">ishaqhassan.dev</div></div>
           </div>
         </a>
       </div>
@@ -1259,10 +1262,10 @@
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('github')">−</div>
       <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'github')">+<div class="snap-menu" id="sm-github"><div class="snap-menu-item" onclick="snapWindow('github','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('github','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('github','top-full',event)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:8px;"><path d="M8 3 H5 a2 2 0 00-2 2 v3 M21 8 V5 a2 2 0 00-2-2 h-3 M3 16 v3 a2 2 0 002 2 h3 M16 21 h3 a2 2 0 002-2 v-3"/></svg>Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('github','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('github','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('github','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('github','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
-    <div class="window-title">GitHub — ishaquehassan</div>
+    <div class="window-title">GitHub</div>
   </div>
   <div class="window-loader" id="loader-github"><div class="loader-spinner"></div></div>
-  <div class="window-body has-footer">
+  <div class="window-body">
     <div style="text-align:center;padding:16px 0 12px;">
       <div style="width:80px;height:80px;border-radius:50%;overflow:hidden;margin:0 auto 12px;border:3px solid rgba(99,102,241,0.5);box-shadow:0 8px 24px rgba(99,102,241,0.3);"><img src="./assets/github-avatar.webp" loading="lazy" style="width:100%;height:100%;object-fit:cover;" alt="Ishaq Hassan"></div>
       <div style="font-size:20px;font-weight:700;">ishaquehassan</div>
@@ -1292,7 +1295,6 @@
       <a href="https://github.com/ishaquehassan/goal-agent" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="pr-card" style="text-align:left;padding:12px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">🎯</span><span class="pr-title" style="font-size:12px;margin:0;">goal-agent</span></div><div class="pr-repo" style="margin-top:4px;">JS | Claude Code Plugin</div></div></a>
     </div>
   </div>
-  <div class="window-footer"><a href="https://github.com/ishaquehassan" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#24292e,#40464d);color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.1);">Open GitHub Profile →</a></div>
 </div>
 
 <div class="window" id="win-linkedin" style="width:700px;height:620px;top:35px;left:calc(50% - 350px);">
@@ -1302,10 +1304,10 @@
       <div class="traffic-light tl-minimize" onclick="minimizeWindow('linkedin')">−</div>
       <div class="traffic-light tl-maximize" onclick="toggleSnapMenu(event,'linkedin')">+<div class="snap-menu" id="sm-linkedin"><div class="snap-menu-item" onclick="snapWindow('linkedin','left-half',event)">⬅ Tile Left</div><div class="snap-menu-item" onclick="snapWindow('linkedin','right-half',event)">➡ Tile Right</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('linkedin','top-full',event)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:8px;"><path d="M8 3 H5 a2 2 0 00-2 2 v3 M21 8 V5 a2 2 0 00-2-2 h-3 M3 16 v3 a2 2 0 002 2 h3 M16 21 h3 a2 2 0 002-2 v-3"/></svg>Full Screen</div><div class="snap-menu-divider"></div><div class="snap-menu-item" onclick="snapWindow('linkedin','topleft-quarter',event)">◰ Top Left</div><div class="snap-menu-item" onclick="snapWindow('linkedin','topright-quarter',event)">◳ Top Right</div><div class="snap-menu-item" onclick="snapWindow('linkedin','bottomleft-quarter',event)">◱ Bottom Left</div><div class="snap-menu-item" onclick="snapWindow('linkedin','bottomright-quarter',event)">◲ Bottom Right</div></div></div>
     </div>
-    <div class="window-title">LinkedIn — Ishaq Hassan</div>
+    <div class="window-title">LinkedIn</div>
   </div>
   <div class="window-loader" id="loader-linkedin"><div class="loader-spinner"></div></div>
-  <div class="window-body has-footer" style="padding:0;">
+  <div class="window-body" style="padding:0;">
     <!-- Profile Header -->
     <div class="li-hero" style="position:relative;border-bottom:1px solid var(--border);">
       <div style="height:180px;background:url('./assets/linkedin-banner.webp') center 30%/cover no-repeat;opacity:0.7;"></div>
@@ -1501,7 +1503,6 @@
       </div>
     </div>
   </div>
-  <div class="window-footer"><a href="https://linkedin.com/in/ishaquehassan" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:#0077B5;color:#fff;padding:8px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;">Open LinkedIn Profile →</a></div>
 </div>
 
 <div class="window" id="win-snake" style="width:640px;height:700px;top:40px;left:calc(50% - 320px);">
@@ -1569,19 +1570,6 @@
         <div class="fc-hero-orb fc-hero-orb-1"></div>
         <div class="fc-hero-orb fc-hero-orb-2"></div>
         <div class="fc-hero-grid"></div>
-        <div class="fc-hero-top">
-          <div class="fc-hero-chips">
-            <span class="fc-hero-chip fc-hero-chip-free"><span class="fc-hero-dot-live"></span>Free Course</span>
-            <a href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener noreferrer" class="fc-hero-chip fc-hero-chip-verified">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2"/></svg>
-              <span>Listed on Official Flutter Docs</span>
-            </a>
-          </div>
-          <a href="https://www.youtube.com/@ishaquehassan?sub_confirmation=1" target="_blank" rel="noopener noreferrer" class="fc-yt-sub" aria-label="Subscribe on YouTube">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 00.5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 002.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 002.1-2.1C24 16 24 12 24 12s0-4-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
-            <span>Subscribe</span>
-          </a>
-        </div>
         <div class="fc-hero-main">
           <div class="fc-hero-avatar">
             <div class="fc-hero-avatar-ring"></div>
@@ -1589,15 +1577,13 @@
           </div>
           <div class="fc-hero-body">
             <h2 class="fc-hero-title">Flutter: Basic to Advanced</h2>
-            <div class="fc-hero-meta">
-              <span class="fc-hero-author"><img src="assets/profile-photo.webp" width="18" height="18" loading="lazy" alt="">Ishaq Hassan</span>
-              <span class="fc-hero-sep">&middot;</span>
-              <span>Tech Idara</span>
-              <span class="fc-hero-sep">&middot;</span>
-              <span>2022</span>
-              <span class="fc-hero-sep">&middot;</span>
-              <span class="fc-hero-lang">Urdu</span>
-            </div>
+            <a href="https://docs.flutter.dev/resources/courses#urdu" target="_blank" rel="noopener noreferrer" class="fc-hero-badge">
+              <span class="fc-hero-badge-label">Featured on</span>
+              <span class="fc-hero-badge-value">
+                <img src="assets/tech/flutter.svg" width="12" height="12" alt="" class="fc-hero-badge-logo">
+                Flutter Docs
+              </span>
+            </a>
             <div class="fc-hero-statpills">
               <div class="fc-hero-pill">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4" fill="currentColor"/></svg>
@@ -1607,14 +1593,10 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
                 <span><b>7</b> Sections</span>
               </div>
-              <div class="fc-hero-pill">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 010 20M12 2a15 15 0 000 20M2 12h20"/></svg>
-                <span>Urdu Audio</span>
-              </div>
-              <div class="fc-hero-pill fc-hero-pill-hot">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 4-2 5-2 8a4 4 0 008 0c0-2-1-3-2-4 0 3-2 3-2 3-1-2 1-4 1-7-1-1-2 0-3 0z"/></svg>
-                <span>Hands-On</span>
-              </div>
+              <a href="https://www.youtube.com/@ishaquehassan?sub_confirmation=1" target="_blank" rel="noopener noreferrer" class="fc-yt-sub" aria-label="Subscribe on YouTube">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 00.5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 002.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 002.1-2.1C24 16 24 12 24 12s0-4-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
+                <span>Subscribe</span>
+              </a>
             </div>
           </div>
         </div>

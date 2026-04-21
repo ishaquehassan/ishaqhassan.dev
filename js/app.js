@@ -75,23 +75,6 @@ function detectSystemSpecs() {
     document.getElementById('about-gpu').textContent = 'Not Available';
   }
 
-  if (navigator.storage && navigator.storage.estimate) {
-    navigator.storage.estimate().then(est => {
-      const fmt = function(bytes) {
-        if (!bytes) return '0 B';
-        if (bytes >= 1024 * 1024 * 1024) return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
-        if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-        if (bytes >= 1024) return (bytes / 1024).toFixed(1) + ' KB';
-        return bytes + ' B';
-      };
-      const used = est.usage || 0;
-      const quota = est.quota || 0;
-      const pct = quota ? ((used / quota) * 100).toFixed(2) : '0';
-      document.getElementById('about-disk').textContent = fmt(used) + ' used of ' + fmt(quota) + ' (' + pct + '%)';
-    });
-  } else {
-    document.getElementById('about-disk').textContent = 'Not Available';
-  }
 
   const w = screen.width * (window.devicePixelRatio || 1);
   const h = screen.height * (window.devicePixelRatio || 1);
@@ -109,6 +92,8 @@ function detectSystemSpecs() {
 
 function openAboutDialog() {
   detectSystemSpecs();
+  var yEl = document.getElementById('about-year');
+  if (yEl) yEl.textContent = new Date().getFullYear();
   document.getElementById('about-dialog-overlay').classList.add('show');
 }
 function closeAboutDialog() {
@@ -366,6 +351,30 @@ function findSmartPosition(win) {
 
   // Only rearrange if cells are big enough
   if (cellW >= minW && cellH >= minH) {
+    // Any window whose CSS min-width can't fit in the current tile cell gets
+    // pulled out of the tile grid and sent to the back, keeping its full size.
+    // Iterate until no more windows need to be removed (removing one may shrink
+    // the cell further depending on grid reshape — but reshape here grows cellW
+    // so a single pass is usually enough, still loop to be safe).
+    var bumped = true;
+    while (bumped && allOpen.length > 0) {
+      bumped = false;
+      for (var bI = allOpen.length - 1; bI >= 0; bI--) {
+        var bW = allOpen[bI];
+        var bMinW = parseInt(getComputedStyle(bW).minWidth) || 0;
+        if (bMinW > 0 && cellW < bMinW) {
+          allOpen.splice(bI, 1);
+          bW.style.zIndex = 1;
+          totalWins = allOpen.length + 1;
+          cols = Math.ceil(Math.sqrt(totalWins));
+          rows = Math.ceil(totalWins / cols);
+          cellW = Math.floor(areaW / cols);
+          cellH = Math.floor(areaH / rows);
+          bumped = true;
+          break;
+        }
+      }
+    }
     var idx = 0;
     allOpen.forEach(function(w) {
       var col = idx % cols;
@@ -1608,7 +1617,9 @@ function restoreWindowStates() {
 function clampWindowToViewport(win, skipTransition) {
   var menuH = 28;
   var dockH = 80;
-  var minW = 400, minH = 300;
+  var cs = getComputedStyle(win);
+  var minW = Math.max(parseInt(cs.minWidth) || 0, 400);
+  var minH = Math.max(parseInt(cs.minHeight) || 0, 300);
   var t = parseInt(win.style.top) || 0;
   var l = parseInt(win.style.left) || 0;
   var w = win.offsetWidth || parseInt(win.style.width) || minW;
@@ -1618,9 +1629,9 @@ function clampWindowToViewport(win, skipTransition) {
   var availH = Math.max(minH, window.innerHeight - menuH - dockH);
   var availW = Math.max(minW, window.innerWidth - 20);
 
-  // Shrink window if larger than viewport (respect minimums)
-  if (w > availW) { w = availW; win.style.width = w + 'px'; }
-  if (h > availH) { h = availH; win.style.height = h + 'px'; }
+  // Shrink window if larger than viewport, but never below its CSS min-width/height
+  if (w > availW) { w = Math.max(minW, availW); win.style.width = w + 'px'; }
+  if (h > availH) { h = Math.max(minH, availH); win.style.height = h + 'px'; }
 
   // Keep fully inside viewport
   if (l < 0) l = 0;
@@ -1776,7 +1787,7 @@ var WIN_SIDEBAR = {
     ]
   },
   articles: {
-    accent: 'green',
+    accent: 'medium',
     title: 'Medium',
     mode: 'filter',
     sections: [
@@ -1812,7 +1823,12 @@ var WIN_SIDEBAR = {
     mode: 'scroll',
     dynamic: 'fcSections',
     sections: [
-      { label: 'Sections', items: [] }
+      { label: 'Sections', items: [] },
+      { label: 'External', items: [
+        { href: 'https://www.youtube.com/@ishaquehassan', icon: 'play',   text: 'YouTube Channel' },
+        { href: 'https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5', icon: 'folder', text: 'Course Playlist' },
+        { href: 'https://docs.flutter.dev/resources/courses#urdu', icon: 'book', text: 'Flutter Docs' },
+      ]}
     ]
   }
 };
@@ -2050,7 +2066,10 @@ function fshellReshapeWindow(win) {
   // dynamic sections for Flutter Course
   if (cfg.dynamic === 'fcSections') {
     var secs = fshellBuildFcSections();
-    if (secs) cfg.sections = secs;
+    if (secs) {
+      var extras = cfg.sections.filter(function(s){ return s.label !== 'Sections'; });
+      cfg.sections = secs.concat(extras);
+    }
   }
 
   // 1) Toolbar restructure: wrap traffic-lights in .wt-left, build .wt-right
@@ -2219,7 +2238,7 @@ document.addEventListener('click', function(e) {
         var secName = target.replace(/^sec-/, '').replace(/-/g, ' ').toLowerCase();
         var sections = content.querySelectorAll('.fc-section');
         for (var i = 0; i < sections.length; i++) {
-          var hdr = sections[i].querySelector('.fc-section-header span');
+          var hdr = sections[i].querySelector('.fc-sh-title') || sections[i].querySelector('.fc-section-header span');
           if (hdr && hdr.textContent.trim().toLowerCase() === secName) {
             sections[i].classList.remove('collapsed');
             if (fcSections) {
