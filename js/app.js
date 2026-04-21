@@ -77,9 +77,17 @@ function detectSystemSpecs() {
 
   if (navigator.storage && navigator.storage.estimate) {
     navigator.storage.estimate().then(est => {
-      const totalGB = (est.quota / (1024 * 1024 * 1024)).toFixed(0);
-      const usedGB = (est.usage / (1024 * 1024 * 1024)).toFixed(1);
-      document.getElementById('about-disk').textContent = usedGB + ' GB / ' + totalGB + ' GB available';
+      const fmt = function(bytes) {
+        if (!bytes) return '0 B';
+        if (bytes >= 1024 * 1024 * 1024) return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+        if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        if (bytes >= 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return bytes + ' B';
+      };
+      const used = est.usage || 0;
+      const quota = est.quota || 0;
+      const pct = quota ? ((used / quota) * 100).toFixed(2) : '0';
+      document.getElementById('about-disk').textContent = fmt(used) + ' used of ' + fmt(quota) + ' (' + pct + '%)';
     });
   } else {
     document.getElementById('about-disk').textContent = 'Not Available';
