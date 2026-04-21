@@ -196,32 +196,50 @@ function closeAllWindows() {
   Object.keys(openWindows).forEach(id => closeWindow(id));
 }
 
+function _collectDesktopWindowIds() {
+  var wins = document.querySelectorAll('.window.open');
+  var items = [];
+  wins.forEach(function(win) {
+    var id = win.id.replace(/^win-/, '');
+    var z = parseInt(win.style.zIndex || 0, 10) || 0;
+    items.push({ id: id, z: z });
+  });
+  // Front window first so user sees the topmost close first
+  items.sort(function(a, b) { return b.z - a.z; });
+  return items.map(function(x) { return x.id; });
+}
+
 function forceCloseAllWindows() {
   if (document.body.classList.contains('has-fullscreen') && typeof fullscreenState !== 'undefined') {
     Object.keys(fullscreenState).forEach(function(id) {
       if (typeof exitFullscreen === 'function') { try { exitFullscreen(id); } catch(e){} }
     });
   }
-  document.querySelectorAll('.window.open, .window.minimizing, .window.show').forEach(function(win) {
-    var id = win.id.replace(/^win-/, '');
-    win.classList.remove('open','closing','minimizing','show','maximized','hidden-desktop','fullscreen-space');
-    win.style.display = 'none';
-    delete openWindows[id];
-    if (id === 'fc-player') { var pif = document.getElementById('fc-pw-iframe'); if (pif) pif.src = ''; }
-    if (id === 'snake' && typeof snakeReset === 'function') { try { snakeReset(); } catch(e){} }
-    if (id === 'flutter-course' && typeof stopAllFlutterCourseVideos === 'function') { try { stopAllFlutterCourseVideos(); } catch(e){} }
+  var ids = _collectDesktopWindowIds();
+  var stagger = 55; // ms between each window starting its close animation
+  ids.forEach(function(id, i) {
+    setTimeout(function() {
+      try { closeWindow(id); } catch(e){}
+    }, i * stagger);
   });
-  document.body.classList.remove('has-fullscreen');
-  if (typeof syncDockIndicators === 'function') syncDockIndicators();
-  if (typeof updateMenuBarForWindow === 'function') updateMenuBarForWindow(null);
+  setTimeout(function() {
+    document.body.classList.remove('has-fullscreen');
+    if (typeof syncDockIndicators === 'function') syncDockIndicators();
+    if (typeof updateMenuBarForWindow === 'function') updateMenuBarForWindow(null);
+  }, ids.length * stagger + 260);
 }
 
 function forceMinimizeAllWindows() {
-  document.querySelectorAll('.window.open').forEach(function(win) {
-    var id = win.id.replace(/^win-/, '');
-    if (typeof minimizeWindow === 'function') { try { minimizeWindow(id); } catch(e){} }
+  var ids = _collectDesktopWindowIds();
+  var stagger = 55;
+  ids.forEach(function(id, i) {
+    setTimeout(function() {
+      try { minimizeWindow(id); } catch(e){}
+    }, i * stagger);
   });
-  if (typeof updateMenuBarForWindow === 'function') updateMenuBarForWindow(null);
+  setTimeout(function() {
+    if (typeof updateMenuBarForWindow === 'function') updateMenuBarForWindow(null);
+  }, ids.length * stagger + 400);
 }
 
 // ===== CLOCK =====
