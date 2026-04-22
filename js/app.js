@@ -607,7 +607,7 @@ function startTerminal() {
     { type: 'out', text: '' },
     { type: 'cmd', text: '<span class="prompt">ishaq@dev</span> <span class="cmd">~</span> $ <span class="cmd">cat</span> <span class="flag">achievements.md</span>' },
     { type: 'out', text: '' },
-    { type: 'out', text: '  ✅ <span class="str">3 PRs merged</span> into flutter/flutter (official framework)' },
+    { type: 'out', text: '  ✅ <span class="str">4 PRs merged</span> into flutter/flutter (official framework)' },
     { type: 'out', text: '  ✅ <span class="str">Flutter course</span> listed on official Flutter docs' },
     { type: 'out', text: '  ✅ <span class="str">10+ speaking events</span> at GDG, Nest I/O, universities' },
     { type: 'out', text: '  ✅ <span class="str">GDG Kolachi Mentor</span> & community leader' },
@@ -1090,11 +1090,12 @@ var spotlightIndex = [
   {t:'Flutter Course',s:'35 Videos, Urdu, Tech Idara',w:'flutter-course',cat:'Applications',icon:'🎬',p:100},
 
   // Flutter PRs
-  {t:'Fix AnimatedCrossFade clipBehavior forwarding',s:'flutter/flutter #183081, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(1)',p:70},
-  {t:'Forward clipBehavior in AnimatedSize widget',s:'flutter/flutter #183097, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(2)',p:70},
-  {t:'Add clipBehavior to SizeTransition widget',s:'flutter/flutter #183109, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(3)',p:70},
-  {t:'Expose decoration properties in CupertinoTextField',s:'flutter/flutter #184545, Approved',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(4)',p:70},
-  {t:'Add missing property forwarding in Material widgets',s:'flutter/flutter #184569, Approved',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(5)',p:70},
+  {t:'Fix LicenseRegistry docs to reference NOTICES',s:'flutter/flutter #184572, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(1)',p:70},
+  {t:'Fix AnimatedCrossFade clipBehavior forwarding',s:'flutter/flutter #183081, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(2)',p:70},
+  {t:'Forward clipBehavior in AnimatedSize widget',s:'flutter/flutter #183097, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(3)',p:70},
+  {t:'Add clipBehavior to SizeTransition widget',s:'flutter/flutter #183109, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(4)',p:70},
+  {t:'Expose decoration properties in CupertinoTextField',s:'flutter/flutter #184545, Approved',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(5)',p:70},
+  {t:'Add missing property forwarding in Material widgets',s:'flutter/flutter #184569, Approved',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(6)',p:70},
 
   // Speaking Events
   {t:'DevFest Karachi',s:'GDG Kolachi, Panel Speaker',w:'speaking',cat:'Events',icon:'🎯',el:'#win-speaking .event-row:nth-child(1)',p:70},
@@ -2315,7 +2316,7 @@ var appMenus = {
   },
   flutter: {
     name: 'Flutter PRs',
-    nameMenu: '<div class="menu-dd-item disabled">3 Merged, 2 Approved</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://github.com/flutter/flutter/pulls?q=author:ishaquehassan\')">View All on GitHub</div>',
+    nameMenu: '<div class="menu-dd-item disabled">4 Merged, 2 Approved</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://github.com/flutter/flutter/pulls?q=author:ishaquehassan\')">View All on GitHub</div>',
     file: '<div class="menu-dd-item" onclick="window.open(\'https://github.com/flutter/flutter/pull/183081\')">PR #183081: AnimatedCrossFade</div><div class="menu-dd-item" onclick="window.open(\'https://github.com/flutter/flutter/pull/183097\')">PR #183097: AnimatedSize</div><div class="menu-dd-item" onclick="window.open(\'https://github.com/flutter/flutter/pull/183109\')">PR #183109: SizeTransition</div><div class="menu-dd-item" onclick="window.open(\'https://github.com/flutter/flutter/pull/184545\')">PR #184545: CupertinoTextField</div><div class="menu-dd-item" onclick="window.open(\'https://github.com/flutter/flutter/pull/184569\')">PR #184569: Material Widgets</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'flutter\')">Close Window<span class="shortcut">⌘W</span></div>',
     go: '<div class="menu-dd-item" onclick="window.open(\'https://github.com/flutter/flutter\')">Flutter Repository</div><div class="menu-dd-item" onclick="window.open(\'https://flutter.dev\')">flutter.dev</div>'
   },

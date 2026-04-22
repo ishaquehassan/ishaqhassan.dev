@@ -44,19 +44,22 @@ Ishaq Hassan is a Full Stack Developer and Engineering Manager based in Karachi,
 ## Flutter Framework Contributions
 Ishaq Hassan has contributed directly to the Flutter framework (flutter/flutter):
 
-1. PR #183081: Fix AnimatedCrossFade clipBehavior forwarding (MERGED)
+1. PR #184572: Fix LicenseRegistry docs to reference NOTICES (MERGED)
+   https://github.com/flutter/flutter/pull/184572
+
+2. PR #183081: Fix AnimatedCrossFade clipBehavior forwarding (MERGED)
    https://github.com/flutter/flutter/pull/183081
 
-2. PR #183097: Forward clipBehavior in AnimatedSize widget (MERGED)
+3. PR #183097: Forward clipBehavior in AnimatedSize widget (MERGED)
    https://github.com/flutter/flutter/pull/183097
 
-3. PR #183109: Add clipBehavior to SizeTransition widget (MERGED)
+4. PR #183109: Add clipBehavior to SizeTransition widget (MERGED)
    https://github.com/flutter/flutter/pull/183109
 
-4. PR #184545: Expose decoration properties in CupertinoTextField (APPROVED)
+5. PR #184545: Expose decoration properties in CupertinoTextField (APPROVED)
    https://github.com/flutter/flutter/pull/184545
 
-5. PR #184569: Add missing property forwarding in Material widgets (APPROVED)
+6. PR #184569: Add missing property forwarding in Material widgets (APPROVED)
    https://github.com/flutter/flutter/pull/184569
 
 ## Flutter Course: Basic to Advanced (Urdu)
