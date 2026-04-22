@@ -165,10 +165,6 @@ window.addEventListener('resize', () => {
   if (activeMenu && activeParent) positionDropdown(activeParent, activeMenu);
 });
 
-// Keyboard-aware focus: show outline on Tab, hide on mouse
-document.addEventListener('keydown', (e) => { if (e.key === 'Tab') document.body.classList.add('keyboard-nav'); }, { passive: true });
-document.addEventListener('mousedown', () => document.body.classList.remove('keyboard-nav'), { passive: true });
-
 // Click outside to close
 document.addEventListener('mousedown', (e) => {
   if (!activeMenu) return;

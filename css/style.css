@@ -13,14 +13,13 @@
   --surface: rgba(18,18,18,0.92);
   --glass: rgba(255,255,255,0.04);
   --text: #fafafa;
-  --text2: rgba(255,255,255,0.75);
-  --text2-muted: rgba(255,255,255,0.50);
+  --text2: rgba(255,255,255,0.55);
   --border: rgba(255,255,255,0.06);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-/* Focus: hidden by default, visible only during keyboard nav (body.keyboard-nav class) */
+/* Global: kill focus outlines everywhere (desktop + mobile). User explicit ask. */
 *:focus, *:focus-visible, *:focus-within { outline: none !important; }
 a:focus, button:focus, [role="button"]:focus, [tabindex]:focus,
 a:focus-visible, button:focus-visible, [role="button"]:focus-visible, [tabindex]:focus-visible,
@@ -32,20 +31,8 @@ a:focus-visible, button:focus-visible, [role="button"]:focus-visible, [tabindex]
   outline: none !important;
   box-shadow: none;
 }
+/* Keep real input focus rings intentional: just strip default outline, let explicit styles handle it */
 input:focus, textarea:focus, select:focus { outline: none !important; }
-
-/* Keyboard nav: show cyan focus ring on Tab navigation */
-body.keyboard-nav *:focus-visible,
-body.keyboard-nav a:focus-visible,
-body.keyboard-nav button:focus-visible,
-body.keyboard-nav [role="button"]:focus-visible,
-body.keyboard-nav [tabindex]:focus-visible,
-body.keyboard-nav .dock-item:focus-visible,
-body.keyboard-nav .sb-item:focus-visible {
-  outline: 3px solid #7dd3fc !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 0 1px rgba(125,211,252,0.3) !important;
-}
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
