@@ -940,9 +940,9 @@ body {
 /* ===== WINDOWS ===== */
 .window {
   position: absolute;
-  background: rgba(24,24,24,0.92);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background: rgba(24,24,24,0.72);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
   contain: layout style paint;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--win-radius);
