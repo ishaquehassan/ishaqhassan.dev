@@ -1055,9 +1055,9 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 
 .window-toolbar {
   height: var(--toolbar-h);
-  background: rgba(42,44,56,0.78);
-  backdrop-filter: blur(24px) saturate(200%);
-  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  background: rgba(42,44,56,0.82);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
   border-bottom: 1px solid rgba(255,255,255,0.05);
   display: flex;
   align-items: center;
