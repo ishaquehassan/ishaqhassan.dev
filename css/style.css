@@ -940,9 +940,9 @@ body {
 /* ===== WINDOWS ===== */
 .window {
   position: absolute;
-  background: rgba(24,24,24,0.72);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  background: rgba(20,22,30,0.86);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   contain: layout style paint;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--win-radius);
@@ -1055,10 +1055,10 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 
 .window-toolbar {
   height: var(--toolbar-h);
-  background: rgba(18,24,36,0.5);
-  backdrop-filter: blur(22px) saturate(200%);
-  -webkit-backdrop-filter: blur(22px) saturate(200%);
-  border-bottom: none;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
   display: flex;
   align-items: center;
   padding: 0 16px;
@@ -1069,12 +1069,12 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   transition: background 0.25s ease, backdrop-filter 0.25s ease,
               -webkit-backdrop-filter 0.25s ease, box-shadow 0.25s ease;
 }
-#win-flutter-course .window-toolbar { background: rgba(14,18,32,0.55); }
+#win-flutter-course .window-toolbar { background: rgba(255,255,255,0.05); }
+#win-linkedin .window-toolbar { background: rgba(255,255,255,0.04); }
 .window.is-scrolled .window-toolbar {
-  background: rgba(14,18,28,0.7);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 6px 18px -6px rgba(0,0,0,0.55);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06), 0 6px 18px -6px rgba(0,0,0,0.55);
 }
-#win-flutter-course.is-scrolled .window-toolbar { background: rgba(10,14,24,0.72); }
 .window-body {
   position: relative;
 }
