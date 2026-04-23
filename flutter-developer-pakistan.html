@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style id="ihp-redirect-mask">html{visibility:hidden}</style>
+<script>
+/* No-flash landing redirect: hide page instantly, bots get content, humans get portfolio. */
+(function(){
+  try{
+    var ua=(navigator.userAgent||'').toLowerCase();
+    var botRE=/bot|crawler|spider|slurp|lighthouse|googlebot|bingbot|yandex|baiduspider|duckduckbot|applebot|claudebot|anthropic-ai|gptbot|perplexitybot|facebookexternalhit|linkedinbot|twitterbot|telegrambot|whatsapp|slackbot|discordbot|embedly|preview/;
+    var stay=location.search.indexOf('stay=1')!==-1;
+    if(botRE.test(ua)||stay){
+      var s=document.getElementById('ihp-redirect-mask');
+      if(s)s.parentNode.removeChild(s);
+      return;
+    }
+    location.replace('https://ishaqhassan.dev/?ref='+encodeURIComponent(location.pathname.replace(/^\/|\.html$/g,'')));
+  }catch(e){
+    var s=document.getElementById('ihp-redirect-mask');
+    if(s)s.parentNode.removeChild(s);
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Flutter Developer in Pakistan — Ishaq Hassan | Senior Flutter Engineer, Framework Contributor</title>
@@ -106,20 +126,6 @@ li { margin-bottom: 8px; color: #d0d0d0; }
 .related { background: rgba(125,211,252,0.05); padding: 16px; border-radius: 10px; margin-top: 32px; }
 strong { color: #fff; }
 </style>
-<script>
-/* Landing page -> portfolio redirect. Bots see full SEO content, humans go to ishaqhassan.dev. */
-(function(){
-  try{
-    var ua = (navigator.userAgent || '').toLowerCase();
-    var botRE = /bot|crawler|spider|slurp|lighthouse|googlebot|bingbot|yandex|baiduspider|duckduckbot|applebot|claudebot|anthropic-ai|gptbot|perplexitybot|facebookexternalhit|linkedinbot|twitterbot|telegrambot|whatsapp|slackbot|discordbot|embedly|preview/;
-    if(botRE.test(ua)) return;
-    if(window.location.search.indexOf('stay=1') !== -1) return;
-    setTimeout(function(){
-      window.location.replace('https://ishaqhassan.dev/?ref=' + encodeURIComponent(window.location.pathname.replace(/^\/|\.html$/g,'')));
-    }, 80);
-  }catch(e){}
-})();
-</script>
 </head>
 <body>
 <div class="wrap">

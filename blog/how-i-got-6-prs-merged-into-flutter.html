@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style id="ihp-redirect-mask">html{visibility:hidden}</style>
+<script>
+/* No-flash landing redirect: hide page instantly, bots get content, humans get portfolio. */
+(function(){
+  try{
+    var ua=(navigator.userAgent||'').toLowerCase();
+    var botRE=/bot|crawler|spider|slurp|lighthouse|googlebot|bingbot|yandex|baiduspider|duckduckbot|applebot|claudebot|anthropic-ai|gptbot|perplexitybot|facebookexternalhit|linkedinbot|twitterbot|telegrambot|whatsapp|slackbot|discordbot|embedly|preview/;
+    var stay=location.search.indexOf('stay=1')!==-1;
+    if(botRE.test(ua)||stay){
+      var s=document.getElementById('ihp-redirect-mask');
+      if(s)s.parentNode.removeChild(s);
+      return;
+    }
+    location.replace('https://ishaqhassan.dev/?ref='+encodeURIComponent(location.pathname.replace(/^\/|\.html$/g,'')));
+  }catch(e){
+    var s=document.getElementById('ihp-redirect-mask');
+    if(s)s.parentNode.removeChild(s);
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>How a Pakistani Engineer Got 6 PRs Merged Into Flutter's Official Framework | Ishaq Hassan</title>
@@ -109,20 +129,6 @@ hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 40px 0; 
 .cta-btn { display: inline-block; padding: 10px 20px; background: #7dd3fc; color: #0c0c0c; border-radius: 8px; font-weight: 600; text-decoration: none; margin-top: 12px; }
 strong { color: #fff; }
 </style>
-<script>
-/* Landing page -> portfolio redirect. Bots see full SEO content, humans go to ishaqhassan.dev. */
-(function(){
-  try{
-    var ua = (navigator.userAgent || '').toLowerCase();
-    var botRE = /bot|crawler|spider|slurp|lighthouse|googlebot|bingbot|yandex|baiduspider|duckduckbot|applebot|claudebot|anthropic-ai|gptbot|perplexitybot|facebookexternalhit|linkedinbot|twitterbot|telegrambot|whatsapp|slackbot|discordbot|embedly|preview/;
-    if(botRE.test(ua)) return;
-    if(window.location.search.indexOf('stay=1') !== -1) return;
-    setTimeout(function(){
-      window.location.replace('https://ishaqhassan.dev/?ref=' + encodeURIComponent(window.location.pathname.replace(/^\/|\.html$/g,'')));
-    }, 80);
-  }catch(e){}
-})();
-</script>
 </head>
 <body>
 <div class="wrap">
