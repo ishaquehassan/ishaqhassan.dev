@@ -421,7 +421,12 @@ body {
   transition: opacity 0.3s;
 }
 
-#w-clock .widget-value { font-size: 42px; font-variant-numeric: tabular-nums; }
+/* ===== CLOCK WIDGET ===== */
+@keyframes clock-colon-blink { 0%,49%{opacity:1} 50%,100%{opacity:0.15} }
+.clock-time-row { display:flex; align-items:baseline; gap:0; margin-top:4px; }
+.clock-digits { font-size:44px; font-weight:700; letter-spacing:-2px; font-variant-numeric:tabular-nums; color:var(--text1); line-height:1; }
+.clock-colon { font-size:40px; font-weight:300; color:rgba(125,211,252,0.7); margin:0 2px; animation:clock-colon-blink 1s step-end infinite; line-height:1; align-self:baseline; }
+.clock-ampm { font-size:12px; font-weight:600; letter-spacing:1.5px; color:rgba(125,211,252,0.6); align-self:flex-start; margin-top:7px; margin-left:6px; text-transform:uppercase; }
 #w-clock .widget-sub { font-size: 14px; }
 
 #gh-graph {

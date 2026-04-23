@@ -59,10 +59,10 @@
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
 <link rel="apple-touch-icon" href="/assets/profile-photo.png">
-<link rel="stylesheet" href="css/style.min.css?v=185">
+<link rel="stylesheet" href="css/style.min.css?v=186">
 
 <!-- JS: defer = parallel download during HTML parse, execute after DOM ready, in order -->
-<script src="js/app.min.js?v=103" defer></script>
+<script src="js/app.min.js?v=104" defer></script>
 <script src="js/widgets.min.js?v=64" defer></script>
 <script src="js/snake.min.js?v=68" defer></script>
 <script src="js/desktop.min.js?v=77" defer></script>
@@ -579,8 +579,11 @@
 <div id="desktop">
   <div class="widget-col">
     <div class="widget" id="w-clock">
-      <div class="widget-title">🕐 Local Time</div>
-      <div class="widget-value" id="clock-time">00:00</div>
+      <div class="widget-title">Local Time</div>
+      <div class="clock-time-row">
+        <span class="clock-digits" id="clock-h">05</span><span class="clock-colon">:</span><span class="clock-digits" id="clock-m">17</span>
+        <span class="clock-ampm" id="clock-ampm">AM</span>
+      </div>
       <div class="widget-sub" id="clock-date">Loading...</div>
     </div>
     <div class="widget" id="w-status">
@@ -618,12 +621,17 @@
         </div>
       </div>
     </div>
+    <div class="widget" id="w-wallpaper">
+      <div class="widget-title">Wallpaper</div>
+      <div class="wp-swatches" id="wp-swatches"></div>
+      <div class="wp-name" id="wp-name">Dark Matter</div>
+    </div>
   </div>
   <div class="widget-col">
     <div class="widget" onclick="openWindow('flutter')" style="min-width:160px;">
       <div class="widget-title">Flutter Framework</div>
       <div style="display:flex;gap:16px;margin-top:6px;">
-        <div><div class="widget-value" style="font-size:28px;">3</div><div class="widget-sub">Merged</div></div>
+        <div><div class="widget-value" style="font-size:28px;">4</div><div class="widget-sub">Merged</div></div>
         <div><div class="widget-value" style="font-size:28px;">2</div><div class="widget-sub">Approved</div></div>
       </div>
     </div>
@@ -663,11 +671,6 @@
           <span id="weather-wind">💨 -- km/h</span>
         </div>
       </div>
-    </div>
-    <div class="widget" id="w-wallpaper">
-      <div class="widget-title">Wallpaper</div>
-      <div class="wp-swatches" id="wp-swatches"></div>
-      <div class="wp-name" id="wp-name">Dark Matter</div>
     </div>
   </div>
 </div>

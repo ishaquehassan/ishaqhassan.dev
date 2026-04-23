@@ -238,9 +238,16 @@ function forceMinimizeAllWindows() {
 // ===== CLOCK =====
 function updateClock() {
   const now = new Date();
-  const h = now.getHours().toString().padStart(2,'0');
+  const raw = now.getHours();
+  const ampm = raw >= 12 ? 'PM' : 'AM';
+  const h = (raw % 12 || 12).toString().padStart(2,'0');
   const m = now.getMinutes().toString().padStart(2,'0');
-  document.getElementById('clock-time').textContent = `${h}:${m}`;
+  const hEl = document.getElementById('clock-h');
+  const mEl = document.getElementById('clock-m');
+  const apEl = document.getElementById('clock-ampm');
+  if (hEl) hEl.textContent = h;
+  if (mEl) mEl.textContent = m;
+  if (apEl) apEl.textContent = ampm;
   document.getElementById('clock-date').textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
   document.getElementById('menubar-time').textContent = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }) + ' ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
 }

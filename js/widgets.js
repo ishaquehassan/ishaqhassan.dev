@@ -296,12 +296,12 @@ function fetchMobWeather(lat, lon, fallbackCity) {
 
 // ===== WALLPAPER WIDGET =====
 const WALLPAPERS = [
-  { id: 'default',  name: 'Dark Matter',   type: 'image',    value: 'assets/wallpaper.webp', preview: 'linear-gradient(135deg,#1a1a2e 0%,#0c0c1e 100%)' },
-  { id: 'space',    name: 'Deep Space',    type: 'gradient', value: 'radial-gradient(ellipse at 20% 50%,#1a1a2e 0%,#16213e 50%,#0f3460 100%)', preview: 'radial-gradient(ellipse at 20% 50%,#1a1a2e,#0f3460)' },
-  { id: 'emerald',  name: 'Emerald Night', type: 'gradient', value: 'radial-gradient(ellipse at 80% 20%,#0d2818 0%,#052e16 60%,#041a0d 100%)', preview: 'radial-gradient(ellipse at 80% 20%,#0d2818,#041a0d)' },
-  { id: 'aurora',   name: 'Aurora',        type: 'gradient', value: 'radial-gradient(ellipse at 30% 70%,#2d0415 0%,#1a0a2e 45%,#0d0f30 100%)', preview: 'radial-gradient(ellipse at 30% 70%,#2d0415,#0d0f30)' },
-  { id: 'ocean',    name: 'Deep Ocean',    type: 'gradient', value: 'radial-gradient(ellipse at 60% 30%,#001a2e 0%,#003355 50%,#00264d 100%)', preview: 'radial-gradient(ellipse at 60% 30%,#001a2e,#003355)' },
-  { id: 'dusk',     name: 'Dusk',          type: 'gradient', value: 'radial-gradient(ellipse at 50% 100%,#1a0a00 0%,#0d0510 50%,#050010 100%)', preview: 'radial-gradient(ellipse at 50% 100%,#1a0a00,#050010)' }
+  { id: 'default',  name: 'Dark Matter',   value: 'assets/wallpaper.webp',   preview: 'assets/wallpaper.webp' },
+  { id: 'space',    name: 'Deep Space',    value: 'assets/wp-space.webp',    preview: 'assets/wp-space.webp' },
+  { id: 'aurora',   name: 'Aurora',        value: 'assets/wp-aurora.webp',   preview: 'assets/wp-aurora.webp' },
+  { id: 'mountain', name: 'Mountain',      value: 'assets/wp-mountain.webp', preview: 'assets/wp-mountain.webp' },
+  { id: 'nebula',   name: 'Nebula',        value: 'assets/wp-nebula.webp',   preview: 'assets/wp-nebula.webp' },
+  { id: 'night',    name: 'Night Sky',     value: 'assets/wp-night.webp',    preview: 'assets/wp-night.webp' }
 ];
 
 let wpIndex = 0;
@@ -313,11 +313,7 @@ function setWallpaper(idx, save) {
   var el = document.getElementById('wallpaper');
   el.style.opacity = '0.6';
   setTimeout(function() {
-    if (wp.type === 'image') {
-      el.style.backgroundImage = 'url(' + wp.value + ')';
-    } else {
-      el.style.backgroundImage = wp.value;
-    }
+    el.style.backgroundImage = 'url(' + wp.value + ')';
     el.style.opacity = '1';
   }, 180);
   document.querySelectorAll('.wp-swatch').forEach(function(s, i) {
@@ -336,7 +332,9 @@ function initWallpaperWidget() {
   WALLPAPERS.forEach(function(wp, i) {
     var swatch = document.createElement('div');
     swatch.className = 'wp-swatch' + (i === 0 ? ' active' : '');
-    swatch.style.background = wp.preview;
+    swatch.style.backgroundImage = 'url(' + wp.preview + ')';
+    swatch.style.backgroundSize = 'cover';
+    swatch.style.backgroundPosition = 'center';
     swatch.title = wp.name;
     swatch.addEventListener('click', function(e) {
       e.stopPropagation();
