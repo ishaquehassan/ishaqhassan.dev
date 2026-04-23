@@ -1575,7 +1575,7 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--toolbar-h) 22px 0;
+  padding: calc(var(--toolbar-h) + 12px) 22px 24px;
   min-width: 0;
   box-sizing: border-box;
   scrollbar-width: thin;
