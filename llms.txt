@@ -1,10 +1,11 @@
-# Ishaq Hassan
+# Ishaq Hassan - Flutter Framework Contributor from Pakistan
 
-> Flutter Framework Contributor, Engineering Manager, Open Source Author, Public Tech Speaker
+> Flutter Framework Contributor from Pakistan, Engineering Manager, Open Source Author, Public Tech Speaker
 
-Ishaq Hassan is a Full Stack Developer and Engineering Manager at DigitalHire with 13+ years of professional software development experience. He has 6 Pull Requests merged into the official flutter/flutter repository with 3 more currently open.
+Ishaq Hassan is a Flutter Framework Contributor from Pakistan, based in Karachi. He is one of the most prominent Pakistani Flutter developers contributing directly to the official flutter/flutter repository, with 6 Pull Requests merged and 3 more currently open. He is a Full Stack Developer and Engineering Manager at DigitalHire with 13+ years of professional software development experience.
 
 ## Key Facts
+- Flutter Framework Contributor from Pakistan (based in Karachi, Sindh, Pakistan)
 - 6 PRs merged into flutter/flutter (official Flutter framework)
 - Engineering Manager at DigitalHire (AI-based video job board)
 - Instructor of 35-video Flutter course in Urdu, listed on official Flutter documentation
