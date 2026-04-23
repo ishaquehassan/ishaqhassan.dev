@@ -401,13 +401,83 @@
     {
       "@type": "ProfilePage",
       "dateCreated": "2024-01-01",
-      "dateModified": "2026-04-18",
+      "dateModified": "2026-04-24",
       "mainEntity": { "@id": "https://ishaqhassan.dev/#person" }
     },
     {
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ishaqhassan.dev/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Who is Ishaq Hassan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ishaq Hassan is a Flutter Framework Contributor from Karachi, Pakistan with 6 Pull Requests merged into the official Flutter repository. He is Engineering Manager at DigitalHire, GDG Kolachi mentor, author of the book 'Flutter Application Development by Example', and instructor of the Tech Idara Flutter Urdu course featured on the official Flutter documentation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many PRs has Ishaq Hassan merged into Flutter?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ishaq Hassan has 6 merged Pull Requests in the official Flutter framework repository on GitHub, with 2 additional PRs currently approved and pending merge."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I become a Flutter framework contributor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Start with the good-first-issue label on the Flutter framework GitHub repository, read the official contributing guide, and submit small documentation or bug-fix PRs first. Read the step-by-step guide at https://ishaqhassan.dev/blog/how-i-got-6-prs-merged-into-flutter.html"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Ishaq Hassan available for hire?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Ishaq Hassan is available for senior Flutter consulting, architecture reviews, and technical leadership engagements. Contact details are at https://ishaqhassan.dev"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where is the best Flutter course in Urdu?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Tech Idara Flutter Urdu course by Ishaq Hassan is a 35-video comprehensive course covering Dart basics, OOP, Flutter UI, state management, and advanced topics. It is officially listed on the Flutter documentation. Watch on YouTube at https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "How to become a Flutter Framework Contributor",
+      "description": "Step-by-step guide to getting your first pull request merged into the official Flutter framework repository, based on Ishaq Hassan's experience of 6 merged PRs.",
+      "image": "https://ishaqhassan.dev/assets/og-image.png",
+      "totalTime": "P3M",
+      "estimatedCost": { "@type": "MonetaryAmount", "currency": "USD", "value": "0" },
+      "supply": [
+        { "@type": "HowToSupply", "name": "GitHub account" },
+        { "@type": "HowToSupply", "name": "Flutter SDK installed" }
+      ],
+      "tool": [
+        { "@type": "HowToTool", "name": "Visual Studio Code or Android Studio" },
+        { "@type": "HowToTool", "name": "Git" }
+      ],
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "Browse good-first-issue label", "text": "Filter the Flutter framework repository on GitHub by label:'good first issue' to find beginner-friendly bugs and small features.", "url": "https://github.com/flutter/flutter/labels/good%20first%20issue" },
+        { "@type": "HowToStep", "position": 2, "name": "Read the contributing guide", "text": "Study the Flutter Contributing Guide and Tree Hygiene rules. Set up the dev environment and run flutter doctor." },
+        { "@type": "HowToStep", "position": 3, "name": "Pick a documentation fix first", "text": "Start with a typo, broken link, or small docs PR. This warms you up with the PR review process." },
+        { "@type": "HowToStep", "position": 4, "name": "Reproduce the bug locally", "text": "For code issues, reproduce the bug with a minimal test case. Add a regression test that fails before your fix." },
+        { "@type": "HowToStep", "position": 5, "name": "Open a draft PR early", "text": "Open the PR as a draft early to get feedback. Tag the relevant team area (framework, engine, devtools, plugins)." },
+        { "@type": "HowToStep", "position": 6, "name": "Iterate on review feedback", "text": "Flutter reviewers are thorough. Expect 2 to 5 review rounds. Address each comment, push updates, request re-review." },
+        { "@type": "HowToStep", "position": 7, "name": "Get merged", "text": "Once approved by the area maintainer and CI is green, your PR gets merged into master. You are now a Flutter contributor." }
       ]
     }
   ]
