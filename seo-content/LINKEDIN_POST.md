@@ -6,7 +6,7 @@
 
 🇵🇰 Update for the Pakistani Flutter community:
 
-I just crossed **6 Pull Requests merged into flutter/flutter** — the official Flutter framework maintained by Google.
+I just crossed **6 Pull Requests merged into Flutter** — the official Flutter framework maintained by Google.
 
 Merged so far:
 ✅ #184572 — Fix LicenseRegistry docs (NOTICES reference)

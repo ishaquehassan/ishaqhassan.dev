@@ -38,7 +38,7 @@ Personal portfolio website that replicates a full macOS desktop environment in t
 - Animated number counters
 
 **Content**
-- Flutter framework contributions (6 merged, 3 open PRs into flutter/flutter)
+- Flutter framework contributions (6 merged, 3 open PRs into Flutter)
 - 10+ speaking events at GDG, universities, conferences
 - 16 professional roles across 13+ years
 - 6 Medium articles on Flutter and Dart

@@ -6,7 +6,7 @@
 
 ## TL;DR
 
-I'm Ishaq Hassan, Engineering Manager at DigitalHire, Flutter course instructor on the official Flutter docs, and a **Pakistani Flutter developer with 6 Pull Requests merged into the `flutter/flutter` repository** — the official framework maintained by Google. This post walks through why framework-level contributions matter, how I landed mine, and a short guide for other Pakistani (and South Asian) developers who want to do the same.
+I'm Ishaq Hassan, Engineering Manager at DigitalHire, Flutter course instructor on the official Flutter docs, and a **Pakistani Flutter developer with 6 Pull Requests merged into the Flutter repository** — the official framework maintained by Google. This post walks through why framework-level contributions matter, how I landed mine, and a short guide for other Pakistani (and South Asian) developers who want to do the same.
 
 **Live portfolio:** https://ishaqhassan.dev
 
@@ -18,13 +18,13 @@ Pakistan has thousands of Flutter developers now. You'll find Flutter jobs in Ka
 
 But there's a difference between **using** a framework and **contributing to it**.
 
-If you open the `flutter/flutter` repository on GitHub and search the contributor graph for Pakistani engineers with multiple merged PRs, the list is short. Surprisingly short. Most Pakistani engagement with Flutter stops at the app layer — building apps, building plugins, teaching courses. Direct contributions to the framework itself remain rare.
+If you open the Flutter repository on GitHub and search the contributor graph for Pakistani engineers with multiple merged PRs, the list is short. Surprisingly short. Most Pakistani engagement with Flutter stops at the app layer — building apps, building plugins, teaching courses. Direct contributions to the framework itself remain rare.
 
 This article exists partly to normalize it. If you're from Pakistan and you want to contribute to the Flutter framework, **you can**. Here's how I did it.
 
 ---
 
-## My 6 Merged Pull Requests into flutter/flutter
+## My 6 Merged Pull Requests into Flutter
 
 As of April 2026, these are the ones that made it in:
 
@@ -59,13 +59,13 @@ The Flutter team has strict style guides, commit conventions, and test coverage 
 
 ### 3. Find real issues via search, not browsing
 
-- Search `flutter/flutter` issues for labels: `good first issue`, `help wanted`, `d: api docs`
+- Search Flutter issues for labels: `good first issue`, `help wanted`, `d: api docs`
 - Grep the codebase for `TODO` comments near widgets you understand
 - Use Flutter yourself, find a paper cut, reproduce it in a test, fix it
 
 ### 4. Tests are non-negotiable
 
-Every PR into `flutter/flutter` needs a test. If you're adding a parameter, add a unit test that proves it works. If you're fixing a bug, add a regression test. No test = no merge.
+Every PR into Flutter needs a test. If you're adding a parameter, add a unit test that proves it works. If you're fixing a bug, add a regression test. No test = no merge.
 
 ### 5. Be patient and responsive
 
@@ -83,7 +83,7 @@ Open source framework contributions are a **career accelerator** in a way most p
 
 3. **Community leadership.** It earns speaking invitations, course opportunities, mentorship requests.
 
-4. **Pakistani representation.** Every time a Pakistani name appears on a merged flutter/flutter PR, it chips away at the assumption that serious OSS contributions only come from North America or Europe.
+4. **Pakistani representation.** Every time a Pakistani name appears on a merged Flutter PR, it chips away at the assumption that serious OSS contributions only come from North America or Europe.
 
 ---
 

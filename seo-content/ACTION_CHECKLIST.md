@@ -81,7 +81,7 @@ Space 24+ hours between posts. Respond to every comment.
 
 Open your github.com/ishaquehassan profile README. Add:
 ```
-🇵🇰 Flutter Framework Contributor from Pakistan | 6 merged PRs into flutter/flutter
+🇵🇰 Flutter Framework Contributor from Pakistan | 6 merged PRs into Flutter
 📺 Flutter course in Urdu on official Flutter docs
 🎓 Engineering Manager at DigitalHire | GDG Kolachi Mentor
 🌐 Portfolio: https://ishaqhassan.dev
@@ -137,20 +137,20 @@ Should show no errors on the Person/Article schemas.
 
 **Twitter/X bio:**
 ```
-🇵🇰 Flutter Framework Contributor | 6 merged PRs into flutter/flutter | Eng Manager @ DigitalHire | Flutter Urdu course on docs.flutter.dev | ishaqhassan.dev
+🇵🇰 Flutter Framework Contributor | 6 merged PRs into Flutter | Eng Manager @ DigitalHire | Flutter Urdu course on docs.flutter.dev | ishaqhassan.dev
 ```
 
 **LinkedIn headline:**
 ```
-Flutter Framework Contributor from Pakistan | 6 Merged PRs into flutter/flutter | Engineering Manager @ DigitalHire | Open Source Author | Flutter Urdu Course Instructor (docs.flutter.dev)
+Flutter Framework Contributor from Pakistan | 6 Merged PRs into Flutter | Engineering Manager @ DigitalHire | Open Source Author | Flutter Urdu Course Instructor (docs.flutter.dev)
 ```
 
 **GitHub bio:**
 ```
-🇵🇰 Flutter Framework Contributor · 6 merged PRs into flutter/flutter · Eng Manager @ DigitalHire · ishaqhassan.dev
+🇵🇰 Flutter Framework Contributor · 6 merged PRs into Flutter · Eng Manager @ DigitalHire · ishaqhassan.dev
 ```
 
 **Medium bio:**
 ```
-Flutter Framework Contributor from Karachi, Pakistan. 6 merged PRs into flutter/flutter. Engineering Manager at DigitalHire. Writing about Flutter internals, mobile architecture, and OSS.
+Flutter Framework Contributor from Karachi, Pakistan. 6 merged PRs into Flutter. Engineering Manager at DigitalHire. Writing about Flutter internals, mobile architecture, and OSS.
 ```

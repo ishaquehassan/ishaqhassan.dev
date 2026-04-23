@@ -614,7 +614,7 @@ function startTerminal() {
     { type: 'out', text: '' },
     { type: 'cmd', text: '<span class="prompt">ishaq@dev</span> <span class="cmd">~</span> $ <span class="cmd">cat</span> <span class="flag">achievements.md</span>' },
     { type: 'out', text: '' },
-    { type: 'out', text: '  ✅ <span class="str">6 PRs merged</span> into flutter/flutter (official framework)' },
+    { type: 'out', text: '  ✅ <span class="str">6 PRs merged</span> into Flutter (official framework)' },
     { type: 'out', text: '  ✅ <span class="str">Flutter course</span> listed on official Flutter docs' },
     { type: 'out', text: '  ✅ <span class="str">10+ speaking events</span> at GDG, Nest I/O, universities' },
     { type: 'out', text: '  ✅ <span class="str">GDG Kolachi Mentor</span> & community leader' },
@@ -1097,15 +1097,15 @@ var spotlightIndex = [
   {t:'Flutter Course',s:'35 Videos, Urdu, Tech Idara',w:'flutter-course',cat:'Applications',icon:'🎬',p:100},
 
   // Flutter PRs
-  {t:'Fix LicenseRegistry docs to reference NOTICES',s:'flutter/flutter #184572, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(1)',p:70},
-  {t:'Add disposal guidance to CurvedAnimation and CurveTween docs',s:'flutter/flutter #184569, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(2)',p:70},
-  {t:'Add clipBehavior parameter to AnimatedCrossFade',s:'flutter/flutter #184545, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(3)',p:70},
-  {t:'Add scrollPadding property to DropdownMenu',s:'flutter/flutter #183109, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(4)',p:70},
-  {t:'Fix RouteAware.didPushNext documentation inaccuracy',s:'flutter/flutter #183097, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(5)',p:70},
-  {t:'Use double quotes in settings.gradle.kts template',s:'flutter/flutter #183081, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(6)',p:70},
-  {t:'Suppress browser word-selection in SelectableText on web right-click',s:'flutter/flutter #183110, Open',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(7)',p:70},
-  {t:'Guard auto-scroll against Offset.infinite',s:'flutter/flutter #183079, Open',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(8)',p:70},
-  {t:'Reset AppBar _scrolledUnder flag when scroll context changes',s:'flutter/flutter #183062, Open',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(9)',p:70},
+  {t:'Fix LicenseRegistry docs to reference NOTICES',s:'Flutter PR #184572, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(1)',p:70},
+  {t:'Add disposal guidance to CurvedAnimation and CurveTween docs',s:'Flutter PR #184569, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(2)',p:70},
+  {t:'Add clipBehavior parameter to AnimatedCrossFade',s:'Flutter PR #184545, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(3)',p:70},
+  {t:'Add scrollPadding property to DropdownMenu',s:'Flutter PR #183109, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(4)',p:70},
+  {t:'Fix RouteAware.didPushNext documentation inaccuracy',s:'Flutter PR #183097, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(5)',p:70},
+  {t:'Use double quotes in settings.gradle.kts template',s:'Flutter PR #183081, Merged',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(6)',p:70},
+  {t:'Suppress browser word-selection in SelectableText on web right-click',s:'Flutter PR #183110, Open',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(7)',p:70},
+  {t:'Guard auto-scroll against Offset.infinite',s:'Flutter PR #183079, Open',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(8)',p:70},
+  {t:'Reset AppBar _scrolledUnder flag when scroll context changes',s:'Flutter PR #183062, Open',w:'flutter',cat:'Contributions',icon:'🔀',el:'#win-flutter .pr-card:nth-child(9)',p:70},
 
   // Speaking Events
   {t:'DevFest Karachi',s:'GDG Kolachi, Panel Speaker',w:'speaking',cat:'Events',icon:'🎯',el:'#win-speaking .event-row:nth-child(1)',p:70},

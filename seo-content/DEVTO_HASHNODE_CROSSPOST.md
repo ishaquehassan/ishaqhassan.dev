@@ -4,7 +4,7 @@
 
 ```yaml
 ---
-title: "From Karachi to flutter/flutter — 6 Merged PRs and How a Pakistani Dev Got There"
+title: "From Karachi to Flutter — 6 Merged PRs and How a Pakistani Dev Got There"
 published: true
 description: "The journey of a Pakistani Flutter engineer with 6 PRs merged into the official Flutter framework, plus a practical guide for other South Asian developers to do the same."
 tags: flutter, dart, opensource, pakistan
@@ -14,7 +14,7 @@ canonical_url: https://medium.com/@ishaqhassan/how-i-got-6-prs-merged-into-flutt
 ```
 
 **For Hashnode:**
-- Title: "From Karachi to flutter/flutter — 6 Merged PRs and How a Pakistani Dev Got There"
+- Title: "From Karachi to Flutter — 6 Merged PRs and How a Pakistani Dev Got There"
 - Tags: Flutter, Dart, Open Source, Pakistan, Mobile Development
 - Canonical URL (important for SEO): paste the Medium URL after you publish on Medium
 
@@ -37,7 +37,7 @@ canonical_url: https://medium.com/@ishaqhassan/how-i-got-6-prs-merged-into-flutt
 ## Reddit Drop (optional but high impact)
 
 ### r/FlutterDev
-Title: "6 PRs merged into flutter/flutter — a Pakistani developer's journey into framework-level contributions"
+Title: "6 PRs merged into Flutter — a Pakistani developer's journey into framework-level contributions"
 Body: 1–2 paragraphs from MEDIUM_ARTICLE.md + link to full article.
 
 ### r/pakistan or r/developersPK
@@ -51,12 +51,12 @@ Body: Context paragraph + portfolio link.
 ## Twitter/X Thread
 
 ```
-1/ 🧵 6 Pull Requests merged into flutter/flutter — Google's Flutter framework — from 🇵🇰 Karachi.
+1/ 🧵 6 Pull Requests merged into Flutter — Google's Flutter framework — from 🇵🇰 Karachi.
 
 Thread on how I got here, why it matters, and a mini-guide for other South Asian devs who want to do the same 👇
 
 2/ First, the numbers:
-- 6 merged PRs into flutter/flutter
+- 6 merged PRs into Flutter
 - 3 open PRs under active review
 - All verifiable on GitHub: github.com/ishaquehassan
 
@@ -97,7 +97,7 @@ Also — my 35-video Flutter course in Urdu is on official Flutter docs: docs.fl
 Portfolio: ishaqhassan.dev
 GitHub: github.com/ishaquehassan
 
-Let's get more 🇵🇰 names on flutter/flutter. /end
+Let's get more 🇵🇰 names on Flutter. /end
 ```
 
 ---
@@ -119,7 +119,7 @@ Subject: Flutter Framework Contributor from Pakistan — story pitch
 
 Hi [name],
 
-I'm Ishaq Hassan from Karachi. I've just crossed 6 merged Pull Requests into the official Flutter framework (flutter/flutter) — one of the small number of Pakistani engineers with multiple core contributions to Flutter.
+I'm Ishaq Hassan from Karachi. I've just crossed 6 merged Pull Requests into the official Flutter framework (Flutter) — one of the small number of Pakistani engineers with multiple core contributions to Flutter.
 
 I wrote up the journey here: [Medium link]
 
