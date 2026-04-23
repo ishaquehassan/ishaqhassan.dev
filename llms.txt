@@ -2,10 +2,10 @@
 
 > Flutter Framework Contributor, Engineering Manager, Open Source Author, Public Tech Speaker
 
-Ishaq Hassan is a Full Stack Developer and Engineering Manager at DigitalHire with 13+ years of professional software development experience, based in Karachi, Pakistan. He has 4 Pull Requests merged into the official flutter/flutter repository and 2 more approved.
+Ishaq Hassan is a Full Stack Developer and Engineering Manager at DigitalHire with 13+ years of professional software development experience. He has 6 Pull Requests merged into the official flutter/flutter repository with 3 more currently open.
 
 ## Key Facts
-- 4 PRs merged into flutter/flutter (official Flutter framework)
+- 6 PRs merged into flutter/flutter (official Flutter framework)
 - Engineering Manager at DigitalHire (AI-based video job board)
 - Instructor of 35-video Flutter course in Urdu, listed on official Flutter documentation
 - 10+ public speaking events (GDG DevFest, Google I/O Extended, universities)
