@@ -414,6 +414,31 @@
 }
 </script>
 
+<!-- Firebase Analytics -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { getAnalytics, logEvent, isSupported } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3GK5W5GFxuiBxueeaT61hkORrCD44BqA",
+    authDomain: "ishaqhassan-dev.firebaseapp.com",
+    projectId: "ishaqhassan-dev",
+    storageBucket: "ishaqhassan-dev.firebasestorage.app",
+    messagingSenderId: "553482103816",
+    appId: "1:553482103816:web:1157f4b8ceddbc618cb5bd",
+    measurementId: "G-PLACEHOLDER"
+  };
+  try {
+    const app = initializeApp(firebaseConfig);
+    isSupported().then((ok) => {
+      if (!ok) return;
+      const analytics = getAnalytics(app);
+      window.__fbAnalytics = analytics;
+      window.__fbLogEvent = (name, params) => { try { logEvent(analytics, name, params || {}); } catch (e) {} };
+      window.__fbLogEvent('page_view', { page_path: location.pathname, page_title: document.title });
+    });
+  } catch (e) { console.warn('Firebase init failed:', e); }
+</script>
+
 </head>
 <body>
 
