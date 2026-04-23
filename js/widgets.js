@@ -152,14 +152,47 @@ function updateMusicProgress() {
 }
 
 // ===== WEATHER WIDGET =====
+// Fast geolocation options: network-based first (quick), 5s timeout, 10min cache OK
+const GEO_OPTS = { enableHighAccuracy: false, timeout: 5000, maximumAge: 600000 };
+const LOC_CACHE_KEY = 'weather_loc_cache';
+const LOC_CACHE_TTL = 24 * 60 * 60 * 1000; // 24h
+
+function getCachedLoc() {
+  try {
+    const raw = localStorage.getItem(LOC_CACHE_KEY);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    if (Date.now() - obj.t > LOC_CACHE_TTL) return null;
+    return { lat: obj.lat, lon: obj.lon };
+  } catch(e) { return null; }
+}
+function saveCachedLoc(lat, lon) {
+  try { localStorage.setItem(LOC_CACHE_KEY, JSON.stringify({ lat, lon, t: Date.now() })); } catch(e) {}
+}
+
 function requestWeatherLocation() {
-  if (!navigator.geolocation) {
-    fetchWeatherFallback();
-    return;
-  }
+  // Instant loading state so user sees feedback on tap
+  const wp = document.getElementById('weather-permit');
+  const wd = document.getElementById('weather-data');
+  if (wp) wp.style.display = 'none';
+  if (wd) wd.classList.add('show');
+  const tempEl = document.getElementById('weather-temp');
+  const cityEl = document.getElementById('weather-city');
+  if (tempEl && !tempEl.textContent.match(/\d/)) tempEl.textContent = '…';
+  if (cityEl && !cityEl.textContent) cityEl.textContent = 'Locating…';
+
+  // Try cached location first (instant render)
+  const cached = getCachedLoc();
+  if (cached) fetchWeather(cached.lat, cached.lon);
+
+  if (!navigator.geolocation) { fetchWeatherFallback(); return; }
   navigator.geolocation.getCurrentPosition(
-    (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude),
-    () => fetchWeatherFallback()
+    (pos) => {
+      saveCachedLoc(pos.coords.latitude, pos.coords.longitude);
+      fetchWeather(pos.coords.latitude, pos.coords.longitude);
+    },
+    () => { if (!cached) fetchWeatherFallback(); },
+    GEO_OPTS
   );
 }
 
@@ -246,16 +279,36 @@ function mobMusicCtrl(action) {
   }, 100);
 }
 
-// Mobile weather
-// Auto-check if location already permitted (with fallback for browsers that don't support permissions API)
+// Mobile + desktop weather auto-load
+// 1. If cached location exists, render immediately (no API wait) - fires during splash screen
+// 2. If geolocation permission already granted, silently refresh in background
+// 3. On permission change (grant), auto-load without user re-tap
 (function autoWeather() {
+  const cached = getCachedLoc();
+  if (cached) {
+    // Instant render with cached coords - runs even before permission UI is touched
+    if (document.getElementById('mob-weather-permit')) {
+      const permit = document.getElementById('mob-weather-permit');
+      const dataEl = document.getElementById('mob-weather-data');
+      if (permit) permit.style.display = 'none';
+      if (dataEl) dataEl.style.display = 'block';
+      fetchMobWeather(cached.lat, cached.lon);
+    }
+    if (document.getElementById('weather-city')) {
+      const wp = document.getElementById('weather-permit');
+      const wd = document.getElementById('weather-data');
+      if (wp) wp.style.display = 'none';
+      if (wd) wd.classList.add('show');
+      fetchWeather(cached.lat, cached.lon);
+    }
+  }
+
   if (navigator.permissions && navigator.permissions.query) {
     navigator.permissions.query({name:'geolocation'}).then(p => {
       if (p.state === 'granted') {
         if (document.getElementById('mob-weather-permit')) requestMobWeather();
         if (document.getElementById('weather-city')) requestWeatherLocation();
       }
-      // Also listen for permission change
       p.onchange = () => {
         if (p.state === 'granted') {
           if (document.getElementById('mob-weather-permit')) requestMobWeather();
@@ -267,10 +320,28 @@ function mobMusicCtrl(action) {
 })();
 
 function requestMobWeather() {
+  // Instant UX: hide permit prompt, show loading state before geolocation call
+  const permit = document.getElementById('mob-weather-permit');
+  const dataEl = document.getElementById('mob-weather-data');
+  if (permit) permit.style.display = 'none';
+  if (dataEl) dataEl.style.display = 'block';
+  const tempEl = document.getElementById('mob-weather-temp');
+  const cityEl = document.getElementById('mob-weather-city');
+  if (tempEl && !tempEl.textContent.match(/\d/)) tempEl.textContent = '…';
+  if (cityEl && !cityEl.textContent) cityEl.textContent = 'Locating…';
+
+  // Render cached location instantly while fresh lookup happens
+  const cached = getCachedLoc();
+  if (cached) fetchMobWeather(cached.lat, cached.lon);
+
   if (!navigator.geolocation) { fetchMobWeather(24.86, 67.01, 'Karachi, PK'); return; }
   navigator.geolocation.getCurrentPosition(
-    (pos) => fetchMobWeather(pos.coords.latitude, pos.coords.longitude),
-    () => fetchMobWeather(24.86, 67.01, 'Karachi, PK')
+    (pos) => {
+      saveCachedLoc(pos.coords.latitude, pos.coords.longitude);
+      fetchMobWeather(pos.coords.latitude, pos.coords.longitude);
+    },
+    () => { if (!cached) fetchMobWeather(24.86, 67.01, 'Karachi, PK'); },
+    GEO_OPTS
   );
 }
 function fetchMobWeather(lat, lon, fallbackCity) {
