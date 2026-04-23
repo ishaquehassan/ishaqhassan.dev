@@ -293,3 +293,62 @@ function fetchMobWeather(lat, lon, fallbackCity) {
       else { fetch('https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lon+'&format=json').then(r=>r.json()).then(geo=>{const city=geo.address.city||geo.address.town||geo.address.state||'Unknown';document.getElementById('mob-weather-city').textContent=city+', '+(geo.address.country_code||'').toUpperCase();}).catch(()=>document.getElementById('mob-weather-city').textContent='Your Location'); }
     }).catch(() => { document.getElementById('mob-weather-temp').textContent = '--'; });
 }
+
+// ===== WALLPAPER WIDGET =====
+const WALLPAPERS = [
+  { id: 'default',  name: 'Dark Matter',   type: 'image',    value: 'assets/wallpaper.webp', preview: 'linear-gradient(135deg,#1a1a2e 0%,#0c0c1e 100%)' },
+  { id: 'space',    name: 'Deep Space',    type: 'gradient', value: 'radial-gradient(ellipse at 20% 50%,#1a1a2e 0%,#16213e 50%,#0f3460 100%)', preview: 'radial-gradient(ellipse at 20% 50%,#1a1a2e,#0f3460)' },
+  { id: 'emerald',  name: 'Emerald Night', type: 'gradient', value: 'radial-gradient(ellipse at 80% 20%,#0d2818 0%,#052e16 60%,#041a0d 100%)', preview: 'radial-gradient(ellipse at 80% 20%,#0d2818,#041a0d)' },
+  { id: 'aurora',   name: 'Aurora',        type: 'gradient', value: 'radial-gradient(ellipse at 30% 70%,#2d0415 0%,#1a0a2e 45%,#0d0f30 100%)', preview: 'radial-gradient(ellipse at 30% 70%,#2d0415,#0d0f30)' },
+  { id: 'ocean',    name: 'Deep Ocean',    type: 'gradient', value: 'radial-gradient(ellipse at 60% 30%,#001a2e 0%,#003355 50%,#00264d 100%)', preview: 'radial-gradient(ellipse at 60% 30%,#001a2e,#003355)' },
+  { id: 'dusk',     name: 'Dusk',          type: 'gradient', value: 'radial-gradient(ellipse at 50% 100%,#1a0a00 0%,#0d0510 50%,#050010 100%)', preview: 'radial-gradient(ellipse at 50% 100%,#1a0a00,#050010)' }
+];
+
+let wpIndex = 0;
+
+function setWallpaper(idx, save) {
+  if (save === undefined) save = true;
+  wpIndex = idx;
+  var wp = WALLPAPERS[idx];
+  var el = document.getElementById('wallpaper');
+  el.style.opacity = '0.6';
+  setTimeout(function() {
+    if (wp.type === 'image') {
+      el.style.backgroundImage = 'url(' + wp.value + ')';
+    } else {
+      el.style.backgroundImage = wp.value;
+    }
+    el.style.opacity = '1';
+  }, 180);
+  document.querySelectorAll('.wp-swatch').forEach(function(s, i) {
+    s.classList.toggle('active', i === idx);
+  });
+  var nameEl = document.getElementById('wp-name');
+  if (nameEl) nameEl.textContent = wp.name;
+  if (save) {
+    try { localStorage.setItem('ishaq_wallpaper', wp.id); } catch(e) {}
+  }
+}
+
+function initWallpaperWidget() {
+  var container = document.getElementById('wp-swatches');
+  if (!container) return;
+  WALLPAPERS.forEach(function(wp, i) {
+    var swatch = document.createElement('div');
+    swatch.className = 'wp-swatch' + (i === 0 ? ' active' : '');
+    swatch.style.background = wp.preview;
+    swatch.title = wp.name;
+    swatch.addEventListener('click', function(e) {
+      e.stopPropagation();
+      setWallpaper(i);
+    });
+    container.appendChild(swatch);
+  });
+  try {
+    var saved = localStorage.getItem('ishaq_wallpaper');
+    if (saved) {
+      var idx = WALLPAPERS.findIndex(function(w) { return w.id === saved; });
+      if (idx !== -1) setWallpaper(idx, false);
+    }
+  } catch(e) {}
+}

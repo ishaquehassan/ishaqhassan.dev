@@ -140,6 +140,7 @@ window.addEventListener('load', () => {
   // Pre-load everything during splash
   initResize();
   initMusicPlayer();
+  initWallpaperWidget();
   // Auto-load weather if permission already granted
   if (navigator.permissions && navigator.permissions.query) {
     navigator.permissions.query({name:'geolocation'}).then(function(p) {
