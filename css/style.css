@@ -4343,10 +4343,9 @@ a.li-tl-company:hover { color: #7dd3fc; }
   100% { background-position: 200% center; }
 }
 
-/* LinkedIn hero extends under glass toolbar — inner banner padding-top keeps profile content below toolbar */
+/* LinkedIn hero starts flush below toolbar (no overlap) */
 .window.has-fshell .fshell-content > .li-hero {
-  margin: calc(var(--toolbar-h) * -1) -22px 18px;
-  padding-top: var(--toolbar-h);
+  margin: 0 -22px 18px;
 }
 
 /* Some windows need a minimum width to render their hero/grid/timeline cleanly */
