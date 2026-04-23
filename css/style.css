@@ -1126,7 +1126,6 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
 }
 #win-flutter-course.is-scrolled .window-toolbar { background: rgba(20,24,36,0.88); }
 #win-linkedin.is-scrolled .window-toolbar { background: rgba(22,26,40,0.88); }
-.window-toolbar { background: linear-gradient(to bottom, rgba(32,34,46,0.92) 45%, rgba(32,34,46,0) 100%) !important; border-bottom: none !important; box-shadow: none !important; }
 .window-body {
   position: relative;
 }
