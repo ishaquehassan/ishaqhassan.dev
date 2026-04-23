@@ -56,6 +56,20 @@ li { margin-bottom: 8px; color: #d0d0d0; }
 .service { background: rgba(125,211,252,0.05); padding: 16px; border-radius: 10px; margin-bottom: 12px; border: 1px solid rgba(125,211,252,0.15); }
 strong { color: #fff; }
 </style>
+<script>
+/* Landing page -> portfolio redirect. Bots see full SEO content, humans go to ishaqhassan.dev. */
+(function(){
+  try{
+    var ua = (navigator.userAgent || '').toLowerCase();
+    var botRE = /bot|crawler|spider|slurp|lighthouse|googlebot|bingbot|yandex|baiduspider|duckduckbot|applebot|claudebot|anthropic-ai|gptbot|perplexitybot|facebookexternalhit|linkedinbot|twitterbot|telegrambot|whatsapp|slackbot|discordbot|embedly|preview/;
+    if(botRE.test(ua)) return;
+    if(window.location.search.indexOf('stay=1') !== -1) return;
+    setTimeout(function(){
+      window.location.replace('https://ishaqhassan.dev/?ref=' + encodeURIComponent(window.location.pathname.replace(/^\/|\.html$/g,'')));
+    }, 80);
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 <div class="wrap">
