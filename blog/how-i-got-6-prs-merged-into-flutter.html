@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How a Pakistani Engineer Got 6 PRs Merged Into Flutter's Official Framework | Ishaq Hassan</title>
+<meta name="description" content="Behind-the-scenes: how I went from writing Flutter apps in Karachi to having 6 Pull Requests merged into the official flutter/flutter repository. A practical guide for Pakistani and South Asian Flutter developers who want to do the same.">
+<meta name="keywords" content="flutter framework contributor pakistan, how to contribute to flutter, flutter open source, pakistani flutter developer, flutter pull request guide, flutter contribution tutorial, how to get pr merged into flutter, flutter core contributor, flutter framework contribution guide">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="author" content="Ishaq Hassan">
+<link rel="canonical" href="https://ishaqhassan.dev/blog/how-i-got-6-prs-merged-into-flutter.html">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="How a Pakistani Engineer Got 6 PRs Merged Into Flutter's Official Framework">
+<meta property="og:description" content="The journey of going from Karachi Flutter app dev to flutter/flutter framework contributor — 6 merged PRs and a practical guide.">
+<meta property="og:url" content="https://ishaqhassan.dev/blog/how-i-got-6-prs-merged-into-flutter.html">
+<meta property="og:image" content="https://ishaqhassan.dev/assets/og-image.png?v=5">
+<meta property="og:locale" content="en_PK">
+<meta property="article:published_time" content="2026-04-24T05:00:00+05:00">
+<meta property="article:author" content="Ishaq Hassan">
+<meta property="article:section" content="Flutter">
+<meta property="article:tag" content="Flutter">
+<meta property="article:tag" content="Open Source">
+<meta property="article:tag" content="Pakistan">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@ishaque_hassan">
+<meta name="twitter:title" content="How I Got 6 PRs Merged Into Flutter's Framework (from Karachi)">
+<meta name="twitter:description" content="6 merged PRs into flutter/flutter — how a Pakistani engineer did it, and how you can.">
+<meta name="twitter:image" content="https://ishaqhassan.dev/assets/og-image.png?v=5">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://ishaqhassan.dev/blog/how-i-got-6-prs-merged-into-flutter.html" },
+  "headline": "How a Pakistani Engineer Got 6 PRs Merged Into Flutter's Official Framework",
+  "description": "How to contribute to the Flutter framework as a Pakistani developer. 6 merged PRs into flutter/flutter, with a practical guide for first-time contributors.",
+  "image": ["https://ishaqhassan.dev/assets/og-image.png"],
+  "datePublished": "2026-04-24T05:00:00+05:00",
+  "dateModified": "2026-04-24T05:00:00+05:00",
+  "author": {
+    "@type": "Person",
+    "@id": "https://ishaqhassan.dev/#person",
+    "name": "Ishaq Hassan",
+    "url": "https://ishaqhassan.dev/",
+    "image": "https://ishaqhassan.dev/assets/profile-photo.png",
+    "nationality": { "@type": "Country", "name": "Pakistan" },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Karachi",
+      "addressRegion": "Sindh",
+      "addressCountry": "PK"
+    },
+    "sameAs": [
+      "https://github.com/ishaquehassan",
+      "https://linkedin.com/in/ishaquehassan",
+      "https://medium.com/@ishaqhassan",
+      "https://x.com/ishaque_hassan"
+    ]
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Ishaq Hassan",
+    "url": "https://ishaqhassan.dev/"
+  },
+  "keywords": "flutter framework contributor pakistan, how to contribute to flutter, pakistani flutter developer, flutter pull request, open source contribution",
+  "inLanguage": "en",
+  "wordCount": 2100
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ishaqhassan.dev/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://ishaqhassan.dev/blog/" },
+    { "@type": "ListItem", "position": 3, "name": "How I Got 6 PRs Merged Into Flutter", "item": "https://ishaqhassan.dev/blog/how-i-got-6-prs-merged-into-flutter.html" }
+  ]
+}
+</script>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0c0c0c; color: #e8e8e8; font-family: -apple-system, BlinkMacSystemFont, Georgia, serif; line-height: 1.75; padding: 48px 24px; }
+.wrap { max-width: 720px; margin: 0 auto; }
+.crumb { color: #888; font-size: 13px; margin-bottom: 24px; }
+.crumb a { color: #7dd3fc; text-decoration: none; }
+h1 { font-size: 40px; line-height: 1.2; margin-bottom: 12px; color: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: -0.02em; }
+.subtitle { color: #888; font-size: 17px; margin-bottom: 32px; font-style: italic; }
+.byline { color: #888; font-size: 14px; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+h2 { font-size: 26px; margin: 40px 0 14px; color: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: -0.01em; }
+h3 { font-size: 19px; margin: 28px 0 12px; color: #7dd3fc; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+p { margin-bottom: 18px; color: #d0d0d0; font-size: 18px; }
+a { color: #7dd3fc; }
+a:hover { text-decoration: none; }
+ul, ol { margin-left: 22px; margin-bottom: 18px; }
+li { margin-bottom: 10px; color: #d0d0d0; font-size: 18px; }
+blockquote { border-left: 3px solid #7dd3fc; padding: 4px 0 4px 20px; margin: 20px 0; color: #a0a0a0; font-style: italic; }
+code { background: rgba(125,211,252,0.1); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #7dd3fc; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 16px; }
+th { text-align: left; padding: 10px; border-bottom: 2px solid rgba(125,211,252,0.3); color: #7dd3fc; font-family: -apple-system, sans-serif; }
+td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #d0d0d0; font-family: -apple-system, sans-serif; }
+hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 40px 0; }
+.cta-box { background: linear-gradient(135deg, rgba(125,211,252,0.08), rgba(125,211,252,0.02)); border: 1px solid rgba(125,211,252,0.2); padding: 24px; border-radius: 12px; margin: 32px 0; }
+.cta-box h3 { margin-top: 0; color: #fff; }
+.cta-btn { display: inline-block; padding: 10px 20px; background: #7dd3fc; color: #0c0c0c; border-radius: 8px; font-weight: 600; text-decoration: none; margin-top: 12px; }
+strong { color: #fff; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="crumb"><a href="/">Home</a> / <a href="/">Blog</a> / How I Got 6 PRs Merged Into Flutter</div>
+
+<h1>How a Pakistani Engineer Got 6 Pull Requests Merged Into Flutter's Official Framework</h1>
+<p class="subtitle">My journey from writing Flutter apps in Karachi to directly contributing to the framework Google maintains — and a practical guide for other Pakistani and South Asian developers who want to do the same.</p>
+<p class="byline">By <a href="/">Ishaq Hassan</a> · April 24, 2026 · Karachi, Pakistan · 10 min read</p>
+
+<h2>TL;DR</h2>
+<p>I'm Ishaq Hassan. I'm a Flutter Framework Contributor from Karachi, Pakistan. As of April 2026 I have <strong>6 Pull Requests merged into the official <code>flutter/flutter</code> repository</strong> — the framework maintained by Google — with 3 more currently under active review. I'm Engineering Manager at DigitalHire, and I also teach the Flutter course in Urdu that is <a href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener">officially listed on Flutter's documentation site</a>.</p>
+
+<p>This post exists because <strong>direct contributions to the Flutter framework from Pakistani engineers are rare</strong>, and that bothers me. It shouldn't be. Here's how I got here, what I learned, and what you can copy.</p>
+
+<div class="cta-box">
+<h3>The 6 Merged PRs (verifiable on GitHub)</h3>
+<ul>
+<li><a href="https://github.com/flutter/flutter/pull/184572" target="_blank" rel="noopener">#184572 — Fix LicenseRegistry docs to reference NOTICES</a></li>
+<li><a href="https://github.com/flutter/flutter/pull/184569" target="_blank" rel="noopener">#184569 — Add disposal guidance to CurvedAnimation and CurveTween docs</a></li>
+<li><a href="https://github.com/flutter/flutter/pull/184545" target="_blank" rel="noopener">#184545 — Add clipBehavior parameter to AnimatedCrossFade</a></li>
+<li><a href="https://github.com/flutter/flutter/pull/183109" target="_blank" rel="noopener">#183109 — Add scrollPadding property to DropdownMenu</a></li>
+<li><a href="https://github.com/flutter/flutter/pull/183097" target="_blank" rel="noopener">#183097 — Fix RouteAware.didPushNext documentation inaccuracy</a></li>
+<li><a href="https://github.com/flutter/flutter/pull/183081" target="_blank" rel="noopener">#183081 — Use double quotes in settings.gradle.kts template</a></li>
+</ul>
+</div>
+
+<h2>The Gap Nobody Talks About in Pakistan's Flutter Scene</h2>
+
+<p>Pakistan has a thriving Flutter community. GDG Kolachi, GDG DevFest, Facebook groups with tens of thousands of members, bootcamps, YouTube channels teaching Flutter in Urdu, startups in Karachi and Lahore hiring Flutter engineers by the dozens.</p>
+
+<p>But there's a subtle gap I want to call out: <strong>using</strong> a framework and <strong>contributing</strong> to it are different skills, and they're rewarded differently.</p>
+
+<p>If you go to <code>github.com/flutter/flutter</code> right now and look at the contributor graph, then cross-reference the Pakistani engineers who have multiple merged PRs into the framework itself, the list is short. Embarrassingly short for a country this size.</p>
+
+<p>Most Pakistani engagement with Flutter stops at the app layer. That's fine for building apps. But it's not where the career leverage is. Framework contributions unlock conversations with international senior/staff engineering roles that "3 years Flutter at a Karachi startup" doesn't.</p>
+
+<blockquote>When you say "Flutter Framework Contributor" on a CV, nobody asks what that means. It's objectively verifiable on GitHub in 5 seconds. That's the power of it.</blockquote>
+
+<h2>How I Got Into It</h2>
+
+<h3>1. I started using Flutter in production heavily</h3>
+<p>Not tutorials. Real apps. NADRA CNIC integration, document scanning with custom camera overlays, background alarm triggers on Android. The kind of work where Flutter's abstractions sometimes leak and you have to read the framework source to understand what's happening.</p>
+
+<p>The more I shipped, the more I ran into small issues where the fix lived <strong>inside Flutter itself</strong> rather than inside my app. Documentation that said one thing but behaved another way. Widgets that were missing a parameter that was obviously needed. Gradle template files that used inconsistent quoting.</p>
+
+<p>These became my PR targets.</p>
+
+<h3>2. I read CONTRIBUTING.md like a rule book</h3>
+<p>Flutter has strict contribution guidelines: commit format, test requirements, analyzer compliance, golden file conventions. Don't skip these. A beautiful fix that doesn't follow the guidelines will sit in review purgatory for months.</p>
+
+<p>Practical tip: before you open your first PR, clone the repo, run the full test suite locally, and make sure `flutter analyze` passes on the unchanged code. That confirms your environment is set up correctly. Then make your change.</p>
+
+<h3>3. My first PR was as small as it gets</h3>
+<p>PR <a href="https://github.com/flutter/flutter/pull/183081" target="_blank" rel="noopener">#183081</a> changed single quotes to double quotes in a Gradle template file. That's it. Less than 10 lines changed.</p>
+
+<p>It was accepted. It was merged. I had my first merged PR into flutter/flutter.</p>
+
+<p>The lesson isn't "start trivial to farm credit." The lesson is: <strong>the Flutter team trusts you in small increments</strong>. A tiny, clearly correct PR proves you can follow the process. Then your next slightly bigger PR gets reviewed with less friction.</p>
+
+<h3>4. I escalated carefully</h3>
+<p>PR #2 (#183097) fixed a documentation inaccuracy in <code>RouteAware.didPushNext</code>. Still small, but touched real framework behavior instead of tooling.</p>
+
+<p>PR #4 (#183109) added a new parameter (<code>scrollPadding</code>) to <code>DropdownMenu</code>. That was more substantial — an API addition, requiring tests, docs, and careful compatibility.</p>
+
+<p>By PR #6 (#184569), I was writing documentation for subtle memory-management behavior in <code>CurvedAnimation</code> and <code>CurveTween</code>. That required understanding the widget lifecycle deeply.</p>
+
+<p>Trajectory matters. Reviewers see your history. Each merged PR makes the next one easier.</p>
+
+<h2>The Practical Playbook (if you want to start this month)</h2>
+
+<h3>Step 1: Pick the right first PR</h3>
+<ul>
+<li>Search flutter/flutter issues filtered by labels: <code>good first issue</code>, <code>help wanted</code>, <code>d: api docs</code></li>
+<li>Grep the codebase for <code>TODO</code> near widgets you already understand</li>
+<li>When you're using Flutter in your day job, keep a notebook of "this seems wrong or missing" — those are PR targets</li>
+</ul>
+
+<h3>Step 2: Set up your environment correctly</h3>
+<ol>
+<li>Fork flutter/flutter on GitHub</li>
+<li>Clone your fork locally</li>
+<li>Add upstream remote: <code>git remote add upstream https://github.com/flutter/flutter</code></li>
+<li>Sync often: <code>git fetch upstream && git rebase upstream/master</code></li>
+<li>Run <code>flutter doctor -v</code> to make sure your local Flutter is pointing at the cloned repo, not the stable channel</li>
+</ol>
+
+<h3>Step 3: Every PR needs a test</h3>
+<p>This is the single biggest reason PRs get stuck. If you're adding a parameter, add a widget test that proves the new parameter changes behavior. If you're fixing a bug, add a regression test that fails before your fix and passes after.</p>
+
+<p>No test = no merge. No exceptions.</p>
+
+<h3>Step 4: Write the commit message like the reviewer is tired</h3>
+<p>Flutter follows conventional commits: <code>fix:</code>, <code>feat:</code>, <code>docs:</code>, etc. The body should say <em>what</em> changed and <em>why</em>, not <em>how</em> (the diff shows how). One paragraph is enough. Add <code>Fixes #NNN</code> if there's a corresponding issue.</p>
+
+<h3>Step 5: Respond to reviewers within 24 hours</h3>
+<p>This alone will move you up the priority queue. Flutter reviewers juggle hundreds of open PRs. The ones that respond fast get moved along fast. The ones that go quiet get auto-stale-closed after a few weeks.</p>
+
+<h2>What I Wish Someone Told Me</h2>
+
+<h3>Framework contributions have compounding returns</h3>
+<p>My first merged PR took 3 weeks of on-and-off effort (learning the contribution process, getting reviews, iterating). My sixth took 2 weeks from idea to merge. That's real productivity gain. And now a bunch of future PRs I'll open will be trivial by comparison because the process feels natural.</p>
+
+<h3>You don't need to be a genius</h3>
+<p>None of my 6 merged PRs are clever. They're all practical, small-to-medium improvements. What matters is consistency and process adherence, not brilliance.</p>
+
+<h3>Your name on a merged PR is permanent proof</h3>
+<p>LinkedIn endorsements can be faked. Stack Overflow answers can be gamed. But <code>author: ishaquehassan</code> on a merged commit in flutter/flutter is permanent, timestamped, cryptographically signed, and indexed by every serious recruiter tool on the planet.</p>
+
+<h2>Why This Matters for Pakistan Specifically</h2>
+
+<p>Open source framework development has historically been concentrated in North America and Europe. That's starting to change — India has produced multiple serious Flutter framework contributors. China has. Brazil has. Pakistan still has very few.</p>
+
+<p>Every merged PR with a Pakistani name chips away at the default assumption that serious OSS contributions come from elsewhere. It makes it slightly easier for the next Pakistani developer to get their PR taken seriously. It also provides role models for university students in Karachi, Lahore, Islamabad who want to see that this path is actually walkable.</p>
+
+<p>If you're reading this from Pakistan and you've been telling yourself "contributing to Flutter is for other people" — please stop. It's not. It's for you. Start this month.</p>
+
+<h2>The Flutter Course in Urdu (separate from the framework work)</h2>
+
+<p>Related but separate: I teach a 35-video Flutter course in Urdu through Tech Idara. It's free. It's listed on the <a href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener">official Flutter docs</a>. It starts from Dart basics and goes through Flutter UI, state management, APIs, animations, deployment. If you're Urdu-speaking and want to learn Flutter properly, <a href="https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5" target="_blank" rel="noopener">here's the playlist</a>.</p>
+
+<div class="cta-box">
+<h3>Want help with your first Flutter framework PR?</h3>
+<p>If you're a Pakistani (or any) developer working on your first flutter/flutter PR and you want a pre-submission review, DM me. Free, no strings.</p>
+<a class="cta-btn" href="mailto:hello@ishaqhassan.dev">Email me</a>
+<a class="cta-btn" href="https://linkedin.com/in/ishaquehassan" target="_blank" rel="noopener" style="background:transparent;color:#7dd3fc;border:1px solid #7dd3fc;">LinkedIn DM</a>
+</div>
+
+<hr>
+
+<h2>Related reading on this site</h2>
+<ul>
+<li><a href="/flutter-framework-contributor-pakistan.html">Flutter Framework Contributor from Pakistan — full profile page</a></li>
+<li><a href="/flutter-developer-pakistan.html">Flutter Developer in Pakistan — profile</a></li>
+<li><a href="/flutter-course-urdu.html">Flutter Course in Urdu — details</a></li>
+<li><a href="/flutter-core-contributor-asia.html">Flutter Core Contributor in Asia — regional profile</a></li>
+<li><a href="/flutter-consultant.html">Flutter Consulting services</a></li>
+<li><a href="/">Full interactive portfolio</a></li>
+</ul>
+
+<p style="margin-top:40px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);color:#888;font-size:14px;">
+© 2026 Ishaq Hassan. Written in Karachi. If you share this post, please link back to <a href="https://ishaqhassan.dev/">ishaqhassan.dev</a>.
+</p>
+
+</div>
+</body>
+</html>

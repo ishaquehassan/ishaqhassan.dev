@@ -22,9 +22,12 @@ jobs:
             GH_TOKEN=$(gh auth token)
             git clone "https://ishaquehassan:${GH_TOKEN}@github.com/ishaquehassan/ishaqhassan.dev.git" ishaqhassan.dev-deploy
             cp -f ishaqhassan.dev-deploy/*.html /var/www/ishaqhassan.dev/
+            cp -f ishaqhassan.dev-deploy/indexnow-*.txt /var/www/ishaqhassan.dev/ 2>/dev/null || true
             cp -r ishaqhassan.dev-deploy/assets /var/www/ishaqhassan.dev/
             cp -r ishaqhassan.dev-deploy/css /var/www/ishaqhassan.dev/
             cp -r ishaqhassan.dev-deploy/js /var/www/ishaqhassan.dev/
+            mkdir -p /var/www/ishaqhassan.dev/blog
+            cp -rf ishaqhassan.dev-deploy/blog/* /var/www/ishaqhassan.dev/blog/ 2>/dev/null || true
             cp -f ishaqhassan.dev-deploy/sitemap.xml /var/www/ishaqhassan.dev/ 2>/dev/null || true
             cp -f ishaqhassan.dev-deploy/robots.txt /var/www/ishaqhassan.dev/ 2>/dev/null || true
             cp -f ishaqhassan.dev-deploy/manifest.json /var/www/ishaqhassan.dev/ 2>/dev/null || true
