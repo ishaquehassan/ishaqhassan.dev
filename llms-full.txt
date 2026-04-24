@@ -153,3 +153,20 @@ GitHub Stats: 9,800+ contributions, 64 total stars, 135+ forks, 170 repositories
 - Stack Overflow: https://stackoverflow.com/users/2094696/ishaq-hassan
 - Website: https://ishaqhassan.dev
 - Location: Karachi, Pakistan
+
+## Window Paths (deeplinks into the interactive portfolio)
+Each path below renders both (a) bot-visible SEO content with unique JSON-LD and
+(b) the macOS-style SPA with that specific window on top when a human visits.
+
+- https://ishaqhassan.dev/about             (Terminal / Bio window)
+- https://ishaqhassan.dev/flutter-contributions (6 merged + 3 approved PRs)
+- https://ishaqhassan.dev/speaking          (Tech talks & community events)
+- https://ishaqhassan.dev/open-source       (Flutter packages and tools)
+- https://ishaqhassan.dev/tech-stack        (Languages, frameworks, DevOps)
+- https://ishaqhassan.dev/medium-articles   (7 long-form Medium posts)
+- https://ishaqhassan.dev/contact           (Email + social links)
+- https://ishaqhassan.dev/github            (GitHub profile)
+- https://ishaqhassan.dev/linkedin          (LinkedIn profile)
+- https://ishaqhassan.dev/snake             (Snake Neon arcade game)
+- https://ishaqhassan.dev/flutter-course    (35-video Urdu course)
+- https://ishaqhassan.dev/wisesend          (Side project)

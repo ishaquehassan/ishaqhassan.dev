@@ -1092,6 +1092,17 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+/* Premium deeplink entrance: longer, scale-up + blur-lift + subtle drop. */
+.window.open.deeplink-enter {
+  animation: windowDeeplinkEnter 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity, filter;
+}
+@keyframes windowDeeplinkEnter {
+  0%   { opacity: 0; transform: scale(0.72) translateY(56px); filter: blur(14px); }
+  55%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+}
+
 @keyframes windowClose {
   0% { opacity: 1; transform: scale(1); }
   100% { opacity: 0; transform: scale(0.8) translateY(20px); }

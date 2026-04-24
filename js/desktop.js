@@ -201,6 +201,9 @@ window.addEventListener('load', () => {
   function finishBoot() {
     screen.classList.add('fade-out');
     try { swoosh.currentTime = 0; swoosh.play().catch(function(){}); } catch(e){}
+    // Has the incoming URL asked for a specific window? (deeplink)
+    var deeplinkId = null;
+    try { if (typeof windowIdFromCurrentUrl === 'function') deeplinkId = windowIdFromCurrentUrl(); } catch(e){}
     setTimeout(() => {
       screen.style.display = 'none';
       var dockC = document.getElementById('dock-container');
@@ -212,11 +215,15 @@ window.addEventListener('load', () => {
         try { visited = !!localStorage.getItem('already_visited'); } catch(e) {}
         var welcomeMsg = visited ? 'Welcome back to Ishaq OS 👋' : 'Welcome to Ishaq OS ✨';
         setTimeout(function() { showNotif(welcomeMsg); }, 500);
-        if (!visited) {
+        // Skip welcome-window auto-open if user deeplinked to a specific window
+        if (!visited && !deeplinkId) {
           setTimeout(autoOpenWelcomeWindows, 700);
         }
         try { localStorage.setItem('already_visited', '1'); } catch(e) {}
       }
+      // Re-apply URL route AFTER splash dismisses so z-bump + analytics land when user actually sees the window.
+      // Pass shouldMaximize=true so the deeplinked window animates to center + fullscreen for focus.
+      try { if (typeof applyUrlRoute === 'function') setTimeout(function(){ applyUrlRoute(true); }, 50); } catch(e){}
     }, 800);
   }
 

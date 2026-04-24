@@ -23,6 +23,13 @@ jobs:
             git clone "https://ishaquehassan:${GH_TOKEN}@github.com/ishaquehassan/ishaqhassan.dev.git" ishaqhassan.dev-deploy
             cp -f ishaqhassan.dev-deploy/*.html /var/www/ishaqhassan.dev/
             cp -f ishaqhassan.dev-deploy/indexnow-*.txt /var/www/ishaqhassan.dev/ 2>/dev/null || true
+            if [ -f ishaqhassan.dev-deploy/window-paths.txt ]; then
+              while IFS= read -r d; do
+                [ -z "$d" ] && continue
+                mkdir -p "/var/www/ishaqhassan.dev/$d"
+                cp -f "ishaqhassan.dev-deploy/$d/index.html" "/var/www/ishaqhassan.dev/$d/" 2>/dev/null || true
+              done < ishaqhassan.dev-deploy/window-paths.txt
+            fi
             cp -r ishaqhassan.dev-deploy/assets /var/www/ishaqhassan.dev/
             cp -r ishaqhassan.dev-deploy/css /var/www/ishaqhassan.dev/
             cp -r ishaqhassan.dev-deploy/js /var/www/ishaqhassan.dev/

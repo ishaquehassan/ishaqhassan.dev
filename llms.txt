@@ -37,5 +37,19 @@ Ishaq Hassan is a Flutter Framework Contributor from Pakistan, based in Karachi.
 - Top Flutter Developers in Industry: https://ishaqhassan.dev/top-flutter-developers-in-industry.html
 - Blog - How I Got 6 PRs Merged into Flutter: https://ishaqhassan.dev/blog/how-i-got-6-prs-merged-into-flutter.html
 
+## Window Paths (canonical SPA views, each with unique meta + JSON-LD)
+- About: https://ishaqhassan.dev/about
+- Flutter Contributions: https://ishaqhassan.dev/flutter-contributions
+- Speaking: https://ishaqhassan.dev/speaking
+- Open Source: https://ishaqhassan.dev/open-source
+- Tech Stack: https://ishaqhassan.dev/tech-stack
+- Medium Articles: https://ishaqhassan.dev/medium-articles
+- Contact: https://ishaqhassan.dev/contact
+- GitHub: https://ishaqhassan.dev/github
+- LinkedIn: https://ishaqhassan.dev/linkedin
+- Snake Game: https://ishaqhassan.dev/snake
+- Flutter Course: https://ishaqhassan.dev/flutter-course
+- WiseSend: https://ishaqhassan.dev/wisesend
+
 ## Optional
 - [Full details](https://ishaqhassan.dev/llms-full.txt)

@@ -511,6 +511,13 @@ function closeWindow(id) {
     delete openWindows[id];
     if (typeof syncDockIndicators === 'function') syncDockIndicators();
     updateMenuBarForWindow(null);
+    // Revert URL to / if the closed window matched the current path
+    try {
+      if (typeof windowIdFromCurrentUrl === 'function' && windowIdFromCurrentUrl() === id) {
+        history.pushState({}, '', '/');
+        if (typeof updateMetaForWindow === 'function') updateMetaForWindow(null);
+      }
+    } catch (e) {}
     }, 250);
 }
 
@@ -1307,7 +1314,7 @@ function activateSpotlightItem(idx) {
 
   setTimeout(function() {
     if (window.innerWidth > 768) {
-      openWindow(item.w);
+      if (typeof navigate === 'function') navigate(item.w); else openWindow(item.w);
       if (item.el) {
         setTimeout(function() {
           var el = document.querySelector(item.el);
@@ -1685,8 +1692,222 @@ window.addEventListener('resize', function() {
     return;
   }
   // Run as soon as DOM is ready. Windows render behind the boot screen (higher z).
-  setTimeout(restoreWindowStates, 0);
+  setTimeout(function() {
+    restoreWindowStates();
+    // After restore, apply URL route so the URL-specified window sits on top
+    try { applyUrlRoute(); } catch (e) {}
+  }, 0);
 })();
+
+/* ===== PER-WINDOW URL ROUTING ===== */
+var WINDOW_PATHS = {
+  about: '/about',
+  flutter: '/flutter-contributions',
+  speaking: '/speaking',
+  oss: '/open-source',
+  tech: '/tech-stack',
+  articles: '/medium-articles',
+  contact: '/contact',
+  github: '/github',
+  linkedin: '/linkedin',
+  snake: '/snake',
+  'flutter-course': '/flutter-course',
+  wisesend: '/wisesend'
+};
+var PATH_TO_WINDOW = {};
+Object.keys(WINDOW_PATHS).forEach(function(id){ PATH_TO_WINDOW[WINDOW_PATHS[id]] = id; });
+
+// Which desktop windows have an equivalent mobile expanded section.
+// Keys: desktop window id. Values: mobile section slug (id of #mobile-<slug>-expanded).
+// `about` and `wisesend` are desktop-only and intentionally omitted.
+var MOBILE_SECTION_MAP = {
+  flutter: 'prs',
+  speaking: 'speaking',
+  oss: 'oss',
+  tech: 'tech',
+  articles: 'articles',
+  contact: 'connect',
+  github: 'github',
+  linkedin: 'linkedin',
+  snake: 'snake',
+  'flutter-course': 'flutter-course'
+};
+
+var DEFAULT_PAGE_TITLE = (typeof document !== 'undefined' && document.title) || 'Ishaq Hassan | Senior Engineer & Flutter Framework Contributor';
+var DEFAULT_PAGE_DESC  = 'Senior full-stack engineer, Flutter Framework Contributor with 6 merged PRs, Engineering Manager at DigitalHire. Interactive macOS-style portfolio.';
+
+var WINDOW_META = {
+  about:           { title: 'About Ishaq Hassan | Flutter Framework Contributor',                 desc: '13+ years in software, 6 merged PRs into the Flutter framework, 50+ production apps shipped.' },
+  flutter:         { title: 'Flutter Framework Contributions | 6 Merged PRs | Ishaq Hassan',      desc: 'Framework-level Flutter PRs: six merged, three approved. Contribution list and links.' },
+  speaking:        { title: 'Speaking & Tech Talks | Ishaq Hassan',                               desc: 'Flutter bootcamps, GDG events, university seminars and community meetups.' },
+  oss:             { title: 'Open Source Projects | Ishaq Hassan',                                desc: 'Open-source Flutter packages, Dart tools and developer utilities on pub.dev and GitHub.' },
+  tech:            { title: 'Tech Stack & Tools | Ishaq Hassan',                                  desc: 'Flutter, Dart, Firebase, Node, Next.js, Rust and the broader stack behind 50+ production apps.' },
+  articles:        { title: 'Medium Articles | Ishaq Hassan',                                     desc: 'Long-form technical writing: Dart isolates, Flutter three-tree architecture, Firebase and more.' },
+  contact:         { title: 'Contact Ishaq Hassan',                                               desc: 'Reach out for Flutter consulting, speaking engagements, or collaboration.' },
+  github:          { title: 'GitHub Profile | Ishaq Hassan',                                      desc: 'Open source repos, pub.dev packages, Flutter framework PRs and contribution heatmap.' },
+  linkedin:        { title: 'LinkedIn Profile | Ishaq Hassan',                                    desc: 'Engineering Manager at DigitalHire, Flutter Framework Contributor, 13+ years of experience.' },
+  snake:           { title: 'Snake Neon | Play inside the Portfolio',                             desc: 'A vanilla-JS arcade game with neon visuals, multiple control schemes and pause/resume.' },
+  'flutter-course':{ title: 'Flutter Course (Urdu) | 35 Free Videos by Ishaq Hassan',             desc: 'Free Urdu Flutter course listed on official Flutter docs. 35 videos across 7 sections.' },
+  wisesend:        { title: 'WiseSend | Side Project by Ishaq Hassan',                            desc: 'A side project by Ishaq Hassan under the XRLabs umbrella.' }
+};
+
+function windowIdFromCurrentUrl() {
+  try {
+    var sp = new URLSearchParams(location.search);
+    var p = sp.get('w');
+    if (p && WINDOW_PATHS[p]) return p;
+    var path = location.pathname.replace(/\/+$/, '') || '/';
+    return PATH_TO_WINDOW[path] || null;
+  } catch (e) { return null; }
+}
+
+function updateMetaForWindow(id) {
+  var m = id ? WINDOW_META[id] : null;
+  var title = m ? m.title : DEFAULT_PAGE_TITLE;
+  var desc  = m ? m.desc  : DEFAULT_PAGE_DESC;
+  var url   = 'https://ishaqhassan.dev' + (id && WINDOW_PATHS[id] ? WINDOW_PATHS[id] : '/');
+  try { document.title = title; } catch (e) {}
+  var setAttr = function(selector, attr, val) {
+    var el = document.querySelector(selector);
+    if (el) el.setAttribute(attr, val);
+  };
+  setAttr('meta[name="description"]',    'content', desc);
+  setAttr('meta[property="og:title"]',   'content', title);
+  setAttr('meta[property="og:description"]', 'content', desc);
+  setAttr('meta[property="og:url"]',     'content', url);
+  setAttr('meta[name="twitter:title"]',  'content', title);
+  setAttr('meta[name="twitter:description"]', 'content', desc);
+  setAttr('link[rel="canonical"]',       'href',    url);
+}
+
+var _deeplinkCentered = {};
+function deeplinkAnimateCenter(id) {
+  // On first URL-land, glide the target window to a pleasant centered size.
+  // No maximize, no fullscreen: just a smooth slide-to-center so the
+  // deeplinked view lands in the visual focus of the desktop. If a saved
+  // state had this window maximized/fullscreened, drop those classes first
+  // so the incoming deeplinked view is a fresh centered frame.
+  try {
+    if (_deeplinkCentered[id]) return;
+    _deeplinkCentered[id] = true;
+    var win = document.getElementById('win-' + id);
+    if (!win) return;
+    if (win.classList.contains('maximized')) win.classList.remove('maximized');
+    if (win.classList.contains('fullscreen-space')) {
+      win.classList.remove('fullscreen-space');
+      document.body.classList.remove('has-fullscreen');
+    }
+    var menuH = 28, dockH = 80;
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var midW = Math.min(1080, Math.max(520, Math.floor(vw * 0.66)));
+    var midH = Math.min(720,  Math.max(420, Math.floor((vh - menuH - dockH) * 0.78)));
+    var midLeft = Math.floor((vw - midW) / 2);
+    var midTop  = Math.floor(menuH + ((vh - menuH - dockH - midH) / 2));
+    var easedT = 'top 0.48s cubic-bezier(.16,1,.3,1), left 0.48s cubic-bezier(.16,1,.3,1), width 0.48s cubic-bezier(.16,1,.3,1), height 0.48s cubic-bezier(.16,1,.3,1)';
+    var applyCenter = function() {
+      win.style.transition = easedT;
+      win.style.top    = midTop  + 'px';
+      win.style.left   = midLeft + 'px';
+      win.style.width  = midW    + 'px';
+      win.style.height = midH    + 'px';
+    };
+    // Apply immediately (works even in background tabs where rAF is throttled),
+    // and again shortly after to override any late restore/clamp from other handlers.
+    applyCenter();
+    setTimeout(applyCenter, 60);
+    setTimeout(function() { win.style.transition = ''; }, 700);
+  } catch (e) {}
+}
+// Back-compat alias (older name used in window exports)
+var deeplinkAnimateMaximize = deeplinkAnimateCenter;
+
+function applyUrlRoute(shouldMaximize) {
+  try {
+    if (!isDesktopViewport()) {
+      // Mobile: expand section for the URL-specified window, if one exists on mobile.
+      // Only windows with an actual #mobile-<section>-expanded element get expanded here.
+      // `about` and `wisesend` have no mobile surface — we keep the URL + meta and show home.
+      var mid = windowIdFromCurrentUrl();
+      if (mid) {
+        // Canonicalise URL first (?w=X → pretty path) and update share metadata
+        if (location.search.indexOf('w=') !== -1 && WINDOW_PATHS[mid]) {
+          try { history.replaceState({w: mid}, '', WINDOW_PATHS[mid]); } catch(e) {}
+        }
+        updateMetaForWindow(mid);
+        var section = MOBILE_SECTION_MAP[mid];
+        if (section && typeof expandMobileSection === 'function') {
+          setTimeout(function(){ try { expandMobileSection(null, section); } catch(e) {} }, 300);
+        }
+      }
+      return;
+    }
+    var id = windowIdFromCurrentUrl();
+    if (!id) return;
+    var win = document.getElementById('win-' + id);
+    if (!win) return;
+    var wasClosed = !openWindows[id];
+    if (wasClosed) {
+      var hasSavedPos = !!(win.style.top && win.style.left);
+      // Only add the premium deeplink-enter class when we're ABOUT to do the center-glide.
+      // For restore/popstate cases (shouldMaximize=false), keep the default open animation.
+      if (shouldMaximize) win.classList.add('deeplink-enter');
+      try { openWindow(id, hasSavedPos); } catch(e) {}
+      if (shouldMaximize) setTimeout(function(){ try { win.classList.remove('deeplink-enter'); } catch(e) {} }, 780);
+    }
+    // ALWAYS bump z-index so URL-specified window sits on top
+    win.style.zIndex = ++activeZ;
+    if (typeof updateMenuBarForWindow === 'function') updateMenuBarForWindow(id);
+    if (location.search.indexOf('w=') !== -1) {
+      try { history.replaceState({w: id}, '', WINDOW_PATHS[id]); } catch(e) {}
+    }
+    updateMetaForWindow(id);
+    if (typeof window.__fbLogEvent === 'function') {
+      try {
+        window.__fbLogEvent('page_view', {
+          page_path: WINDOW_PATHS[id],
+          page_title: (WINDOW_META[id] && WINDOW_META[id].title) || document.title
+        });
+      } catch(e) {}
+    }
+    // When the user lands via the URL itself (not via dock/popstate), glide the target window
+    // to the visual center of the desktop so the deeplinked view is immediately in focus.
+    if (shouldMaximize) setTimeout(function() { deeplinkAnimateCenter(id); }, 60);
+    // Ensure dock indicator for the deeplinked window is visibly lit
+    if (typeof syncDockIndicators === 'function') try { syncDockIndicators(); } catch(e) {}
+  } catch (e) {}
+}
+
+function navigate(id) {
+  openWindow(id);
+  if (!WINDOW_PATHS[id]) return;
+  if (location.pathname === WINDOW_PATHS[id]) return;
+  try { history.pushState({w: id}, '', WINDOW_PATHS[id]); } catch (e) {}
+  updateMetaForWindow(id);
+  if (typeof window.__fbLogEvent === 'function') {
+    try {
+      window.__fbLogEvent('page_view', {
+        page_path: WINDOW_PATHS[id],
+        page_title: (WINDOW_META[id] && WINDOW_META[id].title) || document.title
+      });
+    } catch(e) {}
+  }
+}
+
+window.addEventListener('popstate', function() {
+  var id = windowIdFromCurrentUrl();
+  if (id) {
+    var win = document.getElementById('win-' + id);
+    if (!win) return;
+    if (!openWindows[id]) { try { openWindow(id); } catch(e) {} }
+    win.style.zIndex = ++activeZ;
+    if (typeof updateMenuBarForWindow === 'function') updateMenuBarForWindow(id);
+    updateMetaForWindow(id);
+  } else {
+    updateMetaForWindow(null);
+  }
+});
+
+try { window.navigate = navigate; window.applyUrlRoute = applyUrlRoute; window.updateMetaForWindow = updateMetaForWindow; window.deeplinkAnimateCenter = deeplinkAnimateCenter; window.deeplinkAnimateMaximize = deeplinkAnimateCenter; } catch(e) {}
 
 /* ===== FINDER SHELL (native macOS Finder layout: sidebar + content) =====
    Runs on DOMContentLoaded. Reshapes eligible windows into:
@@ -2313,16 +2534,16 @@ document.addEventListener('DOMContentLoaded', function() {
 var menuBarDefault = {
   name: 'Ishaq Hassan',
   nameMenu: '<div class="menu-dd-item disabled">Flutter Framework Contributor</div><div class="menu-dd-item disabled">Engineering Manager @ DigitalHire</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan\')">GitHub Profile</div><div class="menu-dd-item" onclick="window.open(\'https://linkedin.com/in/ishaquehassan\')">LinkedIn Profile</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Medium Blog</div>',
-  file: '<div class="menu-dd-item" onclick="openWindow(\'flutter\')">Flutter Contributions<span class="shortcut">⌘1</span></div><div class="menu-dd-item" onclick="openWindow(\'oss\')">Open Source Projects<span class="shortcut">⌘2</span></div><div class="menu-dd-item" onclick="openWindow(\'articles\')">Medium Articles<span class="shortcut">⌘3</span></div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="openWindow(\'tech\')">Tech Stack</div><div class="menu-dd-item" onclick="openWindow(\'speaking\')">Speaking Events</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeAllWindows()">Close All Windows<span class="shortcut">⌘W</span></div>',
+  file: '<div class="menu-dd-item" onclick="navigate(\'flutter\')">Flutter Contributions<span class="shortcut">⌘1</span></div><div class="menu-dd-item" onclick="navigate(\'oss\')">Open Source Projects<span class="shortcut">⌘2</span></div><div class="menu-dd-item" onclick="navigate(\'articles\')">Medium Articles<span class="shortcut">⌘3</span></div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="navigate(\'tech\')">Tech Stack</div><div class="menu-dd-item" onclick="navigate(\'speaking\')">Speaking Events</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeAllWindows()">Close All Windows<span class="shortcut">⌘W</span></div>',
   view: '<div class="menu-dd-item" onclick="openAllWindows()">Open All Windows</div><div class="menu-dd-item" onclick="toggleMissionControl()">Mission Control<span class="shortcut">F3</span></div>'
 };
 
 var appMenus = {
   about: {
     name: 'Terminal',
-    nameMenu: '<div class="menu-dd-item disabled">ishaq@dev: ~</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="openWindow(\'about\')">New Terminal Window</div><div class="menu-dd-item" onclick="closeWindow(\'about\')">Close Terminal</div>',
+    nameMenu: '<div class="menu-dd-item disabled">ishaq@dev: ~</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="navigate(\'about\')">New Terminal Window</div><div class="menu-dd-item" onclick="closeWindow(\'about\')">Close Terminal</div>',
     file: '<div class="menu-dd-item" onclick="closeWindow(\'about\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="openWindow(\'github\')">GitHub</div><div class="menu-dd-item" onclick="openWindow(\'contact\')">Contact</div>'
+    go: '<div class="menu-dd-item" onclick="navigate(\'github\')">GitHub</div><div class="menu-dd-item" onclick="navigate(\'contact\')">Contact</div>'
   },
   flutter: {
     name: 'Flutter PRs',
@@ -2340,55 +2561,55 @@ var appMenus = {
     name: 'Open Source',
     nameMenu: '<div class="menu-dd-item disabled">9.8K+ Contributions, 64 Stars</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan?tab=repositories\')">All Repositories</div>',
     file: '<div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan/document_scanner_flutter\')">document_scanner_flutter</div><div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan/flutter_alarm_background_trigger\')">flutter_alarm_background_trigger</div><div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan/assets_indexer\')">assets_indexer</div><div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan/nadra_verisys_flutter\')">nadra_verisys_flutter</div><div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan/goal-agent\')">goal-agent</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'oss\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan\')">GitHub Profile</div><div class="menu-dd-item" onclick="openWindow(\'flutter\')">Flutter PRs</div>'
+    go: '<div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan\')">GitHub Profile</div><div class="menu-dd-item" onclick="navigate(\'flutter\')">Flutter PRs</div>'
   },
   tech: {
     name: 'Tech Stack',
     nameMenu: '<div class="menu-dd-item disabled">21 Technologies</div><div class="menu-dd-sep"></div><div class="menu-dd-item disabled">Mobile, Backend, Database, DevOps</div>',
     file: '<div class="menu-dd-item" onclick="window.open(\'https://flutter.dev\')">Flutter</div><div class="menu-dd-item" onclick="window.open(\'https://dart.dev\')">Dart</div><div class="menu-dd-item" onclick="window.open(\'https://firebase.google.com\')">Firebase</div><div class="menu-dd-item" onclick="window.open(\'https://nodejs.org\')">Node.js</div><div class="menu-dd-item" onclick="window.open(\'https://python.org\')">Python</div><div class="menu-dd-item" onclick="window.open(\'https://go.dev\')">Go</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'tech\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="openWindow(\'oss\')">Open Source</div><div class="menu-dd-item" onclick="openWindow(\'flutter\')">Flutter PRs</div>'
+    go: '<div class="menu-dd-item" onclick="navigate(\'oss\')">Open Source</div><div class="menu-dd-item" onclick="navigate(\'flutter\')">Flutter PRs</div>'
   },
   articles: {
     name: 'Medium',
     nameMenu: '<div class="menu-dd-item disabled">@ishaqhassan on Medium</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Visit Profile on Medium</div>',
     file: '<div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e\')">Dart Isolates: The Missing Guide</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan/how-flutters-three-tree-architecture-actually-works-953c8cc17226\')">Flutter Three-Tree Architecture</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e\')">PRs Merged Into Flutter</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061\')">Flutter Native Plugin Dev</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb\')">Indexing Assets in Dart</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67\')">Firebase Cloud Functions</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'articles\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Medium Profile</div><div class="menu-dd-item" onclick="openWindow(\'flutter\')">Flutter PRs</div>'
+    go: '<div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Medium Profile</div><div class="menu-dd-item" onclick="navigate(\'flutter\')">Flutter PRs</div>'
   },
   contact: {
     name: 'Contact',
     nameMenu: '<div class="menu-dd-item disabled">Let\'s Build Something Together</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'mailto:hello@ishaqhassan.dev\')">hello@ishaqhassan.dev</div>',
     file: '<div class="menu-dd-item" onclick="window.open(\'mailto:hello@ishaqhassan.dev\')">Send Email</div><div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan\')">GitHub</div><div class="menu-dd-item" onclick="window.open(\'https://linkedin.com/in/ishaquehassan\')">LinkedIn</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Medium</div><div class="menu-dd-item" onclick="window.open(\'https://stackoverflow.com/users/2094696/ishaq-hassan\')">Stack Overflow</div><div class="menu-dd-item" onclick="window.open(\'https://ishaqhassan.dev\')">Website</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'contact\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="openWindow(\'github\')">GitHub Window</div><div class="menu-dd-item" onclick="openWindow(\'linkedin\')">LinkedIn Window</div>'
+    go: '<div class="menu-dd-item" onclick="navigate(\'github\')">GitHub Window</div><div class="menu-dd-item" onclick="navigate(\'linkedin\')">LinkedIn Window</div>'
   },
   github: {
     name: 'GitHub',
     nameMenu: '<div class="menu-dd-item disabled">@ishaquehassan</div><div class="menu-dd-item disabled">213 followers, 170 repos</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan\')">Open in Browser</div>',
     file: '<div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan?tab=repositories\')">Repositories</div><div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan?tab=stars\')">Stars</div><div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan?tab=followers\')">Followers</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'github\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="openWindow(\'oss\')">Open Source</div><div class="menu-dd-item" onclick="openWindow(\'flutter\')">Flutter PRs</div>'
+    go: '<div class="menu-dd-item" onclick="navigate(\'oss\')">Open Source</div><div class="menu-dd-item" onclick="navigate(\'flutter\')">Flutter PRs</div>'
   },
   linkedin: {
     name: 'LinkedIn',
     nameMenu: '<div class="menu-dd-item disabled">@ishaquehassan</div><div class="menu-dd-item disabled">Engineering Manager</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://linkedin.com/in/ishaquehassan\')">Open in Browser</div>',
     file: '<div class="menu-dd-item" onclick="window.open(\'https://linkedin.com/in/ishaquehassan\')">View Profile</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'linkedin\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="openWindow(\'speaking\')">Speaking</div>'
+    go: '<div class="menu-dd-item" onclick="navigate(\'speaking\')">Speaking</div>'
   },
   snake: {
     name: 'Snake Neon',
     nameMenu: '<div class="menu-dd-item disabled">Arcade Game</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="snakeReset()">New Game</div>',
     file: '<div class="menu-dd-item" onclick="snakeReset()">New Game</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'snake\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="openWindow(\'about\')">Terminal</div>'
+    go: '<div class="menu-dd-item" onclick="navigate(\'about\')">Terminal</div>'
   },
   'flutter-course': {
     name: 'Flutter Course',
     nameMenu: '<div class="menu-dd-item disabled">35 Videos, 7 Sections, Urdu</div><div class="menu-dd-item disabled">by Tech Idara</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://docs.flutter.dev/resources/courses\')">Listed on Flutter Docs</div>',
     file: '<div class="menu-dd-item" onclick="window.open(\'https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5\')">Open YouTube Playlist</div><div class="menu-dd-item" onclick="window.open(\'https://docs.flutter.dev/resources/courses\')">Flutter Docs Courses</div><div class="menu-dd-item" onclick="window.open(\'https://www.youtube.com/@ishaquehassan\')">YouTube Channel</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'flutter-course\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="openWindow(\'flutter\')">Flutter PRs</div><div class="menu-dd-item" onclick="openWindow(\'articles\')">Articles</div>'
+    go: '<div class="menu-dd-item" onclick="navigate(\'flutter\')">Flutter PRs</div><div class="menu-dd-item" onclick="navigate(\'articles\')">Articles</div>'
   },
   'fc-player': {
     name: 'Video Player',
-    nameMenu: '<div class="menu-dd-item disabled">Flutter Course Player</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="openWindow(\'flutter-course\')">Back to Library</div>',
+    nameMenu: '<div class="menu-dd-item disabled">Flutter Course Player</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="navigate(\'flutter-course\')">Back to Library</div>',
     file: '<div class="menu-dd-item" onclick="closeFcPlayer()">Close Player<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="openWindow(\'flutter-course\')">Course Library</div>'
+    go: '<div class="menu-dd-item" onclick="navigate(\'flutter-course\')">Course Library</div>'
   }
 };
 
