@@ -32,7 +32,7 @@ WINDOWS = [
         "slug": "about",
         "id": "about",
         "title": "About Ishaq Hassan | Flutter Framework Contributor & Senior Engineer",
-        "desc": "Senior full-stack engineer, Flutter Framework Contributor with 6 merged PRs into the Flutter framework, Engineering Manager at DigitalHire, creator of the Urdu Flutter course listed on official Flutter docs.",
+        "desc": "Flutter Framework Contributor with 6 merged PRs. Engineering Manager at DigitalHire, creator of the Urdu Flutter course listed on Flutter docs.",
         "og_title": "About Ishaq Hassan: Flutter Framework Contributor",
         "og_desc": "13+ years in software, 6 merged PRs into the Flutter framework, 50+ production apps shipped. Engineering Manager, speaker, educator.",
         "h1": "About Ishaq Hassan",
@@ -52,7 +52,7 @@ He has spoken at <strong>GDG Kolachi, Iqra University, DevnCode</strong> and mul
         "slug": "flutter-contributions",
         "id": "flutter",
         "title": "Flutter Framework Contributions | 6 Merged PRs into Flutter: Ishaq Hassan",
-        "desc": "Six pull requests merged into the official Flutter framework, plus three approved and awaiting merge. Framework-level engineering contributions from Pakistan: PR list, titles, and context.",
+        "desc": "6 pull requests merged into the official Flutter framework, 3 approved. Framework-level contributions from Pakistan with full PR list and context.",
         "og_title": "Flutter Framework Contributions: 6 Merged PRs",
         "og_desc": "Framework-level Flutter PRs authored by Ishaq Hassan. Six merged, three approved. Details and links on this page.",
         "h1": "Flutter Framework Contributions",
@@ -106,7 +106,7 @@ Long-form behind-the-scenes story: <a href="/blog/how-i-got-6-prs-merged-into-fl
         "slug": "open-source",
         "id": "oss",
         "title": "Open Source Projects | Ishaq Hassan: Flutter Packages & Tools",
-        "desc": "Open source Flutter packages and developer tools authored by Ishaq Hassan: document scanner, alarm background trigger, assets indexer, and more on pub.dev and GitHub.",
+        "desc": "Open source Flutter packages by Ishaq Hassan: document scanner, alarm background trigger, assets indexer, and more on pub.dev and GitHub.",
         "og_title": "Open Source Projects: Ishaq Hassan",
         "og_desc": "Flutter packages, Dart tools and open source projects authored and maintained on pub.dev and GitHub.",
         "h1": "Open Source Projects",
@@ -153,7 +153,7 @@ All repositories are public at <a href="https://github.com/ishaquehassan" rel="n
         "slug": "medium-articles",
         "id": "articles",
         "title": "Medium Articles by Ishaq Hassan | Flutter, Dart, Firebase Deep Dives",
-        "desc": "Technical essays by Ishaq Hassan on Medium: Dart Isolates, Flutter's three-tree architecture, Firebase Cloud Functions in Kotlin, native plugin development, and more.",
+        "desc": "Technical essays on Medium: Dart Isolates, Flutter three-tree architecture, Firebase Cloud Functions in Kotlin, native plugin development, and more.",
         "og_title": "Medium Articles: Ishaq Hassan",
         "og_desc": "Flutter and Dart deep dives: isolates, three-tree architecture, framework contribution guide, Firebase Cloud Functions in Kotlin.",
         "h1": "Medium Articles",
@@ -249,7 +249,7 @@ Maintainer of open-source Flutter packages on <a href="https://pub.dev/publisher
         "slug": "snake",
         "id": "snake",
         "title": "Snake Neon | Play the Arcade Game inside Ishaq Hassan's Portfolio",
-        "desc": "Snake Neon: a browser-based arcade game built from scratch in vanilla JS, embedded inside Ishaq Hassan's macOS-style portfolio. Keyboard, D-pad, joystick and swipe controls.",
+        "desc": "Snake Neon arcade game, vanilla JS, embedded in Ishaq Hassan's macOS-style portfolio. Keyboard, D-pad, joystick and swipe controls.",
         "og_title": "Snake Neon: Play inside the Portfolio",
         "og_desc": "A vanilla-JS arcade game with neon visuals, multiple control schemes, and a pause/resume animation.",
         "h1": "Snake Neon Arcade Game",
@@ -272,7 +272,7 @@ Maintainer of open-source Flutter packages on <a href="https://pub.dev/publisher
         "slug": "flutter-course",
         "id": "flutter-course",
         "title": "Flutter Course (Urdu) | 35 Free Videos by Ishaq Hassan: Listed on Flutter Docs",
-        "desc": "35-video free Flutter course in Urdu by Ishaq Hassan. Listed on the official Flutter documentation under courses. Foundations, Dart, OOP, UI, state management, API, advanced.",
+        "desc": "35-video free Flutter course in Urdu by Ishaq Hassan. Listed on the official Flutter docs. Foundations, Dart, OOP, UI, state, API, advanced.",
         "og_title": "Flutter Course (Urdu): 35 Free Videos",
         "og_desc": "Free Urdu Flutter course listed on official Flutter docs. 35 videos across foundations, Dart, OOP, UI, state and networking.",
         "h1": "Flutter Course (Urdu)",
@@ -300,7 +300,7 @@ Subscribe to the channel: <a href="https://www.youtube.com/@ishaquehassan?sub_co
         "slug": "wisesend",
         "id": "wisesend",
         "title": "WiseSend | Side Project by Ishaq Hassan (XRLabs)",
-        "desc": "WiseSend: a side project by Ishaq Hassan under the XRLabs umbrella. Preview the product, and see related engineering context from the portfolio.",
+        "desc": "WiseSend: a side project by Ishaq Hassan under the XRLabs umbrella. Embedded in the portfolio and live at wisesend.xrlabs.app.",
         "og_title": "WiseSend: Side Project",
         "og_desc": "A side project by Ishaq Hassan. Full product at wisesend.xrlabs.app.",
         "h1": "WiseSend",
@@ -342,8 +342,25 @@ def build_webpage_jsonld(window):
             "url": f"{SITE}/",
         },
         "inLanguage": "en",
-        "dateModified": "2026-04-24",
+        "dateModified": "2026-04-25",
     }
+
+
+def build_cross_links_html(current_slug):
+    # Render a small sitemap-nav so search engines crawl every sibling path.
+    items = [w for w in WINDOWS if w["slug"] != current_slug]
+    links = "\n".join(
+        f'    <li><a href="/{w["slug"]}/">{w["breadcrumb_name"]}</a></li>'
+        for w in items
+    )
+    return (
+        '<nav class="sitelinks" aria-label="Related sections">\n'
+        '  <h2 class="sitelinks-h">Explore more</h2>\n'
+        '  <ul class="sitelinks-grid">\n'
+        f'{links}\n'
+        '  </ul>\n'
+        '</nav>'
+    )
 
 
 TEMPLATE = """<!DOCTYPE html>
@@ -373,23 +390,37 @@ TEMPLATE = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title}</title>
 <meta name="description" content="{desc}">
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow">
 <meta name="author" content="Ishaq Hassan">
+<meta name="theme-color" content="#0a0a1a">
+<meta name="color-scheme" content="dark">
 <link rel="canonical" href="{site}/{slug}/">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;👨‍💻&lt;/text&gt;&lt;/svg&gt;">
+<link rel="apple-touch-icon" href="/assets/profile-photo.png">
+<link rel="manifest" href="/manifest.json">
 
 <meta property="og:type" content="profile">
 <meta property="og:title" content="{og_title}">
 <meta property="og:description" content="{og_desc}">
 <meta property="og:url" content="{site}/{slug}/">
 <meta property="og:image" content="{og_image}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ishaq Hassan: Flutter Framework Contributor with 6 merged PRs">
 <meta property="og:site_name" content="Ishaq Hassan">
 <meta property="og:locale" content="en_PK">
+<meta property="profile:first_name" content="Ishaq">
+<meta property="profile:last_name" content="Hassan">
+<meta property="profile:username" content="ishaquehassan">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@ishaque_hassan">
+<meta name="twitter:creator" content="@ishaque_hassan">
 <meta name="twitter:title" content="{og_title}">
 <meta name="twitter:description" content="{og_desc}">
 <meta name="twitter:image" content="{og_image}">
+<meta name="twitter:image:alt" content="Ishaq Hassan: Flutter Framework Contributor with 6 merged PRs">
 
 <script type="application/ld+json">{breadcrumb_jsonld}</script>
 <script type="application/ld+json">{webpage_jsonld}</script>
@@ -411,7 +442,13 @@ TEMPLATE = """<!DOCTYPE html>
   li{{margin:6px 0}}
   .cta{{display:inline-block;margin-top:28px;padding:12px 22px;background:#7dd3fc;color:#0b1120;border-radius:8px;font-weight:700;text-decoration:none}}
   .cta:hover{{background:#38bdf8}}
-  footer{{margin-top:60px;padding-top:24px;border-top:1px solid #1e293b;color:#64748b;font-size:13px}}
+  .sitelinks{{margin-top:56px;padding-top:28px;border-top:1px solid #1e293b}}
+  .sitelinks-h{{font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7dd3fc;margin:0 0 14px}}
+  .sitelinks-grid{{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px 18px}}
+  .sitelinks-grid li{{margin:0}}
+  .sitelinks-grid a{{display:block;padding:8px 10px;border-radius:6px;color:#cbd5e1;text-decoration:none;transition:background .15s,color .15s}}
+  .sitelinks-grid a:hover{{background:rgba(125,211,252,0.08);color:#7dd3fc}}
+  footer{{margin-top:40px;padding-top:24px;border-top:1px solid #1e293b;color:#64748b;font-size:13px}}
   footer a{{color:#94a3b8}}
 </style>
 </head>
@@ -422,6 +459,7 @@ TEMPLATE = """<!DOCTYPE html>
   <p class="sub">{desc}</p>
   {body_html}
   <a class="cta" href="/?w={window_id}">Open the interactive portfolio →</a>
+  {cross_links}
   <footer>
     Part of <a href="/">Ishaq Hassan's interactive portfolio</a>: a macOS-style desktop experience with 13 windows, widgets and a live Snake game.
     &middot; Canonical view: <a href="/{slug}/">{site}/{slug}/</a>
@@ -450,6 +488,7 @@ def generate():
             body_html=w["body_html"].strip(),
             breadcrumb_jsonld=json.dumps(build_breadcrumb_jsonld(w), ensure_ascii=False),
             webpage_jsonld=json.dumps(build_webpage_jsonld(w), ensure_ascii=False),
+            cross_links=build_cross_links_html(w["slug"]),
         )
         out_path = out_dir / "index.html"
         out_path.write_text(html, encoding="utf-8")
