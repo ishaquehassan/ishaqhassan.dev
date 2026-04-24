@@ -383,7 +383,7 @@ def build_webpage_jsonld(window):
         "inLanguage": "en",
         "dateModified": "2026-04-25",
         "datePublished": "2026-04-24",
-        "image": f"{SITE}/assets/og-image.png?v=6",
+        "image": f"{SITE}/assets/og/{window['slug']}.png?v=1",
         "author": build_person_entity(),
         "publisher": build_person_entity(),
     }
@@ -604,7 +604,8 @@ TEMPLATE = """<!DOCTYPE html>
 <meta property="og:image" content="{og_image}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Ishaq Hassan: Flutter Framework Contributor with 6 merged PRs">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="{og_image_alt}">
 <meta property="og:site_name" content="Ishaq Hassan">
 <meta property="og:locale" content="en_PK">
 <meta property="profile:first_name" content="Ishaq">
@@ -617,7 +618,7 @@ TEMPLATE = """<!DOCTYPE html>
 <meta name="twitter:title" content="{og_title}">
 <meta name="twitter:description" content="{og_desc}">
 <meta name="twitter:image" content="{og_image}">
-<meta name="twitter:image:alt" content="Ishaq Hassan: Flutter Framework Contributor with 6 merged PRs">
+<meta name="twitter:image:alt" content="{og_image_alt}">
 
 <script type="application/ld+json">{breadcrumb_jsonld}</script>
 <script type="application/ld+json">{webpage_jsonld}</script>{faq_block}
@@ -689,7 +690,8 @@ def generate():
             desc=w["desc"],
             og_title=w["og_title"],
             og_desc=w["og_desc"],
-            og_image=OG_IMAGE,
+            og_image=f"{SITE}/assets/og/{w['slug']}.png?v=1",
+            og_image_alt=f"Ishaq Hassan: {w['breadcrumb_name']} (ishaqhassan.dev/{w['slug']})",
             h1=w["h1"],
             breadcrumb_name=w["breadcrumb_name"],
             body_html=w["body_html"].strip(),

@@ -1,0 +1,206 @@
+{
+  "about": {
+    "accent": { "cyan": "#06b6d4", "cyan2": "#22d3ee", "cyanBg": "rgba(6,182,212,0.12)", "cyanBorder": "rgba(6,182,212,0.25)" },
+    "nameLine1": "ISHAQ",
+    "nameLine2": "HASSAN",
+    "primaryRole": "Flutter Framework Contributor",
+    "secondaryRole": "Senior Full Stack Developer • 13+ yrs",
+    "tags": ["Pakistan", "Open Source", "13+ Years"],
+    "bio": "Building Flutter from the inside out. Shipping mobile apps, open-source libraries, and developer-first experiences.",
+    "statsLabel": "LIVE PORTFOLIO STATS",
+    "stats": [
+      { "num": "6", "plus": "", "badge": "Google Flutter", "label": "Merged PRs in Framework Core", "icon": "play" },
+      { "num": "11", "plus": "+", "badge": "Conferences", "label": "Tech Talks &amp; Speaking Events", "icon": "mic" },
+      { "num": "50", "plus": "+", "badge": "iOS • Android", "label": "Production Apps Shipped", "icon": "phone" },
+      { "num": "22", "plus": "+", "badge": "Full-Stack", "label": "Technologies in Active Use", "icon": "code" }
+    ],
+    "domain": "ishaqhassan.dev / about"
+  },
+  "flutter-contributions": {
+    "accent": { "cyan": "#54c5f8", "cyan2": "#7dd3fc", "cyanBg": "rgba(84,197,248,0.14)", "cyanBorder": "rgba(84,197,248,0.3)" },
+    "nameLine1": "FLUTTER",
+    "nameLine2": "CONTRIBUTIONS",
+    "primaryRole": "Framework-level engineering from Pakistan",
+    "secondaryRole": "6 Merged PRs • 3 Approved • 10+ Commits",
+    "tags": ["flutter/flutter", "Framework Core", "Rendering"],
+    "bio": "Contributing directly to the official Flutter framework. Real PRs, real merges, real names in the commit log.",
+    "statsLabel": "PR STATS",
+    "stats": [
+      { "num": "6", "plus": "", "badge": "Merged", "label": "Pull Requests merged into Flutter", "icon": "merge" },
+      { "num": "3", "plus": "", "badge": "Approved", "label": "PRs ready to merge", "icon": "check" },
+      { "num": "4", "plus": "+", "badge": "Years", "label": "Contributing to Flutter framework", "icon": "calendar" },
+      { "num": "20", "plus": "+", "badge": "Files", "label": "Framework files touched", "icon": "code" }
+    ],
+    "domain": "ishaqhassan.dev / flutter-contributions"
+  },
+  "speaking": {
+    "accent": { "cyan": "#f59e0b", "cyan2": "#fbbf24", "cyanBg": "rgba(245,158,11,0.14)", "cyanBorder": "rgba(245,158,11,0.3)" },
+    "nameLine1": "TECH",
+    "nameLine2": "TALKS",
+    "primaryRole": "Public Speaker • Flutter • Mobile Engineering",
+    "secondaryRole": "GDG Kolachi Mentor • Community Leader",
+    "tags": ["GDG DevFest", "Google I/O", "Universities"],
+    "bio": "Keynotes, panels, university lectures, and meetups. Sharing Flutter depth with the Pakistani dev community and beyond.",
+    "statsLabel": "SPEAKING STATS",
+    "stats": [
+      { "num": "11", "plus": "+", "badge": "Events", "label": "Tech talks delivered", "icon": "mic" },
+      { "num": "6", "plus": "+", "badge": "Years", "label": "Active on conference stages", "icon": "calendar" },
+      { "num": "5", "plus": "+", "badge": "Cities", "label": "Across Pakistan + online", "icon": "globe" },
+      { "num": "1", "plus": "", "badge": "Mentor", "label": "GDG Kolachi community leader", "icon": "users" }
+    ],
+    "domain": "ishaqhassan.dev / speaking"
+  },
+  "open-source": {
+    "accent": { "cyan": "#22c55e", "cyan2": "#4ade80", "cyanBg": "rgba(34,197,94,0.14)", "cyanBorder": "rgba(34,197,94,0.3)" },
+    "nameLine1": "OPEN",
+    "nameLine2": "SOURCE",
+    "primaryRole": "OSS Author • Flutter Packages • Dev Tools",
+    "secondaryRole": "document_scanner_flutter • assets_indexer • and more",
+    "tags": ["Flutter", "Dart", "pub.dev"],
+    "bio": "Publishing libraries that other Flutter developers depend on in production. Stars, forks, real-world adoption.",
+    "statsLabel": "OSS STATS",
+    "stats": [
+      { "num": "64", "plus": "+", "badge": "Stars", "label": "On GitHub repositories", "icon": "star" },
+      { "num": "135", "plus": "+", "badge": "Forks", "label": "Across OSS projects", "icon": "fork" },
+      { "num": "3", "plus": "", "badge": "Packages", "label": "Published on pub.dev", "icon": "package" },
+      { "num": "9.8", "plus": "K", "badge": "Commits", "label": "GitHub activity all-time", "icon": "git" }
+    ],
+    "domain": "ishaqhassan.dev / open-source"
+  },
+  "tech-stack": {
+    "accent": { "cyan": "#a855f7", "cyan2": "#c084fc", "cyanBg": "rgba(168,85,247,0.14)", "cyanBorder": "rgba(168,85,247,0.3)" },
+    "nameLine1": "TECH",
+    "nameLine2": "STACK",
+    "primaryRole": "Full Stack Engineer • Mobile • Web • AI",
+    "secondaryRole": "Flutter • Dart • Node • Next.js • Rust • Firebase",
+    "tags": ["Mobile", "Backend", "DevOps"],
+    "bio": "Production experience across the full stack. From Flutter mobile apps to Rust CLIs and GCP microservices.",
+    "statsLabel": "STACK BREAKDOWN",
+    "stats": [
+      { "num": "22", "plus": "+", "badge": "Techs", "label": "Languages, frameworks, tools", "icon": "code" },
+      { "num": "10", "plus": "+", "badge": "Years", "label": "Production shipping", "icon": "calendar" },
+      { "num": "4", "plus": "", "badge": "Domains", "label": "Mobile, web, backend, AI/ML", "icon": "globe" },
+      { "num": "50", "plus": "+", "badge": "Projects", "label": "Built on this stack", "icon": "phone" }
+    ],
+    "domain": "ishaqhassan.dev / tech-stack"
+  },
+  "medium-articles": {
+    "accent": { "cyan": "#e5e7eb", "cyan2": "#f3f4f6", "cyanBg": "rgba(229,231,235,0.12)", "cyanBorder": "rgba(229,231,235,0.3)" },
+    "nameLine1": "MEDIUM",
+    "nameLine2": "ARTICLES",
+    "primaryRole": "Technical Writer • Flutter Deep Dives",
+    "secondaryRole": "Architecture • Plugins • Dart Isolates",
+    "tags": ["Flutter", "Dart", "Tutorials"],
+    "bio": "Long-form technical articles that walk through real architecture decisions, plugin internals, and Dart advanced topics.",
+    "statsLabel": "WRITING STATS",
+    "stats": [
+      { "num": "6", "plus": "+", "badge": "Articles", "label": "Published on Medium", "icon": "doc" },
+      { "num": "10", "plus": "K+", "badge": "Reads", "label": "Cumulative article views", "icon": "eye" },
+      { "num": "4", "plus": "", "badge": "Topics", "label": "Architecture, plugins, perf, isolates", "icon": "tag" },
+      { "num": "1", "plus": "", "badge": "Featured", "label": "On official Flutter channels", "icon": "star" }
+    ],
+    "domain": "ishaqhassan.dev / medium-articles"
+  },
+  "contact": {
+    "accent": { "cyan": "#6366f1", "cyan2": "#818cf8", "cyanBg": "rgba(99,102,241,0.14)", "cyanBorder": "rgba(99,102,241,0.3)" },
+    "nameLine1": "LET'S",
+    "nameLine2": "TALK",
+    "primaryRole": "Available for Flutter Consulting • Remote",
+    "secondaryRole": "Karachi • Pakistan • Working globally",
+    "tags": ["Consulting", "Remote", "Flutter"],
+    "bio": "Need a Flutter consultant, architect, or engineering leader? Drop an email; I usually reply within 24 hours.",
+    "statsLabel": "HOW TO REACH ME",
+    "stats": [
+      { "num": "24", "plus": "h", "badge": "Reply", "label": "Typical response time", "icon": "mail" },
+      { "num": "3", "plus": "", "badge": "Channels", "label": "Email, LinkedIn, GitHub", "icon": "phone" },
+      { "num": "1", "plus": "", "badge": "Focus", "label": "Flutter + mobile engineering", "icon": "code" },
+      { "num": "13", "plus": "+", "badge": "Years", "label": "Production engineering experience", "icon": "calendar" }
+    ],
+    "domain": "ishaqhassan.dev / contact"
+  },
+  "github": {
+    "accent": { "cyan": "#f1f5f9", "cyan2": "#cbd5e1", "cyanBg": "rgba(241,245,249,0.1)", "cyanBorder": "rgba(241,245,249,0.25)" },
+    "nameLine1": "GITHUB",
+    "nameLine2": "PROFILE",
+    "primaryRole": "@ishaquehassan • 9,800+ Contributions",
+    "secondaryRole": "Flutter PRs • OSS • Personal repos",
+    "tags": ["Open Source", "Flutter", "Dart"],
+    "bio": "Long-running GitHub activity with contributions to Flutter framework, personal open source packages, and production projects.",
+    "statsLabel": "GITHUB STATS",
+    "stats": [
+      { "num": "9.8", "plus": "K", "badge": "Contribs", "label": "Lifetime on GitHub", "icon": "git" },
+      { "num": "64", "plus": "+", "badge": "Stars", "label": "Across repositories", "icon": "star" },
+      { "num": "135", "plus": "+", "badge": "Forks", "label": "Community adoption", "icon": "fork" },
+      { "num": "6", "plus": "+", "badge": "PRs", "label": "Merged into flutter/flutter", "icon": "merge" }
+    ],
+    "domain": "ishaqhassan.dev / github"
+  },
+  "linkedin": {
+    "accent": { "cyan": "#0A66C2", "cyan2": "#3b82f6", "cyanBg": "rgba(10,102,194,0.16)", "cyanBorder": "rgba(10,102,194,0.35)" },
+    "nameLine1": "LINKEDIN",
+    "nameLine2": "PROFILE",
+    "primaryRole": "Engineering Manager • DigitalHire",
+    "secondaryRole": "Building AI video hiring platform",
+    "tags": ["Engineering Mgmt", "Remote Team", "Mobile"],
+    "bio": "Currently leading engineering at DigitalHire. Previously Tech Idara, AeroGlobe, Sastaticket. Open for senior roles + consulting.",
+    "statsLabel": "CAREER STATS",
+    "stats": [
+      { "num": "13", "plus": "+", "badge": "Years", "label": "Full-time engineering experience", "icon": "calendar" },
+      { "num": "5", "plus": "", "badge": "Roles", "label": "Senior to Engineering Manager", "icon": "users" },
+      { "num": "50", "plus": "+", "badge": "Apps", "label": "Shipped to production", "icon": "phone" },
+      { "num": "1", "plus": "", "badge": "Team", "label": "Currently leading at DigitalHire", "icon": "star" }
+    ],
+    "domain": "ishaqhassan.dev / linkedin"
+  },
+  "snake": {
+    "accent": { "cyan": "#22c55e", "cyan2": "#4ade80", "cyanBg": "rgba(34,197,94,0.14)", "cyanBorder": "rgba(34,197,94,0.3)" },
+    "nameLine1": "SNAKE",
+    "nameLine2": "NEON",
+    "primaryRole": "Arcade Game • Inline on the portfolio",
+    "secondaryRole": "Canvas • 60fps • 3 control modes",
+    "tags": ["Canvas", "60 FPS", "Playable"],
+    "bio": "Built-from-scratch Snake game with neon styling, pause animations, HUD, wheel/D-pad/swipe controls on mobile.",
+    "statsLabel": "GAME FEATURES",
+    "stats": [
+      { "num": "60", "plus": "", "badge": "FPS", "label": "Smooth gameplay target", "icon": "play" },
+      { "num": "3", "plus": "", "badge": "Modes", "label": "Wheel, D-Pad, Swipe (mobile)", "icon": "phone" },
+      { "num": "1", "plus": "", "badge": "Canvas", "label": "HTML5 Canvas rendered", "icon": "code" },
+      { "num": "0", "plus": "", "badge": "Deps", "label": "Zero external JS libraries", "icon": "star" }
+    ],
+    "domain": "ishaqhassan.dev / snake"
+  },
+  "flutter-course": {
+    "accent": { "cyan": "#ef4444", "cyan2": "#f87171", "cyanBg": "rgba(239,68,68,0.14)", "cyanBorder": "rgba(239,68,68,0.3)" },
+    "nameLine1": "FLUTTER",
+    "nameLine2": "COURSE",
+    "primaryRole": "35-Video Course in Urdu • Free",
+    "secondaryRole": "Listed on docs.flutter.dev • Tech Idara",
+    "tags": ["Urdu", "Free", "Flutter Docs"],
+    "bio": "End-to-end Flutter curriculum in Urdu covering Dart basics, OOP, UI, state management, API integration, and advanced topics.",
+    "statsLabel": "COURSE STATS",
+    "stats": [
+      { "num": "35", "plus": "", "badge": "Videos", "label": "Structured curriculum", "icon": "play" },
+      { "num": "7", "plus": "", "badge": "Sections", "label": "Foundation to advanced", "icon": "doc" },
+      { "num": "0", "plus": "$", "badge": "Free", "label": "No paywall, YouTube hosted", "icon": "star" },
+      { "num": "1", "plus": "", "badge": "Official", "label": "Listed on docs.flutter.dev", "icon": "check" }
+    ],
+    "domain": "ishaqhassan.dev / flutter-course"
+  },
+  "wisesend": {
+    "accent": { "cyan": "#fb7185", "cyan2": "#fda4af", "cyanBg": "rgba(251,113,133,0.14)", "cyanBorder": "rgba(251,113,133,0.3)" },
+    "nameLine1": "WISE",
+    "nameLine2": "SEND",
+    "primaryRole": "Side Project • XRLabs",
+    "secondaryRole": "Cross-border money movement • Pakistan → global",
+    "tags": ["Fintech", "SaaS", "Flutter"],
+    "bio": "Side project exploring cross-border send flows, KYC, fee optimization. Built on Flutter + serverless backend.",
+    "statsLabel": "PROJECT INFO",
+    "stats": [
+      { "num": "1", "plus": "", "badge": "Side", "label": "Active side project at XRLabs", "icon": "star" },
+      { "num": "2", "plus": "+", "badge": "Markets", "label": "Targeted corridors", "icon": "globe" },
+      { "num": "1", "plus": "", "badge": "Stack", "label": "Flutter + serverless cloud", "icon": "code" },
+      { "num": "WIP", "plus": "", "badge": "Status", "label": "Work in progress", "icon": "calendar" }
+    ],
+    "domain": "ishaqhassan.dev / wisesend"
+  }
+}
