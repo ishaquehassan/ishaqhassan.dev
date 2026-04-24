@@ -31,7 +31,7 @@ WINDOWS = [
     {
         "slug": "about",
         "id": "about",
-        "title": "About Ishaq Hassan | Flutter Framework Contributor & Senior Engineer",
+        "title": "About Ishaq Hassan | Flutter Contributor & Senior Engineer",
         "desc": "Flutter Framework Contributor with 6 merged PRs. Engineering Manager at DigitalHire, creator of the Urdu Flutter course listed on Flutter docs.",
         "og_title": "About Ishaq Hassan: Flutter Framework Contributor",
         "og_desc": "13+ years in software, 6 merged PRs into the Flutter framework, 50+ production apps shipped. Engineering Manager, speaker, educator.",
@@ -51,7 +51,7 @@ He has spoken at <strong>GDG Kolachi, Iqra University, DevnCode</strong> and mul
     {
         "slug": "flutter-contributions",
         "id": "flutter",
-        "title": "Flutter Framework Contributions | 6 Merged PRs into Flutter: Ishaq Hassan",
+        "title": "Flutter Contributions | 6 Merged PRs by Ishaq Hassan",
         "desc": "6 pull requests merged into the official Flutter framework, 3 approved. Framework-level contributions from Pakistan with full PR list and context.",
         "og_title": "Flutter Framework Contributions: 6 Merged PRs",
         "og_desc": "Framework-level Flutter PRs authored by Ishaq Hassan. Six merged, three approved. Details and links on this page.",
@@ -152,7 +152,7 @@ All repositories are public at <a href="https://github.com/ishaquehassan" rel="n
     {
         "slug": "medium-articles",
         "id": "articles",
-        "title": "Medium Articles by Ishaq Hassan | Flutter, Dart, Firebase Deep Dives",
+        "title": "Medium Articles | Ishaq Hassan: Flutter Deep Dives",
         "desc": "Technical essays on Medium: Dart Isolates, Flutter three-tree architecture, Firebase Cloud Functions in Kotlin, native plugin development, and more.",
         "og_title": "Medium Articles: Ishaq Hassan",
         "og_desc": "Flutter and Dart deep dives: isolates, three-tree architecture, framework contribution guide, Firebase Cloud Functions in Kotlin.",
@@ -224,7 +224,7 @@ and upstream contributions to the <a href="https://github.com/flutter/flutter/pu
     {
         "slug": "linkedin",
         "id": "linkedin",
-        "title": "LinkedIn Profile | Ishaq Hassan: Engineering Manager, Flutter Contributor",
+        "title": "LinkedIn | Ishaq Hassan: Engineering Manager & Flutter",
         "desc": "Ishaq Hassan's LinkedIn: 13+ years, Engineering Manager at DigitalHire, Flutter Framework Contributor, former roles at Confiz, Tech Idara, Afiniti.",
         "og_title": "LinkedIn: Ishaq Hassan",
         "og_desc": "Engineering Manager, Flutter Framework Contributor, 13+ years across mobile, web and backend.",
@@ -271,7 +271,7 @@ Maintainer of open-source Flutter packages on <a href="https://pub.dev/publisher
     {
         "slug": "flutter-course",
         "id": "flutter-course",
-        "title": "Flutter Course (Urdu) | 35 Free Videos by Ishaq Hassan: Listed on Flutter Docs",
+        "title": "Flutter Course Urdu | 35 Free Videos by Ishaq Hassan",
         "desc": "35-video free Flutter course in Urdu by Ishaq Hassan. Listed on the official Flutter docs. Foundations, Dart, OOP, UI, state, API, advanced.",
         "og_title": "Flutter Course (Urdu): 35 Free Videos",
         "og_desc": "Free Urdu Flutter course listed on official Flutter docs. 35 videos across foundations, Dart, OOP, UI, state and networking.",
