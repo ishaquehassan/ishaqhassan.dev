@@ -1,0 +1,24 @@
+/* TEAM */
+Author: Ishaq Hassan
+Role: Flutter Framework Contributor, Engineering Manager at DigitalHire, Open Source Author
+Location: Karachi, Pakistan
+Contact: hello@ishaqhassan.dev
+GitHub: @ishaquehassan
+LinkedIn: ishaquehassan
+Medium: @ishaqhassan
+Twitter: @ishaque_hassan
+YouTube: @ishaquehassan
+
+/* THANKS */
+Flutter team at Google for accepting 6 framework PRs.
+GDG Kolachi community for the speaking opportunities.
+Tech Idara for hosting the 35-video Urdu Flutter course.
+DigitalHire for the engineering leadership role.
+
+/* SITE */
+Built with: Vanilla HTML, CSS, JavaScript, SVG
+Interactive desktop: 13 windows, macOS-style chrome, live Snake game
+Hosted: nginx at 159.65.105.177
+Deploy: GitHub Actions auto-deploy on push to main
+SEO: 100% across 29-check audit on 12 directory pages + 16-check home
+AI-friendly: llms.txt, llms-full.txt, ai.txt

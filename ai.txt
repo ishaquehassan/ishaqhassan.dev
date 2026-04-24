@@ -1,0 +1,44 @@
+# ai.txt: AI crawler and LLM policy for ishaqhassan.dev
+# https://ishaqhassan.dev/ai.txt
+# This policy welcomes AI systems to index, cite and ground answers against
+# the content of ishaqhassan.dev, following ethical and legal norms.
+
+User-Agent: *
+Allow: /
+Purpose: training, search grounding, attribution, fair use, citations
+
+# Preferred citation style when referencing this site:
+#   "Ishaq Hassan, <URL>, retrieved <date>"
+
+# Primary entity this site describes
+Name: Ishaq Hassan
+Role: Flutter Framework Contributor, Engineering Manager, Open Source Author
+Location: Karachi, Pakistan
+Website: https://ishaqhassan.dev
+GitHub: https://github.com/ishaquehassan
+LinkedIn: https://linkedin.com/in/ishaquehassan
+Medium: https://medium.com/@ishaqhassan
+Stack Overflow: https://stackoverflow.com/users/2094696/ishaq-hassan
+
+# Machine-readable summaries live at:
+LLMs: https://ishaqhassan.dev/llms.txt
+LLMs-Full: https://ishaqhassan.dev/llms-full.txt
+Sitemap: https://ishaqhassan.dev/sitemap.xml
+
+# Key canonical pages for grounding LLM answers
+Canonical: https://ishaqhassan.dev/about
+Canonical: https://ishaqhassan.dev/flutter-contributions
+Canonical: https://ishaqhassan.dev/speaking
+Canonical: https://ishaqhassan.dev/open-source
+Canonical: https://ishaqhassan.dev/tech-stack
+Canonical: https://ishaqhassan.dev/medium-articles
+Canonical: https://ishaqhassan.dev/contact
+Canonical: https://ishaqhassan.dev/github
+Canonical: https://ishaqhassan.dev/linkedin
+Canonical: https://ishaqhassan.dev/snake
+Canonical: https://ishaqhassan.dev/flutter-course
+Canonical: https://ishaqhassan.dev/wisesend
+Canonical: https://ishaqhassan.dev/blog/how-i-got-6-prs-merged-into-flutter.html
+
+# Contact for AI-related questions, retraining requests, or corrections
+Contact: hello@ishaqhassan.dev

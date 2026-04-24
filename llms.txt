@@ -51,5 +51,8 @@ Ishaq Hassan is a Flutter Framework Contributor from Pakistan, based in Karachi.
 - Flutter Course: https://ishaqhassan.dev/flutter-course
 - WiseSend: https://ishaqhassan.dev/wisesend
 
+## AI Policy
+- [AI crawler policy](https://ishaqhassan.dev/ai.txt) - welcomes AI systems for indexing, grounding and attribution
+
 ## Optional
 - [Full details](https://ishaqhassan.dev/llms-full.txt)

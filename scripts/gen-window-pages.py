@@ -346,6 +346,88 @@ def build_webpage_jsonld(window):
     }
 
 
+FAQ_MAP = {
+    "about": [
+        ("Who is Ishaq Hassan?", "Ishaq Hassan is a senior full-stack software engineer based in Karachi, Pakistan with 13+ years of experience. He is a Flutter Framework Contributor with 6 merged PRs into the official Flutter repository, Engineering Manager at DigitalHire, and the creator of a 35-video Urdu Flutter course listed on the official Flutter documentation."),
+        ("What is Ishaq's current role?", "Engineering Manager at DigitalHire, where he leads mobile and platform engineering."),
+        ("How many years of experience does Ishaq have?", "Over 13 years of professional software engineering experience across mobile, backend, and web."),
+    ],
+    "flutter": [
+        ("How many pull requests has Ishaq Hassan merged into Flutter?", "Six pull requests have been merged into the official Flutter framework at github.com/flutter/flutter, and three more are approved and awaiting merge."),
+        ("What kinds of PRs are these?", "The merged PRs cover documentation corrections, API disposal guidance, CupertinoTextField improvements, Material widget fixes, DropdownMenu scroll padding, and LicenseRegistry NOTICES fixes. Each PR passed the Flutter team's tree-hygiene, test coverage and review standards."),
+        ("Where can I verify these PRs?", "All PRs are public on GitHub. View the full authored list at github.com/flutter/flutter/pulls?q=author:ishaquehassan."),
+    ],
+    "speaking": [
+        ("What topics does Ishaq speak on?", "Flutter framework internals, production-grade Dart patterns, Firebase scaling, and the path from app developer to open-source contributor."),
+        ("Which events has Ishaq spoken at?", "GDG Kolachi Flutter Bootcamp, GDG Kolachi Code to Create (Road to DevFest 2025), Iqra University Flutter Seminar, and DevnCode Meetup IV among others."),
+        ("How do I invite Ishaq for a talk?", "Reach out via the contact page at ishaqhassan.dev/contact or email hello@ishaqhassan.dev."),
+    ],
+    "oss": [
+        ("Which open source Flutter packages has Ishaq authored?", "document_scanner_flutter (native scanning), flutter_alarm_background_trigger (background alarms), assets_indexer (R.java-style asset indexing), nadra_verisys_flutter (Pakistan NADRA SDK), and claude-remote-terminal."),
+        ("Where are the packages published?", "All packages are on pub.dev under the ishaqhassan.dev publisher and on GitHub at github.com/ishaquehassan."),
+        ("What license are the packages under?", "Most packages are MIT-licensed. Check the individual repo LICENSE files for specifics."),
+    ],
+    "tech": [
+        ("What languages does Ishaq work with primarily?", "Dart and Flutter for mobile, Node.js and TypeScript for backend, Kotlin and Swift for native mobile, and React/Next.js for web."),
+        ("What backend stack does Ishaq use?", "Node.js (Express, Fastify, NestJS), Firebase (Firestore, Cloud Functions, FCM, Auth), PostgreSQL, MongoDB, Redis, and selective Rust for performance-critical services."),
+        ("What DevOps and AI tools?", "Docker, GitHub Actions, Nginx for infrastructure; Claude Code, Anthropic API, OpenAI API for AI-augmented engineering."),
+    ],
+    "articles": [
+        ("What topics has Ishaq written about?", "Dart Isolates in production, Flutter's three-tree architecture, how to contribute to the Flutter framework, Firebase Cloud Functions in Kotlin, Flutter native plugin development for iOS and Android, and asset indexing patterns in Dart."),
+        ("Where can I read these articles?", "All articles are published on Medium at medium.com/@ishaqhassan. The blog post on Flutter contributions is also cross-posted on ishaqhassan.dev/blog/."),
+        ("How often does Ishaq publish?", "New long-form technical deep dives are published a few times per year, typically after completing notable engineering work."),
+    ],
+    "contact": [
+        ("How do I contact Ishaq Hassan?", "Email hello@ishaqhassan.dev, or use LinkedIn at linkedin.com/in/ishaquehassan. Typical response time is within 48 hours."),
+        ("Is Ishaq available for consulting?", "Yes. Visit ishaqhassan.dev/flutter-consultant.html for consulting engagements or ishaqhassan.dev/hire-flutter-developer.html for hiring inquiries."),
+        ("Which platforms is Ishaq active on?", "GitHub, LinkedIn, X/Twitter, Medium, YouTube, and Stack Overflow. Links are on the contact page."),
+    ],
+    "github": [
+        ("What is Ishaq Hassan's GitHub username?", "The GitHub handle is ishaquehassan. Full profile: github.com/ishaquehassan."),
+        ("What are the most notable repositories?", "document_scanner_flutter, flutter_alarm_background_trigger, assets_indexer, claude-remote-terminal, and goal-agent. Plus upstream Flutter framework PRs."),
+        ("Does Ishaq contribute to other OSS projects?", "Yes, including framework-level PRs merged into the Flutter repository itself."),
+    ],
+    "linkedin": [
+        ("What is Ishaq Hassan's current role on LinkedIn?", "Engineering Manager at DigitalHire, leading AI-based video job board development and managing the mobile and platform teams."),
+        ("Where can I find Ishaq's LinkedIn?", "linkedin.com/in/ishaquehassan."),
+        ("What prior roles has Ishaq held?", "Senior Software Engineer at Confiz, Head of Engineering at Tech Idara, Software Engineer at Afiniti, and independent Flutter consulting."),
+    ],
+    "snake": [
+        ("How do I play Snake Neon?", "Use the arrow keys or WASD on desktop. On mobile, pick one of three control schemes: Wheel (joystick), D-Pad (9-grid buttons), or full-screen Swipe gestures. Press ESC to pause."),
+        ("Is the source code available?", "The game is part of the open-source portfolio at github.com/ishaquehassan/ishaqhassan.dev."),
+        ("What technology powers Snake Neon?", "Pure vanilla JavaScript with a canvas-based renderer at 60fps using requestAnimationFrame. No framework or external dependency."),
+    ],
+    "flutter-course": [
+        ("How many videos are in the Flutter course?", "35 videos across 7 sections: Foundation, Dart Basics, Object-Oriented Programming, Flutter UI, State Management, API and Networking, and Advanced."),
+        ("What language is the course in?", "Urdu. The course is free and listed on the official Flutter documentation at docs.flutter.dev/resources/courses#urdu."),
+        ("Where can I watch the course?", "On YouTube at the Flutter Course playlist, or inline via the interactive course viewer on the portfolio."),
+    ],
+    "wisesend": [
+        ("What is WiseSend?", "A side project built and maintained by Ishaq Hassan under the XRLabs umbrella."),
+        ("Where can I try WiseSend?", "The live product is at wisesend.xrlabs.app. It is also embedded as an inline window on the portfolio."),
+        ("Is WiseSend open source?", "No, WiseSend is a product, not an open-source package."),
+    ],
+}
+
+
+def build_faq_jsonld(window):
+    qa = FAQ_MAP.get(window["id"], [])
+    if not qa:
+        return None
+    return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": q,
+                "acceptedAnswer": {"@type": "Answer", "text": a},
+            }
+            for q, a in qa
+        ],
+    }
+
+
 def build_cross_links_html(current_slug):
     # Render a small sitemap-nav so search engines crawl every sibling path.
     items = [w for w in WINDOWS if w["slug"] != current_slug]
@@ -423,7 +505,7 @@ TEMPLATE = """<!DOCTYPE html>
 <meta name="twitter:image:alt" content="Ishaq Hassan: Flutter Framework Contributor with 6 merged PRs">
 
 <script type="application/ld+json">{breadcrumb_jsonld}</script>
-<script type="application/ld+json">{webpage_jsonld}</script>
+<script type="application/ld+json">{webpage_jsonld}</script>{faq_block}
 
 <style>
   :root{{color-scheme:dark}}
@@ -442,6 +524,15 @@ TEMPLATE = """<!DOCTYPE html>
   li{{margin:6px 0}}
   .cta{{display:inline-block;margin-top:28px;padding:12px 22px;background:#7dd3fc;color:#0b1120;border-radius:8px;font-weight:700;text-decoration:none}}
   .cta:hover{{background:#38bdf8}}
+  .faq{{margin-top:44px;padding-top:28px;border-top:1px solid #1e293b}}
+  .faq-h{{font-size:15px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7dd3fc;margin:0 0 14px}}
+  .faq-item{{background:rgba(125,211,252,0.03);border:1px solid rgba(125,211,252,0.08);border-radius:10px;padding:14px 18px;margin:0 0 10px;transition:border-color .15s,background .15s}}
+  .faq-item:hover{{border-color:rgba(125,211,252,0.18);background:rgba(125,211,252,0.05)}}
+  .faq-item summary{{cursor:pointer;font-weight:600;color:#e2e8f0;font-size:15px;list-style:none}}
+  .faq-item summary::-webkit-details-marker{{display:none}}
+  .faq-item summary::after{{content:"+";float:right;color:#7dd3fc;font-weight:700;transition:transform .2s}}
+  .faq-item[open] summary::after{{content:"−"}}
+  .faq-item p{{margin:12px 0 0;color:#94a3b8;font-size:14px;line-height:1.65}}
   .sitelinks{{margin-top:56px;padding-top:28px;border-top:1px solid #1e293b}}
   .sitelinks-h{{font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7dd3fc;margin:0 0 14px}}
   .sitelinks-grid{{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px 18px}}
@@ -458,6 +549,7 @@ TEMPLATE = """<!DOCTYPE html>
   <h1>{h1}</h1>
   <p class="sub">{desc}</p>
   {body_html}
+  {faq_html}
   <a class="cta" href="/?w={window_id}">Open the interactive portfolio →</a>
   {cross_links}
   <footer>
@@ -488,6 +580,19 @@ def generate():
             body_html=w["body_html"].strip(),
             breadcrumb_jsonld=json.dumps(build_breadcrumb_jsonld(w), ensure_ascii=False),
             webpage_jsonld=json.dumps(build_webpage_jsonld(w), ensure_ascii=False),
+            faq_block=(
+                '\n<script type="application/ld+json">' + json.dumps(build_faq_jsonld(w), ensure_ascii=False) + '</script>'
+                if build_faq_jsonld(w) else ''
+            ),
+            faq_html=(
+                '<section class="faq" aria-labelledby="faq-h">\n  <h2 id="faq-h" class="faq-h">Frequently asked questions</h2>\n  '
+                + ''.join(
+                    f'<details class="faq-item"><summary><span>{q}</span></summary><p>{a}</p></details>\n  '
+                    for q, a in FAQ_MAP.get(w["id"], [])
+                ).rstrip()
+                + '\n</section>'
+                if FAQ_MAP.get(w["id"]) else ''
+            ),
             cross_links=build_cross_links_html(w["slug"]),
         )
         out_path = out_dir / "index.html"

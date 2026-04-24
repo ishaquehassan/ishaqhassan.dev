@@ -59,6 +59,7 @@
 
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ishaqhassan.dev/"}, {"@type": "ListItem", "position": 2, "name": "Tech Stack", "item": "https://ishaqhassan.dev/tech-stack/"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "@id": "https://ishaqhassan.dev/tech-stack/", "url": "https://ishaqhassan.dev/tech-stack/", "name": "Tech Stack & Tools | Ishaq Hassan: Flutter, Dart, Firebase, Node", "description": "The full stack Ishaq Hassan works with: Flutter, Dart, Firebase, Node.js, Next.js, React, Rust, Kotlin, Swift, GCP, AWS and more.", "isPartOf": {"@type": "WebSite", "@id": "https://ishaqhassan.dev/#website", "url": "https://ishaqhassan.dev/"}, "about": {"@type": "Person", "@id": "https://ishaqhassan.dev/#person", "name": "Ishaq Hassan", "url": "https://ishaqhassan.dev/"}, "inLanguage": "en", "dateModified": "2026-04-25"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What languages does Ishaq work with primarily?", "acceptedAnswer": {"@type": "Answer", "text": "Dart and Flutter for mobile, Node.js and TypeScript for backend, Kotlin and Swift for native mobile, and React/Next.js for web."}}, {"@type": "Question", "name": "What backend stack does Ishaq use?", "acceptedAnswer": {"@type": "Answer", "text": "Node.js (Express, Fastify, NestJS), Firebase (Firestore, Cloud Functions, FCM, Auth), PostgreSQL, MongoDB, Redis, and selective Rust for performance-critical services."}}, {"@type": "Question", "name": "What DevOps and AI tools?", "acceptedAnswer": {"@type": "Answer", "text": "Docker, GitHub Actions, Nginx for infrastructure; Claude Code, Anthropic API, OpenAI API for AI-augmented engineering."}}]}</script>
 
 <style>
   :root{color-scheme:dark}
@@ -77,6 +78,15 @@
   li{margin:6px 0}
   .cta{display:inline-block;margin-top:28px;padding:12px 22px;background:#7dd3fc;color:#0b1120;border-radius:8px;font-weight:700;text-decoration:none}
   .cta:hover{background:#38bdf8}
+  .faq{margin-top:44px;padding-top:28px;border-top:1px solid #1e293b}
+  .faq-h{font-size:15px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7dd3fc;margin:0 0 14px}
+  .faq-item{background:rgba(125,211,252,0.03);border:1px solid rgba(125,211,252,0.08);border-radius:10px;padding:14px 18px;margin:0 0 10px;transition:border-color .15s,background .15s}
+  .faq-item:hover{border-color:rgba(125,211,252,0.18);background:rgba(125,211,252,0.05)}
+  .faq-item summary{cursor:pointer;font-weight:600;color:#e2e8f0;font-size:15px;list-style:none}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{content:"+";float:right;color:#7dd3fc;font-weight:700;transition:transform .2s}
+  .faq-item[open] summary::after{content:"−"}
+  .faq-item p{margin:12px 0 0;color:#94a3b8;font-size:14px;line-height:1.65}
   .sitelinks{margin-top:56px;padding-top:28px;border-top:1px solid #1e293b}
   .sitelinks-h{font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7dd3fc;margin:0 0 14px}
   .sitelinks-grid{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px 18px}
@@ -102,6 +112,12 @@
 <h2>DevOps & AI</h2>
 <ul><li>Docker, GitHub Actions, Nginx</li><li>Claude Code, Anthropic API, OpenAI API</li><li>Puppeteer, Playwright, headless automation</li></ul>
 <p>Current focus: production-grade Flutter, AI-augmented engineering tools, and framework-level OSS contributions.</p>
+  <section class="faq" aria-labelledby="faq-h">
+  <h2 id="faq-h" class="faq-h">Frequently asked questions</h2>
+  <details class="faq-item"><summary><span>What languages does Ishaq work with primarily?</span></summary><p>Dart and Flutter for mobile, Node.js and TypeScript for backend, Kotlin and Swift for native mobile, and React/Next.js for web.</p></details>
+  <details class="faq-item"><summary><span>What backend stack does Ishaq use?</span></summary><p>Node.js (Express, Fastify, NestJS), Firebase (Firestore, Cloud Functions, FCM, Auth), PostgreSQL, MongoDB, Redis, and selective Rust for performance-critical services.</p></details>
+  <details class="faq-item"><summary><span>What DevOps and AI tools?</span></summary><p>Docker, GitHub Actions, Nginx for infrastructure; Claude Code, Anthropic API, OpenAI API for AI-augmented engineering.</p></details>
+</section>
   <a class="cta" href="/?w=tech">Open the interactive portfolio →</a>
   <nav class="sitelinks" aria-label="Related sections">
   <h2 class="sitelinks-h">Explore more</h2>
