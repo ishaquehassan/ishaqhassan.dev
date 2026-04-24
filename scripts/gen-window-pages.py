@@ -383,7 +383,7 @@ def build_webpage_jsonld(window):
         "inLanguage": "en",
         "dateModified": "2026-04-25",
         "datePublished": "2026-04-24",
-        "image": f"{SITE}/assets/og/{window['slug']}.png?v=1",
+        "image": f"{SITE}/assets/og/{window['slug']}.png?v=2",
         "author": build_person_entity(),
         "publisher": build_person_entity(),
     }
@@ -690,7 +690,7 @@ def generate():
             desc=w["desc"],
             og_title=w["og_title"],
             og_desc=w["og_desc"],
-            og_image=f"{SITE}/assets/og/{w['slug']}.png?v=1",
+            og_image=f"{SITE}/assets/og/{w['slug']}.png?v=2",
             og_image_alt=f"Ishaq Hassan: {w['breadcrumb_name']} (ishaqhassan.dev/{w['slug']})",
             h1=w["h1"],
             breadcrumb_name=w["breadcrumb_name"],

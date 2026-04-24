@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GitHub OG</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  :root { --accent: #94a3b8; --accent-ring: #94a3b8; --ambient: rgba(148,163,184,0.1); }
+
+  .layout { position: absolute; inset: 0 0 78px 0; display: grid; grid-template-columns: 0.92fr 1.25fr; z-index: 10; }
+  .left { padding: 56px 14px 48px 56px; display: flex; flex-direction: column; justify-content: center; }
+  .right { padding: 44px 56px 44px 8px; display: flex; flex-direction: column; justify-content: center; }
+
+  .profile-row { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+  .gh-avatar { width: 62px; height: 62px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+  .gh-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .gh-name-block { display: flex; flex-direction: column; gap: 2px; }
+  .gh-name { font-size: 24px; font-weight: 800; color: #f0f6fc; letter-spacing: -0.5px; }
+  .gh-handle { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: rgba(255,255,255,0.55); font-weight: 500; }
+  .gh-verified { display: inline-flex; align-items: center; gap: 5px; margin-top: 3px; padding: 2px 8px; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.35); border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: #4ade80; letter-spacing: 0.4px; }
+  .gh-verified svg { width: 10px; height: 10px; fill: currentColor; }
+
+  .title { font-size: 56px; font-weight: 900; line-height: 0.92; letter-spacing: -2.5px; color: #ffffff; margin-bottom: 12px; }
+  .title span { background: linear-gradient(90deg,#39d353 0%,#26a641 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+  .kicker { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.72); margin-bottom: 22px; line-height: 1.5; max-width: 410px; }
+
+  .gh-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .gs { padding: 12px 14px; border-radius: 11px; background: rgba(14,18,26,0.9); border: 1px solid rgba(255,255,255,0.1); }
+  .gs-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .gs-ic { width: 24px; height: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; }
+  .gs-ic svg { width: 14px; height: 14px; fill: #94a3b8; }
+  .gs-lab { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase; }
+  .gs-num { font-size: 22px; font-weight: 900; color: #f0f6fc; letter-spacing: -0.5px; font-family: 'JetBrains Mono', monospace; }
+  .gs-sub { font-size: 10.5px; color: rgba(255,255,255,0.45); font-family: 'JetBrains Mono', monospace; font-weight: 500; margin-top: 2px; }
+
+  /* Right: contribution heatmap */
+  .heatmap-card { background: rgba(13,17,23,0.94); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px 20px; box-shadow: 0 24px 60px rgba(0,0,0,0.55); }
+  .hm-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .hm-title { font-size: 15px; color: #f0f6fc; font-weight: 600; }
+  .hm-sub { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.5); }
+
+  .hm-grid { display: grid; grid-template-columns: repeat(52, 1fr); gap: 2.5px; margin-bottom: 14px; }
+  .hm-cell { aspect-ratio: 1 / 1; border-radius: 2px; background: #161b22; }
+  .hm-cell.l1 { background: #0e4429; }
+  .hm-cell.l2 { background: #006d32; }
+  .hm-cell.l3 { background: #26a641; }
+  .hm-cell.l4 { background: #39d353; box-shadow: 0 0 4px rgba(57,211,83,0.6); }
+
+  .hm-legend { display: flex; align-items: center; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: rgba(255,255,255,0.5); }
+  .hm-legend-right { display: flex; align-items: center; gap: 5px; }
+  .hm-legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  .hm-meta { margin-top: 14px; display: flex; justify-content: space-between; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .hmm { text-align: center; }
+  .hmm-num { font-size: 17px; font-weight: 800; color: #39d353; font-family: 'JetBrains Mono', monospace; }
+  .hmm-lab { font-size: 10px; color: rgba(255,255,255,0.5); font-family: 'JetBrains Mono', monospace; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; margin-top: 2px; }
+</style>
+</head>
+<body data-active="github" data-domain="ishaqhassan.dev / github">
+<div class="og">
+  <div class="bg"></div>
+  <div class="dots"></div>
+  <div class="top-accent"></div>
+
+  <div class="layout">
+    <div class="left">
+      <div class="profile-row">
+        <div class="gh-avatar"><img src="../../assets/github-avatar.webp"></div>
+        <div class="gh-name-block">
+          <div class="gh-name">Ishaq Hassan</div>
+          <div class="gh-handle">@ishaquehassan</div>
+          <span class="gh-verified"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>FLUTTER CONTRIBUTOR</span>
+        </div>
+      </div>
+
+      <div class="title"><span>9,800+</span><br>contributions</div>
+
+      <div class="kicker">Active open source author. Flutter framework PRs, pub.dev packages, CLIs, personal projects.</div>
+
+      <div class="gh-stats">
+        <div class="gs">
+          <div class="gs-top"><div class="gs-ic"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div><span class="gs-lab">STARS</span></div>
+          <div class="gs-num">64+</div>
+          <div class="gs-sub">across repos</div>
+        </div>
+        <div class="gs">
+          <div class="gs-top"><div class="gs-ic"><svg viewBox="0 0 24 24"><path d="M6 3a3 3 0 11-1 5.83v6.34a3.001 3.001 0 11-2 0V8.83A3.001 3.001 0 116 3z"/></svg></div><span class="gs-lab">FORKS</span></div>
+          <div class="gs-num">135+</div>
+          <div class="gs-sub">on OSS</div>
+        </div>
+        <div class="gs">
+          <div class="gs-top"><div class="gs-ic"><svg viewBox="0 0 24 24"><path d="M17 21c-1.66 0-3-1.34-3-3 0-1.31.84-2.41 2-2.83V8.83c-1.16-.42-2-1.52-2-2.83 0-1.66 1.34-3 3-3s3 1.34 3 3c0 1.31-.84 2.41-2 2.83v6.34c1.16.42 2 1.52 2 2.83 0 1.66-1.34 3-3 3z"/></svg></div><span class="gs-lab">PRs</span></div>
+          <div class="gs-num">6</div>
+          <div class="gs-sub">into flutter</div>
+        </div>
+        <div class="gs">
+          <div class="gs-top"><div class="gs-ic"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div><span class="gs-lab">LANG</span></div>
+          <div class="gs-num">Dart</div>
+          <div class="gs-sub">primary</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="heatmap-card">
+        <div class="hm-head">
+          <div class="hm-title">Contribution activity</div>
+          <div class="hm-sub">last 52 weeks</div>
+        </div>
+
+        <div class="hm-grid" id="hm"></div>
+        <script>
+          // Generate realistic-looking heatmap
+          (function(){
+            var host = document.getElementById('hm');
+            if (!host) return;
+            var cells = 52 * 7;
+            // weighted distribution: 0.35 none, 0.2 l1, 0.2 l2, 0.15 l3, 0.1 l4
+            // Plus a visible "streak" pattern toward the right side
+            var frag = document.createDocumentFragment();
+            for (var i = 0; i < cells; i++) {
+              var week = Math.floor(i / 7);
+              var day = i % 7;
+              var r = Math.random();
+              // streak boost for recent 20 weeks
+              var recentBoost = week > 32 ? 0.25 : 0;
+              var weekend = (day === 0 || day === 6) ? -0.12 : 0;
+              r = r - recentBoost - weekend;
+              var cls = '';
+              if (r < 0.1) cls = 'l4';
+              else if (r < 0.28) cls = 'l3';
+              else if (r < 0.5) cls = 'l2';
+              else if (r < 0.72) cls = 'l1';
+              var d = document.createElement('div');
+              d.className = 'hm-cell' + (cls ? ' ' + cls : '');
+              frag.appendChild(d);
+            }
+            host.appendChild(frag);
+          })();
+        </script>
+
+        <div class="hm-legend">
+          <span>Jan</span>
+          <div class="hm-legend-right">
+            <span>Less</span>
+            <span class="hm-legend-dot" style="background:#161b22;"></span>
+            <span class="hm-legend-dot" style="background:#0e4429;"></span>
+            <span class="hm-legend-dot" style="background:#006d32;"></span>
+            <span class="hm-legend-dot" style="background:#26a641;"></span>
+            <span class="hm-legend-dot" style="background:#39d353;"></span>
+            <span>More</span>
+          </div>
+        </div>
+
+        <div class="hm-meta">
+          <div class="hmm"><div class="hmm-num">9,800+</div><div class="hmm-lab">LIFETIME</div></div>
+          <div class="hmm"><div class="hmm-num">1,200+</div><div class="hmm-lab">LAST 12 MO</div></div>
+          <div class="hmm"><div class="hmm-num">Dart</div><div class="hmm-lab">TOP LANG</div></div>
+          <div class="hmm"><div class="hmm-num">Active</div><div class="hmm-lab">STATUS</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{DOCK}}
+</div>
+</body>
+</html>

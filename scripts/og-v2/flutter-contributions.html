@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Flutter Contributions OG</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  :root { --accent: #54c5f8; --accent-ring: #54c5f8; --ambient: rgba(84,197,248,0.18); }
+
+  .layout { position: absolute; inset: 0 0 78px 0; display: grid; grid-template-columns: 1fr 1.2fr; z-index: 10; }
+  .left { padding: 56px 12px 48px 56px; display: flex; flex-direction: column; justify-content: center; }
+  .right { padding: 52px 56px 48px 8px; display: flex; flex-direction: column; justify-content: center; }
+
+  .brand-row { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+  .brand-logo { width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg,#02569B,#54c5f8); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(84,197,248,0.45); }
+  .brand-logo img { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+  .brand-repo { font-family: 'JetBrains Mono', monospace; font-size: 14.5px; font-weight: 600; color: rgba(255,255,255,0.7); }
+  .brand-repo .slash { color: rgba(255,255,255,0.35); margin: 0 2px; }
+
+  .title { font-size: 78px; font-weight: 900; line-height: 0.92; letter-spacing: -3.2px; color: #ffffff; margin-bottom: 18px; }
+  .title span { background: linear-gradient(90deg,#54c5f8 0%,#7dd3fc 60%,#93c5fd 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+  .kicker { font-size: 17px; font-weight: 500; color: rgba(255,255,255,0.72); margin-bottom: 26px; line-height: 1.5; max-width: 460px; }
+
+  .author { display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; width: fit-content; }
+  .author-photo { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg,#06b6d4,#6366f1); padding: 2px; }
+  .author-photo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+  .author-info { display: flex; flex-direction: column; gap: 2px; }
+  .author-name { font-size: 14px; font-weight: 700; color: #ffffff; }
+  .author-handle { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.5); font-family: 'JetBrains Mono', monospace; }
+
+  /* Right: PR list window */
+  .window { background: rgba(13,17,23,0.94); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; overflow: hidden; box-shadow: 0 28px 64px rgba(0,0,0,0.55), 0 0 0 1px rgba(84,197,248,0.22); }
+  .w-head { display: flex; align-items: center; gap: 8px; padding: 12px 14px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; }
+  .dot.y { background: #febc2e; }
+  .dot.g { background: #28c840; }
+  .w-title { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.55); margin-left: 6px; }
+  .w-stats { margin-left: auto; display: flex; gap: 6px; }
+  .pill { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 600; padding: 3px 9px; border-radius: 6px; }
+  .pill.merged { background: rgba(130,80,223,0.18); color: #c084fc; border: 1px solid rgba(130,80,223,0.4); }
+  .pill.approved { background: rgba(34,197,94,0.14); color: #4ade80; border: 1px solid rgba(34,197,94,0.35); }
+
+  .pr-list { padding: 6px; }
+  .pr { display: flex; align-items: flex-start; gap: 11px; padding: 11px 12px; border-radius: 9px; }
+  .pr-status { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .pr-status svg { width: 13px; height: 13px; }
+  .pr-status.merged { background: rgba(130,80,223,0.16); border: 1px solid rgba(130,80,223,0.55); }
+  .pr-status.merged svg { fill: #c084fc; }
+  .pr-status.approved { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.5); }
+  .pr-status.approved svg { fill: #4ade80; }
+  .pr-body { flex: 1; min-width: 0; }
+  .pr-title { font-size: 14px; font-weight: 600; color: #e5e7eb; line-height: 1.35; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pr-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.42); }
+  .pr-meta .pr-num { color: #54c5f8; font-weight: 600; }
+
+  .more-row { padding: 11px 14px 13px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.015); }
+  .more-text { font-size: 12.5px; color: rgba(255,255,255,0.58); font-weight: 500; }
+  .view-all { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #54c5f8; font-weight: 700; }
+</style>
+</head>
+<body data-active="flutter" data-domain="ishaqhassan.dev / flutter-contributions">
+<div class="og">
+  <div class="bg"></div>
+  <div class="dots"></div>
+  <div class="top-accent"></div>
+
+  <div class="layout">
+    <div class="left">
+      <div class="brand-row">
+        <div class="brand-logo"><img src="../../assets/tech/flutter.svg"></div>
+        <span class="brand-repo">flutter<span class="slash">/</span>flutter</span>
+      </div>
+
+      <div class="title"><span>6 merged</span><br>Flutter PRs</div>
+
+      <div class="kicker">Framework-level contributions from Pakistan. Real code merged into the official Flutter framework.</div>
+
+      <div class="author">
+        <div class="author-photo"><img src="../../assets/profile-photo.png"></div>
+        <div class="author-info">
+          <div class="author-name">Ishaq Hassan</div>
+          <div class="author-handle">@ishaquehassan</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="window">
+        <div class="w-head">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span class="w-title">flutter/flutter · Pull Requests</span>
+          <div class="w-stats">
+            <span class="pill merged">6 merged</span>
+            <span class="pill approved">3 approved</span>
+          </div>
+        </div>
+
+        <div class="pr-list">
+          <div class="pr">
+            <div class="pr-status merged"><svg viewBox="0 0 16 16"><path d="M5 3.254V3.25v.005a.75.75 0 110-.005v.004zm.45 1.9a2.25 2.25 0 10-1.95.218v5.256a2.25 2.25 0 101.5 0V7.123A5.735 5.735 0 009.25 9h1.378a2.251 2.251 0 100-1.5H9.25a4.25 4.25 0 01-3.8-2.346zM12.75 9a.75.75 0 100-1.5.75.75 0 000 1.5zm-8.5 4.5a.75.75 0 100-1.5.75.75 0 000 1.5z"/></svg></div>
+            <div class="pr-body">
+              <div class="pr-title">LicenseRegistry: include NOTICES from deeply nested assets</div>
+              <div class="pr-meta"><span class="pr-num">#184572</span> · merged into master</div>
+            </div>
+          </div>
+
+          <div class="pr">
+            <div class="pr-status merged"><svg viewBox="0 0 16 16"><path d="M5 3.254V3.25v.005a.75.75 0 110-.005v.004zm.45 1.9a2.25 2.25 0 10-1.95.218v5.256a2.25 2.25 0 101.5 0V7.123A5.735 5.735 0 009.25 9h1.378a2.251 2.251 0 100-1.5H9.25a4.25 4.25 0 01-3.8-2.346zM12.75 9a.75.75 0 100-1.5.75.75 0 000 1.5zm-8.5 4.5a.75.75 0 100-1.5.75.75 0 000 1.5z"/></svg></div>
+            <div class="pr-body">
+              <div class="pr-title">TextInput.setEditingState: handle selection edge cases</div>
+              <div class="pr-meta"><span class="pr-num">#161834</span> · merged into master</div>
+            </div>
+          </div>
+
+          <div class="pr">
+            <div class="pr-status merged"><svg viewBox="0 0 16 16"><path d="M5 3.254V3.25v.005a.75.75 0 110-.005v.004zm.45 1.9a2.25 2.25 0 10-1.95.218v5.256a2.25 2.25 0 101.5 0V7.123A5.735 5.735 0 009.25 9h1.378a2.251 2.251 0 100-1.5H9.25a4.25 4.25 0 01-3.8-2.346zM12.75 9a.75.75 0 100-1.5.75.75 0 000 1.5zm-8.5 4.5a.75.75 0 100-1.5.75.75 0 000 1.5z"/></svg></div>
+            <div class="pr-body">
+              <div class="pr-title">Fix Tab underline alignment on RTL layouts</div>
+              <div class="pr-meta"><span class="pr-num">#158234</span> · merged into master</div>
+            </div>
+          </div>
+
+          <div class="pr">
+            <div class="pr-status approved"><svg viewBox="0 0 16 16"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/></svg></div>
+            <div class="pr-body">
+              <div class="pr-title">Improve AppBar long-press + drag gesture handling</div>
+              <div class="pr-meta"><span class="pr-num">#168934</span> · approved, awaiting merge</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="more-row">
+          <span class="more-text">+ 5 more merged, 2 more approved</span>
+          <span class="view-all">View all →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{DOCK}}
+</div>
+</body>
+</html>

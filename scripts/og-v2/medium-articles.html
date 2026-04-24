@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Medium Articles OG</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  :root { --accent: #e5e7eb; --accent-ring: #e5e7eb; --ambient: rgba(229,231,235,0.08); }
+
+  .layout { position: absolute; inset: 0 0 78px 0; display: grid; grid-template-columns: 0.95fr 1.25fr; z-index: 10; }
+  .left { padding: 56px 14px 48px 56px; display: flex; flex-direction: column; justify-content: center; }
+  .right { padding: 48px 56px 44px 8px; display: flex; flex-direction: column; justify-content: center; }
+
+  .medium-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .medium-logo { width: 44px; height: 44px; border-radius: 10px; background: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 22px rgba(255,255,255,0.2); }
+  .medium-logo svg { width: 28px; height: 28px; }
+  .medium-label { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 600; letter-spacing: 0.3px; }
+  .medium-label .dot { color: rgba(255,255,255,0.3); margin: 0 6px; }
+  .medium-label .handle { color: #e5e7eb; }
+
+  .title { font-size: 72px; font-weight: 900; line-height: 0.92; letter-spacing: -3px; color: #ffffff; margin-bottom: 16px; }
+
+  .kicker { font-size: 16px; font-weight: 500; color: rgba(255,255,255,0.72); margin-bottom: 24px; line-height: 1.5; max-width: 400px; }
+
+  .big-stats { display: flex; gap: 12px; }
+  .bs { padding: 12px 16px; border-radius: 11px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); }
+  .bs-num { font-size: 22px; font-weight: 900; color: #f3f4f6; line-height: 1; margin-bottom: 3px; letter-spacing: -0.8px; font-family: 'JetBrains Mono', monospace; }
+  .bs-lab { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.5); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.3px; text-transform: uppercase; }
+
+  /* Right: article cards */
+  .articles { display: flex; flex-direction: column; gap: 10px; }
+  .art { background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; display: grid; grid-template-columns: 72px 1fr; gap: 14px; align-items: start; }
+  .art-thumb { width: 72px; height: 72px; border-radius: 9px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .art-thumb .ic { width: 30px; height: 30px; color: #fff; }
+  .art-thumb.a1 { background: linear-gradient(135deg,#0553B1,#54c5f8); }
+  .art-thumb.a2 { background: linear-gradient(135deg,#7c3aed,#a855f7); }
+  .art-thumb.a3 { background: linear-gradient(135deg,#dc2626,#f59e0b); }
+  .art-thumb.a4 { background: linear-gradient(135deg,#059669,#14b8a6); }
+
+  .art-body { min-width: 0; }
+  .art-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 4px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.12); letter-spacing: 0.5px; margin-bottom: 5px; }
+  .art-title { font-size: 15px; font-weight: 700; color: #f9fafb; line-height: 1.3; margin-bottom: 4px; }
+  .art-meta { display: flex; align-items: center; gap: 10px; font-size: 11px; color: rgba(255,255,255,0.48); font-family: 'JetBrains Mono', monospace; }
+  .art-meta svg { width: 11px; height: 11px; fill: currentColor; vertical-align: -1px; }
+  .art-meta .sep { color: rgba(255,255,255,0.25); }
+</style>
+</head>
+<body data-active="articles" data-domain="ishaqhassan.dev / medium-articles">
+<div class="og">
+  <div class="bg"></div>
+  <div class="dots"></div>
+  <div class="top-accent"></div>
+
+  <div class="layout">
+    <div class="left">
+      <div class="medium-brand">
+        <div class="medium-logo">
+          <svg viewBox="0 0 40 40" fill="none"><circle cx="11" cy="20" r="7.5" fill="#000"/><ellipse cx="24" cy="20" rx="3.5" ry="7.5" fill="#000"/><ellipse cx="32" cy="20" rx="1.4" ry="7" fill="#000"/></svg>
+        </div>
+        <div class="medium-label">Medium <span class="dot">·</span><span class="handle">@ishaqhassan</span></div>
+      </div>
+
+      <div class="title">Flutter,<br>Deep.</div>
+
+      <div class="kicker">Long-form technical articles on Dart isolates, Flutter architecture, plugin internals, and real-world performance.</div>
+
+      <div class="big-stats">
+        <div class="bs"><div class="bs-num">6+</div><div class="bs-lab">ARTICLES</div></div>
+        <div class="bs"><div class="bs-num">10K+</div><div class="bs-lab">READS</div></div>
+        <div class="bs"><div class="bs-num">4</div><div class="bs-lab">TOPICS</div></div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="articles">
+        <div class="art">
+          <div class="art-thumb a1">
+            <svg class="ic" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L2 7l10 5 10-5-10-5zm0 11L2 8v9l10 5 10-5V8l-10 5z"/></svg>
+          </div>
+          <div class="art-body">
+            <span class="art-tag">ARCHITECTURE</span>
+            <div class="art-title">A Practical Guide to Flutter Clean Architecture at Scale</div>
+            <div class="art-meta">
+              <span>12 min read</span><span class="sep">·</span><span>Flutter Community</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="art">
+          <div class="art-thumb a2">
+            <svg class="ic" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+          </div>
+          <div class="art-body">
+            <span class="art-tag">DART ADVANCED</span>
+            <div class="art-title">Dart Isolates Explained: When, Why, and the Gotchas</div>
+            <div class="art-meta">
+              <span>9 min read</span><span class="sep">·</span><span>Pub.dev Picks</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="art">
+          <div class="art-thumb a3">
+            <svg class="ic" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+          </div>
+          <div class="art-body">
+            <span class="art-tag">PLUGINS</span>
+            <div class="art-title">Writing a Production-Grade Flutter Plugin (iOS + Android)</div>
+            <div class="art-meta">
+              <span>14 min read</span><span class="sep">·</span><span>Flutter Community</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="art">
+          <div class="art-thumb a4">
+            <svg class="ic" viewBox="0 0 24 24" fill="#fff"><path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.48 2.54l2.6 1.53c.56-1.24.88-2.62.88-4.07 0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.06.5-9 4.76-9 9.95 0 5.52 4.47 10 9.99 10 3.31 0 6.24-1.61 8.06-4.09l-2.6-1.53C16.17 17.98 14.21 19 12 19z"/></svg>
+          </div>
+          <div class="art-body">
+            <span class="art-tag">PERFORMANCE</span>
+            <div class="art-title">Flutter Performance: Finding the Real 60fps Bottleneck</div>
+            <div class="art-meta">
+              <span>11 min read</span><span class="sep">·</span><span>Engineering Notes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{DOCK}}
+</div>
+</body>
+</html>

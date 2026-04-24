@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1200px; height: 630px; overflow: hidden; background: #0b1120; margin: 0; padding: 0; }
+.og { width: 1200px; height: 630px; position: relative; overflow: hidden; background: #0b1120; font-family: 'Inter', -apple-system, sans-serif; color: #e5e7eb; }
+.bg { position: absolute; inset: 0; background: radial-gradient(ellipse 900px 600px at -10% 110%, var(--ambient, rgba(6,182,212,0.18)) 0%, transparent 55%), radial-gradient(ellipse 600px 500px at 110% -10%, rgba(99,102,241,0.14) 0%, transparent 55%), #0b1120; }
+.dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 28px 28px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%); }
+.top-accent { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent, #06b6d4) 0%, rgba(99,102,241,0.6) 50%, transparent 100%); }
+
+/* Bottom bar with the portfolio's window dock */
+.bottom { position: absolute; bottom: 0; left: 0; right: 0; height: 78px; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 20; background: linear-gradient(180deg, rgba(10,14,22,0.7) 0%, rgba(10,14,22,0.95) 100%); border-top: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(12px); }
+.wdock { display: flex; gap: 6px; padding: 7px 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.03); }
+.wd { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: transform 0.2s; }
+.wd svg { width: 68%; height: 68%; }
+.wd.active { transform: scale(1.16) translateY(-3px); box-shadow: 0 0 0 2.5px var(--accent-ring, #06b6d4), 0 6px 22px var(--accent-ring, #06b6d4), 0 0 40px var(--accent-ring, #06b6d4); z-index: 2; }
+.wd.active::after { content: ''; position: absolute; bottom: -13px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; border-radius: 50%; background: var(--accent-ring, #06b6d4); box-shadow: 0 0 8px var(--accent-ring, #06b6d4); }
+
+/* Per-icon backgrounds (copy of portfolio dock) */
+.wd-about    { background: linear-gradient(135deg, #0f1419, #1c2430); box-shadow: inset 0 0 10px rgba(57,211,83,0.08); }
+.wd-flutter  { background: linear-gradient(135deg, #0553B1 0%, #54c5f8 100%); }
+.wd-flutter svg { width: 48%; height: 48%; filter: brightness(10); }
+.wd-speaking { background: linear-gradient(135deg, #FF6B35 0%, #F7C948 100%); }
+.wd-oss      { background: linear-gradient(135deg, #16a34a 0%, #238636 50%, #0d5025 100%); }
+.wd-tech     { background: linear-gradient(135deg, #334155 0%, #1e293b 100%); }
+.wd-articles { background: linear-gradient(135deg, #fafaf9 0%, #e7e5e4 100%); }
+.wd-articles svg { width: 88%; height: 88%; }
+.wd-contact  { background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #8b5cf6 100%); }
+.wd-github   { background: linear-gradient(135deg, #1c2025 0%, #32373d 100%); }
+.wd-github svg { width: 58%; height: 58%; }
+.wd-linkedin { background: linear-gradient(135deg, #004182 0%, #0077B5 50%, #00a0dc 100%); }
+.wd-linkedin svg { width: 58%; height: 58%; }
+.wd-snake    { background: linear-gradient(135deg, #0a2e1a, #0d3320); box-shadow: inset 0 0 14px rgba(57,211,83,0.08); }
+.wd-course   { background: linear-gradient(135deg, #0553B1, #54c5f8); }
+.wd-wisesend { background: linear-gradient(135deg, #0ea5e9, #0369a1); overflow: hidden; }
+.wd-wisesend img { width: 100%; height: 100%; object-fit: cover; }
+
+.domain-badge { display: flex; align-items: center; gap: 10px; padding: 11px 20px; background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.28); border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: #67e8f9; letter-spacing: -0.2px; }
+.domain-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e, 0 0 16px rgba(34,197,94,0.5); }

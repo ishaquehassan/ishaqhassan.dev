@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OG v2 Gallery</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0f1a; font-family: 'Inter', sans-serif; color: #e5e7eb; min-height: 100vh; padding: 40px 32px 80px; }
+  .head { max-width: 1500px; margin: 0 auto 40px; display: flex; align-items: baseline; justify-content: space-between; }
+  h1 { font-size: 36px; font-weight: 900; letter-spacing: -1.2px; background: linear-gradient(90deg,#7dd3fc,#a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { color: rgba(255,255,255,0.55); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  .grid { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+  .card { background: #14181f; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .card-head { padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .card-title { font-size: 14px; font-weight: 700; color: #f3f4f6; font-family: 'JetBrains Mono', monospace; letter-spacing: -0.2px; }
+  .card-title .slash { color: rgba(255,255,255,0.3); }
+  .card-link { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #7dd3fc; font-weight: 600; text-decoration: none; padding: 4px 10px; border-radius: 6px; background: rgba(125,211,252,0.1); border: 1px solid rgba(125,211,252,0.3); }
+  .card-link:hover { background: rgba(125,211,252,0.2); }
+  .frame-wrap { width: 100%; aspect-ratio: 1200 / 630; position: relative; background: #0b1120; }
+  iframe { position: absolute; top: 0; left: 0; width: 1200px; height: 630px; border: 0; transform: scale(0.5625); transform-origin: 0 0; pointer-events: none; }
+  .nav { max-width: 1500px; margin: 0 auto 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .nav a { padding: 8px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: rgba(255,255,255,0.75); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; }
+  .nav a:hover { background: rgba(125,211,252,0.1); border-color: rgba(125,211,252,0.35); color: #7dd3fc; }
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>OG v2 Gallery &middot; 12 variants</h1>
+  <div class="subtitle">1200 × 630 &middot; scaled to 56.25% (675 × 354)</div>
+</div>
+
+<div class="nav" id="nav"></div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const variants = [
+  { slug: 'about',                  title: 'About Me',            accent: '#39d353' },
+  { slug: 'flutter-contributions',  title: 'Flutter Contribs',    accent: '#54c5f8' },
+  { slug: 'speaking',               title: 'Speaking',            accent: '#fbbf24' },
+  { slug: 'open-source',            title: 'Open Source',         accent: '#4ade80' },
+  { slug: 'tech-stack',             title: 'Tech Stack',          accent: '#c084fc' },
+  { slug: 'medium-articles',        title: 'Medium Articles',     accent: '#e5e7eb' },
+  { slug: 'contact',                title: 'Contact',             accent: '#a5b4fc' },
+  { slug: 'github',                 title: 'GitHub',              accent: '#94a3b8' },
+  { slug: 'linkedin',               title: 'LinkedIn',            accent: '#60a5fa' },
+  { slug: 'snake',                  title: 'Snake Neon',          accent: '#39d353' },
+  { slug: 'flutter-course',         title: 'Flutter Course',      accent: '#fca5a5' },
+  { slug: 'wisesend',               title: 'WiseSend',            accent: '#7dd3fc' },
+];
+
+const nav = document.getElementById('nav');
+const grid = document.getElementById('grid');
+
+variants.forEach(v => {
+  const a = document.createElement('a');
+  a.href = '#' + v.slug;
+  a.style.color = v.accent;
+  a.textContent = v.title;
+  nav.appendChild(a);
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.id = v.slug;
+  card.innerHTML = `
+    <div class="card-head">
+      <span class="card-title" style="color:${v.accent}">${v.title} <span class="slash">·</span> /${v.slug}</span>
+      <a class="card-link" href=".__build_${v.slug}.html" target="_blank">Open full size →</a>
+    </div>
+    <div class="frame-wrap">
+      <iframe src=".__build_${v.slug}.html" scrolling="no"></iframe>
+    </div>
+  `;
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>

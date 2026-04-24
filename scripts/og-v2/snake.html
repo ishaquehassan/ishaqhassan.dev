@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Snake OG</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  :root { --accent: #39d353; --accent-ring: #39d353; --ambient: rgba(57,211,83,0.14); }
+
+  .layout { position: absolute; inset: 0 0 78px 0; display: grid; grid-template-columns: 1.05fr 1fr; z-index: 10; }
+  .left { padding: 56px 16px 48px 56px; display: flex; flex-direction: column; justify-content: center; }
+  .right { padding: 44px 56px 44px 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+  .pill-top { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 30px; background: rgba(57,211,83,0.12); border: 1px solid rgba(57,211,83,0.35); width: fit-content; margin-bottom: 22px; }
+  .pill-top-dot { width: 6px; height: 6px; border-radius: 50%; background: #39d353; box-shadow: 0 0 8px #39d353; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .pill-top-text { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: #39d353; letter-spacing: 0.8px; }
+
+  .title { font-size: 96px; font-weight: 900; line-height: 0.88; letter-spacing: -5px; color: #ffffff; margin-bottom: 16px; text-transform: uppercase; }
+  .title span { background: linear-gradient(180deg,#86efac 0%,#39d353 50%,#16a34a 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 12px rgba(57,211,83,0.35)); }
+
+  .kicker { font-size: 16px; font-weight: 500; color: rgba(255,255,255,0.72); margin-bottom: 26px; line-height: 1.5; max-width: 420px; }
+
+  .stats-row { display: flex; gap: 10px; }
+  .sr { padding: 10px 14px; border-radius: 10px; background: rgba(57,211,83,0.08); border: 1px solid rgba(57,211,83,0.25); font-family: 'JetBrains Mono', monospace; }
+  .sr-n { font-size: 22px; font-weight: 900; color: #39d353; line-height: 1; margin-bottom: 2px; }
+  .sr-l { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.55); letter-spacing: 0.3px; }
+
+  /* Right: game canvas mock */
+  .game-wrap { width: 420px; height: 380px; background: #050a07; border: 2px solid rgba(57,211,83,0.28); border-radius: 14px; box-shadow: 0 0 0 4px rgba(57,211,83,0.08), 0 0 40px rgba(57,211,83,0.25), 0 28px 60px rgba(0,0,0,0.6), inset 0 0 40px rgba(57,211,83,0.06); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .hud { display: flex; align-items: center; justify-content: space-between; font-family: 'JetBrains Mono', monospace; }
+  .hud-item { display: flex; flex-direction: column; gap: 2px; }
+  .hud-lab { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
+  .hud-val { font-size: 17px; font-weight: 900; color: #39d353; letter-spacing: -0.5px; }
+  .hud-val.high { color: #fbbf24; }
+
+  .canvas { flex: 1; background: #020502; border-radius: 8px; position: relative; overflow: hidden; background-image:
+    linear-gradient(rgba(57,211,83,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57,211,83,0.05) 1px, transparent 1px);
+    background-size: 20px 20px; }
+
+  /* Snake segments */
+  .seg { position: absolute; width: 18px; height: 18px; border-radius: 3px; background: #39d353; box-shadow: 0 0 6px rgba(57,211,83,0.9); }
+  .seg.tail { background: #26a641; opacity: 0.85; }
+  .seg.head { background: #86efac; box-shadow: 0 0 10px rgba(134,239,172,1), 0 0 20px rgba(57,211,83,0.8); }
+  .apple { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ff8b8b, #ff5f57 60%, #c93b33); box-shadow: 0 0 14px rgba(255,95,87,0.6); top: 32px; left: 280px; }
+  .apple::before { content: ''; position: absolute; top: -4px; left: 50%; transform: translateX(-40%) rotate(20deg); width: 3px; height: 6px; background: #22c55e; border-radius: 1px; }
+</style>
+</head>
+<body data-active="snake" data-domain="ishaqhassan.dev / snake">
+<div class="og">
+  <div class="bg"></div>
+  <div class="dots"></div>
+  <div class="top-accent"></div>
+
+  <div class="layout">
+    <div class="left">
+      <div class="pill-top"><div class="pill-top-dot"></div><span class="pill-top-text">PLAYABLE · 60 FPS</span></div>
+
+      <div class="title"><span>Snake<br>Neon</span></div>
+
+      <div class="kicker">Arcade game built from scratch inside the portfolio. Neon styling, HUD, pause screen, and 3 mobile control schemes.</div>
+
+      <div class="stats-row">
+        <div class="sr"><div class="sr-n">60</div><div class="sr-l">FPS</div></div>
+        <div class="sr"><div class="sr-n">3</div><div class="sr-l">CONTROLS</div></div>
+        <div class="sr"><div class="sr-n">0</div><div class="sr-l">DEPS</div></div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="game-wrap">
+        <div class="hud">
+          <div class="hud-item"><div class="hud-lab">SCORE</div><div class="hud-val">14</div></div>
+          <div class="hud-item"><div class="hud-lab">LENGTH</div><div class="hud-val">15</div></div>
+          <div class="hud-item"><div class="hud-lab">HIGH</div><div class="hud-val high">42</div></div>
+        </div>
+        <div class="canvas">
+          <!-- Snake body (horizontal then vertical then turns) -->
+          <div class="seg tail" style="top: 200px; left: 40px;"></div>
+          <div class="seg tail" style="top: 200px; left: 60px;"></div>
+          <div class="seg" style="top: 200px; left: 80px;"></div>
+          <div class="seg" style="top: 200px; left: 100px;"></div>
+          <div class="seg" style="top: 200px; left: 120px;"></div>
+          <div class="seg" style="top: 200px; left: 140px;"></div>
+          <div class="seg" style="top: 200px; left: 160px;"></div>
+          <div class="seg" style="top: 180px; left: 160px;"></div>
+          <div class="seg" style="top: 160px; left: 160px;"></div>
+          <div class="seg" style="top: 140px; left: 160px;"></div>
+          <div class="seg" style="top: 120px; left: 160px;"></div>
+          <div class="seg" style="top: 120px; left: 180px;"></div>
+          <div class="seg" style="top: 120px; left: 200px;"></div>
+          <div class="seg" style="top: 120px; left: 220px;"></div>
+          <div class="seg head" style="top: 120px; left: 240px;"></div>
+          <div class="apple"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{DOCK}}
+</div>
+</body>
+</html>

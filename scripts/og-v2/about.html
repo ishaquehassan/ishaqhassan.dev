@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>About OG</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  :root { --accent: #39d353; --accent-ring: #39d353; --ambient: rgba(57,211,83,0.14); }
+
+  .layout { position: absolute; inset: 0 0 78px 0; display: grid; grid-template-columns: 1fr 1.15fr; z-index: 10; }
+  .left { padding: 56px 16px 48px 56px; display: flex; flex-direction: column; justify-content: center; }
+  .right { padding: 52px 56px 48px 8px; display: flex; flex-direction: column; justify-content: center; }
+
+  .pill-top { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 30px; background: rgba(57,211,83,0.12); border: 1px solid rgba(57,211,83,0.3); width: fit-content; margin-bottom: 22px; }
+  .pill-top-dot { width: 6px; height: 6px; border-radius: 50%; background: #39d353; box-shadow: 0 0 8px #39d353; }
+  .pill-top-text { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: #39d353; letter-spacing: 0.5px; }
+
+  .profile { display: flex; align-items: center; gap: 20px; margin-bottom: 26px; }
+  .profile-photo { width: 88px; height: 88px; border-radius: 50%; padding: 3px; background: conic-gradient(from 120deg, #39d353, #6366f1, #39d353); position: relative; }
+  .profile-photo-inner { width: 100%; height: 100%; border-radius: 50%; background: #0b1120; padding: 3px; }
+  .profile-photo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+  .profile-photo::after { content: ''; position: absolute; bottom: 2px; right: 2px; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg,#0ea5e9,#3b82f6); border: 2.5px solid #0b1120; box-shadow: 0 0 8px rgba(14,165,233,0.6); }
+
+  .title { font-size: 64px; font-weight: 900; line-height: 0.92; letter-spacing: -3px; color: #ffffff; margin-bottom: 14px; }
+  .title span { background: linear-gradient(90deg,#39d353 0%,#86efac 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+  .kicker { font-size: 16.5px; font-weight: 500; color: rgba(255,255,255,0.72); line-height: 1.5; max-width: 440px; }
+
+  .meta-row { display: flex; gap: 22px; margin-top: 22px; }
+  .meta { display: flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 500; }
+  .meta svg { width: 14px; height: 14px; fill: #39d353; opacity: 0.9; }
+
+  /* Right: Terminal window */
+  .terminal { background: rgba(5,8,14,0.98); border: 1px solid rgba(57,211,83,0.25); border-radius: 14px; overflow: hidden; box-shadow: 0 28px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(57,211,83,0.2), inset 0 0 80px rgba(57,211,83,0.04); }
+  .t-head { display: flex; align-items: center; gap: 8px; padding: 12px 14px; background: rgba(20,24,32,0.9); border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; } .dot.y { background: #febc2e; } .dot.g { background: #28c840; }
+  .t-title { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.55); margin-left: 6px; }
+
+  .t-body { padding: 20px 22px 22px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.75; }
+  .t-line { display: flex; align-items: baseline; gap: 8px; }
+  .t-prompt { color: #39d353; font-weight: 700; flex-shrink: 0; }
+  .t-cmd { color: #f3f4f6; font-weight: 600; }
+  .t-out { color: rgba(255,255,255,0.72); padding-left: 14px; }
+  .t-out-k { color: #67e8f9; font-weight: 600; }
+  .t-out-m { color: #c084fc; }
+  .t-out-n { color: #fbbf24; }
+  .t-blank { height: 8px; }
+  .cursor { display: inline-block; width: 8px; height: 15px; background: #39d353; margin-left: 2px; vertical-align: -2px; animation: blink 1s infinite; box-shadow: 0 0 4px #39d353; }
+  @keyframes blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
+</style>
+</head>
+<body data-active="about" data-domain="ishaqhassan.dev / about">
+<div class="og">
+  <div class="bg"></div>
+  <div class="dots"></div>
+  <div class="top-accent"></div>
+
+  <div class="layout">
+    <div class="left">
+      <div class="pill-top"><div class="pill-top-dot"></div><span class="pill-top-text">ABOUT ME</span></div>
+
+      <div class="profile">
+        <div class="profile-photo">
+          <div class="profile-photo-inner"><img src="../../assets/profile-photo.png"></div>
+        </div>
+      </div>
+
+      <div class="title">Ishaq<br><span>Hassan</span></div>
+
+      <div class="kicker">Full-stack engineer from Karachi. Flutter framework contributor with 6 merged PRs. 13 years of shipping mobile-first products.</div>
+
+      <div class="meta-row">
+        <div class="meta"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>Karachi, PK</div>
+        <div class="meta"><svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>13+ years</div>
+        <div class="meta"><svg viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20 9.27l-4.91 3.54L16.18 19 12 15.77 7.82 19l1.09-6.19L4 9.27l5.91-1.01L12 2z"/></svg>Engineering Mgr</div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="terminal">
+        <div class="t-head">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span class="t-title">~/ishaq · zsh</span>
+        </div>
+        <div class="t-body">
+          <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd">whoami</span></div>
+          <div class="t-out">Ishaq Hassan <span class="t-out-m">—</span> <span class="t-out-k">Flutter Framework Contributor</span></div>
+          <div class="t-blank"></div>
+          <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd">cat /about/summary.txt</span></div>
+          <div class="t-out">Engineering Manager <span class="t-out-n">@ DigitalHire</span></div>
+          <div class="t-out">13+ yrs production · 50+ apps shipped</div>
+          <div class="t-out">GDG Kolachi mentor · docs.flutter.dev instructor</div>
+          <div class="t-blank"></div>
+          <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd">ls achievements/</span></div>
+          <div class="t-out"><span class="t-out-k">flutter-prs/</span>  <span class="t-out-k">oss-packages/</span>  <span class="t-out-k">course-urdu/</span>  <span class="t-out-k">tech-talks/</span></div>
+          <div class="t-blank"></div>
+          <div class="t-line"><span class="t-prompt">$</span><span class="cursor"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{DOCK}}
+</div>
+</body>
+</html>
