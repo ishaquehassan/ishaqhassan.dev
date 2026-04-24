@@ -1,12 +1,12 @@
 # How a Pakistani Engineer Got 6 Pull Requests Merged Into Flutter's Official Framework
 
-*My journey as a Flutter Framework Contributor from Karachi, Pakistan — and why it's a big deal for the Pakistani Flutter community.*
+*My journey as a Flutter Framework Contributor from Karachi, Pakistan, and why it's a big deal for the Pakistani Flutter community.*
 
 ---
 
 ## TL;DR
 
-I'm Ishaq Hassan, Engineering Manager at DigitalHire, Flutter course instructor on the official Flutter docs, and a **Pakistani Flutter developer with 6 Pull Requests merged into the Flutter repository** — the official framework maintained by Google. This post walks through why framework-level contributions matter, how I landed mine, and a short guide for other Pakistani (and South Asian) developers who want to do the same.
+I'm Ishaq Hassan, Engineering Manager at DigitalHire, Flutter course instructor on the official Flutter docs, and a **Pakistani Flutter developer with 6 Pull Requests merged into the Flutter repository**, the official framework maintained by Google. This post walks through why framework-level contributions matter, how I landed mine, and a short guide for other Pakistani (and South Asian) developers who want to do the same.
 
 **Live portfolio:** https://ishaqhassan.dev
 
@@ -18,7 +18,7 @@ Pakistan has thousands of Flutter developers now. You'll find Flutter jobs in Ka
 
 But there's a difference between **using** a framework and **contributing to it**.
 
-If you open the Flutter repository on GitHub and search the contributor graph for Pakistani engineers with multiple merged PRs, the list is short. Surprisingly short. Most Pakistani engagement with Flutter stops at the app layer — building apps, building plugins, teaching courses. Direct contributions to the framework itself remain rare.
+If you open the Flutter repository on GitHub and search the contributor graph for Pakistani engineers with multiple merged PRs, the list is short. Surprisingly short. Most Pakistani engagement with Flutter stops at the app layer, building apps, building plugins, teaching courses. Direct contributions to the framework itself remain rare.
 
 This article exists partly to normalize it. If you're from Pakistan and you want to contribute to the Flutter framework, **you can**. Here's how I did it.
 
@@ -39,9 +39,9 @@ As of April 2026, these are the ones that made it in:
 
 And 3 open:
 
-- [#183110](https://github.com/flutter/flutter/pull/183110) — Suppress browser word-selection in SelectableText on web right-click
-- [#183079](https://github.com/flutter/flutter/pull/183079) — Guard auto-scroll against Offset.infinite in ScrollableSelectionContainer
-- [#183062](https://github.com/flutter/flutter/pull/183062) — Reset AppBar _scrolledUnder flag when scroll context changes
+- [#183110](https://github.com/flutter/flutter/pull/183110), Suppress browser word-selection in SelectableText on web right-click
+- [#183079](https://github.com/flutter/flutter/pull/183079), Guard auto-scroll against Offset.infinite in ScrollableSelectionContainer
+- [#183062](https://github.com/flutter/flutter/pull/183062), Reset AppBar _scrolledUnder flag when scroll context changes
 
 ---
 
@@ -49,7 +49,7 @@ And 3 open:
 
 ### 1. Pick the right kind of first PR
 
-Don't try to rewrite the rendering pipeline on day one. The Flutter team — like any major OSS project — accepts **small, well-scoped, well-tested PRs** from new contributors first. Documentation fixes are underrated. Adding a single missing parameter to a widget is high-impact and low-risk.
+Don't try to rewrite the rendering pipeline on day one. The Flutter team, like any major OSS project, accepts **small, well-scoped, well-tested PRs** from new contributors first. Documentation fixes are underrated. Adding a single missing parameter to a widget is high-impact and low-risk.
 
 My first merged PR (#183081) literally replaces single quotes with double quotes in a Gradle template. That's the bar. Small. Correct. Tested. Useful.
 
@@ -69,7 +69,7 @@ Every PR into Flutter needs a test. If you're adding a parameter, add a unit tes
 
 ### 5. Be patient and responsive
 
-The Flutter team gets *thousands* of PRs. Reviews are thorough. My average time from PR open to merge is 2–4 weeks. Sometimes longer. **Always respond to reviewer feedback within 24 hours** — that moves you up the priority queue.
+The Flutter team gets *thousands* of PRs. Reviews are thorough. My average time from PR open to merge is 2,4 weeks. Sometimes longer. **Always respond to reviewer feedback within 24 hours**, that moves you up the priority queue.
 
 ---
 

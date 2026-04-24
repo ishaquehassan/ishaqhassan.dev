@@ -4,7 +4,7 @@
 
 ```yaml
 ---
-title: "From Karachi to Flutter — 6 Merged PRs and How a Pakistani Dev Got There"
+title: "From Karachi to Flutter, 6 Merged PRs and How a Pakistani Dev Got There"
 published: true
 description: "The journey of a Pakistani Flutter engineer with 6 PRs merged into the official Flutter framework, plus a practical guide for other South Asian developers to do the same."
 tags: flutter, dart, opensource, pakistan
@@ -14,19 +14,19 @@ canonical_url: https://medium.com/@ishaqhassan/how-i-got-6-prs-merged-into-flutt
 ```
 
 **For Hashnode:**
-- Title: "From Karachi to Flutter — 6 Merged PRs and How a Pakistani Dev Got There"
+- Title: "From Karachi to Flutter, 6 Merged PRs and How a Pakistani Dev Got There"
 - Tags: Flutter, Dart, Open Source, Pakistan, Mobile Development
 - Canonical URL (important for SEO): paste the Medium URL after you publish on Medium
 
 ---
 
-**Article body:** use the same content as `MEDIUM_ARTICLE.md` — paste whole body below the front matter.
+**Article body:** use the same content as `MEDIUM_ARTICLE.md`, paste whole body below the front matter.
 
 ---
 
 ## Posting Order (maximize SEO)
 
-1. **First**, publish on Medium (primary — gets the most organic traffic)
+1. **First**, publish on Medium (primary, gets the most organic traffic)
 2. **Wait 24 hours** for Google to index Medium
 3. **Then** cross-post on Dev.to with `canonical_url` pointing to Medium (prevents duplicate content penalty)
 4. **Then** cross-post on Hashnode with same canonical URL
@@ -37,21 +37,21 @@ canonical_url: https://medium.com/@ishaqhassan/how-i-got-6-prs-merged-into-flutt
 ## Reddit Drop (optional but high impact)
 
 ### r/FlutterDev
-Title: "6 PRs merged into Flutter — a Pakistani developer's journey into framework-level contributions"
-Body: 1–2 paragraphs from MEDIUM_ARTICLE.md + link to full article.
+Title: "6 PRs merged into Flutter, a Pakistani developer's journey into framework-level contributions"
+Body: 1,2 paragraphs from MEDIUM_ARTICLE.md + link to full article.
 
 ### r/pakistan or r/developersPK
-Title: "One of the few Pakistanis directly contributing to the Flutter framework — 6 merged PRs"
+Title: "One of the few Pakistanis directly contributing to the Flutter framework, 6 merged PRs"
 Body: Context paragraph + portfolio link.
 
-**Don't spam multiple subs in one day.** Space posts 24+ hours apart. Respond to every comment — engagement boosts Reddit ranking.
+**Don't spam multiple subs in one day.** Space posts 24+ hours apart. Respond to every comment, engagement boosts Reddit ranking.
 
 ---
 
 ## Twitter/X Thread
 
 ```
-1/ 🧵 6 Pull Requests merged into Flutter — Google's Flutter framework — from 🇵🇰 Karachi.
+1/ 🧵 6 Pull Requests merged into Flutter, Google's Flutter framework, from 🇵🇰 Karachi.
 
 Thread on how I got here, why it matters, and a mini-guide for other South Asian devs who want to do the same 👇
 
@@ -80,7 +80,7 @@ My very first merged PR literally changed single quotes to double quotes. Start 
 - Read CONTRIBUTING.md thoroughly
 - Every PR needs a test
 - Respond to review within 24 hours
-- Be patient (2–4 weeks typical merge time)
+- Be patient (2,4 weeks typical merge time)
 
 6/ Why I care about Pakistani representation:
 Every merged PR with a Pakistani name pushes back against the assumption that serious OSS only comes from NA/EU.
@@ -91,7 +91,7 @@ Plus it makes it easier for the next person behind you.
 DM me. I'll review it before you submit.
 Free, no strings.
 
-Also — my 35-video Flutter course in Urdu is on official Flutter docs: docs.flutter.dev/resources/courses
+Also, my 35-video Flutter course in Urdu is on official Flutter docs: docs.flutter.dev/resources/courses
 
 8/ Full writeup on Medium: [paste Medium link once published]
 Portfolio: ishaqhassan.dev
@@ -105,7 +105,7 @@ Let's get more 🇵🇰 names on Flutter. /end
 ## Indie Hackers / Hacker News (only if comfortable)
 
 ### HN
-- Show HN: I'm a Flutter framework contributor from Pakistan — here's my portfolio site (Desktop-style UI)
+- Show HN: I'm a Flutter framework contributor from Pakistan, here's my portfolio site (Desktop-style UI)
 - Body: Short intro + link + invite for feedback
 - Post Tuesday 8 AM EST for best chances
 
@@ -115,11 +115,11 @@ Don't astroturf comments. Let it rise or sink naturally.
 
 ## Outreach emails (for major Pakistani tech blogs / podcasts)
 
-Subject: Flutter Framework Contributor from Pakistan — story pitch
+Subject: Flutter Framework Contributor from Pakistan, story pitch
 
 Hi [name],
 
-I'm Ishaq Hassan from Karachi. I've just crossed 6 merged Pull Requests into the official Flutter framework (Flutter) — one of the small number of Pakistani engineers with multiple core contributions to Flutter.
+I'm Ishaq Hassan from Karachi. I've just crossed 6 merged Pull Requests into the official Flutter framework (Flutter), one of the small number of Pakistani engineers with multiple core contributions to Flutter.
 
 I wrote up the journey here: [Medium link]
 

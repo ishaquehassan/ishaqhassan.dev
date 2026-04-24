@@ -23,6 +23,9 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="format-detection" content="telephone=no">
 <title>How a Pakistani Engineer Got 6 PRs Merged Into Flutter's Official Framework | Ishaq Hassan</title>
 <meta name="description" content="Behind-the-scenes: how I went from writing Flutter apps in Karachi to having 6 Pull Requests merged into the official Flutter repository. A practical guide for Pakistani and South Asian Flutter developers who want to do the same.">
 <meta name="keywords" content="flutter framework contributor pakistan, how to contribute to flutter, flutter open source, pakistani flutter developer, flutter pull request guide, flutter contribution tutorial, how to get pr merged into flutter, flutter core contributor, flutter framework contribution guide">
@@ -32,7 +35,7 @@
 
 <meta property="og:type" content="article">
 <meta property="og:title" content="How a Pakistani Engineer Got 6 PRs Merged Into Flutter's Official Framework">
-<meta property="og:description" content="The journey of going from Karachi Flutter app dev to Flutter framework contributor — 6 merged PRs and a practical guide.">
+<meta property="og:description" content="The journey of going from Karachi Flutter app dev to Flutter framework contributor, 6 merged PRs and a practical guide.">
 <meta property="og:url" content="https://ishaqhassan.dev/blog/how-i-got-6-prs-merged-into-flutter.html">
 <meta property="og:image" content="https://ishaqhassan.dev/assets/og-image.png?v=6">
 <meta property="og:locale" content="en_PK">
@@ -46,7 +49,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@ishaque_hassan">
 <meta name="twitter:title" content="How I Got 6 PRs Merged Into Flutter's Framework (from Karachi)">
-<meta name="twitter:description" content="6 merged PRs into Flutter — how a Pakistani engineer did it, and how you can.">
+<meta name="twitter:description" content="6 merged PRs into Flutter, how a Pakistani engineer did it, and how you can.">
 <meta name="twitter:image" content="https://ishaqhassan.dev/assets/og-image.png?v=6">
 
 <script type="application/ld+json">
@@ -269,23 +272,23 @@ strong { color: #fff; }
 <div class="crumb"><a href="/">Home</a> / <a href="/">Blog</a> / How I Got 6 PRs Merged Into Flutter</div>
 
 <h1>How a Pakistani Engineer Got 6 Pull Requests Merged Into Flutter's Official Framework</h1>
-<p class="subtitle">My journey from writing Flutter apps in Karachi to directly contributing to the framework Google maintains — and a practical guide for other Pakistani and South Asian developers who want to do the same.</p>
+<p class="subtitle">My journey from writing Flutter apps in Karachi to directly contributing to the framework Google maintains, and a practical guide for other Pakistani and South Asian developers who want to do the same.</p>
 <p class="byline">By <a href="/">Ishaq Hassan</a> · April 24, 2026 · Karachi, Pakistan · 10 min read</p>
 
 <h2>TL;DR</h2>
-<p>I'm Ishaq Hassan. I'm a Flutter Framework Contributor from Karachi, Pakistan. As of April 2026 I have <strong>6 Pull Requests merged into the official Flutter repository</strong> — the framework maintained by Google — with 3 more currently under active review. I'm Engineering Manager at DigitalHire, and I also teach the Flutter course in Urdu that is <a href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener">officially listed on Flutter's documentation site</a>.</p>
+<p>I'm Ishaq Hassan. I'm a Flutter Framework Contributor from Karachi, Pakistan. As of April 2026 I have <strong>6 Pull Requests merged into the official Flutter repository</strong>, the framework maintained by Google, with 3 more currently under active review. I'm Engineering Manager at DigitalHire, and I also teach the Flutter course in Urdu that is <a href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener">officially listed on Flutter's documentation site</a>.</p>
 
 <p>This post exists because <strong>direct contributions to the Flutter framework from Pakistani engineers are rare</strong>, and that bothers me. It shouldn't be. Here's how I got here, what I learned, and what you can copy.</p>
 
 <div class="cta-box">
 <h3>The 6 Merged PRs (verifiable on GitHub)</h3>
 <ul>
-<li><a href="https://github.com/flutter/flutter/pull/184572" target="_blank" rel="noopener">#184572 — Fix LicenseRegistry docs to reference NOTICES</a></li>
-<li><a href="https://github.com/flutter/flutter/pull/184569" target="_blank" rel="noopener">#184569 — Add disposal guidance to CurvedAnimation and CurveTween docs</a></li>
-<li><a href="https://github.com/flutter/flutter/pull/184545" target="_blank" rel="noopener">#184545 — Add clipBehavior parameter to AnimatedCrossFade</a></li>
-<li><a href="https://github.com/flutter/flutter/pull/183109" target="_blank" rel="noopener">#183109 — Add scrollPadding property to DropdownMenu</a></li>
-<li><a href="https://github.com/flutter/flutter/pull/183097" target="_blank" rel="noopener">#183097 — Fix RouteAware.didPushNext documentation inaccuracy</a></li>
-<li><a href="https://github.com/flutter/flutter/pull/183081" target="_blank" rel="noopener">#183081 — Use double quotes in settings.gradle.kts template</a></li>
+<li><a href="https://github.com/flutter/flutter/pull/184572" target="_blank" rel="noopener">#184572, Fix LicenseRegistry docs to reference NOTICES</a></li>
+<li><a href="https://github.com/flutter/flutter/pull/184569" target="_blank" rel="noopener">#184569, Add disposal guidance to CurvedAnimation and CurveTween docs</a></li>
+<li><a href="https://github.com/flutter/flutter/pull/184545" target="_blank" rel="noopener">#184545, Add clipBehavior parameter to AnimatedCrossFade</a></li>
+<li><a href="https://github.com/flutter/flutter/pull/183109" target="_blank" rel="noopener">#183109, Add scrollPadding property to DropdownMenu</a></li>
+<li><a href="https://github.com/flutter/flutter/pull/183097" target="_blank" rel="noopener">#183097, Fix RouteAware.didPushNext documentation inaccuracy</a></li>
+<li><a href="https://github.com/flutter/flutter/pull/183081" target="_blank" rel="noopener">#183081, Use double quotes in settings.gradle.kts template</a></li>
 </ul>
 </div>
 
@@ -325,7 +328,7 @@ strong { color: #fff; }
 <h3>4. I escalated carefully</h3>
 <p>PR #2 (#183097) fixed a documentation inaccuracy in <code>RouteAware.didPushNext</code>. Still small, but touched real framework behavior instead of tooling.</p>
 
-<p>PR #4 (#183109) added a new parameter (<code>scrollPadding</code>) to <code>DropdownMenu</code>. That was more substantial — an API addition, requiring tests, docs, and careful compatibility.</p>
+<p>PR #4 (#183109) added a new parameter (<code>scrollPadding</code>) to <code>DropdownMenu</code>. That was more substantial, an API addition, requiring tests, docs, and careful compatibility.</p>
 
 <p>By PR #6 (#184569), I was writing documentation for subtle memory-management behavior in <code>CurvedAnimation</code> and <code>CurveTween</code>. That required understanding the widget lifecycle deeply.</p>
 
@@ -337,7 +340,7 @@ strong { color: #fff; }
 <ul>
 <li>Search Flutter issues filtered by labels: <code>good first issue</code>, <code>help wanted</code>, <code>d: api docs</code></li>
 <li>Grep the codebase for <code>TODO</code> near widgets you already understand</li>
-<li>When you're using Flutter in your day job, keep a notebook of "this seems wrong or missing" — those are PR targets</li>
+<li>When you're using Flutter in your day job, keep a notebook of "this seems wrong or missing", those are PR targets</li>
 </ul>
 
 <h3>Step 2: Set up your environment correctly</h3>
@@ -373,11 +376,11 @@ strong { color: #fff; }
 
 <h2>Why This Matters for Pakistan Specifically</h2>
 
-<p>Open source framework development has historically been concentrated in North America and Europe. That's starting to change — India has produced multiple serious Flutter framework contributors. China has. Brazil has. Pakistan still has very few.</p>
+<p>Open source framework development has historically been concentrated in North America and Europe. That's starting to change, India has produced multiple serious Flutter framework contributors. China has. Brazil has. Pakistan still has very few.</p>
 
 <p>Every merged PR with a Pakistani name chips away at the default assumption that serious OSS contributions come from elsewhere. It makes it slightly easier for the next Pakistani developer to get their PR taken seriously. It also provides role models for university students in Karachi, Lahore, Islamabad who want to see that this path is actually walkable.</p>
 
-<p>If you're reading this from Pakistan and you've been telling yourself "contributing to Flutter is for other people" — please stop. It's not. It's for you. Start this month.</p>
+<p>If you're reading this from Pakistan and you've been telling yourself "contributing to Flutter is for other people", please stop. It's not. It's for you. Start this month.</p>
 
 <h2>The Flutter Course in Urdu (separate from the framework work)</h2>
 
@@ -394,10 +397,10 @@ strong { color: #fff; }
 
 <h2>Related reading on this site</h2>
 <ul>
-<li><a href="/flutter-framework-contributor-pakistan.html">Flutter Framework Contributor from Pakistan — full profile page</a></li>
-<li><a href="/flutter-developer-pakistan.html">Flutter Developer in Pakistan — profile</a></li>
-<li><a href="/flutter-course-urdu.html">Flutter Course in Urdu — details</a></li>
-<li><a href="/flutter-core-contributor-asia.html">Flutter Core Contributor in Asia — regional profile</a></li>
+<li><a href="/flutter-framework-contributor-pakistan.html">Flutter Framework Contributor from Pakistan, full profile page</a></li>
+<li><a href="/flutter-developer-pakistan.html">Flutter Developer in Pakistan, profile</a></li>
+<li><a href="/flutter-course-urdu.html">Flutter Course in Urdu, details</a></li>
+<li><a href="/flutter-core-contributor-asia.html">Flutter Core Contributor in Asia, regional profile</a></li>
 <li><a href="/flutter-consultant.html">Flutter Consulting services</a></li>
 <li><a href="/">Full interactive portfolio</a></li>
 </ul>

@@ -1,4 +1,4 @@
-# SEO Blitz — Action Checklist (User-Side)
+# SEO Blitz, Action Checklist (User-Side)
 
 Done automatically (deploy chal raha hai):
 
@@ -11,8 +11,8 @@ Done automatically (deploy chal raha hai):
   - /flutter-consultant.html
   - /hire-flutter-developer.html
 ✅ Sitemap.xml updated with all 6 new URLs + llms files
-✅ robots.txt updated — 25+ AI crawlers explicitly allowed (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot-Extended, etc.)
-✅ llms.txt + llms-full.txt updated — "Flutter Framework Contributor from Pakistan" prominently mentioned
+✅ robots.txt updated, 25+ AI crawlers explicitly allowed (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot-Extended, etc.)
+✅ llms.txt + llms-full.txt updated, "Flutter Framework Contributor from Pakistan" prominently mentioned
 ✅ Deploy workflow updated to copy new HTML + llms files
 ✅ Main site seo-content block has internal links to all landing pages
 ✅ Noscript block has visible internal links
@@ -21,9 +21,9 @@ Done automatically (deploy chal raha hai):
 
 ---
 
-## MANUAL STEPS — tu khud karega (bilkul zaroori, jaldi kar)
+## MANUAL STEPS, tu khud karega (bilkul zaroori, jaldi kar)
 
-### 1. Google Search Console (ASAP — 10 minutes)
+### 1. Google Search Console (ASAP, 10 minutes)
 
 - Go to https://search.google.com/search-console
 - Add property `ishaqhassan.dev` if not already added
@@ -47,31 +47,31 @@ Done automatically (deploy chal raha hai):
 
 ### 3. Medium Article (30 min)
 
-Open `seo-content/MEDIUM_ARTICLE.md` — copy body. Publish on Medium:
+Open `seo-content/MEDIUM_ARTICLE.md`, copy body. Publish on Medium:
 - Title: "How a Pakistani Engineer Got 6 Pull Requests Merged Into Flutter's Official Framework"
 - Tags: Flutter, Dart, Open Source, Pakistan, Mobile Development
 - Publish under your existing profile (medium.com/@ishaqhassan)
 - Add the portfolio link at the very top and bottom
-- Save the URL — needed for step 4
+- Save the URL, needed for step 4
 
 ### 4. Dev.to + Hashnode Cross-Posts (10 min)
 
-Open `seo-content/DEVTO_HASHNODE_CROSSPOST.md` — paste article with canonical URL = Medium URL.
+Open `seo-content/DEVTO_HASHNODE_CROSSPOST.md`, paste article with canonical URL = Medium URL.
 - https://dev.to/new
 - https://hashnode.com/create/story
 
 ### 5. LinkedIn Post (3 min)
 
-Open `seo-content/LINKEDIN_POST.md` — paste as regular LinkedIn text post. Tag GDG Kolachi if you can.
+Open `seo-content/LINKEDIN_POST.md`, paste as regular LinkedIn text post. Tag GDG Kolachi if you can.
 
 ### 6. Twitter/X Thread (5 min)
 
 Open `seo-content/DEVTO_HASHNODE_CROSSPOST.md` → bottom has the thread. Paste tweet by tweet.
 
-### 7. Reddit (careful — don't spam)
+### 7. Reddit (careful, don't spam)
 
 Post on:
-- r/FlutterDev (biggest Flutter community, strict rules — be genuine)
+- r/FlutterDev (biggest Flutter community, strict rules, be genuine)
 - r/developersPK
 - r/pakistan (only if the tone fits)
 
@@ -117,19 +117,19 @@ Should show no errors on the Person/Article schemas.
 
 ## When to expect results
 
-- **Google Search Console submission** → indexed within 1–7 days
-- **Ranking for "flutter framework contributor pakistan"** → 2–8 weeks realistically (new pages need trust)
-- **AI Overview inclusion (Google, ChatGPT Search, Perplexity)** → 2–12 weeks (depends on backlinks + authority)
-- **Medium/Dev.to articles ranking** → 1–4 weeks (these platforms have high domain authority, often rank faster than own site)
+- **Google Search Console submission** → indexed within 1,7 days
+- **Ranking for "flutter framework contributor pakistan"** → 2,8 weeks realistically (new pages need trust)
+- **AI Overview inclusion (Google, ChatGPT Search, Perplexity)** → 2,12 weeks (depends on backlinks + authority)
+- **Medium/Dev.to articles ranking** → 1,4 weeks (these platforms have high domain authority, often rank faster than own site)
 
 ---
 
 ## What I can't automate (but you CAN influence)
 
-- **Backlinks from .pk domains** — reach out to TechJuice, ProPakistani, your university alumni network, GDG Kolachi page, Tech Idara site
-- **LinkedIn post virality** — write from your own voice, engage with comments fast
-- **Reddit karma** — participate genuinely in r/FlutterDev before you post about yourself
-- **Ongoing blog posts** — 1 Medium article/month about your Flutter PRs keeps momentum
+- **Backlinks from .pk domains**, reach out to TechJuice, ProPakistani, your university alumni network, GDG Kolachi page, Tech Idara site
+- **LinkedIn post virality**, write from your own voice, engage with comments fast
+- **Reddit karma**, participate genuinely in r/FlutterDev before you post about yourself
+- **Ongoing blog posts**, 1 Medium article/month about your Flutter PRs keeps momentum
 
 ---
 
