@@ -326,24 +326,136 @@ def build_breadcrumb_jsonld(window):
     }
 
 
-def build_webpage_jsonld(window):
+PERSON_SAMEAS = [
+    "https://github.com/ishaquehassan",
+    "https://linkedin.com/in/ishaquehassan",
+    "https://medium.com/@ishaqhassan",
+    "https://x.com/ishaque_hassan",
+    "https://www.youtube.com/@ishaquehassan",
+    "https://stackoverflow.com/users/2094696/ishaq-hassan",
+    "https://pub.dev/publishers/ishaqhassan.dev/packages",
+]
+
+
+def build_person_entity():
     return {
+        "@type": "Person",
+        "@id": f"{SITE}/#person",
+        "name": "Ishaq Hassan",
+        "url": f"{SITE}/",
+        "image": f"{SITE}/assets/profile-photo.png",
+        "jobTitle": "Engineering Manager at DigitalHire, Flutter Framework Contributor",
+        "worksFor": {
+            "@type": "Organization",
+            "name": "DigitalHire",
+            "url": "https://www.digitalhire.com",
+        },
+        "nationality": {"@type": "Country", "name": "Pakistan"},
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Karachi",
+            "addressRegion": "Sindh",
+            "addressCountry": "PK",
+        },
+        "sameAs": PERSON_SAMEAS,
+        "knowsAbout": [
+            "Flutter",
+            "Dart",
+            "Mobile App Development",
+            "Firebase",
+            "Node.js",
+            "Open Source Software",
+            "Software Engineering",
+        ],
+    }
+
+
+def build_webpage_jsonld(window):
+    t = window["json_ld_type"]
+    base = {
         "@context": "https://schema.org",
-        "@type": window["json_ld_type"],
+        "@type": t,
         "@id": f"{SITE}/{window['slug']}/",
         "url": f"{SITE}/{window['slug']}/",
         "name": window["title"],
         "description": window["desc"],
         "isPartOf": {"@type": "WebSite", "@id": f"{SITE}/#website", "url": f"{SITE}/"},
-        "about": {
+        "inLanguage": "en",
+        "dateModified": "2026-04-25",
+        "datePublished": "2026-04-24",
+        "image": f"{SITE}/assets/og-image.png?v=6",
+        "author": build_person_entity(),
+        "publisher": build_person_entity(),
+    }
+
+    # ProfilePage: Google wants mainEntity -> Person for rich profile cards.
+    if t == "ProfilePage":
+        base["mainEntity"] = build_person_entity()
+
+    # ContactPage: mainEntity -> Person with contactPoint.
+    elif t == "ContactPage":
+        person = build_person_entity()
+        person["email"] = "hello@ishaqhassan.dev"
+        person["contactPoint"] = {
+            "@type": "ContactPoint",
+            "contactType": "general",
+            "email": "hello@ishaqhassan.dev",
+            "availableLanguage": ["English", "Urdu"],
+        }
+        base["mainEntity"] = person
+
+    # CollectionPage: about -> Person so Google links the collection to the author entity.
+    elif t == "CollectionPage":
+        base["about"] = build_person_entity()
+
+    # Course: provider + hasCourseInstance + educationalLevel are Google-required.
+    elif t == "Course":
+        base["provider"] = {
             "@type": "Person",
             "@id": f"{SITE}/#person",
             "name": "Ishaq Hassan",
             "url": f"{SITE}/",
-        },
-        "inLanguage": "en",
-        "dateModified": "2026-04-25",
-    }
+        }
+        base["author"] = build_person_entity()
+        base["educationalLevel"] = "Beginner to Advanced"
+        base["inLanguage"] = "ur"
+        base["isAccessibleForFree"] = True
+        base["hasCourseInstance"] = {
+            "@type": "CourseInstance",
+            "courseMode": "online",
+            "inLanguage": "ur",
+            "courseWorkload": "PT8H",
+        }
+        base["offers"] = {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "url": "https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5",
+        }
+
+    # WebApplication / SoftwareApplication: Google requires applicationCategory + operatingSystem + offers.
+    elif t in ("WebApplication", "SoftwareApplication"):
+        base["applicationCategory"] = "GameApplication" if window["slug"] == "snake" else "ProductivityApplication"
+        base["operatingSystem"] = "Any (web browser)"
+        base["author"] = build_person_entity()
+        base["offers"] = {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+        }
+        base["aggregateRating"] = {
+            "@type": "AggregateRating",
+            "ratingValue": "5",
+            "ratingCount": "1",
+            "bestRating": "5",
+            "worstRating": "1",
+        } if window["slug"] == "snake" else None
+        if base["aggregateRating"] is None:
+            del base["aggregateRating"]
+
+    return base
 
 
 FAQ_MAP = {
