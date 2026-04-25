@@ -5234,13 +5234,12 @@ a.li-tl-company:hover { color: #7dd3fc; }
 
 /* ===== FLUTTER COURSE WINDOW ===== */
 #fc-body { padding: 0 !important; overflow: hidden; }
-/* fshell-content has default padding that leaves 60px top + 24px bottom + 22px
-   sides. fc-grid-view manages its own scroll layout edge-to-edge, but it
-   still needs the toolbar's height of clearance up top so the hero doesn't
-   slide UNDER the absolute window-toolbar. Keep top = toolbar height,
-   zero everywhere else so sections list reaches the window's bottom edge. */
+/* fshell-content default padding (60px top + 22px sides + 24px bottom) was
+   leaving a visible gap below the sections list. Trim ONLY bottom to 0 so
+   cards reach the window's bottom edge; keep toolbar clearance on top and
+   the gutter on sides so the hero doesn't butt into the window walls. */
 #win-flutter-course .fshell-content {
-  padding: var(--toolbar-h) 0 0 !important;
+  padding: var(--toolbar-h) 22px 0 !important;
 }
 .fc-grid-view { display: flex; flex-direction: column; height: 100%; }
 
