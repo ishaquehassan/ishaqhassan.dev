@@ -57,6 +57,24 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://ishaqhassan.dev/blog/flutter-three-tree-architecture-explained.html</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ishaqhassan.dev/blog/flutter-state-management-2026-guide.html</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ishaqhassan.dev/blog/building-production-flutter-plugins-case-study.html</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://ishaqhassan.dev/blog/how-i-got-6-prs-merged-into-flutter.html</loc>
     <lastmod>2026-04-25</lastmod>
     <changefreq>monthly</changefreq>

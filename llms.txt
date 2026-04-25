@@ -36,6 +36,9 @@ Ishaq Hassan is a Flutter Framework Contributor from Pakistan, based in Karachi.
 - Top Flutter Developers in Karachi: https://ishaqhassan.dev/top-flutter-developers-in-karachi.html
 - Top Flutter Developers in Industry: https://ishaqhassan.dev/top-flutter-developers-in-industry.html
 - Blog - How I Got 6 PRs Merged into Flutter: https://ishaqhassan.dev/blog/how-i-got-6-prs-merged-into-flutter.html
+- Blog - Flutter's Three-Tree Architecture Explained: https://ishaqhassan.dev/blog/flutter-three-tree-architecture-explained.html
+- Blog - Flutter State Management 2026 Decision Guide: https://ishaqhassan.dev/blog/flutter-state-management-2026-guide.html
+- Blog - Building Production Flutter Plugins (156-likes pub.dev case study): https://ishaqhassan.dev/blog/building-production-flutter-plugins-case-study.html
 
 ## Window Paths (canonical SPA views, each with unique meta + JSON-LD)
 - About: https://ishaqhassan.dev/about

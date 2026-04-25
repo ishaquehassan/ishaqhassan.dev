@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style id="ihp-redirect-mask">html{visibility:hidden}</style>
+<script>
+(function(){
+  try{
+    var ua=(navigator.userAgent||'').toLowerCase();
+    var botRE=/bot|crawler|spider|slurp|lighthouse|googlebot|bingbot|yandex|baiduspider|duckduckbot|applebot|claudebot|anthropic-ai|gptbot|perplexitybot|facebookexternalhit|linkedinbot|twitterbot|telegrambot|whatsapp|slackbot|discordbot|embedly|preview/;
+    var stay=location.search.indexOf('stay=1')!==-1;
+    if(botRE.test(ua)||stay){
+      var s=document.getElementById('ihp-redirect-mask');
+      if(s)s.parentNode.removeChild(s);
+      return;
+    }
+    location.replace('https://ishaqhassan.dev/?ref='+encodeURIComponent(location.pathname.replace(/^\/|\.html$/g,'')));
+  }catch(e){
+    var s=document.getElementById('ihp-redirect-mask');
+    if(s)s.parentNode.removeChild(s);
+  }
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="format-detection" content="telephone=no">
+<title>Production Flutter Plugins: Case Study with 156 Likes</title>
+<meta name="description" content="What it takes to build, publish, and maintain a Flutter plugin with 156 likes and 470 monthly downloads on pub.dev. Real lessons from document_scanner_flutter.">
+<meta name="keywords" content="flutter plugin tutorial, publish flutter plugin pub.dev, flutter document scanner, flutter native plugin, flutter platform channel, federated flutter plugin, build flutter plugin, flutter plugin publishing, flutter package case study">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Ishaq Hassan">
+<link rel="canonical" href="https://ishaqhassan.dev/blog/building-production-flutter-plugins-case-study.html">
+<meta name="theme-color" content="#0a0a1a">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building Production Flutter Plugins: 156 Likes Case Study">
+<meta property="og:description" content="The honest engineering story behind a Flutter plugin with 156 pub.dev likes and 470 monthly downloads. Native bridges, federated architecture, and the support burden.">
+<meta property="og:url" content="https://ishaqhassan.dev/blog/building-production-flutter-plugins-case-study.html">
+<meta property="og:image" content="https://ishaqhassan.dev/assets/og-image.png?v=6">
+<meta property="og:site_name" content="Ishaq Hassan">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Building Production Flutter Plugins by Ishaq Hassan">
+<meta property="og:image:type" content="image/png">
+<meta property="og:locale" content="en_PK">
+<meta property="article:published_time" content="2026-04-25T10:00:00+05:00">
+<meta property="article:modified_time" content="2026-04-25">
+<meta property="article:author" content="Ishaq Hassan">
+<meta property="article:section" content="Flutter">
+<meta property="article:tag" content="Flutter">
+<meta property="article:tag" content="Plugin Development">
+<meta property="article:tag" content="Open Source">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@ishaque_hassan">
+<meta name="twitter:creator" content="@ishaque_hassan">
+<meta name="twitter:title" content="Production Flutter Plugins: 156 Likes Case Study">
+<meta name="twitter:description" content="What it really takes to build and maintain a Flutter plugin people use. Native bridges, federated architecture, support burden.">
+<meta name="twitter:image" content="https://ishaqhassan.dev/assets/og-image.png?v=6">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://ishaqhassan.dev/blog/building-production-flutter-plugins-case-study.html" },
+  "headline": "Building Production Flutter Plugins: A 156-Likes pub.dev Case Study",
+  "description": "Real engineering lessons from building, publishing, and maintaining document_scanner_flutter, a Flutter plugin with 156 pub.dev likes and ongoing production usage.",
+  "image": ["https://ishaqhassan.dev/assets/og-image.png"],
+  "datePublished": "2026-04-25T10:00:00+05:00",
+  "dateModified": "2026-04-25",
+  "proficiencyLevel": "Intermediate to Advanced",
+  "dependencies": "Flutter SDK 3.x, Dart 3.x, native iOS/Android tooling",
+  "author": {
+    "@type": "Person",
+    "@id": "https://ishaqhassan.dev/#person",
+    "name": "Ishaq Hassan",
+    "url": "https://ishaqhassan.dev/",
+    "image": "https://ishaqhassan.dev/assets/profile-photo.png",
+    "jobTitle": "Engineering Manager at DigitalHire, Flutter Framework Contributor",
+    "nationality": { "@type": "Country", "name": "Pakistan" },
+    "sameAs": [
+      "https://github.com/ishaquehassan",
+      "https://linkedin.com/in/ishaquehassan",
+      "https://medium.com/@ishaqhassan",
+      "https://x.com/ishaque_hassan",
+      "https://pub.dev/publishers/ishaqhassan.com/packages"
+    ]
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Ishaq Hassan",
+    "url": "https://ishaqhassan.dev/"
+  },
+  "keywords": "flutter plugin, publish to pub.dev, native plugin, document scanner flutter, federated plugin",
+  "inLanguage": "en",
+  "wordCount": 1900,
+  "mentions": {
+    "@type": "SoftwareSourceCode",
+    "name": "document_scanner_flutter",
+    "codeRepository": "https://github.com/ishaquehassan/document_scanner_flutter",
+    "url": "https://pub.dev/packages/document_scanner_flutter",
+    "programmingLanguage": ["Dart", "Swift", "Kotlin"],
+    "author": { "@id": "https://ishaqhassan.dev/#person" }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I publish a Flutter plugin to pub.dev?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Run flutter create --template=plugin to scaffold a plugin with platform-specific iOS and Android folders. Implement your platform code in Swift/Kotlin, expose it through a MethodChannel, and publish with dart pub publish. Set up a verified publisher (under your owned domain) before publishing for trust signal."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a federated Flutter plugin?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A federated plugin splits the API surface (the app-facing package) from the platform implementations (iOS, Android, web, desktop). Apps depend on the API package, and that package picks the right implementation per platform. This pattern lets multiple maintainers work on different platforms independently."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does it take to write a production-grade Flutter plugin?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An MVP plugin is a weekend. A production plugin with real native edge cases, comprehensive tests, and CI for both platforms takes 4 to 8 weeks. The native code is rarely the hard part. The hard part is handling permission flows, platform-specific edge cases, and async lifecycle correctly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What makes a Flutter plugin score well on pub.dev?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pub points reward complete documentation, valid pubspec, OS support declarations, sound null safety, dependency freshness, and a comprehensive README with examples. Likes and downloads are social signals on top. A well-scored plugin should hit 130 to 160 pub points within a few releases."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I write a custom plugin or use an existing one?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Always check pub.dev first with multiple keyword variations. Most common needs are covered. Write a custom plugin only when no existing package supports your platform, when existing packages are abandoned, or when you need a specific native API surface no plugin exposes. Custom plugins create long-term maintenance burden."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ishaqhassan.dev/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://ishaqhassan.dev/" },
+    { "@type": "ListItem", "position": 3, "name": "Production Flutter Plugins Case Study", "item": "https://ishaqhassan.dev/blog/building-production-flutter-plugins-case-study.html" }
+  ]
+}
+</script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0c0c0c;color:#e8e8e8;font-family:-apple-system,BlinkMacSystemFont,Georgia,serif;line-height:1.75;padding:48px 24px}
+.wrap{max-width:720px;margin:0 auto}
+.crumb{color:#94a3b8;font-size:13px;margin-bottom:24px}
+.crumb a{color:#7dd3fc;text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+h1{font-size:40px;line-height:1.2;margin-bottom:12px;color:#fff;font-family:-apple-system,BlinkMacSystemFont,sans-serif;letter-spacing:-0.02em}
+.subtitle{color:#cbd5e1;font-size:17px;margin-bottom:32px;font-style:italic}
+.byline{color:#94a3b8;font-size:14px;margin-bottom:40px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.byline a{color:#7dd3fc}
+h2{font-size:26px;margin:40px 0 14px;color:#fff;font-family:-apple-system,BlinkMacSystemFont,sans-serif;letter-spacing:-0.01em}
+h3{font-size:19px;margin:28px 0 12px;color:#7dd3fc;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+p{margin-bottom:18px;color:#d0d0d0;font-size:18px}
+a{color:#7dd3fc}
+a:hover{text-decoration:none}
+ul,ol{margin-left:22px;margin-bottom:18px}
+li{margin-bottom:10px;color:#d0d0d0;font-size:18px}
+blockquote{border-left:3px solid #7dd3fc;padding:4px 0 4px 20px;margin:20px 0;color:#cbd5e1;font-style:italic}
+code{background:rgba(125,211,252,0.1);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:15px;color:#7dd3fc}
+pre{background:rgba(255,255,255,0.04);padding:16px;border-radius:8px;overflow-x:auto;margin:18px 0;font-size:14px}
+pre code{background:none;padding:0;color:#cbd5e1;font-size:14px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:16px}
+th{text-align:left;padding:10px;border-bottom:2px solid rgba(125,211,252,0.3);color:#7dd3fc;font-family:-apple-system,sans-serif}
+td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.08);color:#d0d0d0;font-family:-apple-system,sans-serif}
+hr{border:none;border-top:1px solid rgba(255,255,255,0.1);margin:40px 0}
+.cta-box{background:linear-gradient(135deg,rgba(125,211,252,0.08),rgba(125,211,252,0.02));border:1px solid rgba(125,211,252,0.2);padding:24px;border-radius:12px;margin:32px 0}
+.cta-box h3{margin-top:0;color:#fff}
+.cta-btn{display:inline-block;padding:10px 20px;background:#7dd3fc;color:#0c0c0c;border-radius:8px;font-weight:600;text-decoration:none;margin-top:12px}
+strong{color:#fff}
+.tldr{background:rgba(125,211,252,0.06);border-left:3px solid #7dd3fc;padding:18px 20px;border-radius:6px;margin:24px 0;color:#cbd5e1}
+.tldr strong{color:#7dd3fc;text-transform:uppercase;letter-spacing:0.06em;font-size:13px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:24px 0}
+.stat-card{background:rgba(125,211,252,0.06);border:1px solid rgba(125,211,252,0.18);padding:14px;border-radius:10px;text-align:center}
+.stat-num{font-size:28px;font-weight:700;color:#7dd3fc;font-family:-apple-system,sans-serif}
+.stat-lbl{font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="crumb"><a href="/">Home</a> / <a href="/">Blog</a> / Building Production Flutter Plugins</div>
+
+<h1>Building Production Flutter Plugins: A 156-Likes pub.dev Case Study</h1>
+<p class="subtitle">Publishing a Flutter plugin is a weekend. Maintaining one with 156 likes and 470 monthly downloads is a different game. The honest engineering story behind <code>document_scanner_flutter</code>, what worked, and what I'd build differently in 2026.</p>
+<p class="byline">By <a href="/about/">Ishaq Hassan</a> &middot; April 25, 2026 &middot; Karachi, Pakistan &middot; 11 min read &middot; pub.dev verified publisher at <a href="https://pub.dev/publishers/ishaqhassan.com/packages" rel="noopener">ishaqhassan.com</a></p>
+
+<div class="stat-grid">
+  <div class="stat-card"><div class="stat-num">156</div><div class="stat-lbl">pub.dev likes</div></div>
+  <div class="stat-card"><div class="stat-num">130</div><div class="stat-lbl">pub points</div></div>
+  <div class="stat-card"><div class="stat-num">470</div><div class="stat-lbl">monthly downloads</div></div>
+  <div class="stat-card"><div class="stat-num">5+ yr</div><div class="stat-lbl">in production</div></div>
+</div>
+
+<div class="tldr"><strong>TL;DR</strong><br>The native code is rarely the hard part of a plugin. The hard parts are: lifecycle correctness across both iOS and Android, permission flows, async cancellation, supporting users who file half-formed issues, and shipping breaking changes without breaking the world. A successful plugin costs 4 to 8 engineer-weeks before launch and a few hours per month forever after.</div>
+
+<h2>The plugin in one paragraph</h2>
+<p><a href="https://github.com/ishaquehassan/document_scanner_flutter" rel="noopener">document_scanner_flutter</a> is a cross-platform Flutter plugin that lets an app capture a photo of a document, auto-detect the paper edges, perform perspective correction, and return the cropped, rectified image. It uses Apple's Vision framework on iOS and Google ML Kit's document scanner on Android. Apps using it include KYC flows, expense reporting tools, and field-data collection apps. It's been in production since 2021, currently sits at version 0.4.0 with 156 likes on <a href="https://pub.dev/packages/document_scanner_flutter" rel="noopener">pub.dev</a>, and has been a steady source of issues, PRs, and lessons.</p>
+
+<h2>The architecture, layer by layer</h2>
+<p>A Flutter plugin lives at the edge between the Dart VM and the native platform. There are four layers, and getting any one of them wrong shows up as a 1-star review.</p>
+
+<h3>1. The Dart-facing API</h3>
+<p>This is what your users see. It must read like a normal Dart package: simple async functions, well-documented parameters, sensible defaults, type-safe results. For document_scanner_flutter, the entry point is one method:</p>
+<pre><code>final scannedDocs = await DocumentScannerFlutter.launch(
+  context,
+  source: ScannerFileSource.CAMERA,
+  labelsConfig: { ... },
+);</code></pre>
+<p>One method, three optional parameters, returns <code>Future&lt;File?&gt;</code>. Users that want a simple flow get a simple flow. Users with custom needs can pass labelsConfig.</p>
+
+<h3>2. The platform channel</h3>
+<p>Dart talks to native code through a <code>MethodChannel</code>. Calls are async, named ("scanDocument"), and arguments are JSON-encodable. The channel is the contract: Dart and native must agree on the method name and the argument shape, or you get an opaque <code>MissingPluginException</code>.</p>
+<p>Lesson learned the hard way: name your channel under your domain. <code>biz.cv.documentScanner/document_scanner</code> is fine; <code>document_scanner</code> alone collides with any other plugin that picks the same name. We renamed once after a user reported a clash, and it was a breaking change.</p>
+
+<h3>3. The native bridge</h3>
+<p>On iOS, the bridge is a Swift class that registers as a <code>FlutterPlugin</code> and implements <code>handle(_ call: FlutterMethodCall, result: @escaping FlutterResult)</code>. On Android, it's a Kotlin class with <code>onMethodCall</code>. Both must:</p>
+<ul>
+  <li>Validate arguments and return a structured error on bad input (<code>FlutterError</code> or <code>result.error</code>).</li>
+  <li>Hold no implicit state across calls; use the call ID/result pattern for any async work.</li>
+  <li>Handle the case where the user cancels mid-flow (most plugins forget this).</li>
+  <li>Tear down listeners on detach (otherwise you leak when hot-reload happens during dev).</li>
+</ul>
+
+<h3>4. The native UI / system call</h3>
+<p>For document_scanner_flutter, this is where the actual work happens: launch the system camera, run Vision/ML Kit document detection, run perspective correction. This layer is platform-specific and tends to be where 80% of the user-reported bugs hide. iOS users on iPad split-view: edge case. Android users with no camera permission and TYPE_CAMERA: edge case. Foldable Galaxy with camera-rotation: edge case.</p>
+
+<h2>Lifecycle: the silent killer</h2>
+<p>Flutter plugin lifecycle is the most frequently misunderstood topic. The plugin is attached to a Flutter engine, but the engine can be detached and re-attached when the user backgrounds and foregrounds the app. If your plugin holds an Activity reference (Android) or a UIViewController reference (iOS) past detach, you crash the next time the engine reattaches.</p>
+<p>The fix on Android: implement <code>ActivityAware</code> and store the Activity reference only between <code>onAttachedToActivity</code> and <code>onDetachedFromActivity</code>. The fix on iOS: never hold the Flutter engine's UIViewController; resolve it lazily from <code>UIApplication.shared.keyWindow?.rootViewController</code>.</p>
+
+<h2>Federated plugins: when to bother</h2>
+<p>The "federated plugin" pattern splits the package into:</p>
+<ul>
+  <li><code>document_scanner_flutter</code>: the app-facing API package.</li>
+  <li><code>document_scanner_flutter_platform_interface</code>: the abstract contract.</li>
+  <li><code>document_scanner_flutter_ios</code>: the iOS implementation.</li>
+  <li><code>document_scanner_flutter_android</code>: the Android implementation.</li>
+</ul>
+<p>This pattern lets multiple maintainers work on different platforms independently and lets users pick implementations (e.g., a third party could publish <code>document_scanner_flutter_web</code> without forking the API package).</p>
+<p>Should you federate from day one? No. Start as a single package with iOS + Android folders. Federate only when you have either a credible second platform (web, desktop) or a co-maintainer for one of the platforms. Federating prematurely is overhead for one engineer.</p>
+
+<h2>The pub.dev scoring mechanic</h2>
+<p>Pub points are deterministic. They reward:</p>
+<ul>
+  <li>Sound null safety (10 points)</li>
+  <li>Valid pubspec with all required fields (10 points)</li>
+  <li>Platform support declarations (20 points)</li>
+  <li>Comprehensive README with example (10 points)</li>
+  <li>Documentation on public API (20 points)</li>
+  <li>Up-to-date dependencies (10 points)</li>
+  <li>Static analysis clean (50 points)</li>
+</ul>
+<p>document_scanner_flutter sits at 130 points. Hitting 160 requires more inline doc comments on edge methods. Hitting 100% requires zero analyzer warnings and a tight transitive dependency tree.</p>
+<p>Likes and downloads are social signals on top, not part of the score. A well-scored plugin with zero downloads beats a popular plugin with bad scores in pub.dev's search ranking.</p>
+
+<h2>Verified publisher: a trust multiplier</h2>
+<p>The shield icon next to my publisher name on <a href="https://pub.dev/packages/document_scanner_flutter" rel="noopener">pub.dev</a> means the package is published under a verified domain (<code>ishaqhassan.com</code>). Setting it up requires DNS TXT verification, takes 10 minutes, and meaningfully shifts pub.dev's trust signal. If you publish more than one plugin, get verified.</p>
+
+<h2>The support burden nobody mentions</h2>
+<p>The thing they don't tell you about publishing a plugin: if it's any good, you'll get issues forever. Most issues will be:</p>
+<ul>
+  <li>"It doesn't work" with no reproduction steps</li>
+  <li>"Crashes on Android 14" without a stack trace</li>
+  <li>"How do I do X?" where X is in the README</li>
+</ul>
+<p>You can either burn out or build templates. I have a GitHub issue template that asks for the Flutter doctor output, the platform, the OS version, and a code snippet. Issues without these get a polite "please update with more info" and auto-close after 2 weeks of no response. This single change took me from 30 minutes per issue to 5.</p>
+
+<h2>What I'd build differently in 2026</h2>
+<ul>
+  <li><strong>Use Pigeon from day one.</strong> Pigeon is Flutter's official tool for type-safe platform channels. Hand-rolled MethodChannel is fine until your API surface grows, then it becomes a maintenance trap.</li>
+  <li><strong>Federated from second platform.</strong> Once Android worked, I should have federated before adding iOS, not after.</li>
+  <li><strong>Native UI in dev mode only.</strong> Most Flutter plugins fight to render their own UI in Flutter. For complex flows like document scanning, the system UI is faster, accessible, and free. I shipped Flutter UI on top of native first; I'd ship native-only now.</li>
+  <li><strong>Snapshot tests for the native bridge.</strong> Capture the JSON payload from each method call and snapshot it. Catches contract drift early.</li>
+</ul>
+
+<h2>The full roster</h2>
+<p>document_scanner_flutter is the most-liked package in <a href="/open-source/">my open source list</a>, but it's not the only one. <a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" rel="noopener">flutter_alarm_background_trigger</a> is a scheduled-alarm plugin for Android. <a href="https://github.com/ishaquehassan/assets_indexer" rel="noopener">assets_indexer</a> is a build-time Dart code generator that produces strongly-typed asset references. <a href="https://github.com/ishaquehassan/nadra_verisys_flutter" rel="noopener">nadra_verisys_flutter</a> wraps Pakistan's NADRA Verisys CNIC verification SDK.</p>
+<p>Each of those packages has a similar shape: a small Dart API, a focused native or build-time bridge, comprehensive README, and ongoing user support. Each took roughly 6 to 10 weeks to ship to a production-quality state.</p>
+
+<h2>Where to go from here</h2>
+<p>If you're building your first Flutter plugin, start by reading <a href="https://docs.flutter.dev/packages-and-plugins/developing-packages" rel="noopener">Flutter's official plugin guide</a>. Then read the source of two or three popular plugins on pub.dev to see what production-quality looks like. Then write yours, ship at 0.1.0, and iterate based on real user issues.</p>
+<p>The <a href="/blog/flutter-three-tree-architecture-explained.html">three-tree architecture deep dive</a> on this site explains why Flutter's rendering pipeline imposes the constraints plugins must respect. The <a href="/flutter-contributions/">framework contributions page</a> lists the merged PRs into Flutter itself, which is the next step up from publishing a plugin: contributing to the framework that hosts every plugin.</p>
+
+<div class="cta-box">
+  <h3>Need a custom Flutter plugin?</h3>
+  <p>Custom Flutter plugins, native bridge work, and SDK wrapping are common <a href="/flutter-consultant.html">Flutter consulting engagements</a>. <a href="/contact/">Get in touch</a> if you have a native API that needs a Flutter front end.</p>
+  <a class="cta-btn" href="/contact/">Contact</a>
+</div>
+
+<hr>
+
+<h2>Related reading</h2>
+<ul>
+  <li><a href="/open-source/">Open-source Flutter packages by Ishaq Hassan</a></li>
+  <li><a href="/blog/how-i-got-6-prs-merged-into-flutter.html">How I got 6 PRs merged into Flutter</a></li>
+  <li><a href="/blog/flutter-three-tree-architecture-explained.html">Flutter's three-tree architecture explained</a></li>
+  <li><a href="/blog/flutter-state-management-2026-guide.html">Flutter state management 2026 decision guide</a></li>
+</ul>
+
+<p style="margin-top:48px;text-align:center;color:#94a3b8;font-size:14px"><a href="/" style="color:#cbd5e1">&larr; Back to ishaqhassan.dev</a></p>
+
+</div>
+</body>
+</html>
