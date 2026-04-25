@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#0a0f1f"/>
+    <stop offset="0.4" stop-color="#0e2741"/>
+    <stop offset="1" stop-color="#1e0e41"/>
+  </linearGradient>
+  <radialGradient id="glow1" cx="980" cy="180" r="380" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#7dd3fc" stop-opacity="0.45"/>
+    <stop offset="1" stop-color="#7dd3fc" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="glow2" cx="220" cy="540" r="300" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#a78bfa" stop-opacity="0.35"/>
+    <stop offset="1" stop-color="#a78bfa" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="trunk" x1="0" y1="337" x2="1200" y2="337" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#22c55e"/>
+    <stop offset="0.6" stop-color="#7dd3fc"/>
+    <stop offset="1" stop-color="#7dd3fc"/>
+  </linearGradient>
+  <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="2.5"/>
+  </filter>
+</defs>
+<rect width="1200" height="675" fill="url(#bg)"/>
+<rect width="1200" height="675" fill="url(#glow1)"/>
+<rect width="1200" height="675" fill="url(#glow2)"/>
+<g opacity="0.08" stroke="#fff" stroke-width="1" fill="none">
+  <path d="M0 100 H1200 M0 200 H1200 M0 300 H1200 M0 400 H1200 M0 500 H1200 M0 600 H1200"/>
+</g>
+<g stroke-linecap="round" stroke-linejoin="round" fill="none">
+  <path d="M40 165 C 240 165, 280 220, 360 220 L 1100 220" stroke="#22c55e" stroke-width="4" opacity="0.55"/>
+  <path d="M40 245 C 220 245, 270 295, 360 295 L 1100 295" stroke="#22c55e" stroke-width="4" opacity="0.55"/>
+  <path d="M40 320 L 1100 320" stroke="url(#trunk)" stroke-width="6"/>
+  <path d="M40 395 C 220 395, 270 380, 360 380 L 1100 380" stroke="#22c55e" stroke-width="4" opacity="0.55"/>
+  <path d="M40 470 C 240 470, 280 425, 360 425 L 1100 425" stroke="#22c55e" stroke-width="4" opacity="0.55"/>
+  <path d="M40 545 C 240 545, 280 470, 360 470 L 1100 470" stroke="#22c55e" stroke-width="4" opacity="0.5"/>
+</g>
+<g>
+  <circle cx="120" cy="165" r="14" fill="#22c55e"/>
+  <circle cx="120" cy="245" r="14" fill="#22c55e"/>
+  <circle cx="120" cy="320" r="18" fill="#7dd3fc"/>
+  <circle cx="120" cy="395" r="14" fill="#22c55e"/>
+  <circle cx="120" cy="470" r="14" fill="#22c55e"/>
+  <circle cx="120" cy="545" r="14" fill="#22c55e"/>
+</g>
+<g>
+  <circle cx="360" cy="320" r="36" fill="#7dd3fc" filter="url(#soft)" opacity="0.6"/>
+  <circle cx="360" cy="320" r="22" fill="#0b1120" stroke="#7dd3fc" stroke-width="3"/>
+  <text x="360" y="328" text-anchor="middle" fill="#7dd3fc" font-family="SF Pro Display, system-ui, sans-serif" font-size="18" font-weight="800">⚙</text>
+</g>
+<g transform="translate(900 320)">
+  <circle r="80" fill="#0b1120" opacity="0.65"/>
+  <circle r="80" fill="none" stroke="#22c55e" stroke-width="3"/>
+  <text y="6" text-anchor="middle" fill="#fff" font-family="SF Pro Display, system-ui, sans-serif" font-size="46" font-weight="900" letter-spacing="-1">6</text>
+  <text y="34" text-anchor="middle" fill="#22c55e" font-family="SF Pro Display, system-ui, sans-serif" font-size="11" font-weight="700" letter-spacing="3">MERGED</text>
+</g>
+<g font-family="SF Pro Display, system-ui, sans-serif">
+  <text x="60" y="60" fill="#7dd3fc" font-size="14" font-weight="700" letter-spacing="3">FLUTTER · OPEN SOURCE · PAKISTAN</text>
+  <text x="60" y="640" fill="rgba(255,255,255,0.55)" font-size="13" font-weight="600" letter-spacing="2">flutter/flutter — pulls?author=ishaquehassan</text>
+</g>
+</svg>

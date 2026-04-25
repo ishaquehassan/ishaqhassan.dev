@@ -6,6 +6,7 @@ Contact: hello@ishaqhassan.dev
 GitHub: @ishaquehassan
 LinkedIn: ishaquehassan
 Medium: @ishaqhassan
+Dev.to: @ishaquehassan
 Twitter: @ishaque_hassan
 YouTube: @ishaquehassan
 
@@ -20,5 +21,6 @@ Built with: Vanilla HTML, CSS, JavaScript, SVG
 Interactive desktop: 13 windows, macOS-style chrome, live Snake game
 Hosted: nginx at 159.65.105.177
 Deploy: GitHub Actions auto-deploy on push to main
-SEO: 100% across 29-check audit on 12 directory pages + 16-check home
+SEO: 100% across 29-check audit on 22 directory pages + 16-check home (12 windows + 1 articles hub + 9 per-article pages)
+Articles: cross-platform index — 9 articles across Site, Medium, Dev.to with sameAs declarations
 AI-friendly: llms.txt, llms-full.txt, ai.txt

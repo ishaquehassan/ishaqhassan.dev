@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#3a0a01"/>
+    <stop offset="0.5" stop-color="#7c2d12"/>
+    <stop offset="1" stop-color="#1e0a39"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="600" cy="280" r="450" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#f59e0b" stop-opacity="0.45"/>
+    <stop offset="0.6" stop-color="#a855f7" stop-opacity="0.25"/>
+    <stop offset="1" stop-color="#a855f7" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fbbf24"/>
+    <stop offset="0.5" stop-color="#f97316"/>
+    <stop offset="1" stop-color="#dc2626"/>
+  </linearGradient>
+</defs>
+<rect width="1200" height="675" fill="url(#bg)"/>
+<rect width="1200" height="675" fill="url(#glow)"/>
+<g transform="translate(380 337)">
+  <path d="M -60 80 C -90 30, -50 -20, -10 -90 C 10 -40, 60 -20, 50 50 C 40 90, 0 100, -60 80 Z"
+        fill="url(#flame)" stroke="#fff" stroke-width="2" opacity="0.95"/>
+  <path d="M -30 60 C -45 20, -25 -10, -10 -50 C 5 -20, 30 -10, 25 30 C 18 60, -10 75, -30 60 Z"
+        fill="#fbbf24" opacity="0.7"/>
+</g>
+<g transform="translate(820 337)" font-family="SF Pro Display, system-ui, sans-serif">
+  <rect x="-100" y="-100" width="200" height="200" rx="32" fill="#0b1120" stroke="#a855f7" stroke-width="3"/>
+  <text y="40" text-anchor="middle" fill="#a855f7" font-size="160" font-weight="900" letter-spacing="-8">K</text>
+  <text x="0" y="-115" text-anchor="middle" fill="#a855f7" font-size="13" font-weight="700" letter-spacing="3">KOTLIN</text>
+</g>
+<g stroke-linecap="round" fill="none" opacity="0.95">
+  <path d="M 470 337 L 700 337" stroke="#fbbf24" stroke-width="4" stroke-dasharray="6 10"/>
+  <polygon points="700,331 720,337 700,343" fill="#fbbf24"/>
+</g>
+<g font-family="SF Pro Display, system-ui, sans-serif">
+  <text x="600" y="290" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="800" letter-spacing="3">CLOUD FUNCTIONS</text>
+  <text x="600" y="384" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="12" font-weight="700" letter-spacing="2">via GraalVM Native Image</text>
+  <text x="60" y="60" fill="#fbbf24" font-size="14" font-weight="700" letter-spacing="3">FIREBASE · BACKEND</text>
+  <text x="60" y="640" fill="rgba(255,255,255,0.55)" font-size="13" font-weight="600" letter-spacing="2">Type-safe · Native · Cold-start tuned</text>
+</g>
+</svg>

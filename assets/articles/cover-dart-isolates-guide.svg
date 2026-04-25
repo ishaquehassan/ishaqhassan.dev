@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#0b1120"/>
+    <stop offset="0.5" stop-color="#1e1b4b"/>
+    <stop offset="1" stop-color="#1e0a2e"/>
+  </linearGradient>
+  <radialGradient id="g1" cx="280" cy="337" r="280" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#7dd3fc" stop-opacity="0.4"/>
+    <stop offset="1" stop-color="#7dd3fc" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="g2" cx="900" cy="337" r="280" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#a78bfa" stop-opacity="0.4"/>
+    <stop offset="1" stop-color="#a78bfa" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<rect width="1200" height="675" fill="url(#bg)"/>
+<rect width="1200" height="675" fill="url(#g1)"/>
+<rect width="1200" height="675" fill="url(#g2)"/>
+<g transform="translate(280 337)" font-family="SF Pro Display, system-ui, sans-serif">
+  <rect x="-110" y="-90" width="220" height="180" rx="14" fill="#0b1120" stroke="#7dd3fc" stroke-width="3"/>
+  <rect x="-110" y="-90" width="220" height="36" rx="14" fill="#7dd3fc"/>
+  <rect x="-110" y="-72" width="220" height="18" fill="#7dd3fc"/>
+  <text x="0" y="-66" text-anchor="middle" fill="#0b1120" font-size="13" font-weight="900" letter-spacing="2">ISOLATE A</text>
+  <circle cx="-58" cy="0" r="7" fill="#7dd3fc"/>
+  <circle cx="-22" cy="0" r="7" fill="#7dd3fc" opacity="0.7"/>
+  <circle cx="14" cy="0" r="7" fill="#7dd3fc" opacity="0.4"/>
+  <text x="0" y="50" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-size="12" font-weight="600">heap · stack</text>
+  <text x="0" y="74" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-size="12" font-weight="600">no shared memory</text>
+</g>
+<g transform="translate(900 337)" font-family="SF Pro Display, system-ui, sans-serif">
+  <rect x="-110" y="-90" width="220" height="180" rx="14" fill="#0b1120" stroke="#a78bfa" stroke-width="3"/>
+  <rect x="-110" y="-90" width="220" height="36" rx="14" fill="#a78bfa"/>
+  <rect x="-110" y="-72" width="220" height="18" fill="#a78bfa"/>
+  <text x="0" y="-66" text-anchor="middle" fill="#0b1120" font-size="13" font-weight="900" letter-spacing="2">ISOLATE B</text>
+  <circle cx="-58" cy="0" r="7" fill="#a78bfa" opacity="0.4"/>
+  <circle cx="-22" cy="0" r="7" fill="#a78bfa" opacity="0.7"/>
+  <circle cx="14" cy="0" r="7" fill="#a78bfa"/>
+  <text x="0" y="50" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-size="12" font-weight="600">heap · stack</text>
+  <text x="0" y="74" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-size="12" font-weight="600">no shared memory</text>
+</g>
+<g stroke-linecap="round" fill="none">
+  <path d="M 410 320 L 770 320" stroke="#7dd3fc" stroke-width="3" stroke-dasharray="6 8" opacity="0.85"/>
+  <path d="M 770 354 L 410 354" stroke="#a78bfa" stroke-width="3" stroke-dasharray="6 8" opacity="0.85"/>
+  <polygon points="770,314 786,320 770,326" fill="#7dd3fc"/>
+  <polygon points="410,348 394,354 410,360" fill="#a78bfa"/>
+</g>
+<g font-family="SF Pro Display, system-ui, sans-serif">
+  <text x="600" y="290" text-anchor="middle" fill="#7dd3fc" font-size="13" font-weight="700" letter-spacing="2">SendPort</text>
+  <text x="600" y="384" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="700" letter-spacing="2">ReceivePort</text>
+  <text x="60" y="60" fill="#7dd3fc" font-size="14" font-weight="700" letter-spacing="3">DART · CONCURRENCY</text>
+  <text x="60" y="640" fill="rgba(255,255,255,0.55)" font-size="13" font-weight="600" letter-spacing="2">spawn() · compute() · TransferableTypedData</text>
+</g>
+</svg>

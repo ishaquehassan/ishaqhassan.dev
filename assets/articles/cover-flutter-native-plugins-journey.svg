@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#020617"/>
+    <stop offset="0.5" stop-color="#082f49"/>
+    <stop offset="1" stop-color="#1e293b"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="600" cy="337" r="500" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#06b6d4" stop-opacity="0.35"/>
+    <stop offset="1" stop-color="#06b6d4" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<rect width="1200" height="675" fill="url(#bg)"/>
+<rect width="1200" height="675" fill="url(#glow)"/>
+<g transform="translate(280 337)" font-family="SF Pro Display, system-ui, sans-serif">
+  <rect x="-90" y="-150" width="180" height="300" rx="22" fill="#0b1120" stroke="#fff" stroke-width="3"/>
+  <rect x="-78" y="-138" width="156" height="276" rx="14" fill="rgba(125,211,252,0.08)"/>
+  <circle cx="0" cy="-130" r="4" fill="#fff" opacity="0.4"/>
+  <text x="0" y="-50" text-anchor="middle" fill="#fff" font-size="40" font-weight="900"></text>
+  <text x="0" y="0" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="11" font-weight="600" letter-spacing="2">SWIFT · UIKit</text>
+  <text x="0" y="200" text-anchor="middle" fill="#fff" font-size="13" font-weight="700" letter-spacing="2">iOS</text>
+</g>
+<g transform="translate(920 337)" font-family="SF Pro Display, system-ui, sans-serif">
+  <rect x="-90" y="-150" width="180" height="300" rx="22" fill="#0b1120" stroke="#a4e635" stroke-width="3"/>
+  <rect x="-78" y="-138" width="156" height="276" rx="14" fill="rgba(164,230,53,0.08)"/>
+  <text x="0" y="-30" text-anchor="middle" fill="#a4e635" font-size="38" font-weight="900">▶</text>
+  <text x="0" y="0" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="11" font-weight="600" letter-spacing="2">KOTLIN · ANDROID</text>
+  <text x="0" y="200" text-anchor="middle" fill="#fff" font-size="13" font-weight="700" letter-spacing="2">Android</text>
+</g>
+<g transform="translate(600 337)" font-family="SF Pro Display, system-ui, sans-serif">
+  <rect x="-110" y="-50" width="220" height="100" rx="14" fill="#0b1120" stroke="#06b6d4" stroke-width="3"/>
+  <text y="-12" text-anchor="middle" fill="#06b6d4" font-size="11" font-weight="700" letter-spacing="3">METHOD CHANNEL</text>
+  <text y="22" text-anchor="middle" fill="#fff" font-size="20" font-weight="900" letter-spacing="-1">platform.invokeMethod</text>
+</g>
+<g stroke-linecap="round" fill="none" opacity="0.9">
+  <path d="M 380 320 L 480 320" stroke="#7dd3fc" stroke-width="3"/>
+  <path d="M 720 320 L 820 320" stroke="#a4e635" stroke-width="3"/>
+  <polygon points="478,314 494,320 478,326" fill="#7dd3fc"/>
+  <polygon points="822,314 806,320 822,326" fill="#a4e635" transform="translate(0 0)"/>
+  <path d="M 380 354 L 480 354" stroke="#7dd3fc" stroke-width="3" opacity="0.4"/>
+  <path d="M 720 354 L 820 354" stroke="#a4e635" stroke-width="3" opacity="0.4"/>
+  <polygon points="382,348 366,354 382,360" fill="#7dd3fc" opacity="0.7"/>
+  <polygon points="718,348 734,354 718,360" fill="#a4e635" opacity="0.7" transform="translate(0 0)"/>
+</g>
+<g font-family="SF Pro Display, system-ui, sans-serif">
+  <text x="60" y="60" fill="#06b6d4" font-size="14" font-weight="700" letter-spacing="3">FLUTTER · NATIVE PLUGIN DEVELOPMENT</text>
+  <text x="60" y="640" fill="rgba(255,255,255,0.55)" font-size="13" font-weight="600" letter-spacing="2">PlatformView · EventChannel · Federated</text>
+</g>
+</svg>

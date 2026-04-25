@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#04140d"/>
+    <stop offset="0.5" stop-color="#082731"/>
+    <stop offset="1" stop-color="#0c1a3a"/>
+  </linearGradient>
+  <radialGradient id="g1" cx="200" cy="540" r="380" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#22c55e" stop-opacity="0.45"/>
+    <stop offset="1" stop-color="#22c55e" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="g2" cx="600" cy="540" r="380" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#7dd3fc" stop-opacity="0.4"/>
+    <stop offset="1" stop-color="#7dd3fc" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="g3" cx="1000" cy="540" r="380" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#a78bfa" stop-opacity="0.45"/>
+    <stop offset="1" stop-color="#a78bfa" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<rect width="1200" height="675" fill="url(#bg)"/>
+<rect width="1200" height="675" fill="url(#g1)"/>
+<rect width="1200" height="675" fill="url(#g2)"/>
+<rect width="1200" height="675" fill="url(#g3)"/>
+<g stroke-linecap="round" fill="none" opacity="0.55">
+  <line x1="200" y1="280" x2="600" y2="280" stroke="#7dd3fc" stroke-width="2" stroke-dasharray="4 6"/>
+  <line x1="600" y1="280" x2="1000" y2="280" stroke="#a78bfa" stroke-width="2" stroke-dasharray="4 6"/>
+</g>
+<g transform="translate(200 360)" font-family="SF Pro Display, system-ui, sans-serif">
+  <circle r="44" fill="#0b1120" stroke="#22c55e" stroke-width="3" opacity="0.95"/>
+  <path d="M0 -56 L0 -88 M-22 -32 L-44 -56 M22 -32 L44 -56 M-32 0 L-72 -8 M32 0 L72 -8 M-22 32 L-44 56 M22 32 L44 56 M0 56 L0 88" stroke="#22c55e" stroke-width="2.5" opacity="0.7"/>
+  <circle cx="0" cy="-90" r="8" fill="#22c55e"/>
+  <circle cx="-46" cy="-58" r="6" fill="#22c55e" opacity="0.7"/>
+  <circle cx="46" cy="-58" r="6" fill="#22c55e" opacity="0.7"/>
+  <circle cx="-74" cy="-10" r="6" fill="#22c55e" opacity="0.7"/>
+  <circle cx="74" cy="-10" r="6" fill="#22c55e" opacity="0.7"/>
+  <circle cx="-46" cy="58" r="6" fill="#22c55e" opacity="0.7"/>
+  <circle cx="46" cy="58" r="6" fill="#22c55e" opacity="0.7"/>
+  <circle cx="0" cy="90" r="6" fill="#22c55e" opacity="0.7"/>
+  <text y="6" text-anchor="middle" fill="#22c55e" font-size="16" font-weight="900">W</text>
+  <text y="156" text-anchor="middle" fill="#22c55e" font-size="13" font-weight="800" letter-spacing="3">WIDGET</text>
+</g>
+<g transform="translate(600 360)" font-family="SF Pro Display, system-ui, sans-serif">
+  <circle r="50" fill="#0b1120" stroke="#7dd3fc" stroke-width="3.5"/>
+  <circle r="62" fill="none" stroke="#7dd3fc" stroke-width="1" opacity="0.4"/>
+  <path d="M0 -68 L0 -110 M-28 -40 L-58 -72 M28 -40 L58 -72 M-40 0 L-92 -8 M40 0 L92 -8 M-28 40 L-58 72 M28 40 L58 72 M0 68 L0 110" stroke="#7dd3fc" stroke-width="3" opacity="0.85"/>
+  <circle cx="0" cy="-114" r="9" fill="#7dd3fc"/>
+  <circle cx="-60" cy="-74" r="7" fill="#7dd3fc"/>
+  <circle cx="60" cy="-74" r="7" fill="#7dd3fc"/>
+  <circle cx="-94" cy="-10" r="7" fill="#7dd3fc"/>
+  <circle cx="94" cy="-10" r="7" fill="#7dd3fc"/>
+  <circle cx="-60" cy="74" r="7" fill="#7dd3fc"/>
+  <circle cx="60" cy="74" r="7" fill="#7dd3fc"/>
+  <circle cx="0" cy="114" r="9" fill="#7dd3fc"/>
+  <text y="7" text-anchor="middle" fill="#7dd3fc" font-size="18" font-weight="900">E</text>
+  <text y="178" text-anchor="middle" fill="#7dd3fc" font-size="13" font-weight="800" letter-spacing="3">ELEMENT</text>
+</g>
+<g transform="translate(1000 360)" font-family="SF Pro Display, system-ui, sans-serif">
+  <circle r="44" fill="#0b1120" stroke="#a78bfa" stroke-width="3"/>
+  <path d="M0 -56 L0 -88 M-22 -32 L-44 -56 M22 -32 L44 -56 M-32 0 L-72 -8 M32 0 L72 -8 M-22 32 L-44 56 M22 32 L44 56 M0 56 L0 88" stroke="#a78bfa" stroke-width="2.5" opacity="0.7"/>
+  <rect x="-8" y="-98" width="16" height="16" fill="#a78bfa"/>
+  <rect x="-54" y="-66" width="14" height="14" fill="#a78bfa" opacity="0.7"/>
+  <rect x="40" y="-66" width="14" height="14" fill="#a78bfa" opacity="0.7"/>
+  <rect x="-82" y="-18" width="14" height="14" fill="#a78bfa" opacity="0.7"/>
+  <rect x="68" y="-18" width="14" height="14" fill="#a78bfa" opacity="0.7"/>
+  <rect x="-54" y="50" width="14" height="14" fill="#a78bfa" opacity="0.7"/>
+  <rect x="40" y="50" width="14" height="14" fill="#a78bfa" opacity="0.7"/>
+  <rect x="-8" y="82" width="16" height="16" fill="#a78bfa"/>
+  <text y="6" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="900">RO</text>
+  <text y="156" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="800" letter-spacing="3">RENDER OBJ</text>
+</g>
+<g font-family="SF Pro Display, system-ui, sans-serif">
+  <text x="60" y="60" fill="#7dd3fc" font-size="14" font-weight="700" letter-spacing="3">FLUTTER · FRAMEWORK INTERNALS</text>
+  <text x="600" y="640" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="13" font-weight="600" letter-spacing="2">configure → mount → paint</text>
+</g>
+</svg>

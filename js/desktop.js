@@ -481,11 +481,21 @@ function closeMobileSection(section) {
     'snake': 'mobile-snake-expanded',
     'github': 'mobile-github-expanded',
     'linkedin': 'mobile-linkedin-expanded',
-    'medium': 'mobile-medium-expanded',
     'flutter-course': 'mobile-flutter-course-expanded'
   };
   if (section === 'flutter-course' && typeof stopAllFlutterCourseVideos === 'function') stopAllFlutterCourseVideos();
   if (section === 'snake' && typeof mobSnakeUnlockScroll === 'function') mobSnakeUnlockScroll();
+  if (section === 'articles') {
+    var artStage = document.getElementById('mob-articles-stage');
+    if (artStage) artStage.classList.remove('mob-articles-stage-detail');
+    // Revert /articles/ URLs to / when user closes the section.
+    try {
+      if (typeof windowIdFromCurrentUrl === 'function' && windowIdFromCurrentUrl() === 'articles') {
+        history.pushState({}, '', '/');
+        if (typeof updateMetaForWindow === 'function') updateMetaForWindow(null);
+      }
+    } catch (e) {}
+  }
   const elem = document.getElementById(map[section]);
   if (elem) {
     elem.classList.add('closing');

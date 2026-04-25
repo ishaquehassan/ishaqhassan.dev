@@ -505,6 +505,12 @@ function closeWindow(id) {
   if (id === 'snake') snakeReset();
   if (id === 'flutter-course') stopAllFlutterCourseVideos();
   if (id === 'fc-player') { var pif = document.getElementById('fc-pw-iframe'); if (pif) pif.src = ''; fcCurrentVideo = null; }
+  if (id === 'articles') {
+    var stage = document.getElementById('articles-stage');
+    if (stage) stage.classList.remove('articles-stage-detail');
+    win.classList.remove('articles-detail-mode');
+    try { if (typeof _deeplinkCentered !== 'undefined') _deeplinkCentered.articles = false; } catch(e) {}
+  }
   win.classList.add('closing');
   setTimeout(() => {
     win.classList.remove('open','closing','hidden-desktop');
@@ -1157,13 +1163,16 @@ var spotlightIndex = [
   {t:'Linux',s:'Tools & DevOps, Server',w:'tech',cat:'Technology',icon:'🐧',p:60},
   {t:'Claude AI',s:'Tools & DevOps, AI Assistant',w:'tech',cat:'Technology',icon:'🤖',p:60},
 
-  // Articles
-  {t:'Dart Isolates: The Missing Guide',s:'5 min read, Concurrency, Performance',w:'articles',cat:'Articles',icon:'🧩',el:'#win-articles .article-card:nth-child(1)',p:70},
-  {t:"Flutter's Three-Tree Architecture",s:'4 min read, Flutter Internals',w:'articles',cat:'Articles',icon:'🌳',el:'#win-articles .article-card:nth-child(2)',p:70},
-  {t:"PRs Merged Into Flutter's Repository",s:'5 min read, 52 claps, Open Source',w:'articles',cat:'Articles',icon:'🔀',el:'#win-articles .article-card:nth-child(3)',p:70},
-  {t:'Flutter Native Plugin Development',s:'3 min read, iOS, Android',w:'articles',cat:'Articles',icon:'📱',el:'#win-articles .article-card:nth-child(4)',p:70},
-  {t:'Indexing Assets in a Dart Class',s:'4 min read, Nerd For Tech',w:'articles',cat:'Articles',icon:'📁',el:'#win-articles .article-card:nth-child(5)',p:70},
-  {t:'Firebase Cloud Functions Using Kotlin',s:'3 min read, Firebase, Kotlin',w:'articles',cat:'Articles',icon:'🔥',el:'#win-articles .article-card:nth-child(6)',p:70},
+  // Articles (each opens its detail view via navigate('articles', {slug}))
+  {t:'How I Got 6 PRs Merged Into Flutter Framework',s:'10 min read, Site + Medium + Dev.to',w:'articles',slug:'flutter-prs-merged',cat:'Articles',icon:'🔀',p:75},
+  {t:"Flutter's Three-Tree Architecture Explained",s:'12 min read, Site + Medium + Dev.to',w:'articles',slug:'flutter-three-tree-architecture',cat:'Articles',icon:'🌳',p:75},
+  {t:'Flutter State Management 2026: Decision Guide',s:'14 min read, Site + Dev.to',w:'articles',slug:'flutter-state-management-2026',cat:'Articles',icon:'⚛️',p:75},
+  {t:'Building Production Flutter Plugins (156-Likes Case Study)',s:'11 min read, Site + Dev.to',w:'articles',slug:'flutter-plugins-case-study',cat:'Articles',icon:'🧩',p:75},
+  {t:'Dart Isolates: The Missing Guide',s:'8 min read, Medium',w:'articles',slug:'dart-isolates-guide',cat:'Articles',icon:'🧩',p:70},
+  {t:'A Journey with Flutter Native Plugin Development',s:'7 min read, Medium (Nerd For Tech)',w:'articles',slug:'flutter-native-plugins-journey',cat:'Articles',icon:'📱',p:70},
+  {t:'Indexing Assets in a Dart Class (R.java pattern)',s:'6 min read, Medium (Nerd For Tech)',w:'articles',slug:'dart-asset-indexing',cat:'Articles',icon:'📁',p:70},
+  {t:'Firebase Cloud Functions Using Kotlin',s:'5 min read, Medium',w:'articles',slug:'firebase-kotlin-functions',cat:'Articles',icon:'🔥',p:70},
+  {t:'DevnCode Meetup IV: Artificial Intelligence',s:'4 min read, Medium (DevnCode)',w:'articles',slug:'devncode-meetup-iv-ai',cat:'Articles',icon:'🤖',p:65},
 
   // Contact
   {t:'Email',s:'hello@ishaqhassan.dev',w:'contact',cat:'Contact',icon:'📧',p:60},
@@ -1314,7 +1323,8 @@ function activateSpotlightItem(idx) {
 
   setTimeout(function() {
     if (window.innerWidth > 768) {
-      if (typeof navigate === 'function') navigate(item.w); else openWindow(item.w);
+      var navOpts = item.slug ? { slug: item.slug } : undefined;
+      if (typeof navigate === 'function') navigate(item.w, navOpts); else openWindow(item.w);
       if (item.el) {
         setTimeout(function() {
           var el = document.querySelector(item.el);
@@ -1336,6 +1346,9 @@ function activateSpotlightItem(idx) {
       var mobileMap = {about:'about',flutter:'prs',speaking:'speaking',oss:'oss',tech:'tech',articles:'articles',contact:'connect',github:'github',linkedin:'linkedin',snake:'snake','flutter-course':'flutter-course'};
       var section = mobileMap[item.w] || item.w;
       if (typeof expandMobileSection === 'function') expandMobileSection(null, section);
+      if (item.slug && item.w === 'articles' && typeof window.mobOpenArticle === 'function') {
+        setTimeout(function(){ try { window.mobOpenArticle(item.slug); } catch(e) {} }, 320);
+      }
     }
   }, 150);
 }
@@ -1706,7 +1719,7 @@ var WINDOW_PATHS = {
   speaking: '/speaking',
   oss: '/open-source',
   tech: '/tech-stack',
-  articles: '/medium-articles',
+  articles: '/articles',
   contact: '/contact',
   github: '/github',
   linkedin: '/linkedin',
@@ -1742,7 +1755,7 @@ var WINDOW_META = {
   speaking:        { title: 'Speaking & Tech Talks | Ishaq Hassan',                               desc: 'Flutter bootcamps, GDG events, university seminars and community meetups.' },
   oss:             { title: 'Open Source Projects | Ishaq Hassan',                                desc: 'Open-source Flutter packages, Dart tools and developer utilities on pub.dev and GitHub.' },
   tech:            { title: 'Tech Stack & Tools | Ishaq Hassan',                                  desc: 'Flutter, Dart, Firebase, Node, Next.js, Rust and the broader stack behind 50+ production apps.' },
-  articles:        { title: 'Medium Articles | Ishaq Hassan',                                     desc: 'Long-form technical writing: Dart isolates, Flutter three-tree architecture, Firebase and more.' },
+  articles:        { title: 'Articles | Ishaq Hassan: Flutter, Dart & Engineering Writing',       desc: 'Cross-platform article hub: Flutter framework deep-dives, Dart isolates, plugin development. Read on site, Medium or Dev.to.' },
   contact:         { title: 'Contact Ishaq Hassan',                                               desc: 'Reach out for Flutter consulting, speaking engagements, or collaboration.' },
   github:          { title: 'GitHub Profile | Ishaq Hassan',                                      desc: 'Open source repos, pub.dev packages, Flutter framework PRs and contribution heatmap.' },
   linkedin:        { title: 'LinkedIn Profile | Ishaq Hassan',                                    desc: 'Engineering Manager at DigitalHire, Flutter Framework Contributor, 13+ years of experience.' },
@@ -1757,7 +1770,20 @@ function windowIdFromCurrentUrl() {
     var p = sp.get('w');
     if (p && WINDOW_PATHS[p]) return p;
     var path = location.pathname.replace(/\/+$/, '') || '/';
-    return PATH_TO_WINDOW[path] || null;
+    if (PATH_TO_WINDOW[path]) return PATH_TO_WINDOW[path];
+    // Per-article deep link: /articles/<slug>/ maps to articles window.
+    if (/^\/articles\/[a-z0-9-]+$/i.test(path)) return 'articles';
+    return null;
+  } catch (e) { return null; }
+}
+
+function articleSlugFromCurrentUrl() {
+  try {
+    var path = (location.pathname || '').replace(/\/+$/, '');
+    var m = path.match(/^\/articles\/([a-z0-9-]+)$/i);
+    if (m) return m[1];
+    var sp = new URLSearchParams(location.search);
+    return sp.get('a') || null;
   } catch (e) { return null; }
 }
 
@@ -1829,14 +1855,21 @@ function applyUrlRoute(shouldMaximize) {
       // `about` and `wisesend` have no mobile surface — we keep the URL + meta and show home.
       var mid = windowIdFromCurrentUrl();
       if (mid) {
+        var mSlug = (mid === 'articles') ? articleSlugFromCurrentUrl() : null;
         // Canonicalise URL first (?w=X → pretty path) and update share metadata
         if (location.search.indexOf('w=') !== -1 && WINDOW_PATHS[mid]) {
-          try { history.replaceState({w: mid}, '', WINDOW_PATHS[mid]); } catch(e) {}
+          var canonical = WINDOW_PATHS[mid] + (mSlug ? '/' + mSlug + '/' : '');
+          try { history.replaceState({w: mid, slug: mSlug || null}, '', canonical); } catch(e) {}
         }
         updateMetaForWindow(mid);
         var section = MOBILE_SECTION_MAP[mid];
         if (section && typeof expandMobileSection === 'function') {
-          setTimeout(function(){ try { expandMobileSection(null, section); } catch(e) {} }, 300);
+          setTimeout(function(){
+            try { expandMobileSection(null, section); } catch(e) {}
+            if (mSlug && typeof window.mobOpenArticle === 'function') {
+              try { window.mobOpenArticle(mSlug); } catch(e) {}
+            }
+          }, 300);
         }
       }
       return;
@@ -1857,10 +1890,20 @@ function applyUrlRoute(shouldMaximize) {
     // ALWAYS bump z-index so URL-specified window sits on top
     win.style.zIndex = ++activeZ;
     if (typeof updateMenuBarForWindow === 'function') updateMenuBarForWindow(id);
+    var deepSlug = (id === 'articles') ? articleSlugFromCurrentUrl() : null;
     if (location.search.indexOf('w=') !== -1) {
-      try { history.replaceState({w: id}, '', WINDOW_PATHS[id]); } catch(e) {}
+      var pretty = WINDOW_PATHS[id] + (deepSlug ? '/' + deepSlug + '/' : '');
+      try { history.replaceState({w: id, slug: deepSlug || null}, '', pretty); } catch(e) {}
     }
     updateMetaForWindow(id);
+    // Articles: switch detail/list view based on URL slug
+    if (id === 'articles') {
+      if (deepSlug && typeof window.renderArticleDetail === 'function') {
+        try { window.renderArticleDetail(deepSlug); } catch(e) {}
+      } else if (typeof window.renderArticleList === 'function') {
+        try { window.renderArticleList(); } catch(e) {}
+      }
+    }
     if (typeof window.__fbLogEvent === 'function') {
       try {
         window.__fbLogEvent('page_view', {
@@ -1877,16 +1920,52 @@ function applyUrlRoute(shouldMaximize) {
   } catch (e) {}
 }
 
-function navigate(id) {
+function navigate(id, opts) {
   openWindow(id);
   if (!WINDOW_PATHS[id]) return;
-  if (location.pathname === WINDOW_PATHS[id]) return;
-  try { history.pushState({w: id}, '', WINDOW_PATHS[id]); } catch (e) {}
+  var slug = (opts && opts.slug) ? String(opts.slug) : null;
+  var path = WINDOW_PATHS[id] + (slug ? '/' + slug + '/' : '');
+  if (location.pathname === path) {
+    // Already at this URL: still re-render the detail view if articles slug provided
+    if (id === 'articles') {
+      if (slug && typeof window.renderArticleDetail === 'function') {
+        try { window.renderArticleDetail(slug); } catch(e) {}
+      } else if (typeof window.renderArticleList === 'function') {
+        try { window.renderArticleList(); } catch(e) {}
+      }
+      // Mobile renderers — same-URL nav from a card tap still needs to flip
+      // the mobile section into detail mode.
+      if (!isDesktopViewport()) {
+        if (slug && typeof window.mobRenderArticleDetail === 'function') {
+          try { window.mobRenderArticleDetail(slug); } catch(e) {}
+        } else if (typeof window.mobRenderArticleList === 'function') {
+          try { window.mobRenderArticleList(); } catch(e) {}
+        }
+      }
+    }
+    return;
+  }
+  try { history.pushState({w: id, slug: slug}, '', path); } catch (e) {}
   updateMetaForWindow(id);
+  // Articles: switch view based on slug presence
+  if (id === 'articles') {
+    if (slug && typeof window.renderArticleDetail === 'function') {
+      try { window.renderArticleDetail(slug); } catch(e) {}
+    } else if (typeof window.renderArticleList === 'function') {
+      try { window.renderArticleList(); } catch(e) {}
+    }
+    if (!isDesktopViewport()) {
+      if (slug && typeof window.mobRenderArticleDetail === 'function') {
+        try { window.mobRenderArticleDetail(slug); } catch(e) {}
+      } else if (typeof window.mobRenderArticleList === 'function') {
+        try { window.mobRenderArticleList(); } catch(e) {}
+      }
+    }
+  }
   if (typeof window.__fbLogEvent === 'function') {
     try {
       window.__fbLogEvent('page_view', {
-        page_path: WINDOW_PATHS[id],
+        page_path: path,
         page_title: (WINDOW_META[id] && WINDOW_META[id].title) || document.title
       });
     } catch(e) {}
@@ -1902,6 +1981,21 @@ window.addEventListener('popstate', function() {
     win.style.zIndex = ++activeZ;
     if (typeof updateMenuBarForWindow === 'function') updateMenuBarForWindow(id);
     updateMetaForWindow(id);
+    if (id === 'articles') {
+      var psSlug = articleSlugFromCurrentUrl();
+      if (psSlug && typeof window.renderArticleDetail === 'function') {
+        try { window.renderArticleDetail(psSlug); } catch(e) {}
+      } else if (typeof window.renderArticleList === 'function') {
+        try { window.renderArticleList(); } catch(e) {}
+      }
+      if (!isDesktopViewport()) {
+        if (psSlug && typeof window.mobRenderArticleDetail === 'function') {
+          try { window.mobRenderArticleDetail(psSlug); } catch(e) {}
+        } else if (typeof window.mobRenderArticleList === 'function') {
+          try { window.mobRenderArticleList(); } catch(e) {}
+        }
+      }
+    }
   } else {
     updateMetaForWindow(null);
   }
@@ -2019,17 +2113,27 @@ var WIN_SIDEBAR = {
     ]
   },
   articles: {
-    accent: 'medium',
-    title: 'Medium',
+    accent: 'cyan',
+    title: 'Articles',
     mode: 'filter',
     sections: [
       { label: 'Library', items: [
-        { target: 'all',          icon: 'all',          text: 'All Stories' },
-        { target: 'flutter',      icon: 'mobile',       text: 'Flutter' },
-        { target: 'architecture', icon: 'package',      text: 'Architecture' },
+        { target: 'all',          icon: 'all',     text: 'All Stories' },
+        { target: 'flutter',      icon: 'mobile',  text: 'Flutter' },
+        { target: 'architecture', icon: 'package', text: 'Architecture' },
+        { target: 'tutorial',     icon: 'book',    text: 'Tutorials' },
+        { target: 'open-source',  icon: 'code',    text: 'Open Source' },
+        { target: 'tip',          icon: 'star',    text: 'Tips' },
+      ]},
+      { label: 'Platforms', items: [
+        { target: 'site',   icon: 'globe',   text: 'On Site' },
+        { target: 'medium', icon: 'book',    text: 'Medium' },
+        { target: 'devto',  icon: 'code',    text: 'Dev.to' },
       ]},
       { label: 'External', items: [
-        { href: 'https://medium.com/@ishaqhassan', icon: 'link', text: 'Read on Medium' },
+        { href: 'https://medium.com/@ishaqhassan', icon: 'link', text: 'Medium Profile' },
+        { href: 'https://dev.to/ishaquehassan',    icon: 'link', text: 'Dev.to Profile' },
+        { href: '/blog/',                          icon: 'link', text: 'On-site Blog' },
       ]}
     ]
   },
@@ -2394,18 +2498,12 @@ function fshellTagFilterCards(winId, content) {
       var wrap = r.closest('a') || r;
       wrap.setAttribute('data-filter-val', tags);
     });
-  } else if (winId === 'articles') {
-    content.querySelectorAll('.article-card, [class*="article"]').forEach(function(a) {
-      var text = (a.textContent || '').toLowerCase();
-      var tags = 'all';
-      if (text.indexOf('flutter') >= 0) tags += ' flutter';
-      if (text.indexOf('architecture') >= 0 || text.indexOf('pattern') >= 0 || text.indexOf('clean') >= 0) tags += ' architecture';
-      if (text.indexOf('tutorial') >= 0 || text.indexOf('step') >= 0) tags += ' tutorial';
-      if (text.indexOf('tip') >= 0 || text.indexOf('trick') >= 0) tags += ' tip';
-      var wrap = a.closest('a') || a;
-      wrap.setAttribute('data-filter-val', tags);
-    });
   }
+  // 'articles' is intentionally skipped here: articles-render.js sets the
+  // canonical data-filter-val tokens (topics + platform) directly from the
+  // ARTICLES data model when it renders cards. Re-tagging based on text
+  // content would lose the platform tokens (site/medium/devto) and break
+  // the platform filter group.
 }
 
 /* Register anchor IDs for scroll-mode windows */
@@ -2570,10 +2668,10 @@ var appMenus = {
     go: '<div class="menu-dd-item" onclick="navigate(\'oss\')">Open Source</div><div class="menu-dd-item" onclick="navigate(\'flutter\')">Flutter PRs</div>'
   },
   articles: {
-    name: 'Medium',
-    nameMenu: '<div class="menu-dd-item disabled">@ishaqhassan on Medium</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Visit Profile on Medium</div>',
-    file: '<div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e\')">Dart Isolates: The Missing Guide</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan/how-flutters-three-tree-architecture-actually-works-953c8cc17226\')">Flutter Three-Tree Architecture</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e\')">PRs Merged Into Flutter</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061\')">Flutter Native Plugin Dev</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb\')">Indexing Assets in Dart</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67\')">Firebase Cloud Functions</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'articles\')">Close Window<span class="shortcut">⌘W</span></div>',
-    go: '<div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Medium Profile</div><div class="menu-dd-item" onclick="navigate(\'flutter\')">Flutter PRs</div>'
+    name: 'Articles',
+    nameMenu: '<div class="menu-dd-item disabled">9 stories across Site + Medium + Dev.to</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="navigate(\'articles\')">All Articles</div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Medium Profile</div><div class="menu-dd-item" onclick="window.open(\'https://dev.to/ishaquehassan\')">Dev.to Profile</div>',
+    file: '<div class="menu-dd-item" onclick="navigate(\'articles\',{slug:\'flutter-prs-merged\'})">How I Got 6 PRs Merged Into Flutter</div><div class="menu-dd-item" onclick="navigate(\'articles\',{slug:\'flutter-three-tree-architecture\'})">Flutter Three-Tree Architecture</div><div class="menu-dd-item" onclick="navigate(\'articles\',{slug:\'flutter-state-management-2026\'})">Flutter State Management 2026</div><div class="menu-dd-item" onclick="navigate(\'articles\',{slug:\'flutter-plugins-case-study\'})">Production Flutter Plugins Case Study</div><div class="menu-dd-item" onclick="navigate(\'articles\',{slug:\'dart-isolates-guide\'})">Dart Isolates: The Missing Guide</div><div class="menu-dd-item" onclick="navigate(\'articles\',{slug:\'flutter-native-plugins-journey\'})">Flutter Native Plugin Development</div><div class="menu-dd-item" onclick="navigate(\'articles\',{slug:\'dart-asset-indexing\'})">Indexing Assets in Dart</div><div class="menu-dd-item" onclick="navigate(\'articles\',{slug:\'firebase-kotlin-functions\'})">Firebase Cloud Functions in Kotlin</div><div class="menu-dd-item" onclick="navigate(\'articles\',{slug:\'devncode-meetup-iv-ai\'})">DevnCode Meetup IV: AI</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeWindow(\'articles\')">Close Window<span class="shortcut">⌘W</span></div>',
+    go: '<div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Medium Profile</div><div class="menu-dd-item" onclick="window.open(\'https://dev.to/ishaquehassan\')">Dev.to Profile</div><div class="menu-dd-item" onclick="navigate(\'flutter\')">Flutter PRs</div>'
   },
   contact: {
     name: 'Contact',

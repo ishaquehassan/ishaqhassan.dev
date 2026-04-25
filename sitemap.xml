@@ -141,10 +141,64 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://ishaqhassan.dev/medium-articles/</loc>
+    <loc>https://ishaqhassan.dev/articles/</loc>
     <lastmod>2026-04-25</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ishaqhassan.dev/articles/flutter-prs-merged/</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ishaqhassan.dev/articles/flutter-three-tree-architecture/</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ishaqhassan.dev/articles/flutter-state-management-2026/</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ishaqhassan.dev/articles/flutter-plugins-case-study/</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ishaqhassan.dev/articles/dart-isolates-guide/</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ishaqhassan.dev/articles/flutter-native-plugins-journey/</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ishaqhassan.dev/articles/dart-asset-indexing/</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ishaqhassan.dev/articles/firebase-kotlin-functions/</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ishaqhassan.dev/articles/devncode-meetup-iv-ai/</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://ishaqhassan.dev/contact/</loc>

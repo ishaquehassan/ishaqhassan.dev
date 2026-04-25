@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style id="ihp-redirect-mask">html{visibility:hidden}</style>
+<script>
+(function(){
+  try{
+    var ua=(navigator.userAgent||'').toLowerCase();
+    var botRE=/bot|crawler|spider|slurp|lighthouse|googlebot|bingbot|yandex|baiduspider|duckduckbot|applebot|claudebot|anthropic-ai|gptbot|perplexitybot|facebookexternalhit|linkedinbot|twitterbot|telegrambot|whatsapp|slackbot|discordbot|embedly|preview/;
+    var stay=location.search.indexOf('stay=1')!==-1;
+    if(botRE.test(ua)||stay){
+      var s=document.getElementById('ihp-redirect-mask');
+      if(s)s.parentNode.removeChild(s);
+      return;
+    }
+    location.replace('/?w=articles&a=devncode-meetup-iv-ai');
+  }catch(e){
+    var s=document.getElementById('ihp-redirect-mask');
+    if(s)s.parentNode.removeChild(s);
+  }
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="format-detection" content="telephone=no">
+<title>DevnCode Meetup IV: Artificial Intelligence | Ishaq Hassan</title>
+<meta name="description" content="Recap of DevnCode Meetup IV on AI. Talks, takeaways, the state of practical AI in 2024 from the Karachi developer scene.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Ishaq Hassan">
+<meta name="theme-color" content="#0a0a1a">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;👨‍💻&lt;/text&gt;&lt;/svg&gt;">
+<link rel="apple-touch-icon" href="/assets/profile-photo.png">
+<link rel="manifest" href="/manifest.json">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="DevnCode Meetup IV: Artificial Intelligence">
+<meta property="og:description" content="Recap of DevnCode Meetup IV on AI. Talks, takeaways, the state of practical AI in 2024 from the Karachi developer scene.">
+<meta property="og:url" content="https://ishaqhassan.dev/articles/devncode-meetup-iv-ai/">
+<meta property="og:image" content="https://ishaqhassan.dev/assets/articles/og-devncode-meetup-iv-ai.jpg?v=1">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="DevnCode Meetup IV: Artificial Intelligence by Ishaq Hassan">
+<meta property="og:site_name" content="Ishaq Hassan">
+<meta property="og:locale" content="en_PK">
+<meta property="article:published_time" content="2024-05-18T08:00:00+05:00">
+<meta property="article:modified_time" content="2024-05-18">
+<meta property="article:author" content="Ishaq Hassan">
+<meta property="article:section" content="AI">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Community">
+<meta property="article:tag" content="Speaking">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@ishaque_hassan">
+<meta name="twitter:creator" content="@ishaque_hassan">
+<meta name="twitter:title" content="DevnCode Meetup IV: Artificial Intelligence">
+<meta name="twitter:description" content="Recap of DevnCode Meetup IV on AI. Talks, takeaways, the state of practical AI in 2024 from the Karachi developer scene.">
+<meta name="twitter:image" content="https://ishaqhassan.dev/assets/articles/og-devncode-meetup-iv-ai.jpg?v=1">
+<meta name="twitter:image:alt" content="DevnCode Meetup IV: Artificial Intelligence by Ishaq Hassan">
+
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ishaqhassan.dev/"}, {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://ishaqhassan.dev/articles/"}, {"@type": "ListItem", "position": 3, "name": "DevnCode Meetup IV: Artificial Intelligence", "item": "https://ishaqhassan.dev/articles/devncode-meetup-iv-ai/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "@id": "https://ishaqhassan.dev/articles/devncode-meetup-iv-ai/", "url": "https://ishaqhassan.dev/articles/devncode-meetup-iv-ai/", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5"}, "headline": "DevnCode Meetup IV: Artificial Intelligence", "name": "DevnCode Meetup IV: Artificial Intelligence", "description": "Recap of DevnCode Meetup IV on AI. Talks, takeaways, the state of practical AI in 2024 from the Karachi developer scene.", "image": ["https://ishaqhassan.dev/assets/articles/og-devncode-meetup-iv-ai.jpg"], "datePublished": "2024-05-18", "dateModified": "2024-05-18", "author": {"@type": "Person", "@id": "https://ishaqhassan.dev/#person", "name": "Ishaq Hassan", "url": "https://ishaqhassan.dev/", "image": "https://ishaqhassan.dev/assets/profile-photo.png", "jobTitle": "Engineering Manager at DigitalHire, Flutter Framework Contributor", "worksFor": {"@type": "Organization", "name": "DigitalHire", "url": "https://www.digitalhire.com"}, "nationality": {"@type": "Country", "name": "Pakistan"}, "address": {"@type": "PostalAddress", "addressLocality": "Karachi", "addressRegion": "Sindh", "addressCountry": "PK"}, "sameAs": ["https://github.com/ishaquehassan", "https://linkedin.com/in/ishaquehassan", "https://medium.com/@ishaqhassan", "https://x.com/ishaque_hassan", "https://www.youtube.com/@ishaquehassan", "https://stackoverflow.com/users/2094696/ishaq-hassan", "https://pub.dev/publishers/ishaqhassan.com/packages"], "knowsAbout": ["Flutter", "Dart", "Mobile App Development", "Firebase", "Node.js", "Open Source Software", "Software Engineering"]}, "publisher": {"@type": "Person", "@id": "https://ishaqhassan.dev/#person", "name": "Ishaq Hassan", "url": "https://ishaqhassan.dev/", "image": "https://ishaqhassan.dev/assets/profile-photo.png", "jobTitle": "Engineering Manager at DigitalHire, Flutter Framework Contributor", "worksFor": {"@type": "Organization", "name": "DigitalHire", "url": "https://www.digitalhire.com"}, "nationality": {"@type": "Country", "name": "Pakistan"}, "address": {"@type": "PostalAddress", "addressLocality": "Karachi", "addressRegion": "Sindh", "addressCountry": "PK"}, "sameAs": ["https://github.com/ishaquehassan", "https://linkedin.com/in/ishaquehassan", "https://medium.com/@ishaqhassan", "https://x.com/ishaque_hassan", "https://www.youtube.com/@ishaquehassan", "https://stackoverflow.com/users/2094696/ishaq-hassan", "https://pub.dev/publishers/ishaqhassan.com/packages"], "knowsAbout": ["Flutter", "Dart", "Mobile App Development", "Firebase", "Node.js", "Open Source Software", "Software Engineering"]}, "keywords": "AI, Community, Speaking, tutorial", "articleSection": "AI", "inLanguage": "en", "wordCount": 700, "isPartOf": {"@type": "Blog", "@id": "https://ishaqhassan.dev/articles/", "url": "https://ishaqhassan.dev/articles/", "name": "Articles | Ishaq Hassan"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What was DevnCode Meetup IV about?", "acceptedAnswer": {"@type": "Answer", "text": "The fourth instalment of the DevnCode meetup focused on practical applied AI: LLM ops, prompt engineering, vector search, and shipping AI features in production apps."}}, {"@type": "Question", "name": "Who spoke?", "acceptedAnswer": {"@type": "Answer", "text": "A mix of Karachi-based founders, senior engineers, and AI researchers. Talks covered both 'ship today' and longer horizon research themes."}}, {"@type": "Question", "name": "Will there be a Meetup V?", "acceptedAnswer": {"@type": "Answer", "text": "DevnCode runs roughly 1-2 meetups per year. Watch the DevnCode publication on Medium for announcements."}}, {"@type": "Question", "name": "Are slides or video available?", "acceptedAnswer": {"@type": "Answer", "text": "A community recap is on Medium. Selected talks were recorded; check the DevnCode publication for the latest videos."}}]}</script>
+
+<style>
+  :root{color-scheme:dark}
+  html,body{margin:0;padding:0;background:#0b1120;color:#e5e7eb;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,sans-serif;line-height:1.6}
+  .wrap{max-width:820px;margin:0 auto;padding:48px 24px 80px}
+  nav.crumbs{font-size:13px;color:#7dd3fc;margin-bottom:24px}
+  nav.crumbs a{color:#7dd3fc;text-decoration:none}
+  nav.crumbs a:hover{text-decoration:underline}
+  h1{font-size:34px;font-weight:800;margin:0 0 8px;color:#fff;letter-spacing:-0.02em;line-height:1.2}
+  h2{font-size:22px;font-weight:700;color:#fff;margin-top:36px;margin-bottom:12px}
+  .meta{color:#94a3b8;font-size:13px;margin:0 0 12px;letter-spacing:0.2px}
+  .tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .tag-row span{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:rgba(125,211,252,0.1);color:#7dd3fc;letter-spacing:0.3px;text-transform:uppercase}
+  .sub{color:#cbd5e1;margin:0 0 28px;font-size:16px;line-height:1.6}
+  a{color:#7dd3fc}
+  ul,ol{padding-left:20px}
+  li{margin:6px 0}
+  .platform-list{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:8px;margin:0 0 28px}
+  .platform-list li{margin:0}
+  .platform-chip{display:inline-block;padding:8px 14px;border-radius:8px;border:1px solid #7dd3fc;color:#7dd3fc;font-size:12.5px;font-weight:600;text-decoration:none;transition:background 0.18s,color 0.18s}
+  .platform-chip:hover{background:#7dd3fc;color:#0b1120}
+  .cta{display:inline-block;margin-top:14px;padding:12px 22px;background:#7dd3fc;color:#0b1120;border-radius:8px;font-weight:700;text-decoration:none}
+  .cta:hover{background:#38bdf8}
+  .faq{margin-top:44px;padding-top:28px;border-top:1px solid #1e293b}
+  .faq-h{font-size:15px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7dd3fc;margin:0 0 14px}
+  .faq-item{background:rgba(125,211,252,0.03);border:1px solid rgba(125,211,252,0.08);border-radius:10px;padding:14px 18px;margin:0 0 10px;transition:border-color .15s,background .15s}
+  .faq-item:hover{border-color:rgba(125,211,252,0.18);background:rgba(125,211,252,0.05)}
+  .faq-item summary{cursor:pointer;font-weight:600;color:#e2e8f0;font-size:15px;list-style:none}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{content:"+";float:right;color:#7dd3fc;font-weight:700;transition:transform .2s}
+  .faq-item[open] summary::after{content:"−"}
+  .faq-item p{margin:12px 0 0;color:#94a3b8;font-size:14px;line-height:1.65}
+  .sitelinks{margin-top:48px;padding-top:24px;border-top:1px solid #1e293b}
+  .sitelinks-h{font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7dd3fc;margin:0 0 14px}
+  .sitelinks-grid{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px 18px}
+  .sitelinks-grid li{margin:0}
+  .sitelinks-grid a{display:block;padding:8px 10px;border-radius:6px;color:#cbd5e1;text-decoration:none;transition:background .15s,color .15s;font-size:13px;line-height:1.4}
+  .sitelinks-grid a:hover{background:rgba(125,211,252,0.08);color:#7dd3fc}
+  footer{margin-top:40px;padding-top:24px;border-top:1px solid #1e293b;color:#94a3b8;font-size:13px}
+  footer a{color:#cbd5e1;text-decoration:underline}
+  footer a:hover{color:#7dd3fc}
+  .hero-icon{font-size:60px;margin:0 0 20px}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/">Articles</a> &rsaquo; DevnCode Meetup IV: Artificial Intelligence</nav>
+  <article>
+    <div class="hero-icon" aria-hidden="true">🤖</div>
+    <div class="tag-row"><span>AI</span><span>Community</span><span>Speaking</span></div>
+    <h1>DevnCode Meetup IV: Artificial Intelligence</h1>
+    <p class="meta">2024-05-18 &middot; 4 min read &middot; by Ishaq Hassan</p>
+    <p class="sub">Recap and takeaways from the DevnCode AI meetup. The state of practical AI in 2024, the talks, the people, what stuck.</p>
+    <h2>Read on</h2>
+    <ul class="platform-list">
+    <li><a class="platform-chip" data-p="medium" href="https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5" rel="noopener noreferrer" target="_blank" style="border-color:#86efac;color:#86efac;"><strong>Medium</strong> · external</a></li>
+  </ul>
+    <a class="cta" href="https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5">Read on Medium →</a>
+    <h2>Key takeaways</h2>
+  <ul>
+    <li>Pakistani developer community is rapidly upskilling on practical AI.</li>
+    <li>Local meetups are still the highest-signal way to meet people doing real work.</li>
+    <li>Speakers covered LLM ops, prompt engineering, and applied vector search.</li>
+    <li>Bring your laptop. Demo culture beats slide culture.</li>
+  </ul>
+    <section class="faq" aria-labelledby="art-faq-h">
+  <h2 id="art-faq-h" class="faq-h">Frequently asked questions</h2>
+  <details class="faq-item"><summary><span>What was DevnCode Meetup IV about?</span></summary><p>The fourth instalment of the DevnCode meetup focused on practical applied AI: LLM ops, prompt engineering, vector search, and shipping AI features in production apps.</p></details>
+  <details class="faq-item"><summary><span>Who spoke?</span></summary><p>A mix of Karachi-based founders, senior engineers, and AI researchers. Talks covered both 'ship today' and longer horizon research themes.</p></details>
+  <details class="faq-item"><summary><span>Will there be a Meetup V?</span></summary><p>DevnCode runs roughly 1-2 meetups per year. Watch the DevnCode publication on Medium for announcements.</p></details>
+  <details class="faq-item"><summary><span>Are slides or video available?</span></summary><p>A community recap is on Medium. Selected talks were recorded; check the DevnCode publication for the latest videos.</p></details>
+</section>
+  </article>
+  <nav class="sitelinks" aria-label="Other articles">
+  <h2 class="sitelinks-h">More articles</h2>
+  <ul class="sitelinks-grid">
+    <li><a href="/articles/flutter-prs-merged/">How a Pakistani Engineer Got 6 PRs Merged Into Flutter's Official Framework</a></li>
+    <li><a href="/articles/flutter-three-tree-architecture/">Flutter's Three-Tree Architecture Explained: Widgets, Elements, RenderObjects</a></li>
+    <li><a href="/articles/flutter-state-management-2026/">Flutter State Management in 2026: A Decision Guide for Production Apps</a></li>
+    <li><a href="/articles/flutter-plugins-case-study/">Building Production Flutter Plugins: A 156-Likes pub.dev Case Study</a></li>
+    <li><a href="/articles/dart-isolates-guide/">Dart Isolates: The Missing Guide for Production Flutter Apps</a></li>
+    <li><a href="/articles/flutter-native-plugins-journey/">A Journey with Flutter Native Plugin Development for iOS and Android</a></li>
+    <li><a href="/articles/dart-asset-indexing/">Indexing Assets in a Dart Class Just Like R.java</a></li>
+    <li><a href="/articles/firebase-kotlin-functions/">Firebase Cloud Functions Using Kotlin</a></li>
+  </ul>
+</nav>
+<nav class="sitelinks" aria-label="Other sections">
+  <h2 class="sitelinks-h">Other sections</h2>
+  <ul class="sitelinks-grid">
+    <li><a href="/about/">About</a></li>
+    <li><a href="/flutter-contributions/">Flutter Contributions</a></li>
+    <li><a href="/speaking/">Speaking</a></li>
+    <li><a href="/open-source/">Open Source</a></li>
+    <li><a href="/tech-stack/">Tech Stack</a></li>
+    <li><a href="/contact/">Contact</a></li>
+    <li><a href="/github/">GitHub</a></li>
+    <li><a href="/linkedin/">LinkedIn</a></li>
+    <li><a href="/snake/">Snake</a></li>
+    <li><a href="/flutter-course/">Flutter Course</a></li>
+    <li><a href="/wisesend/">WiseSend</a></li>
+  </ul>
+</nav>
+  <footer>
+    Part of <a href="/articles/">Ishaq Hassan's Articles</a> hub. Cross-platform writing index across Site, Medium, Dev.to.
+    &middot; Open the interactive view: <a href="/articles/devncode-meetup-iv-ai/">/articles/devncode-meetup-iv-ai/</a>
+  </footer>
+</main>
+</body>
+</html>

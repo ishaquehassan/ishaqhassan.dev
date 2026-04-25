@@ -150,27 +150,29 @@ All repositories are public at <a href="https://github.com/ishaquehassan" rel="n
 """,
     },
     {
-        "slug": "medium-articles",
+        "slug": "articles",
         "id": "articles",
-        "title": "Medium Articles | Ishaq Hassan: Flutter Deep Dives",
-        "desc": "Technical essays on Medium: Dart Isolates, Flutter three-tree architecture, Firebase Cloud Functions in Kotlin, native plugin development, and more.",
-        "og_title": "Medium Articles: Ishaq Hassan",
-        "og_desc": "Flutter and Dart deep dives: isolates, three-tree architecture, framework contribution guide, Firebase Cloud Functions in Kotlin.",
-        "h1": "Medium Articles",
-        "breadcrumb_name": "Medium Articles",
+        "title": "Articles | Ishaq Hassan: Flutter, Dart & Engineering Writing",
+        "desc": "Cross-platform article hub: Flutter framework deep-dives, Dart isolates, plugin development. Read on site, Medium or Dev.to from one canonical index.",
+        "og_title": "Articles: Ishaq Hassan",
+        "og_desc": "9 cross-platform articles. Site + Medium + Dev.to. Flutter framework deep-dives, Dart, architecture, tutorials.",
+        "h1": "Articles",
+        "breadcrumb_name": "Articles",
         "json_ld_type": "CollectionPage",
         "body_html": """
-<p>Long-form technical writing by Ishaq Hassan on <a href="https://medium.com/@ishaqhassan" rel="noopener">medium.com/@ishaqhassan</a>:</p>
+<p>Long-form technical writing by Ishaq Hassan, indexed across <strong>three platforms</strong>: this site (<a href="/blog/">/blog/</a>), <a href="https://medium.com/@ishaqhassan" rel="noopener">Medium</a>, and <a href="https://dev.to/ishaquehassan" rel="noopener">Dev.to</a>. Cross-posted articles are listed once with platform links.</p>
 <ul>
-  <li><a href="https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e" rel="noopener">Dart Isolates: The Missing Guide for Production Flutter Apps</a></li>
-  <li><a href="https://medium.com/@ishaqhassan/how-flutters-three-tree-architecture-actually-works-953c8cc17226" rel="noopener">How Flutter's Three-Tree Architecture Actually Works</a></li>
-  <li><a href="https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e" rel="noopener">How I Got My Pull Requests Merged Into Flutter's Official Repository</a></li>
-  <li><a href="https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67" rel="noopener">Firebase Cloud Functions Using Kotlin</a></li>
-  <li><a href="https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061" rel="noopener">A Journey with Flutter Native Plugin Development for iOS & Android</a></li>
-  <li><a href="https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb" rel="noopener">Indexing Assets in a Dart Class Just Like R.java</a></li>
-  <li><a href="https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5" rel="noopener">DevnCode Meetup IV: Artificial Intelligence</a></li>
+  <li><a href="/articles/flutter-prs-merged/">How a Pakistani Engineer Got 6 PRs Merged Into Flutter's Framework</a> (Site, Medium, Dev.to)</li>
+  <li><a href="/articles/flutter-three-tree-architecture/">Flutter's Three-Tree Architecture Explained: Widgets, Elements, RenderObjects</a> (Site, Medium, Dev.to)</li>
+  <li><a href="/articles/flutter-state-management-2026/">Flutter State Management in 2026: A Decision Guide for Production Apps</a> (Site, Dev.to)</li>
+  <li><a href="/articles/flutter-plugins-case-study/">Building Production Flutter Plugins: A 156-Likes pub.dev Case Study</a> (Site, Dev.to)</li>
+  <li><a href="/articles/dart-isolates-guide/">Dart Isolates: The Missing Guide for Production Flutter Apps</a> (Medium)</li>
+  <li><a href="/articles/flutter-native-plugins-journey/">A Journey with Flutter Native Plugin Development for iOS &amp; Android</a> (Medium / Nerd For Tech)</li>
+  <li><a href="/articles/dart-asset-indexing/">Indexing Assets in a Dart Class Just Like R.java</a> (Medium / Nerd For Tech)</li>
+  <li><a href="/articles/firebase-kotlin-functions/">Firebase Cloud Functions Using Kotlin</a> (Medium)</li>
+  <li><a href="/articles/devncode-meetup-iv-ai/">DevnCode Meetup IV: Artificial Intelligence</a> (Medium / DevnCode)</li>
 </ul>
-<p>A canonical on-site copy of the Flutter-PR guide is available at <a href="/blog/how-i-got-6-prs-merged-into-flutter.html">the blog post</a>.</p>
+<p>The on-site full-content posts live under <a href="/blog/">/blog/</a>. Each <code>/articles/&lt;slug&gt;/</code> page links to all the platforms that hosted the article, so Google, Medium, Dev.to and crawlers can resolve the cross-domain identity through <code>sameAs</code> declarations.</p>
 """,
     },
     {
@@ -553,9 +555,10 @@ FAQ_MAP = {
         ("What DevOps and AI tools?", "Docker, GitHub Actions, Nginx for infrastructure; Claude Code, Anthropic API, OpenAI API for AI-augmented engineering."),
     ],
     "articles": [
-        ("What topics has Ishaq written about?", "Dart Isolates in production, Flutter's three-tree architecture, how to contribute to the Flutter framework, Firebase Cloud Functions in Kotlin, Flutter native plugin development for iOS and Android, and asset indexing patterns in Dart."),
-        ("Where can I read these articles?", "All articles are published on Medium at medium.com/@ishaqhassan. The blog post on Flutter contributions is also cross-posted on ishaqhassan.dev/blog/."),
-        ("How often does Ishaq publish?", "New long-form technical deep dives are published a few times per year, typically after completing notable engineering work."),
+        ("What topics has Ishaq written about?", "Flutter framework internals (three-tree architecture, plugin development, state management), Dart language deep-dives (isolates, asset indexing), Firebase Cloud Functions in Kotlin, and the contribution path into the Flutter framework itself."),
+        ("Where can I read these articles?", "Cross-posted across three platforms: this site (/blog/), Medium at medium.com/@ishaqhassan, and Dev.to at dev.to/ishaquehassan. Each /articles/<slug>/ page links to every platform that hosts the same piece."),
+        ("How does cross-posting work for canonical SEO?", "Site-original articles list /blog/<slug>.html as canonical and Medium/Dev.to as sameAs. Medium-only articles are canonical to Medium. This avoids duplicate-content penalties and lets each platform rank the version most relevant to its audience."),
+        ("How often does Ishaq publish?", "New long-form technical deep dives are published a few times per year, typically after completing notable engineering work or framework PRs."),
     ],
     "contact": [
         ("How do I contact Ishaq Hassan?", "Email hello@ishaqhassan.dev, or use LinkedIn at linkedin.com/in/ishaquehassan. Typical response time is within 48 hours."),
@@ -785,7 +788,616 @@ def generate():
         out_path.write_text(html, encoding="utf-8")
         print(f"[gen] {out_path.relative_to(REPO_ROOT)}")
 
+    # Per-article SEO pages under /articles/<slug>/
+    for art in ARTICLES_DATA:
+        out_dir = REPO_ROOT / "articles" / art["slug"]
+        out_dir.mkdir(parents=True, exist_ok=True)
+        html = build_article_page(art)
+        (out_dir / "index.html").write_text(html, encoding="utf-8")
+        print(f"[gen] articles/{art['slug']}/index.html")
+
+
+# =============================================================================
+# Per-article (/articles/<slug>/) pages
+# =============================================================================
+
+ARTICLES_DATA = [
+    {
+        "slug": "flutter-prs-merged",
+        "title": "How I Got 6 PRs Merged Into Flutter Framework",
+        "headline": "How a Pakistani Engineer Got 6 PRs Merged Into Flutter's Official Framework",
+        "desc": "How a Pakistani engineer got 6 PRs merged into the Flutter framework. Practical guide for first-time framework contributors from Asia.",
+        "excerpt": "A Karachi engineer's 90-day path into the Flutter framework: triage, the test-first bar, review etiquette, and how to repeat it.",
+        "topics": ["flutter", "open-source", "tutorial"],
+        "tags": ["Flutter", "Open Source", "Pakistan"],
+        "date": "2026-04-24",
+        "modified": "2026-04-25",
+        "read_mins": 10,
+        "icon": "🔀",
+        "canonical": f"{SITE}/blog/how-i-got-6-prs-merged-into-flutter.html",
+        "primary_label": "On Site",
+        "json_ld_type": "BlogPosting",
+        "word_count": 2100,
+        "key_takeaways": [
+            "Start with `good first issue` triage, not feature PRs. Earn the review etiquette first.",
+            "Every PR needs a test. Fix-only diffs are rejected almost on sight.",
+            "Tight, obvious diffs win. Reviewers reward clarity over cleverness.",
+            "Plan three months, not three days. Sustainability beats burst contributions.",
+        ],
+        "faq": [
+            ("How long does Flutter PR merging take?", "Median 2-4 weeks once review starts. First response usually lands in 3-7 days. Plan for at least one round of revisions even on small fixes."),
+            ("Do I need to be a Google employee?", "No. External contributors get the same review path. Six of these PRs were merged from outside Google."),
+            ("What is the hardest part?", "Writing the test that proves the fix without breaking adjacent paths. The Flutter team will not take a fix without a test that fails before and passes after."),
+            ("Where do I find good-first-issues?", "github.com/flutter/flutter/labels/good%20first%20issue is the live list. Many are stale; pick ones with recent triage labels."),
+        ],
+        "platforms": [
+            {"id": "site",   "label": "On Site",  "url": f"{SITE}/blog/how-i-got-6-prs-merged-into-flutter.html?stay=1"},
+            {"id": "medium", "label": "Medium",   "url": "https://medium.com/@ishaqhassan/how-i-got-my-pull-requests-merged-into-flutters-official-repository-98d055f3270e"},
+            {"id": "devto",  "label": "Dev.to",   "url": "https://dev.to/ishaquehassan/how-a-pakistani-engineer-got-6-pull-requests-merged-into-flutters-official-framework-51po"},
+        ],
+    },
+    {
+        "slug": "flutter-three-tree-architecture",
+        "title": "Flutter's Three-Tree Architecture Explained",
+        "headline": "Flutter's Three-Tree Architecture Explained: Widgets, Elements, RenderObjects",
+        "desc": "Deep dive into Flutter's Widget, Element, and RenderObject trees. How they interact and why bugs hide in the gaps.",
+        "excerpt": "Widget tree configures, Element tree mounts, RenderObject tree paints. The bugs that hide between the layers and how to debug them.",
+        "topics": ["flutter", "architecture", "tutorial"],
+        "tags": ["Flutter", "Framework Internals", "Rendering"],
+        "date": "2026-04-25",
+        "modified": "2026-04-25",
+        "read_mins": 12,
+        "icon": "🌳",
+        "canonical": f"{SITE}/blog/flutter-three-tree-architecture-explained.html",
+        "primary_label": "On Site",
+        "json_ld_type": "BlogPosting",
+        "word_count": 2200,
+        "key_takeaways": [
+            "Widgets are immutable configuration. Cheap to rebuild 60 times per second.",
+            "Elements are persistent identity. They survive rebuilds and decide what to update.",
+            "RenderObjects do the heavy lifting: layout, paint, hit-testing.",
+            "Most 'weird' Flutter bugs live in the gap between Widget rebuilds and Element survival.",
+        ],
+        "faq": [
+            ("Why does Flutter have three trees instead of one?", "Each tree solves a separate concern. Widgets are cheap immutable configuration. Elements are persistent identity. RenderObjects are heavy machinery. Splitting them lets Flutter rebuild widget configs 60x/sec without touching expensive RenderObjects."),
+            ("When does a new Element get created?", "When the runtimeType or the Key of a widget at a given position changes. Same type plus same key (or null key) lets Flutter reuse the existing Element and update it in place."),
+            ("What is the difference between StatelessWidget and StatefulWidget at the Element level?", "StatelessWidget produces a StatelessElement that just rebuilds child widgets on demand. StatefulWidget produces a StatefulElement that owns a State object that survives rebuilds and holds mutable state."),
+            ("How do I debug Element-level bugs?", "Use Flutter Inspector's 'Show widget inspector' with the Element tree view, or call debugDumpApp(). Most 'ghost state' bugs come from Elements being reused when you expected them to be recreated, or vice versa."),
+        ],
+        "platforms": [
+            {"id": "site",   "label": "On Site",  "url": f"{SITE}/blog/flutter-three-tree-architecture-explained.html?stay=1"},
+            {"id": "medium", "label": "Medium",   "url": "https://medium.com/@ishaqhassan/how-flutters-three-tree-architecture-actually-works-953c8cc17226"},
+            {"id": "devto",  "label": "Dev.to",   "url": "https://dev.to/ishaquehassan/flutter-three-tree-architecture-explained-widgets-elements-renderobjects-2h28"},
+        ],
+    },
+    {
+        "slug": "flutter-state-management-2026",
+        "title": "Flutter State Management 2026: Decision Guide",
+        "headline": "Flutter State Management in 2026: A Decision Guide for Production Apps",
+        "desc": "Decision guide to Flutter state management in 2026. setState, Provider, Riverpod, Bloc, signals: when to use which.",
+        "excerpt": "setState, InheritedWidget, Provider, Riverpod, Bloc, signals. When to use which, with honest tradeoffs from production.",
+        "topics": ["flutter", "architecture", "tutorial"],
+        "tags": ["Flutter", "State Management", "Architecture"],
+        "date": "2026-04-25",
+        "modified": "2026-04-25",
+        "read_mins": 14,
+        "icon": "⚛️",
+        "canonical": f"{SITE}/blog/flutter-state-management-2026-guide.html",
+        "primary_label": "On Site",
+        "json_ld_type": "BlogPosting",
+        "word_count": 2200,
+        "key_takeaways": [
+            "No single 'best' library. Pick by app size, team familiarity, and reactivity needs.",
+            "setState plus a couple of InheritedWidgets covers most small apps.",
+            "Riverpod has the best ergonomics for medium apps in 2026.",
+            "Bloc remains safest for large enterprise event-sourcing apps.",
+            "Signals (signals_flutter) are the rising option for fine-grained reactivity.",
+        ],
+        "faq": [
+            ("What is the best Flutter state management library in 2026?", "There is no single best. For small apps, setState plus InheritedWidgets is enough. For medium apps, Riverpod has the best ergonomics. For large enterprise apps with event-sourcing requirements, Bloc remains safest. Signals are the rising fine-grained reactivity option."),
+            ("Provider or Riverpod for a new project?", "Riverpod. Same author, evolved API, no BuildContext requirement, better testing story. Provider is fine if your team already knows it well, but new projects should start on Riverpod."),
+            ("When does Bloc become worth its boilerplate?", "When you need explicit event sourcing, time-travel debugging, or a clear audit trail of state transitions. In smaller apps, the boilerplate cost outweighs the benefit."),
+            ("Are signals replacing all of these?", "Not yet. Signals are excellent for fine-grained reactive UIs but the ecosystem is still maturing in 2026. Treat them as a complement to your primary state library, not a replacement."),
+        ],
+        "platforms": [
+            {"id": "site",  "label": "On Site", "url": f"{SITE}/blog/flutter-state-management-2026-guide.html?stay=1"},
+            {"id": "devto", "label": "Dev.to",  "url": "https://dev.to/ishaquehassan/flutter-state-management-in-2026-a-decision-guide-for-production-apps-4b36"},
+        ],
+    },
+    {
+        "slug": "flutter-plugins-case-study",
+        "title": "Building Production Flutter Plugins: 156-Likes Case Study",
+        "headline": "Building Production Flutter Plugins: A 156-Likes pub.dev Case Study",
+        "desc": "A pub.dev plugin case study with 156 likes and 470 monthly downloads. Native bridges, federated architecture, real maintenance lessons.",
+        "excerpt": "What it really takes to build, publish, and maintain a Flutter plugin with 156 pub.dev likes. Native bridges, federated architecture, support burden.",
+        "topics": ["flutter", "open-source", "tutorial"],
+        "tags": ["Flutter", "Plugin Development", "Open Source"],
+        "date": "2026-04-25",
+        "modified": "2026-04-25",
+        "read_mins": 11,
+        "icon": "🧩",
+        "canonical": f"{SITE}/blog/building-production-flutter-plugins-case-study.html",
+        "primary_label": "On Site",
+        "json_ld_type": "BlogPosting",
+        "word_count": 1900,
+        "key_takeaways": [
+            "Federated plugin architecture pays off the moment you add a third platform.",
+            "Verified publisher status materially boosts pub.dev trust score.",
+            "Support burden scales faster than downloads. Budget for issues.",
+            "A clear example app is the single biggest driver of likes and adoption.",
+        ],
+        "faq": [
+            ("How do I publish a Flutter plugin to pub.dev?", "Run flutter create --template=plugin to scaffold platform folders. Implement Swift / Kotlin platform code, expose via MethodChannel, set up a verified publisher under your owned domain, then dart pub publish."),
+            ("Federated architecture: worth the complexity?", "Yes if you target three or more platforms (iOS, Android, Web, macOS, Windows, Linux). For two platforms, plain pubspec platforms section is simpler. Federated splits the public API from per-platform implementations."),
+            ("How long until a plugin breaks even on maintenance?", "Realistically about 6 months of active issue triage before the community starts fixing things back. Until then, expect to spend 2-4 hours a week on issues, PRs, and SDK upgrade compatibility."),
+            ("What gets a Flutter plugin to 100+ likes?", "A working example app, clear README with native screenshots, immediate response to first 20 issues, and a real production use-case story. Likes follow trust, not features."),
+        ],
+        "platforms": [
+            {"id": "site",  "label": "On Site", "url": f"{SITE}/blog/building-production-flutter-plugins-case-study.html?stay=1"},
+            {"id": "devto", "label": "Dev.to",  "url": "https://dev.to/ishaquehassan/building-production-flutter-plugins-a-156-likes-pubdev-case-study-4e3a"},
+        ],
+    },
+    {
+        "slug": "dart-isolates-guide",
+        "title": "Dart Isolates: The Missing Guide",
+        "headline": "Dart Isolates: The Missing Guide for Production Flutter Apps",
+        "desc": "Production guide to Dart isolates: ports, message passing, compute(), and real-world patterns for Flutter apps.",
+        "excerpt": "Concurrency primitives, ports, real-world patterns. The piece every Flutter dev wishes they had read before shipping their first heavy compute feature.",
+        "topics": ["flutter", "tutorial"],
+        "tags": ["Dart", "Concurrency", "Performance"],
+        "date": "2024-08-12",
+        "modified": "2024-08-12",
+        "read_mins": 8,
+        "icon": "🧩",
+        "canonical": "https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e",
+        "primary_label": "Medium",
+        "json_ld_type": "Article",
+        "word_count": 1600,
+        "key_takeaways": [
+            "Isolates are not threads. They share no memory, only messages.",
+            "compute() is fine for one-shot heavy work. Long-lived isolates need spawn().",
+            "SendPort / ReceivePort patterns power most production isolate use.",
+            "Always close ports and exit isolates explicitly to avoid leaks.",
+        ],
+        "faq": [
+            ("When should I use an isolate vs async/await?", "Use async/await for I/O-bound work like network calls and file reads. Use an isolate when CPU-bound work would block the UI thread, typically anything over 16ms of synchronous compute on the main isolate."),
+            ("What is the overhead of spawning an isolate?", "Around 1-3ms on modern devices, plus the memory cost of a fresh heap. For one-shot work, compute() amortises this nicely. For repeated work, keep an isolate alive and message it."),
+            ("Can isolates share memory?", "Not in the general case. They communicate via copied messages. TransferableTypedData and Isolate.exit can move ownership of typed buffers without a copy, which is the main exception."),
+            ("Why does my isolate code freeze the UI?", "Most likely you are awaiting the isolate result on the main isolate without a yield. Wrap the call so the main isolate stays responsive while the worker runs."),
+        ],
+        "platforms": [
+            {"id": "medium", "label": "Medium", "url": "https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e"},
+        ],
+    },
+    {
+        "slug": "flutter-native-plugins-journey",
+        "title": "A Journey with Flutter Native Plugin Development",
+        "headline": "A Journey with Flutter Native Plugin Development for iOS and Android",
+        "desc": "A field guide to building Flutter native plugins for iOS and Android. Method channels, platform views, common pitfalls.",
+        "excerpt": "Building cross-platform plugins for iOS and Android from scratch. Code, pitfalls, real examples from a published plugin author.",
+        "topics": ["flutter", "tutorial", "open-source"],
+        "tags": ["Flutter", "iOS", "Android"],
+        "date": "2021-06-04",
+        "modified": "2021-06-04",
+        "read_mins": 7,
+        "icon": "📱",
+        "canonical": "https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061",
+        "primary_label": "Medium",
+        "json_ld_type": "Article",
+        "word_count": 1300,
+        "key_takeaways": [
+            "MethodChannel is enough for 80% of native plugin work.",
+            "EventChannel handles streams from native to Dart.",
+            "PlatformView is for actual native UI, not just data.",
+            "iOS Swift bridge is finicky. Pin Xcode and Flutter versions in CI.",
+        ],
+        "faq": [
+            ("MethodChannel vs PlatformView: which to use?", "MethodChannel for one-off function calls and data exchange. PlatformView only when you need to embed an actual native UIView or Android View inside the Flutter widget tree."),
+            ("How do I debug native plugin crashes?", "On iOS, attach Xcode to the running iOS device or simulator and watch the console. On Android, run flutter logs while the app runs and look for native stack traces alongside Dart errors."),
+            ("Should I write Swift or Objective-C for the iOS side?", "Swift in 2024+. Objective-C is only worth it if you must support an old codebase. The Flutter plugin template defaults to Swift now."),
+            ("How do I publish a native plugin?", "Same flow as any pub.dev package: dart pub publish from the plugin root. Make sure your example app builds on both platforms before publishing or your pub score takes a hit."),
+        ],
+        "platforms": [
+            {"id": "medium", "label": "Medium", "url": "https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061"},
+        ],
+    },
+    {
+        "slug": "dart-asset-indexing",
+        "title": "Indexing Assets in a Dart Class (R.java pattern)",
+        "headline": "Indexing Assets in a Dart Class Just Like R.java",
+        "desc": "Generate typed Flutter asset references in a Dart class. Inspired by Android R.java. End string-based asset path bugs.",
+        "excerpt": "Auto-generate typed asset references with codegen, inspired by Android's R.java. Drop string-based asset paths forever.",
+        "topics": ["flutter", "tutorial", "open-source", "tip"],
+        "tags": ["Dart", "Codegen", "Tooling"],
+        "date": "2020-09-22",
+        "modified": "2020-09-22",
+        "read_mins": 6,
+        "icon": "📁",
+        "canonical": "https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb",
+        "primary_label": "Medium",
+        "json_ld_type": "Article",
+        "word_count": 1100,
+        "key_takeaways": [
+            "Stringly-typed asset paths are a top-3 source of 'release-only' bugs.",
+            "A pre-build script can scan /assets and emit a typed Dart class.",
+            "IDE autocomplete for asset names is a quiet productivity multiplier.",
+            "Bonus: detect dead assets at build time and remove them from final IPA / APK.",
+        ],
+        "faq": [
+            ("Do I need build_runner or just a script?", "A plain Dart script that scans /assets and writes lib/generated/assets.dart is enough. build_runner is overkill unless you already use it for other codegen."),
+            ("What if my designer renames an asset?", "Re-run the generator. Any usage referencing the old name fails to compile, which is the entire point. You catch the rename at build time, not at runtime in production."),
+            ("Can this work with --tree-shake-icons?", "Yes. The generator emits string constants, not Widget instances. Tree-shaking still applies normally to anything you build with those strings."),
+            ("Is there a published package?", "Yes: assets_indexer on pub.dev. Or copy the generator into your own project; it is roughly 80 lines of Dart."),
+        ],
+        "platforms": [
+            {"id": "medium", "label": "Medium", "url": "https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb"},
+        ],
+    },
+    {
+        "slug": "firebase-kotlin-functions",
+        "title": "Firebase Cloud Functions Using Kotlin",
+        "headline": "Firebase Cloud Functions Using Kotlin",
+        "desc": "Run Firebase Cloud Functions in Kotlin with GraalVM. Setup guide, performance numbers, real-world caveats.",
+        "excerpt": "Writing Cloud Functions in Kotlin via GraalVM. Performance wins, full setup guide, and the caveats nobody warns you about.",
+        "topics": ["architecture", "tutorial"],
+        "tags": ["Kotlin", "Firebase", "Backend"],
+        "date": "2022-11-15",
+        "modified": "2022-11-15",
+        "read_mins": 5,
+        "icon": "🔥",
+        "canonical": "https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67",
+        "primary_label": "Medium",
+        "json_ld_type": "Article",
+        "word_count": 900,
+        "key_takeaways": [
+            "Kotlin via GraalVM Native Image runs as fast as Node in cold starts.",
+            "You lose the Node ecosystem; not every Firebase Admin call has a Kotlin equivalent.",
+            "Setup is involved: GraalVM, Gradle plugin, Firebase emulator config.",
+            "Pick this only if your team already lives in Kotlin and refuses to switch.",
+        ],
+        "faq": [
+            ("Why use Kotlin for Cloud Functions instead of Node?", "Type safety, sharing code with an Android backend, and team familiarity. The native ecosystem is much smaller, so it is a deliberate tradeoff, not a default."),
+            ("What about cold-start performance?", "GraalVM Native Image brings Kotlin cold-starts close to Node. Without it, JVM cold-starts make Cloud Functions painfully slow for HTTPS triggers."),
+            ("Can I use Firebase Admin SDK from Kotlin?", "Yes, the Java Firebase Admin SDK works fine. Just be aware not every helper from the Node SDK has a direct Kotlin / Java equivalent."),
+            ("Is this production ready?", "For internal services or background workers, yes. For latency-sensitive HTTPS endpoints, only if you have GraalVM tuned and accept higher operational complexity."),
+        ],
+        "platforms": [
+            {"id": "medium", "label": "Medium", "url": "https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67"},
+        ],
+    },
+    {
+        "slug": "devncode-meetup-iv-ai",
+        "title": "DevnCode Meetup IV: Artificial Intelligence",
+        "headline": "DevnCode Meetup IV: Artificial Intelligence",
+        "desc": "Recap of DevnCode Meetup IV on AI. Talks, takeaways, the state of practical AI in 2024 from the Karachi developer scene.",
+        "excerpt": "Recap and takeaways from the DevnCode AI meetup. The state of practical AI in 2024, the talks, the people, what stuck.",
+        "topics": ["tutorial"],
+        "tags": ["AI", "Community", "Speaking"],
+        "date": "2024-05-18",
+        "modified": "2024-05-18",
+        "read_mins": 4,
+        "icon": "🤖",
+        "canonical": "https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5",
+        "primary_label": "Medium",
+        "json_ld_type": "Article",
+        "word_count": 700,
+        "key_takeaways": [
+            "Pakistani developer community is rapidly upskilling on practical AI.",
+            "Local meetups are still the highest-signal way to meet people doing real work.",
+            "Speakers covered LLM ops, prompt engineering, and applied vector search.",
+            "Bring your laptop. Demo culture beats slide culture.",
+        ],
+        "faq": [
+            ("What was DevnCode Meetup IV about?", "The fourth instalment of the DevnCode meetup focused on practical applied AI: LLM ops, prompt engineering, vector search, and shipping AI features in production apps."),
+            ("Who spoke?", "A mix of Karachi-based founders, senior engineers, and AI researchers. Talks covered both 'ship today' and longer horizon research themes."),
+            ("Will there be a Meetup V?", "DevnCode runs roughly 1-2 meetups per year. Watch the DevnCode publication on Medium for announcements."),
+            ("Are slides or video available?", "A community recap is on Medium. Selected talks were recorded; check the DevnCode publication for the latest videos."),
+        ],
+        "platforms": [
+            {"id": "medium", "label": "Medium", "url": "https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5"},
+        ],
+    },
+]
+
+ARTICLE_PLATFORM_BRAND = {
+    "site":   {"color": "#7dd3fc", "name": "On Site"},
+    "medium": {"color": "#86efac", "name": "Medium"},
+    "devto":  {"color": "#cbd5e1", "name": "Dev.to"},
+}
+
+
+def article_breadcrumb_jsonld(art):
+    return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home",     "item": f"{SITE}/"},
+            {"@type": "ListItem", "position": 2, "name": "Articles", "item": f"{SITE}/articles/"},
+            {"@type": "ListItem", "position": 3, "name": art["headline"], "item": f"{SITE}/articles/{art['slug']}/"},
+        ],
+    }
+
+
+def article_blogposting_jsonld(art):
+    # sameAs lists OTHER platform URLs that host the same content. Drop the canonical
+    # URL itself (canonical handles that) and drop /blog/<slug>.html?stay=1 variants
+    # since they're just the canonical with a query flag.
+    canon_path = art["canonical"].split('?')[0]
+    same_as = []
+    for p in art["platforms"]:
+        clean = p["url"].split('?')[0]
+        if clean == canon_path:
+            continue
+        same_as.append(p["url"])
+    base = {
+        "@context": "https://schema.org",
+        "@type": art["json_ld_type"],
+        "@id": f"{SITE}/articles/{art['slug']}/",
+        "url": f"{SITE}/articles/{art['slug']}/",
+        "mainEntityOfPage": {"@type": "WebPage", "@id": art["canonical"]},
+        "headline": art["headline"],
+        "name": art["headline"],
+        "description": art["desc"],
+        "image": [f"{SITE}/assets/articles/og-{art['slug']}.jpg"],
+        "datePublished": art["date"],
+        "dateModified": art.get("modified", art["date"]),
+        "author": build_person_entity(),
+        "publisher": build_person_entity(),
+        "keywords": ", ".join(art["tags"] + art["topics"]),
+        "articleSection": art["tags"][0] if art["tags"] else "Engineering",
+        "inLanguage": "en",
+        "wordCount": art.get("word_count", 1500),
+        "isPartOf": {"@type": "Blog", "@id": f"{SITE}/articles/", "url": f"{SITE}/articles/", "name": "Articles | Ishaq Hassan"},
+    }
+    if same_as:
+        base["sameAs"] = same_as
+    return base
+
+
+def article_faq_jsonld(art):
+    if not art.get("faq"):
+        return None
+    return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}}
+            for q, a in art["faq"]
+        ],
+    }
+
+
+def article_platform_chips_html(art):
+    chips = []
+    for p in art["platforms"]:
+        brand = ARTICLE_PLATFORM_BRAND.get(p["id"], {"color": "#7dd3fc", "name": p["label"]})
+        chips.append(
+            f'    <li><a class="platform-chip" data-p="{p["id"]}" href="{p["url"]}" '
+            + ('rel="noopener noreferrer" target="_blank"' if p["id"] != "site" else '')
+            + f' style="border-color:{brand["color"]};color:{brand["color"]};">'
+            + f'<strong>{p["label"]}</strong>'
+            + (' · external' if p["id"] != "site" else '')
+            + '</a></li>'
+        )
+    return '<ul class="platform-list">\n' + '\n'.join(chips) + '\n  </ul>'
+
+
+def article_takeaways_html(art):
+    items = '\n'.join(f'    <li>{t}</li>' for t in art["key_takeaways"])
+    return f'<h2>Key takeaways</h2>\n  <ul>\n{items}\n  </ul>'
+
+
+def article_faq_html(art):
+    if not art.get("faq"):
+        return ''
+    items = '\n  '.join(
+        f'<details class="faq-item"><summary><span>{q}</span></summary><p>{a}</p></details>'
+        for q, a in art["faq"]
+    )
+    return (
+        '<section class="faq" aria-labelledby="art-faq-h">\n'
+        '  <h2 id="art-faq-h" class="faq-h">Frequently asked questions</h2>\n  '
+        + items + '\n</section>'
+    )
+
+
+def article_cross_links_html(current_slug):
+    others = [a for a in ARTICLES_DATA if a["slug"] != current_slug]
+    article_links = '\n'.join(
+        f'    <li><a href="/articles/{a["slug"]}/">{a["headline"]}</a></li>'
+        for a in others
+    )
+    section_links = '\n'.join(
+        f'    <li><a href="/{w["slug"]}/">{w["breadcrumb_name"]}</a></li>'
+        for w in WINDOWS if w["slug"] != "articles"
+    )
+    return (
+        '<nav class="sitelinks" aria-label="Other articles">\n'
+        '  <h2 class="sitelinks-h">More articles</h2>\n'
+        '  <ul class="sitelinks-grid">\n'
+        f'{article_links}\n'
+        '  </ul>\n'
+        '</nav>\n'
+        '<nav class="sitelinks" aria-label="Other sections">\n'
+        '  <h2 class="sitelinks-h">Other sections</h2>\n'
+        '  <ul class="sitelinks-grid">\n'
+        f'{section_links}\n'
+        '  </ul>\n'
+        '</nav>'
+    )
+
+
+ARTICLE_TEMPLATE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<style id="ihp-redirect-mask">html{{visibility:hidden}}</style>
+<script>
+(function(){{
+  try{{
+    var ua=(navigator.userAgent||'').toLowerCase();
+    var botRE=/bot|crawler|spider|slurp|lighthouse|googlebot|bingbot|yandex|baiduspider|duckduckbot|applebot|claudebot|anthropic-ai|gptbot|perplexitybot|facebookexternalhit|linkedinbot|twitterbot|telegrambot|whatsapp|slackbot|discordbot|embedly|preview/;
+    var stay=location.search.indexOf('stay=1')!==-1;
+    if(botRE.test(ua)||stay){{
+      var s=document.getElementById('ihp-redirect-mask');
+      if(s)s.parentNode.removeChild(s);
+      return;
+    }}
+    location.replace('/?w=articles&a={slug}');
+  }}catch(e){{
+    var s=document.getElementById('ihp-redirect-mask');
+    if(s)s.parentNode.removeChild(s);
+  }}
+}})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="format-detection" content="telephone=no">
+<title>{title} | Ishaq Hassan</title>
+<meta name="description" content="{desc}">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Ishaq Hassan">
+<meta name="theme-color" content="#0a0a1a">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="{canonical}">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;👨‍💻&lt;/text&gt;&lt;/svg&gt;">
+<link rel="apple-touch-icon" href="/assets/profile-photo.png">
+<link rel="manifest" href="/manifest.json">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="{headline}">
+<meta property="og:description" content="{desc}">
+<meta property="og:url" content="{site}/articles/{slug}/">
+<meta property="og:image" content="{og_image}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="{headline} by Ishaq Hassan">
+<meta property="og:site_name" content="Ishaq Hassan">
+<meta property="og:locale" content="en_PK">
+<meta property="article:published_time" content="{date}T08:00:00+05:00">
+<meta property="article:modified_time" content="{modified}">
+<meta property="article:author" content="Ishaq Hassan">
+<meta property="article:section" content="{section}">
+{article_tags}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@ishaque_hassan">
+<meta name="twitter:creator" content="@ishaque_hassan">
+<meta name="twitter:title" content="{headline}">
+<meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{og_image}">
+<meta name="twitter:image:alt" content="{headline} by Ishaq Hassan">
+
+<script type="application/ld+json">{breadcrumb_jsonld}</script>
+<script type="application/ld+json">{blogposting_jsonld}</script>{faq_block}
+
+<style>
+  :root{{color-scheme:dark}}
+  html,body{{margin:0;padding:0;background:#0b1120;color:#e5e7eb;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,sans-serif;line-height:1.6}}
+  .wrap{{max-width:820px;margin:0 auto;padding:48px 24px 80px}}
+  nav.crumbs{{font-size:13px;color:#7dd3fc;margin-bottom:24px}}
+  nav.crumbs a{{color:#7dd3fc;text-decoration:none}}
+  nav.crumbs a:hover{{text-decoration:underline}}
+  h1{{font-size:34px;font-weight:800;margin:0 0 8px;color:#fff;letter-spacing:-0.02em;line-height:1.2}}
+  h2{{font-size:22px;font-weight:700;color:#fff;margin-top:36px;margin-bottom:12px}}
+  .meta{{color:#94a3b8;font-size:13px;margin:0 0 12px;letter-spacing:0.2px}}
+  .tag-row{{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}}
+  .tag-row span{{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:rgba(125,211,252,0.1);color:#7dd3fc;letter-spacing:0.3px;text-transform:uppercase}}
+  .sub{{color:#cbd5e1;margin:0 0 28px;font-size:16px;line-height:1.6}}
+  a{{color:#7dd3fc}}
+  ul,ol{{padding-left:20px}}
+  li{{margin:6px 0}}
+  .platform-list{{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:8px;margin:0 0 28px}}
+  .platform-list li{{margin:0}}
+  .platform-chip{{display:inline-block;padding:8px 14px;border-radius:8px;border:1px solid #7dd3fc;color:#7dd3fc;font-size:12.5px;font-weight:600;text-decoration:none;transition:background 0.18s,color 0.18s}}
+  .platform-chip:hover{{background:#7dd3fc;color:#0b1120}}
+  .cta{{display:inline-block;margin-top:14px;padding:12px 22px;background:#7dd3fc;color:#0b1120;border-radius:8px;font-weight:700;text-decoration:none}}
+  .cta:hover{{background:#38bdf8}}
+  .faq{{margin-top:44px;padding-top:28px;border-top:1px solid #1e293b}}
+  .faq-h{{font-size:15px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7dd3fc;margin:0 0 14px}}
+  .faq-item{{background:rgba(125,211,252,0.03);border:1px solid rgba(125,211,252,0.08);border-radius:10px;padding:14px 18px;margin:0 0 10px;transition:border-color .15s,background .15s}}
+  .faq-item:hover{{border-color:rgba(125,211,252,0.18);background:rgba(125,211,252,0.05)}}
+  .faq-item summary{{cursor:pointer;font-weight:600;color:#e2e8f0;font-size:15px;list-style:none}}
+  .faq-item summary::-webkit-details-marker{{display:none}}
+  .faq-item summary::after{{content:"+";float:right;color:#7dd3fc;font-weight:700;transition:transform .2s}}
+  .faq-item[open] summary::after{{content:"−"}}
+  .faq-item p{{margin:12px 0 0;color:#94a3b8;font-size:14px;line-height:1.65}}
+  .sitelinks{{margin-top:48px;padding-top:24px;border-top:1px solid #1e293b}}
+  .sitelinks-h{{font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7dd3fc;margin:0 0 14px}}
+  .sitelinks-grid{{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px 18px}}
+  .sitelinks-grid li{{margin:0}}
+  .sitelinks-grid a{{display:block;padding:8px 10px;border-radius:6px;color:#cbd5e1;text-decoration:none;transition:background .15s,color .15s;font-size:13px;line-height:1.4}}
+  .sitelinks-grid a:hover{{background:rgba(125,211,252,0.08);color:#7dd3fc}}
+  footer{{margin-top:40px;padding-top:24px;border-top:1px solid #1e293b;color:#94a3b8;font-size:13px}}
+  footer a{{color:#cbd5e1;text-decoration:underline}}
+  footer a:hover{{color:#7dd3fc}}
+  .hero-icon{{font-size:60px;margin:0 0 20px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/">Articles</a> &rsaquo; {title}</nav>
+  <article>
+    <div class="hero-icon" aria-hidden="true">{icon}</div>
+    <div class="tag-row">{tag_chips}</div>
+    <h1>{headline}</h1>
+    <p class="meta">{date} &middot; {read_mins} min read &middot; by Ishaq Hassan</p>
+    <p class="sub">{excerpt}</p>
+    <h2>Read on</h2>
+    {platform_chips}
+    <a class="cta" href="{primary_url}">Read on {primary_label} →</a>
+    {takeaways}
+    {faq_html}
+  </article>
+  {cross_links}
+  <footer>
+    Part of <a href="/articles/">Ishaq Hassan's Articles</a> hub. Cross-platform writing index across Site, Medium, Dev.to.
+    &middot; Open the interactive view: <a href="/articles/{slug}/">/articles/{slug}/</a>
+  </footer>
+</main>
+</body>
+</html>
+"""
+
+
+def build_article_page(art):
+    primary = art["platforms"][0]
+    article_tags_html = '\n'.join(f'<meta property="article:tag" content="{t}">' for t in art["tags"])
+    tag_chips_html = ''.join(f'<span>{t}</span>' for t in art["tags"])
+    return ARTICLE_TEMPLATE.format(
+        site=SITE,
+        slug=art["slug"],
+        title=art["title"],
+        headline=art["headline"],
+        desc=art["desc"],
+        excerpt=art["excerpt"],
+        date=art["date"],
+        modified=art.get("modified", art["date"]),
+        read_mins=art["read_mins"],
+        icon=art["icon"],
+        canonical=art["canonical"],
+        og_image=f"{SITE}/assets/articles/og-{art['slug']}.jpg?v=1",
+        section=art["tags"][0] if art["tags"] else "Engineering",
+        article_tags=article_tags_html,
+        tag_chips=tag_chips_html,
+        breadcrumb_jsonld=json.dumps(article_breadcrumb_jsonld(art), ensure_ascii=False),
+        blogposting_jsonld=json.dumps(article_blogposting_jsonld(art), ensure_ascii=False),
+        faq_block=(
+            '\n<script type="application/ld+json">' + json.dumps(article_faq_jsonld(art), ensure_ascii=False) + '</script>'
+            if article_faq_jsonld(art) else ''
+        ),
+        platform_chips=article_platform_chips_html(art),
+        primary_url=primary["url"],
+        primary_label=primary["label"],
+        takeaways=article_takeaways_html(art),
+        faq_html=article_faq_html(art),
+        cross_links=article_cross_links_html(art["slug"]),
+    )
+
 
 if __name__ == "__main__":
     generate()
-    print(f"\nGenerated {len(WINDOWS)} pages.")
+    print(f"\nGenerated {len(WINDOWS)} window pages + {len(ARTICLES_DATA)} article pages.")
