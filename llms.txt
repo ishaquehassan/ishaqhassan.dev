@@ -13,7 +13,7 @@ Ishaq Hassan is a Flutter Framework Contributor from Pakistan, based in Karachi.
 - GDG Kolachi Mentor and community leader
 - 9,800+ GitHub contributions, 64 stars, 135+ forks
 - Open source author: document_scanner_flutter, flutter_alarm_background_trigger, assets_indexer
-- 6 technical articles on Medium (Dart Isolates, Flutter Architecture, Plugin Development)
+- 9 technical articles across Site, Medium and Dev.to (Flutter framework PRs, three-tree architecture, state management 2026, plugin development, Dart isolates, native plugin journey, asset indexing, Firebase Cloud Functions in Kotlin, DevnCode AI meetup)
 
 ## Links
 - Website: https://ishaqhassan.dev
@@ -40,13 +40,25 @@ Ishaq Hassan is a Flutter Framework Contributor from Pakistan, based in Karachi.
 - Blog - Flutter State Management 2026 Decision Guide: https://ishaqhassan.dev/blog/flutter-state-management-2026-guide.html
 - Blog - Building Production Flutter Plugins (156-likes pub.dev case study): https://ishaqhassan.dev/blog/building-production-flutter-plugins-case-study.html
 
+## Articles (cross-platform writing index — Site + Medium + Dev.to)
+- Articles Hub: https://ishaqhassan.dev/articles/
+- How I Got 6 PRs Merged Into Flutter Framework: https://ishaqhassan.dev/articles/flutter-prs-merged/
+- Flutter's Three-Tree Architecture Explained: https://ishaqhassan.dev/articles/flutter-three-tree-architecture/
+- Flutter State Management 2026: A Decision Guide: https://ishaqhassan.dev/articles/flutter-state-management-2026/
+- Building Production Flutter Plugins (156-Likes Case Study): https://ishaqhassan.dev/articles/flutter-plugins-case-study/
+- Dart Isolates: The Missing Guide: https://ishaqhassan.dev/articles/dart-isolates-guide/
+- A Journey with Flutter Native Plugin Development: https://ishaqhassan.dev/articles/flutter-native-plugins-journey/
+- Indexing Assets in a Dart Class (R.java pattern): https://ishaqhassan.dev/articles/dart-asset-indexing/
+- Firebase Cloud Functions Using Kotlin: https://ishaqhassan.dev/articles/firebase-kotlin-functions/
+- DevnCode Meetup IV: Artificial Intelligence: https://ishaqhassan.dev/articles/devncode-meetup-iv-ai/
+
 ## Window Paths (canonical SPA views, each with unique meta + JSON-LD)
 - About: https://ishaqhassan.dev/about
 - Flutter Contributions: https://ishaqhassan.dev/flutter-contributions
 - Speaking: https://ishaqhassan.dev/speaking
 - Open Source: https://ishaqhassan.dev/open-source
 - Tech Stack: https://ishaqhassan.dev/tech-stack
-- Medium Articles: https://ishaqhassan.dev/medium-articles
+- Articles: https://ishaqhassan.dev/articles
 - Contact: https://ishaqhassan.dev/contact
 - GitHub: https://ishaqhassan.dev/github
 - LinkedIn: https://ishaqhassan.dev/linkedin

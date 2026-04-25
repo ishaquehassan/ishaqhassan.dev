@@ -163,7 +163,7 @@ Each path below renders both (a) bot-visible SEO content with unique JSON-LD and
 - https://ishaqhassan.dev/speaking          (Tech talks & community events)
 - https://ishaqhassan.dev/open-source       (Flutter packages and tools)
 - https://ishaqhassan.dev/tech-stack        (Languages, frameworks, DevOps)
-- https://ishaqhassan.dev/medium-articles   (7 long-form Medium posts)
+- https://ishaqhassan.dev/articles/         (cross-platform writing hub, 9 articles across Site + Medium + Dev.to with per-article deep links)
 - https://ishaqhassan.dev/contact           (Email + social links)
 - https://ishaqhassan.dev/github            (GitHub profile)
 - https://ishaqhassan.dev/linkedin          (LinkedIn profile)
