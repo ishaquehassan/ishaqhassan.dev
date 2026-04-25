@@ -1379,7 +1379,7 @@ def build_article_page(art):
         read_mins=art["read_mins"],
         icon=art["icon"],
         canonical=art["canonical"],
-        og_image=f"{SITE}/assets/articles/og-{art['slug']}.jpg?v=1",
+        og_image=f"{SITE}/assets/articles/og-{art['slug']}.jpg?v=2",
         section=art["tags"][0] if art["tags"] else "Engineering",
         article_tags=article_tags_html,
         tag_chips=tag_chips_html,
