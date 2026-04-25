@@ -113,7 +113,7 @@ Long-form behind-the-scenes story: <a href="/blog/how-i-got-6-prs-merged-into-fl
         "breadcrumb_name": "Open Source",
         "json_ld_type": "CollectionPage",
         "body_html": """
-<p>Ishaq maintains several open-source Flutter packages published on <a href="https://pub.dev/publishers/ishaqhassan.dev/packages" rel="noopener">pub.dev under <code>ishaqhassan.dev</code></a>:</p>
+<p>Ishaq maintains several open-source Flutter packages published on <a href="https://pub.dev/publishers/ishaqhassan.com/packages" rel="noopener">pub.dev under <code>ishaqhassan.dev</code></a>:</p>
 <ul>
   <li><a href="https://github.com/ishaquehassan/document_scanner_flutter" rel="noopener"><strong>document_scanner_flutter</strong></a>: Native iOS/Android document scanning for Flutter.</li>
   <li><a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" rel="noopener"><strong>flutter_alarm_background_trigger</strong></a>: Background alarm scheduler for Flutter.</li>
@@ -203,7 +203,7 @@ All repositories are public at <a href="https://github.com/ishaquehassan" rel="n
   <li>Stack Overflow: <a href="https://stackoverflow.com/users/2094696/ishaq-hassan" rel="noopener">Ishaq Hassan profile</a></li>
   <li>Medium: <a href="https://medium.com/@ishaqhassan" rel="noopener">@ishaqhassan</a></li>
   <li>YouTube: <a href="https://www.youtube.com/@ishaquehassan" rel="noopener">@ishaquehassan</a> (course videos and tech tutorials)</li>
-  <li>Pub.dev: <a href="https://pub.dev/publishers/ishaqhassan.dev/packages" rel="noopener">verified publisher</a> for Flutter packages</li>
+  <li>Pub.dev: <a href="https://pub.dev/publishers/ishaqhassan.com/packages" rel="noopener">verified publisher</a> for Flutter packages</li>
 </ul>
 <p>For paid Flutter consulting engagements, see the dedicated <a href="/flutter-consultant.html">consulting page</a>. To hire Ishaq full-time, contract or per-project, visit the <a href="/hire-flutter-developer.html">hire page</a>. For all other inquiries, email is the fastest channel.</p>
 """,
@@ -256,7 +256,7 @@ All repositories are public at <a href="https://github.com/ishaquehassan" rel="n
   <li><strong>Independent Flutter Consultant</strong>: Various clients</li>
 </ul>
 <p>Flutter Framework Contributor with <a href="/flutter-contributions">6 merged PRs into the Flutter framework</a>. Speaker at <a href="/speaking">GDG Kolachi, Iqra University, DevnCode</a>.
-Maintainer of open-source Flutter packages on <a href="https://pub.dev/publishers/ishaqhassan.dev/packages" rel="noopener">pub.dev</a>.</p>
+Maintainer of open-source Flutter packages on <a href="https://pub.dev/publishers/ishaqhassan.com/packages" rel="noopener">pub.dev</a>.</p>
 """,
     },
     {
@@ -361,7 +361,7 @@ PERSON_SAMEAS = [
     "https://x.com/ishaque_hassan",
     "https://www.youtube.com/@ishaquehassan",
     "https://stackoverflow.com/users/2094696/ishaq-hassan",
-    "https://pub.dev/publishers/ishaqhassan.dev/packages",
+    "https://pub.dev/publishers/ishaqhassan.com/packages",
 ]
 
 
