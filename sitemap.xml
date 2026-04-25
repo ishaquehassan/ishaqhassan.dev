@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://ishaqhassan.dev/</loc>
     <lastmod>2026-04-25</lastmod>
@@ -151,55 +152,109 @@
     <lastmod>2026-04-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-  </url>
+  
+    <image:image>
+      <image:loc>https://ishaqhassan.dev/assets/articles/og-flutter-prs-merged.jpg</image:loc>
+      <image:title>How a Pakistani Engineer Got 6 PRs Merged Into Flutter Framework</image:title>
+      <image:caption>How a Pakistani Engineer Got 6 PRs Merged Into Flutter Framework by Ishaq Hassan</image:caption>
+    </image:image>
+</url>
   <url>
     <loc>https://ishaqhassan.dev/articles/flutter-three-tree-architecture/</loc>
     <lastmod>2026-04-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-  </url>
+  
+    <image:image>
+      <image:loc>https://ishaqhassan.dev/assets/articles/og-flutter-three-tree-architecture.jpg</image:loc>
+      <image:title>Flutter's Three-Tree Architecture Explained</image:title>
+      <image:caption>Flutter's Three-Tree Architecture Explained by Ishaq Hassan</image:caption>
+    </image:image>
+</url>
   <url>
     <loc>https://ishaqhassan.dev/articles/flutter-state-management-2026/</loc>
     <lastmod>2026-04-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-  </url>
+  
+    <image:image>
+      <image:loc>https://ishaqhassan.dev/assets/articles/og-flutter-state-management-2026.jpg</image:loc>
+      <image:title>Flutter State Management 2026: A Decision Guide</image:title>
+      <image:caption>Flutter State Management 2026: A Decision Guide by Ishaq Hassan</image:caption>
+    </image:image>
+</url>
   <url>
     <loc>https://ishaqhassan.dev/articles/flutter-plugins-case-study/</loc>
     <lastmod>2026-04-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-  </url>
+  
+    <image:image>
+      <image:loc>https://ishaqhassan.dev/assets/articles/og-flutter-plugins-case-study.jpg</image:loc>
+      <image:title>Building Production Flutter Plugins: 156-Likes Case Study</image:title>
+      <image:caption>Building Production Flutter Plugins: 156-Likes Case Study by Ishaq Hassan</image:caption>
+    </image:image>
+</url>
   <url>
     <loc>https://ishaqhassan.dev/articles/dart-isolates-guide/</loc>
     <lastmod>2026-04-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
+  
+    <image:image>
+      <image:loc>https://ishaqhassan.dev/assets/articles/og-dart-isolates-guide.jpg</image:loc>
+      <image:title>Dart Isolates: The Missing Guide</image:title>
+      <image:caption>Dart Isolates: The Missing Guide by Ishaq Hassan</image:caption>
+    </image:image>
+</url>
   <url>
     <loc>https://ishaqhassan.dev/articles/flutter-native-plugins-journey/</loc>
     <lastmod>2026-04-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
+  
+    <image:image>
+      <image:loc>https://ishaqhassan.dev/assets/articles/og-flutter-native-plugins-journey.jpg</image:loc>
+      <image:title>A Journey with Flutter Native Plugin Development</image:title>
+      <image:caption>A Journey with Flutter Native Plugin Development by Ishaq Hassan</image:caption>
+    </image:image>
+</url>
   <url>
     <loc>https://ishaqhassan.dev/articles/dart-asset-indexing/</loc>
     <lastmod>2026-04-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
+  
+    <image:image>
+      <image:loc>https://ishaqhassan.dev/assets/articles/og-dart-asset-indexing.jpg</image:loc>
+      <image:title>Indexing Assets in a Dart Class (R.java pattern)</image:title>
+      <image:caption>Indexing Assets in a Dart Class (R.java pattern) by Ishaq Hassan</image:caption>
+    </image:image>
+</url>
   <url>
     <loc>https://ishaqhassan.dev/articles/firebase-kotlin-functions/</loc>
     <lastmod>2026-04-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
+  
+    <image:image>
+      <image:loc>https://ishaqhassan.dev/assets/articles/og-firebase-kotlin-functions.jpg</image:loc>
+      <image:title>Firebase Cloud Functions Using Kotlin</image:title>
+      <image:caption>Firebase Cloud Functions Using Kotlin by Ishaq Hassan</image:caption>
+    </image:image>
+</url>
   <url>
     <loc>https://ishaqhassan.dev/articles/devncode-meetup-iv-ai/</loc>
     <lastmod>2026-04-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-  </url>
+  
+    <image:image>
+      <image:loc>https://ishaqhassan.dev/assets/articles/og-devncode-meetup-iv-ai.jpg</image:loc>
+      <image:title>DevnCode Meetup IV: Artificial Intelligence</image:title>
+      <image:caption>DevnCode Meetup IV: Artificial Intelligence by Ishaq Hassan</image:caption>
+    </image:image>
+</url>
   <url>
     <loc>https://ishaqhassan.dev/contact/</loc>
     <lastmod>2026-04-25</lastmod>
