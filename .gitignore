@@ -6,3 +6,6 @@ package-lock.json
 
 # Puppeteer OG build temp files
 scripts/og-v2/.__build_*.html
+
+# Local SEO action-items (manual user actions, not for repo)
+.seo-action-items/
