@@ -433,10 +433,14 @@ def build_webpage_jsonld(window):
         base["mainEntity"] = person
 
     # CollectionPage: about -> Person so Google links the collection to the author entity.
+    # mainEntity is what Google's rich-result evaluator checks for ProfilePage/CollectionPage cards.
     elif t == "CollectionPage":
-        base["about"] = build_person_entity()
+        person = build_person_entity()
+        base["about"] = person
+        base["mainEntity"] = person
 
     # Course: provider + hasCourseInstance + educationalLevel are Google-required.
+    # video unlocks Video carousel rich result; teaches is a Google-recommended Course field.
     elif t == "Course":
         base["provider"] = {
             "@type": "Person",
@@ -448,18 +452,54 @@ def build_webpage_jsonld(window):
         base["educationalLevel"] = "Beginner to Advanced"
         base["inLanguage"] = "ur"
         base["isAccessibleForFree"] = True
+        base["teaches"] = [
+            "Flutter",
+            "Dart programming language",
+            "Object-Oriented Programming",
+            "Flutter UI and widget composition",
+            "State management",
+            "REST API integration",
+            "Asynchronous programming",
+            "Mobile app architecture",
+        ]
+        base["audience"] = {
+            "@type": "EducationalAudience",
+            "educationalRole": "student",
+        }
         base["hasCourseInstance"] = {
             "@type": "CourseInstance",
             "courseMode": "online",
             "inLanguage": "ur",
             "courseWorkload": "PT8H",
+            "instructor": {
+                "@type": "Person",
+                "@id": f"{SITE}/#person",
+                "name": "Ishaq Hassan",
+            },
         }
         base["offers"] = {
             "@type": "Offer",
             "price": "0",
             "priceCurrency": "USD",
             "availability": "https://schema.org/InStock",
+            "category": "Educational",
             "url": "https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5",
+        }
+        base["video"] = {
+            "@type": "VideoObject",
+            "name": "Flutter Course in Urdu - 35 Free Videos by Ishaq Hassan",
+            "description": "Comprehensive Flutter development course in Urdu, listed on the official Flutter docs. 35 video lessons spanning Dart basics, OOP, Flutter UI, state management, networking and advanced topics.",
+            "thumbnailUrl": "https://img.youtube.com/vi/DB51xmXlaX4/maxresdefault.jpg",
+            "uploadDate": "2021-08-10",
+            "contentUrl": "https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5",
+            "embedUrl": "https://www.youtube.com/embed/DB51xmXlaX4",
+            "publisher": {
+                "@type": "Person",
+                "@id": f"{SITE}/#person",
+                "name": "Ishaq Hassan",
+            },
+            "inLanguage": "ur",
+            "isFamilyFriendly": True,
         }
 
     # WebApplication / SoftwareApplication: Google requires applicationCategory + operatingSystem + offers.
