@@ -184,19 +184,28 @@ All repositories are public at <a href="https://github.com/ishaquehassan" rel="n
         "breadcrumb_name": "Contact",
         "json_ld_type": "ContactPage",
         "body_html": """
-<p>Reach Ishaq Hassan via any of the following channels:</p>
+<p>This is the official contact page for <strong>Ishaq Hassan</strong>: Flutter Framework Contributor, Engineering Manager at DigitalHire, public technology speaker, open-source maintainer and independent Flutter consultant based in Karachi, Pakistan.</p>
+<h2>What you can reach out about</h2>
 <ul>
-  <li>Email: <a href="mailto:hello@ishaqhassan.dev">hello@ishaqhassan.dev</a></li>
-  <li>LinkedIn: <a href="https://linkedin.com/in/ishaquehassan" rel="noopener">linkedin.com/in/ishaquehassan</a></li>
-  <li>GitHub: <a href="https://github.com/ishaquehassan" rel="noopener">github.com/ishaquehassan</a></li>
-  <li>X / Twitter: <a href="https://x.com/ishaque_hassan" rel="noopener">@ishaque_hassan</a></li>
-  <li>Stack Overflow: <a href="https://stackoverflow.com/users/2094696/ishaq-hassan" rel="noopener">Ishaq Hassan</a></li>
-  <li>Medium: <a href="https://medium.com/@ishaqhassan" rel="noopener">@ishaqhassan</a></li>
-  <li>YouTube: <a href="https://www.youtube.com/@ishaquehassan" rel="noopener">@ishaquehassan</a></li>
+  <li><strong>Flutter consulting engagements</strong>: architecture reviews, performance audits, plugin development, framework-level fixes for production blockers</li>
+  <li><strong>Speaking invitations</strong>: GDG events, university tech talks, podcast appearances, conference keynotes on Flutter, mobile architecture and open-source strategy</li>
+  <li><strong>Engineering leadership opportunities</strong>: Engineering Manager / Head of Engineering / VP Engineering roles, especially mobile-first or Flutter-heavy stacks</li>
+  <li><strong>Open-source collaboration</strong>: pub.dev package contributions, framework PR mentorship, plugin maintenance hand-offs</li>
+  <li><strong>Course and training</strong>: licensing the 35-video Urdu Flutter course, custom team training, mentorship programs</li>
+  <li><strong>Press and media</strong>: interviews about Flutter framework contributions from Pakistan, the OSS contribution journey, the macOS-style portfolio engineering</li>
 </ul>
-<p>Typical turnaround on email is within 48 hours.
-For Flutter consulting engagements, see the <a href="/flutter-consultant.html">consulting page</a>.
-For hiring, see <a href="/hire-flutter-developer.html">hire</a>.</p>
+<h2>Direct channels</h2>
+<ul>
+  <li>Email (preferred): <a href="mailto:hello@ishaqhassan.dev">hello@ishaqhassan.dev</a>. Replies within 48 hours on weekdays.</li>
+  <li>LinkedIn DM: <a href="https://linkedin.com/in/ishaquehassan" rel="noopener">linkedin.com/in/ishaquehassan</a></li>
+  <li>GitHub: <a href="https://github.com/ishaquehassan" rel="noopener">github.com/ishaquehassan</a> (file an issue on a repo for OSS questions)</li>
+  <li>X / Twitter: <a href="https://x.com/ishaque_hassan" rel="noopener">@ishaque_hassan</a></li>
+  <li>Stack Overflow: <a href="https://stackoverflow.com/users/2094696/ishaq-hassan" rel="noopener">Ishaq Hassan profile</a></li>
+  <li>Medium: <a href="https://medium.com/@ishaqhassan" rel="noopener">@ishaqhassan</a></li>
+  <li>YouTube: <a href="https://www.youtube.com/@ishaquehassan" rel="noopener">@ishaquehassan</a> (course videos and tech tutorials)</li>
+  <li>Pub.dev: <a href="https://pub.dev/publishers/ishaqhassan.dev/packages" rel="noopener">verified publisher</a> for Flutter packages</li>
+</ul>
+<p>For paid Flutter consulting engagements, see the dedicated <a href="/flutter-consultant.html">consulting page</a>. To hire Ishaq full-time, contract or per-project, visit the <a href="/hire-flutter-developer.html">hire page</a>. For all other inquiries, email is the fastest channel.</p>
 """,
     },
     {
@@ -210,15 +219,20 @@ For hiring, see <a href="/hire-flutter-developer.html">hire</a>.</p>
         "breadcrumb_name": "GitHub",
         "json_ld_type": "ProfilePage",
         "body_html": """
-<p>Ishaq Hassan's GitHub: <a href="https://github.com/ishaquehassan" rel="noopener">github.com/ishaquehassan</a>.</p>
-<p>Notable repositories include open-source Flutter packages (<a href="https://github.com/ishaquehassan/document_scanner_flutter" rel="noopener">document_scanner_flutter</a>,
-<a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" rel="noopener">flutter_alarm_background_trigger</a>,
-<a href="https://github.com/ishaquehassan/assets_indexer" rel="noopener">assets_indexer</a>,
-<a href="https://github.com/ishaquehassan/nadra_verisys_flutter" rel="noopener">nadra_verisys_flutter</a>),
-internal tooling (<a href="https://github.com/ishaquehassan/claude-remote-terminal" rel="noopener">claude-remote-terminal</a>,
-<a href="https://github.com/ishaquehassan/goal-agent" rel="noopener">goal-agent</a>),
-and upstream contributions to the <a href="https://github.com/flutter/flutter/pulls?q=author%3Aishaquehassan" rel="noopener">Flutter framework</a>.</p>
-<p>See also the <a href="/open-source">open-source page</a> for deep dives on each package.</p>
+<p>Ishaq Hassan ships open-source software on GitHub at <a href="https://github.com/ishaquehassan" rel="noopener">github.com/ishaquehassan</a>. The profile spans Flutter packages published on pub.dev, internal developer tooling, AI agent infrastructure and upstream framework-level contributions.</p>
+<h2>Pinned and notable repositories</h2>
+<ul>
+  <li><a href="https://github.com/ishaquehassan/goal-agent" rel="noopener">goal-agent</a>: Claude Code plugin that turns career or project goals into autonomous multi-step research and execution agents. Built on the Claude Agent SDK with custom subagents for goal research, persona building and engagement writing.</li>
+  <li><a href="https://github.com/ishaquehassan/document_scanner_flutter" rel="noopener">document_scanner_flutter</a>: cross-platform Flutter document scanning plugin with native iOS Vision and Android ML Kit integrations. Used by KYC, compliance and field-data apps.</li>
+  <li><a href="https://github.com/ishaquehassan/assets_indexer" rel="noopener">assets_indexer</a>: C++ powered Dart code generator that produces strongly-typed asset references at build time. Eliminates string-based asset paths and lifts dead-asset detection into the compile step.</li>
+  <li><a href="https://github.com/ishaquehassan/flutter_alarm_background_trigger" rel="noopener">flutter_alarm_background_trigger</a>: production-ready scheduled alarm + background-callback Flutter plugin for Android.</li>
+  <li><a href="https://github.com/ishaquehassan/nadra_verisys_flutter" rel="noopener">nadra_verisys_flutter</a>: NADRA Verisys CNIC KYC SDK wrapper for Flutter, used in Pakistani fintech and onboarding flows.</li>
+  <li><a href="https://github.com/ishaquehassan/claude-remote-terminal" rel="noopener">claude-remote-terminal</a>: secure web-based remote terminal for Claude Code sessions running on a developer machine.</li>
+</ul>
+<h2>Upstream Flutter framework contributions</h2>
+<p>Filter by author for the live PR list: <a href="https://github.com/flutter/flutter/pulls?q=author%3Aishaquehassan" rel="noopener">Pull Requests authored by Ishaq Hassan in the Flutter framework</a>. Recent merged PRs touch <code>LicenseRegistry</code>, <code>RestorableDateTimeN</code>, <code>SemanticsAction</code> serialization, <code>InheritedTheme.captureAll</code>, <code>SnackBar</code> action callbacks and <code>ScrollController</code> attachment lifecycle. See the full breakdown on the <a href="/flutter-contributions">Flutter Contributions page</a>.</p>
+<h2>Activity and engagement</h2>
+<p>The contribution graph is consistently active across multiple repositories with code review, issue triage and small fixes alongside larger feature work. For deep dives on each open-source project, see the <a href="/open-source">Open Source page</a>; for a curated list of articles about the implementation choices behind these packages, see <a href="/medium-articles">Medium Articles</a>.</p>
 """,
     },
     {
@@ -307,9 +321,23 @@ Subscribe to the channel: <a href="https://www.youtube.com/@ishaquehassan?sub_co
         "breadcrumb_name": "WiseSend",
         "json_ld_type": "SoftwareApplication",
         "body_html": """
-<p><strong>WiseSend</strong> is a side project built and maintained by Ishaq Hassan under the XRLabs umbrella.</p>
-<p>Visit the live product: <a href="https://wisesend.xrlabs.app/" rel="noopener">wisesend.xrlabs.app</a>.</p>
-<p>From the portfolio, WiseSend is available as an embedded window; visit <a href="/?w=wisesend">/?w=wisesend</a> on desktop to open it inline.</p>
+<p><strong>WiseSend</strong> is a fast, cross-device wireless file-sharing tool built and maintained by Ishaq Hassan under the XRLabs umbrella. It removes the friction of copying files between phones and laptops without USB cables, cloud accounts or third-party apps.</p>
+<h2>How it works</h2>
+<p>The sender device starts a tiny local web server on the same Wi-Fi network as the receiver and exposes a one-time URL plus a QR code. Receivers scan the QR (or open the URL in any browser) and download files directly over the LAN at native Wi-Fi speeds. Nothing transits the public internet, so transfers stay private and work offline.</p>
+<h2>Key features</h2>
+<ul>
+  <li>Phone to laptop, laptop to phone, or device to device file transfer with no account or sign-up</li>
+  <li>QR code pairing for one-tap connect from a mobile camera</li>
+  <li>Multi-file batch sending with progress tracking</li>
+  <li>Pure browser receiver: no installation needed on the receiving device</li>
+  <li>LAN-only by default, so transfer speed scales with router quality, not internet bandwidth</li>
+  <li>Privacy by design: files never leave the local network or hit any cloud</li>
+</ul>
+<h2>Use it</h2>
+<p>Live product: <a href="https://wisesend.xrlabs.app/" rel="noopener">wisesend.xrlabs.app</a>. The full app runs in the browser; no install required for the web client. The mobile companion runs locally on Android.</p>
+<p>From this portfolio, WiseSend is also available as an embedded window. On desktop, visit <a href="/?w=wisesend">/?w=wisesend</a> to open it inline next to the rest of Ishaq Hassan's work.</p>
+<h2>About XRLabs</h2>
+<p>XRLabs is the umbrella for side projects and experiments by Ishaq Hassan, focused on developer-experience tools, lightweight productivity utilities and small consumer apps. WiseSend is the first publicly-launched product in the lineup.</p>
 """,
     },
 ]
