@@ -501,29 +501,29 @@
 }
 </script>
 
-<!-- Firebase Analytics -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-  import { getAnalytics, logEvent, isSupported } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
-  const firebaseConfig = {
-    apiKey: "AIzaSyA3GK5W5GFxuiBxueeaT61hkORrCD44BqA",
-    authDomain: "ishaqhassan-dev.firebaseapp.com",
-    projectId: "ishaqhassan-dev",
-    storageBucket: "ishaqhassan-dev.firebasestorage.app",
-    messagingSenderId: "553482103816",
-    appId: "1:553482103816:web:1157f4b8ceddbc618cb5bd",
-    measurementId: "G-SLFEKTF611"
-  };
-  try {
-    const app = initializeApp(firebaseConfig);
-    isSupported().then((ok) => {
-      if (!ok) return;
-      const analytics = getAnalytics(app);
-      window.__fbAnalytics = analytics;
-      window.__fbLogEvent = (name, params) => { try { logEvent(analytics, name, params || {}); } catch (e) {} };
-      window.__fbLogEvent('page_view', { page_path: location.pathname, page_title: document.title });
-    });
-  } catch (e) { console.warn('Firebase init failed:', e); }
+<!-- Firebase Analytics: lazy-loaded after first user interaction or 4s idle to keep critical path light -->
+<script>
+(function(){
+  window.__fbQueue = [];
+  window.__fbLogEvent = function(name, params){ window.__fbQueue.push([name, params || {}]); };
+  var loaded = false;
+  function loadFirebase(){
+    if (loaded) return;
+    loaded = true;
+    var s = document.createElement('script');
+    s.type = 'module';
+    s.textContent = [
+      'import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";',
+      'import { getAnalytics, logEvent, isSupported } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";',
+      'const cfg = {apiKey:"AIzaSyA3GK5W5GFxuiBxueeaT61hkORrCD44BqA",authDomain:"ishaqhassan-dev.firebaseapp.com",projectId:"ishaqhassan-dev",storageBucket:"ishaqhassan-dev.firebasestorage.app",messagingSenderId:"553482103816",appId:"1:553482103816:web:1157f4b8ceddbc618cb5bd",measurementId:"G-SLFEKTF611"};',
+      'try { const app = initializeApp(cfg); isSupported().then(function(ok){ if(!ok) return; const a = getAnalytics(app); window.__fbAnalytics = a; const fire = function(n,p){ try { logEvent(a, n, p||{}); } catch(e){} }; window.__fbLogEvent = fire; fire("page_view",{page_path:location.pathname, page_title:document.title}); var q = window.__fbQueue||[]; for (var i=0;i<q.length;i++) fire(q[i][0], q[i][1]); window.__fbQueue=[]; }); } catch(e) { console.warn("Firebase init failed:", e); }'
+    ].join('\n');
+    document.head.appendChild(s);
+  }
+  var evts = ['pointerdown','keydown','scroll','touchstart'];
+  evts.forEach(function(ev){ window.addEventListener(ev, loadFirebase, {passive:true, once:true}); });
+  setTimeout(loadFirebase, 4000);
+})();
 </script>
 
 </head>
