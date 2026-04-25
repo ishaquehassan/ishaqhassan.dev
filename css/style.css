@@ -5234,6 +5234,10 @@ a.li-tl-company:hover { color: #7dd3fc; }
 
 /* ===== FLUTTER COURSE WINDOW ===== */
 #fc-body { padding: 0 !important; overflow: hidden; }
+/* fshell-content has default padding that leaves 60px top + 24px bottom + 22px
+   sides — fc-grid-view is designed flush with its own header + scrollable
+   sections, so kill the padding on the FC-window-only fshell-content. */
+#win-flutter-course .fshell-content { padding: 0 !important; }
 .fc-grid-view { display: flex; flex-direction: column; height: 100%; }
 
 /* Shimmer animation */
