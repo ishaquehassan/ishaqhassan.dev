@@ -9,7 +9,7 @@
  * Resend (re_*) for outbound notifications from hello@ishaqhassan.dev.
  */
 
-const MODEL = 'google/gemini-2.0-flash-001';
+const MODEL = 'deepseek/deepseek-chat';
 const FROM_EMAIL = 'Max (Ishaq AI) <hello@ishaqhassan.dev>';
 const TO_EMAIL = 'hello@ishaqhassan.dev';
 
