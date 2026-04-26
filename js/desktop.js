@@ -156,7 +156,7 @@ window.addEventListener('load', () => {
       const graph = document.getElementById('gh-graph');
       const total = document.getElementById('gh-total');
       if (graph) {
-        const weeks = data.weeks.slice(-26);
+        const weeks = data.weeks.slice(-17);
         weeks.forEach(week => {
           week.contributionDays.forEach(day => {
             const cell = document.createElement('div');

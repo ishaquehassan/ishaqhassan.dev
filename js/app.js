@@ -276,8 +276,10 @@ function updateClock() {
   if (hEl) hEl.textContent = h;
   if (mEl) mEl.textContent = m;
   if (apEl) apEl.textContent = ampm;
-  document.getElementById('clock-date').textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
-  document.getElementById('menubar-time').textContent = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }) + ' ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+  const dateEl = document.getElementById('clock-date');
+  if (dateEl) dateEl.textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+  const mbTime = document.getElementById('menubar-time');
+  if (mbTime) mbTime.textContent = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }) + ' ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
 }
 setInterval(updateClock, 1000);
 updateClock();
