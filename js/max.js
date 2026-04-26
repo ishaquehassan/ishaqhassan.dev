@@ -34,11 +34,24 @@
     { num: 183062, title: 'Reset AppBar _scrolledUnder flag when scroll context changes' },
   ];
 
+  // Articles catalog (slug → metadata)
+  const ARTICLE_CATALOG = {
+    'flutter-prs': { tag: 'Flutter', title: 'How I Got 6 PRs Merged Into Flutter Framework', excerpt: '90-day path from triage to merge. Test-first bar, review etiquette.', mins: 10, href: '/blog/how-i-got-6-prs-merged-into-flutter.html' },
+    'three-tree': { tag: 'Architecture', title: "Flutter's Three-Tree Architecture Explained", excerpt: 'Widget configures, Element mounts, RenderObject paints. Where bugs hide.', mins: 12, href: '/blog/flutter-three-tree-architecture-explained.html' },
+    'state-mgmt': { tag: 'State', title: 'Flutter State Management 2026: A Decision Guide', excerpt: 'setState, Provider, Riverpod, Bloc, signals. When to use which.', mins: 14, href: '/blog/flutter-state-management-2026-guide.html' },
+    'plugins-case': { tag: 'Plugins', title: 'Building Production Flutter Plugins (156 likes case study)', excerpt: 'Build, publish, maintain a plugin with 156 pub.dev likes.', mins: 11, href: '/blog/building-production-flutter-plugins-case-study.html' },
+    'isolates': { tag: 'Dart', title: 'Dart Isolates: The Missing Guide', excerpt: 'Concurrency, ports, real-world patterns for production Flutter.', mins: 8, href: 'https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e' },
+    'native-plugins': { tag: 'Native', title: 'A Journey with Flutter Native Plugin Development', excerpt: 'MethodChannel, EventChannel, PlatformView. Cross-platform plugin dev.', mins: 7, href: 'https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061' },
+    'asset-indexer': { tag: 'Codegen', title: 'Indexing Assets in a Dart Class (R.java pattern)', excerpt: 'Auto-generate typed asset references with codegen.', mins: 6, href: 'https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb' },
+    'kotlin-functions': { tag: 'Firebase', title: 'Firebase Cloud Functions Using Kotlin', excerpt: 'Cloud Functions in Kotlin via GraalVM. Setup, performance, caveats.', mins: 5, href: 'https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67' },
+    'devncode-ai': { tag: 'AI', title: 'DevnCode Meetup IV: Artificial Intelligence', excerpt: 'Recap of DevnCode AI meetup, talks, takeaways.', mins: 4, href: 'https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5' },
+  };
+  // Default top-4 ordering when [[CARDS:articles]] (no slugs given)
   const ARTICLE_CARDS = [
-    { tag: 'Flutter', title: 'How I Got 6 PRs Merged Into Flutter Framework', excerpt: '90-day path from triage to merge. Test-first bar, review etiquette.', mins: 10, href: '/blog/how-i-got-6-prs-merged-into-flutter.html' },
-    { tag: 'Architecture', title: "Flutter's Three-Tree Architecture Explained", excerpt: 'Widget configures, Element mounts, RenderObject paints. Where bugs hide.', mins: 12, href: '/blog/flutter-three-tree-architecture-explained.html' },
-    { tag: 'State', title: 'Flutter State Management 2026: A Decision Guide', excerpt: 'setState, Provider, Riverpod, Bloc, signals. When to use which.', mins: 14, href: '/blog/flutter-state-management-2026-guide.html' },
-    { tag: 'Plugins', title: 'Building Production Flutter Plugins (156 likes case study)', excerpt: 'Build, publish, maintain a plugin with 156 pub.dev likes.', mins: 11, href: '/blog/building-production-flutter-plugins-case-study.html' },
+    ARTICLE_CATALOG['flutter-prs'],
+    ARTICLE_CATALOG['three-tree'],
+    ARTICLE_CATALOG['state-mgmt'],
+    ARTICLE_CATALOG['plugins-case'],
   ];
 
   const SPEAKING_CARDS = [
@@ -48,11 +61,48 @@
     { date: '2024', title: 'Flutter Seminar', org: 'Iqra University', role: 'Keynote', href: 'https://www.linkedin.com/posts/itrathussainzaidi_flutter-iqrauniversity-seminar-activity-7192627199412232192-8t2X' },
   ];
 
+  const OSS_CATALOG = {
+    'document_scanner_flutter': {
+      name: 'document_scanner_flutter',
+      desc: 'Flutter plugin: document scanning with edge detection, perspective correction, OCR-ready output',
+      stars: '63★ · 135 forks', lang: 'Dart',
+      href: 'https://github.com/ishaquehassan/document_scanner_flutter',
+      topics: ['scan', 'document', 'ocr', 'camera', 'flutter plugin', 'pdf', 'paper scan', 'edge detection'],
+    },
+    'flutter_alarm_background_trigger': {
+      name: 'flutter_alarm_background_trigger',
+      desc: 'Native Kotlin alarm plugin for Flutter - background tasks, scheduled alarms, wake-up triggers on Android',
+      stars: '13★', lang: 'Kotlin',
+      href: 'https://github.com/ishaquehassan/flutter_alarm_background_trigger',
+      topics: ['alarm', 'background', 'cron', 'scheduled task', 'wake up', 'android background', 'flutter background'],
+    },
+    'assets_indexer': {
+      name: 'assets_indexer',
+      desc: 'Auto-generate typed asset references for Flutter (R.java pattern). Codegen for compile-time safety',
+      stars: '9★', lang: 'Dart',
+      href: 'https://github.com/ishaquehassan/assets_indexer',
+      topics: ['assets', 'codegen', 'typed', 'r.java', 'images', 'auto generate', 'asset class', 'safe assets'],
+    },
+    'nadra_verisys_flutter': {
+      name: 'nadra_verisys_flutter',
+      desc: 'NADRA CNIC KYC verification plugin for Flutter - Pakistan ID verification flow',
+      stars: '3★', lang: 'Dart',
+      href: 'https://github.com/ishaquehassan/nadra_verisys_flutter',
+      topics: ['kyc', 'cnic', 'nadra', 'pakistan id', 'verification', 'identity', 'kyb'],
+    },
+    'goal-agent': {
+      name: 'goal-agent',
+      desc: 'AI-powered career goal tracking agent. Daily roadmap, content calendar, dashboard, contact mgmt - turns ambitious goals into daily actions',
+      stars: 'OSS', lang: 'TypeScript',
+      href: 'https://github.com/ishaquehassan/goal-agent',
+      topics: ['goal', 'career', 'ai agent', 'roadmap', 'productivity', 'tracker', 'career planning', 'achievement', 'milestones', 'agent', 'tracking', 'progress', 'discipline', 'self improvement'],
+    },
+  };
   const OSS_CARDS = [
-    { name: 'document_scanner_flutter', desc: 'Flutter plugin: document scanning with edge detection', stars: '63★ · 135 forks', lang: 'Dart', href: 'https://github.com/ishaquehassan/document_scanner_flutter' },
-    { name: 'flutter_alarm_background_trigger', desc: 'Native Kotlin alarm plugin for Flutter', stars: '13★', lang: 'Kotlin', href: 'https://github.com/ishaquehassan/flutter_alarm_background_trigger' },
-    { name: 'assets_indexer', desc: 'Auto-generate typed asset references (R.java pattern)', stars: '9★', lang: 'Dart', href: 'https://github.com/ishaquehassan/assets_indexer' },
-    { name: 'goal-agent', desc: 'AI-powered career goal tracking agent', stars: 'OSS', lang: 'TypeScript', href: 'https://github.com/ishaquehassan/goal-agent' },
+    OSS_CATALOG['document_scanner_flutter'],
+    OSS_CATALOG['flutter_alarm_background_trigger'],
+    OSS_CATALOG['assets_indexer'],
+    OSS_CATALOG['goal-agent'],
   ];
 
   const TECH_GROUPS = [
@@ -69,6 +119,50 @@
     bullets: ['Dart fundamentals', 'OOP', 'Flutter UI + Layout', 'State management', 'API & Networking', 'CI/CD + Deployment'],
   };
 
+  // Course video catalog (mirrors fcVideos in js/app.js)
+  const FC_VIDEOS = [
+    {id:'DB51xmXlaX4',t:'Basics Of Computers & Why Flutter',s:'Foundation'},
+    {id:'i6NyxOIDPAg',t:'Variables & Types',s:'Dart Basics'},
+    {id:'EwfsrybbU20',t:'Lists / Maps / Control Flow',s:'Dart Basics'},
+    {id:'GJpmATFL3JQ',t:'Loops / Scope / break',s:'Dart Basics'},
+    {id:'PMZIF36_LOk',t:'Loops / continue / labels / Functions',s:'Dart Basics'},
+    {id:'xKtramkjQJE',t:'Functions / Arguments / By Ref / By Value',s:'Dart Basics'},
+    {id:'LLes21jFpIY',t:'Higher Order Functions / const & final / typedef',s:'Dart Basics'},
+    {id:'wgHSJtaxdmE',t:'Arrow Functions / Class / Constructors',s:'OOP'},
+    {id:'MEKPMFf14kw',t:'Factory Constructor / Static / Get / Set',s:'OOP'},
+    {id:'-IKODeF5zgE',t:'Inheritance / super / overriding / Polymorphism',s:'OOP'},
+    {id:'cX8v6jX66ZA',t:'Encapsulation / Abstraction',s:'OOP'},
+    {id:'mIfYL2uQo64',t:'Mixins / Enums / Exception Handling',s:'OOP'},
+    {id:'sO9Kj2u_3A8',t:'Git Basics',s:'Foundation'},
+    {id:'zh4ilo3x2lo',t:'Flutter Intro',s:'Flutter UI'},
+    {id:'y86zTGZzg4E',t:'Widgets & How to Compose Them',s:'Flutter UI'},
+    {id:'e1jlRM5eALc',t:'Flex Layout Composition',s:'Flutter UI'},
+    {id:'Kd6xEbzB9Ls',t:'Stateful Widgets in Depth',s:'Flutter UI'},
+    {id:'LUb32ZGcDC0',t:'Assignment for Stateful Widget',s:'Flutter UI'},
+    {id:'t6Oar6baJ84',t:'Complex Data / Null Safety / Child Contexts',s:'Flutter UI'},
+    {id:'zOO5aiO0MVc',t:'Navigator & Future',s:'State Management'},
+    {id:'NzOleMz_39c',t:'HTTP / DNS / Server & Client / API / JSON',s:'API & Network'},
+    {id:'_8Sp-b3jC3k',t:'REST API / HTTP Methods / JSON Parsing',s:'API & Network'},
+    {id:'OpDiadtIWGY',t:'Assets / Theme / Dialog & Modal Sheet',s:'Flutter UI'},
+    {id:'8DceQCquWC0',t:'Complex JSON / Parsing to Models',s:'API & Network'},
+    {id:'zURZS5-sL90',t:'Deep JSON Parsing / Debugging',s:'API & Network'},
+    {id:'nQLiQ3AvoT8',t:'Future Builder / Form / Context Flow',s:'State Management'},
+    {id:'WtSBV06lWj4',t:'State Management / Inherited Widget',s:'State Management'},
+    {id:'YPTU4ebYkLw',t:'Authenticated API / Postman / Dart Server',s:'API & Network'},
+    {id:'KwOhPYsSS-o',t:'Access Token / Shared Preferences',s:'Advanced'},
+    {id:'-Bikp0jtas4',t:'Generics / Generic Model / Provider',s:'State Management'},
+    {id:'YBp7i8VGiaQ',t:'Stacked / Stacked Services / Generator',s:'Advanced'},
+    {id:'8FwRyiARuhI',t:'Unit Test / CI-CD / Github Actions',s:'Advanced'},
+    {id:'vJnH0HE-YZw',t:'UX UI / Figma / Product Lifecycle',s:'Advanced'},
+    {id:'414Ulz9HjMs',t:'Local Database / SQLite / ORM / Floor',s:'Advanced'},
+    {id:'b_MPN5n8g6o',t:'Deploying Flutter Web / Github Actions',s:'Advanced'},
+  ];
+  const FC_VIDEO_INDEX = (() => {
+    const m = {};
+    FC_VIDEOS.forEach((v, i) => { m[v.id] = i; });
+    return m;
+  })();
+
   const CONTACT_CARDS = [
     { label: 'Email', value: 'hello@ishaqhassan.dev', href: 'mailto:hello@ishaqhassan.dev', grad: 'linear-gradient(135deg,#22c55e,#16a34a)', svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="#fff" stroke-width="1.5"/></svg>' },
     { label: 'GitHub', value: '@ishaquehassan', href: 'https://github.com/ishaquehassan', grad: 'linear-gradient(135deg,#24292e,#40464d)', svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>' },
@@ -76,6 +170,7 @@
     { label: 'Medium', value: '@ishaqhassan', href: 'https://medium.com/@ishaqhassan', grad: 'linear-gradient(135deg,#1a8917,#0d7a0d)', svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>' },
     { label: 'YouTube', value: '@ishaquehassan', href: 'https://www.youtube.com/@ishaquehassan', grad: 'linear-gradient(135deg,#ff0033,#cc0000)', svg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 00.5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 002.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 002.1-2.1C24 16 24 12 24 12s0-4-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>' },
     { label: 'X (Twitter)', value: '@ishaque_hassan', href: 'https://x.com/ishaque_hassan', grad: 'linear-gradient(135deg,#000,#1a1a1a)', svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>' },
+    { label: 'TikTok', value: '@ishaqhassan.dev', href: 'https://www.tiktok.com/@ishaqhassan.dev', grad: 'linear-gradient(135deg,#010101,#1a1a1a)', svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005.17 20.1a6.34 6.34 0 0010.86-4.43V8.66a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1.21-.09z" fill="#25F4EE"/><path d="M20.8 6.78a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 006.38 20.1a6.34 6.34 0 0010.86-4.43V8.66a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1.21-.09z" fill="#fff" fill-opacity=".85"/><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25h-1.04v13.23a2.89 2.89 0 01-2.89 2.89 2.84 2.84 0 01-1.34-.34 2.89 2.89 0 002.45 1.34 2.89 2.89 0 002.89-2.89V7.4a8.16 8.16 0 004.77 1.52V5.52a4.83 4.83 0 01-1.07-.16zM9.21 12.74a2.89 2.89 0 00-1.83 5.16 2.84 2.84 0 011.83-3.86z" fill="#FE2C55"/></svg>' },
   ];
 
   /* ------------------- Persistence ------------------- */
@@ -248,9 +343,11 @@
       } else if (p.kind === 'cards') {
         const fn = CARD_BUILDERS[p.type];
         if (!fn) return;
+        const html = fn(p.param);
+        if (!html) return;
         const block = el('div', 'max-msg max-msg-bot max-msg-cards');
         if (!animate) block.style.animation = 'none';
-        block.innerHTML = fn();
+        block.innerHTML = html;
         inst.messagesEl.appendChild(block);
         firstWrap = firstWrap || block;
       }
@@ -333,8 +430,14 @@
     );
   }
 
-  function buildArticlesCardsHTML() {
-    const cards = ARTICLE_CARDS.map(buildArticleCard).join('');
+  function buildArticlesCardsHTML(param) {
+    let list;
+    if (param) {
+      const slugs = String(param).split(',').map((s) => s.trim()).filter(Boolean);
+      list = slugs.map((s) => ARTICLE_CATALOG[s]).filter(Boolean);
+    }
+    if (!list || list.length === 0) list = ARTICLE_CARDS;
+    const cards = list.map(buildArticleCard).join('');
     return (
       '<div class="max-cards-block">' +
         '<div class="max-art-grid">' + cards + '</div>' +
@@ -359,8 +462,14 @@
     );
   }
 
-  function buildOSSCardsHTML() {
-    const cards = OSS_CARDS.map((o) => (
+  function buildOSSCardsHTML(param) {
+    let list;
+    if (param) {
+      const slugs = String(param).split(',').map((s) => s.trim()).filter(Boolean);
+      list = slugs.map((s) => OSS_CATALOG[s]).filter(Boolean);
+    }
+    if (!list || list.length === 0) list = OSS_CARDS;
+    const cards = list.map((o) => (
       '<a class="max-oss-card" href="' + escapeHtml(o.href) + '" target="_blank" rel="noopener noreferrer">' +
         '<div class="max-oss-head">' +
           '<div class="max-oss-name">' + escapeHtml(o.name) + '</div>' +
@@ -412,34 +521,93 @@
     return '<div class="max-cards-block">' + buildContactCardsHTML() + '</div>';
   }
 
-  const CARD_BUILDERS = {
-    contact: buildContactCardsBlockHTML,
-    prs: buildPRsCardsHTML,
-    articles: buildArticlesCardsHTML,
-    course: buildCourseCardHTML,
-    speaking: buildSpeakingCardsHTML,
-    opensource: buildOSSCardsHTML,
-    oss: buildOSSCardsHTML,
-    tech: buildTechCardsHTML,
-    techstack: buildTechCardsHTML,
+  function buildVideoCard(v, idx) {
+    const thumb = 'https://img.youtube.com/vi/' + v.id + '/mqdefault.jpg';
+    return (
+      '<a class="max-video-card" href="https://www.youtube.com/watch?v=' + v.id + '"' +
+        ' onclick="return window.maxOpenVideo(' + idx + ', event)">' +
+        '<div class="max-video-thumb">' +
+          '<img src="' + thumb + '" alt="' + escapeHtml(v.t) + '" loading="lazy">' +
+          '<div class="max-video-badge">#' + (idx + 1) + '</div>' +
+          '<div class="max-video-play">▶</div>' +
+        '</div>' +
+        '<div class="max-video-meta">' +
+          '<div class="max-video-section">' + escapeHtml(v.s) + '</div>' +
+          '<div class="max-video-title">' + escapeHtml(v.t) + '</div>' +
+        '</div>' +
+      '</a>'
+    );
+  }
+
+  // Build cards for one or more video IDs (param can be id or comma-separated ids)
+  function buildVideoCardsHTML(param) {
+    const ids = String(param || '').split(',').map((s) => s.trim()).filter(Boolean);
+    const items = ids.map((id) => {
+      const idx = FC_VIDEO_INDEX[id];
+      if (idx == null) return null;
+      return { v: FC_VIDEOS[idx], idx };
+    }).filter(Boolean);
+    if (items.length === 0) return '';
+    const grid = items.map((it) => buildVideoCard(it.v, it.idx)).join('');
+    return (
+      '<div class="max-cards-block">' +
+        '<div class="max-video-grid">' + grid + '</div>' +
+        '<a class="max-cards-cta" href="/flutter-course">Open full Flutter course →</a>' +
+      '</div>'
+    );
+  }
+
+  // Click handler: if course player is available in same page, use it; else fall back to YouTube link
+  window.maxOpenVideo = function (idx, ev) {
+    try {
+      if (typeof window.playFcVideo === 'function') {
+        if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+        // Ensure flutter-course module is initialized so the player window exists
+        if (typeof window.initFlutterCourse === 'function') {
+          try { window.initFlutterCourse(); } catch (e) {}
+        }
+        window.playFcVideo(idx);
+        return false;
+      }
+    } catch (e) {}
+    return true; // allow default href to open YouTube
   };
 
-  // Extract [[CARDS:type]] tags from text and split into segments.
-  // Returns array of { kind: 'text', value } | { kind: 'cards', type }
+  const CARD_BUILDERS = {
+    contact: () => buildContactCardsBlockHTML(),
+    prs: () => buildPRsCardsHTML(),
+    articles: (p) => buildArticlesCardsHTML(p),
+    article: (p) => buildArticlesCardsHTML(p),
+    course: () => buildCourseCardHTML(),
+    speaking: () => buildSpeakingCardsHTML(),
+    opensource: () => buildOSSCardsHTML(),
+    oss: () => buildOSSCardsHTML(),
+    tech: () => buildTechCardsHTML(),
+    techstack: () => buildTechCardsHTML(),
+    video: (p) => buildVideoCardsHTML(p),
+    videos: (p) => buildVideoCardsHTML(p),
+  };
+
+  // Extract card tags from text. Supported:
+  //   [[CARDS:type]]         e.g. [[CARDS:contact]]
+  //   [[type]]               shorthand for type alone
+  //   [[type:param]]         e.g. [[VIDEO:GJpmATFL3JQ]] or [[ARTICLES:state-mgmt,three-tree]]
+  //   [[CARDS:type:param]]   verbose version
+  // Returns segments: { kind:'text', value } | { kind:'cards', type, param }
   function splitCardTags(text) {
     if (!text) return [{ kind: 'text', value: '' }];
-    const re = /\[\[CARDS?:([a-z_-]+)\]\]/gi;
+    const re = /\[\[(?:CARDS?:)?([a-zA-Z_-]+)(?::([^\]]+))?\]\]/g;
     const parts = [];
     let last = 0;
     let m;
     while ((m = re.exec(text)) !== null) {
+      const type = (m[1] || '').toLowerCase();
+      const param = (m[2] || '').trim();
+      if (!CARD_BUILDERS[type]) continue;
       if (m.index > last) {
         parts.push({ kind: 'text', value: text.slice(last, m.index).trim() });
       }
-      const type = (m[1] || '').toLowerCase();
-      if (CARD_BUILDERS[type]) {
-        parts.push({ kind: 'cards', type: type });
-      }
+      parts.push({ kind: 'cards', type: type, param: param });
       last = m.index + m[0].length;
     }
     if (last < text.length) {
@@ -731,6 +899,10 @@
     saveSession(state);
   }
 
+  function scrollAllToBottom(smooth) {
+    bindAll().forEach((i) => scrollToBottom(i, !!smooth));
+  }
+
   /* ------------------- Init ------------------- */
   function init() {
     const insts = bindAll();
@@ -738,6 +910,27 @@
     insts.forEach(attachEvents);
     ensureGreeting();
     insts.forEach(renderAll);
+    // Scroll to bottom multiple times to cover layout/font-load settling
+    [0, 60, 180, 400, 800].forEach((d) => setTimeout(() => scrollAllToBottom(false), d));
+
+    // Re-scroll when chat container becomes visible (window opens / mobile section expands)
+    insts.forEach((inst) => {
+      if (!inst || !inst.messagesEl) return;
+      let last = 0;
+      try {
+        const ro = new ResizeObserver(() => {
+          const h = inst.messagesEl.clientHeight;
+          if (h > 0 && h !== last) {
+            last = h;
+            scrollToBottom(inst, false);
+          }
+        });
+        ro.observe(inst.messagesEl);
+      } catch (e) {}
+    });
+
+    // Window resize / orientation change
+    window.addEventListener('resize', () => scrollAllToBottom(false));
   }
 
   if (document.readyState === 'loading') {
@@ -761,6 +954,7 @@
       insts.forEach((i) => setTab(i, tab));
     },
     send: function (text) { return sendMessage(text); },
+    scrollBottom: function (smooth) { scrollAllToBottom(!!smooth); },
     _state: function () {
       const insts = bindAll();
       return {

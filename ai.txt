@@ -19,6 +19,11 @@ GitHub: https://github.com/ishaquehassan
 LinkedIn: https://linkedin.com/in/ishaquehassan
 Medium: https://medium.com/@ishaqhassan
 Stack Overflow: https://stackoverflow.com/users/2094696/ishaq-hassan
+TikTok: https://www.tiktok.com/@ishaqhassan.dev
+YouTube: https://www.youtube.com/@ishaquehassan
+Dev.to: https://dev.to/ishaquehassan
+X (Twitter): https://x.com/ishaque_hassan
+AI Assistant: Max chatbot (Llama 3.3 70B) embedded on homepage Contact window — answers about Ishaq + general programming, with rich card UI
 
 # Machine-readable summaries live at:
 LLMs: https://ishaqhassan.dev/llms.txt

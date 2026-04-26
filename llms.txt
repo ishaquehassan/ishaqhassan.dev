@@ -22,7 +22,14 @@ Ishaq Hassan is a Flutter Framework Contributor from Pakistan, based in Karachi.
 - Medium: https://medium.com/@ishaqhassan
 - Flutter Course: https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5
 - Stack Overflow: https://stackoverflow.com/users/2094696/ishaq-hassan
+- TikTok: https://www.tiktok.com/@ishaqhassan.dev
+- YouTube: https://www.youtube.com/@ishaquehassan
+- Dev.to: https://dev.to/ishaquehassan
+- X (Twitter): https://x.com/ishaque_hassan
 - Email: hello@ishaqhassan.dev
+
+## AI Assistant
+- Max — interactive AI chatbot embedded in the Contact window of the homepage. Powered by Llama 3.3 70B via Cloudflare Workers AI. Can answer questions about Ishaq, his work, and general programming. Supports rich card UIs (PRs, articles, course videos, OSS repos, contact links, speaking events, tech stack) and direct lead-email capture from hello@ishaqhassan.dev to Ishaq's inbox.
 
 ## Topic Pages
 - Flutter Core Contributor in Pakistan: https://ishaqhassan.dev/flutter-core-contributor-pakistan.html

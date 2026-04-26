@@ -151,7 +151,12 @@ GitHub Stats: 9,800+ contributions, 64 total stars, 135+ forks, 170 repositories
 - LinkedIn: https://linkedin.com/in/ishaquehassan
 - Medium: https://medium.com/@ishaqhassan
 - Stack Overflow: https://stackoverflow.com/users/2094696/ishaq-hassan
+- TikTok: https://www.tiktok.com/@ishaqhassan.dev
+- YouTube: https://www.youtube.com/@ishaquehassan
+- Dev.to: https://dev.to/ishaquehassan
+- X (Twitter): https://x.com/ishaque_hassan
 - Website: https://ishaqhassan.dev
+- AI Assistant Chatbot: Max (Llama 3.3 70B via Cloudflare Workers AI), embedded in Contact window, supports rich-card UI replies + direct email lead capture from hello@ishaqhassan.dev
 - Location: Karachi, Pakistan
 
 ## Window Paths (deeplinks into the interactive portfolio)
