@@ -6846,8 +6846,7 @@ a.li-tl-company:hover { color: #7dd3fc; }
 /* Messages — Claude-style: bot is full-width plain prose (no avatar,
    no bubble), user gets a tight indigo bubble capped at 80%. */
 .max-msg {
-  display: flex;
-  gap: 0;
+  display: block;
   width: 100%;
   max-width: 100%;
   animation: maxMsgIn .35s cubic-bezier(.18,.89,.32,1.28);
@@ -6858,12 +6857,17 @@ a.li-tl-company:hover { color: #7dd3fc; }
 }
 
 /* Bot (assistant): no avatar, no bubble, just clean prose */
-.max-msg-bot { align-self: stretch; }
-.max-msg-bot .max-msg-avatar { display: none; }
+.max-msg-bot {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+.max-msg-bot .max-msg-avatar { display: none !important; }
 .max-msg-bot .max-bubble {
+  display: block;
   background: transparent;
   color: var(--text);
-  padding: 4px 2px 8px;
+  padding: 4px 0 8px;
   border-radius: 0;
   box-shadow: none;
   max-width: 100%;
@@ -6876,14 +6880,15 @@ a.li-tl-company:hover { color: #7dd3fc; }
   word-break: break-word;
 }
 
-/* User: right-aligned, bubble, capped at 80% */
+/* User: right-aligned bubble, capped at 80% */
 .max-msg-user {
-  align-self: flex-end;
-  justify-content: flex-end;
-  max-width: 80%;
+  display: block;
+  width: 100%;
+  text-align: right;
 }
-.max-msg-user .max-msg-avatar { display: none; }
+.max-msg-user .max-msg-avatar { display: none !important; }
 .max-msg-user .max-bubble {
+  display: inline-block;
   background: linear-gradient(135deg, #6366f1 0%, #5b6cff 50%, #818cf8 100%);
   color: #fff;
   padding: 10px 14px;
@@ -6891,7 +6896,8 @@ a.li-tl-company:hover { color: #7dd3fc; }
   border-bottom-right-radius: 6px;
   font-size: 14px;
   line-height: 1.5;
-  max-width: 100%;
+  max-width: 80%;
+  text-align: left;
   white-space: pre-wrap;
   word-wrap: break-word;
   word-break: break-word;
