@@ -414,14 +414,14 @@
         '<div class="max-pr-grid">' + merged + '</div>' +
         '<div class="max-cards-section" style="margin-top:14px;">3 Open / In-review</div>' +
         '<div class="max-pr-grid">' + open + '</div>' +
-        '<a class="max-cards-cta" href="/flutter-contributions">View all PRs →</a>' +
+        '<a class="max-cards-cta" href="/flutter-contributions" onclick="return window.maxOpenSection(\'prs\',event)">View all PRs →</a>' +
       '</div>'
     );
   }
 
   function buildArticleCard(a) {
     return (
-      '<a class="max-art-card" href="' + escapeHtml(a.href) + '">' +
+      '<a class="max-art-card" href="' + escapeHtml(a.href) + '" target="_blank" rel="noopener noreferrer">' +
         '<div class="max-art-tag">' + escapeHtml(a.tag) + '</div>' +
         '<div class="max-art-title">' + escapeHtml(a.title) + '</div>' +
         '<div class="max-art-excerpt">' + escapeHtml(a.excerpt) + '</div>' +
@@ -441,7 +441,7 @@
     return (
       '<div class="max-cards-block">' +
         '<div class="max-art-grid">' + cards + '</div>' +
-        '<a class="max-cards-cta" href="/articles/">View all articles →</a>' +
+        '<a class="max-cards-cta" href="/articles/" onclick="return window.maxOpenSection(\'articles\',event)">View all articles →</a>' +
       '</div>'
     );
   }
@@ -457,7 +457,7 @@
     return (
       '<div class="max-cards-block">' +
         '<div class="max-spk-grid">' + cards + '</div>' +
-        '<a class="max-cards-cta" href="/speaking">View all speaking events →</a>' +
+        '<a class="max-cards-cta" href="/speaking" onclick="return window.maxOpenSection(\'speaking\',event)">View all speaking events →</a>' +
       '</div>'
     );
   }
@@ -482,7 +482,7 @@
     return (
       '<div class="max-cards-block">' +
         '<div class="max-oss-grid">' + cards + '</div>' +
-        '<a class="max-cards-cta" href="/open-source">View all open source →</a>' +
+        '<a class="max-cards-cta" href="/open-source" onclick="return window.maxOpenSection(\'oss\',event)">View all open source →</a>' +
       '</div>'
     );
   }
@@ -496,7 +496,7 @@
     )).join('');
     return (
       '<div class="max-cards-block">' + groups +
-        '<a class="max-cards-cta" href="/tech-stack">Full tech stack →</a>' +
+        '<a class="max-cards-cta" href="/tech-stack" onclick="return window.maxOpenSection(\'tech\',event)">Full tech stack →</a>' +
       '</div>'
     );
   }
@@ -506,12 +506,12 @@
     const bullets = c.bullets.map((b) => '<li>' + escapeHtml(b) + '</li>').join('');
     return (
       '<div class="max-cards-block">' +
-        '<a class="max-course-card" href="' + escapeHtml(c.href) + '" target="_blank" rel="noopener noreferrer">' +
+        '<a class="max-course-card" href="/flutter-course" onclick="return window.maxOpenSection(\'course\',event)">' +
           '<div class="max-course-badge">FREE · 35 videos</div>' +
           '<div class="max-course-title">' + escapeHtml(c.title) + '</div>' +
           '<div class="max-course-sub">' + escapeHtml(c.sub) + '</div>' +
           '<ul class="max-course-bullets">' + bullets + '</ul>' +
-          '<div class="max-course-cta">▶ Watch on YouTube</div>' +
+          '<div class="max-course-cta">▶ Open the course</div>' +
         '</a>' +
       '</div>'
     );
@@ -552,10 +552,41 @@
     return (
       '<div class="max-cards-block">' +
         '<div class="max-video-grid">' + grid + '</div>' +
-        '<a class="max-cards-cta" href="/flutter-course">Open full Flutter course →</a>' +
+        '<a class="max-cards-cta" href="/flutter-course" onclick="return window.maxOpenSection(\'course\',event)">Open full Flutter course →</a>' +
       '</div>'
     );
   }
+
+  // Map of CTA keys to (desktop window id, mobile section id)
+  const NAV_MAP = {
+    prs: { win: 'flutter', mob: 'prs' },
+    speaking: { win: 'speaking', mob: 'speaking' },
+    oss: { win: 'oss', mob: 'oss' },
+    tech: { win: 'tech', mob: 'tech' },
+    articles: { win: 'articles', mob: 'articles' },
+    course: { win: 'flutter-course', mob: 'flutter-course' },
+    contact: { win: 'contact', mob: 'connect' },
+  };
+
+  // Open a section in-site (window on desktop, expanded section on mobile)
+  window.maxOpenSection = function (key, ev) {
+    const m = NAV_MAP[key];
+    if (!m) return true;
+    const isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+    try {
+      if (isMobile && typeof window.expandMobileSection === 'function') {
+        if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+        window.expandMobileSection(ev || { stopPropagation: function(){} }, m.mob);
+        return false;
+      }
+      if (!isMobile && typeof window.openWindow === 'function') {
+        if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+        window.openWindow(m.win);
+        return false;
+      }
+    } catch (e) {}
+    return true;
+  };
 
   // Click handler: if course player is available in same page, use it; else fall back to YouTube link
   window.maxOpenVideo = function (idx, ev) {
