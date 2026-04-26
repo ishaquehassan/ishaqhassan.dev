@@ -7763,6 +7763,59 @@ a.li-tl-company:hover { color: #7dd3fc; }
 }
 
 /* =====================================================================
+   Max chat — wide-container readability cap (full-screen / large windows)
+   ChatGPT/Claude-style centered column. Without this, on full-screen or a
+   wide-resized window the messages and rich cards stretch edge-to-edge
+   and the page reads like a billboard.
+
+   Uses container queries: cap kicks in when the chat's own width crosses
+   880px, regardless of whether triggered by fullscreen or manual resize.
+   ===================================================================== */
+.max-chat:not(.max-chat-mob) {
+  container-type: inline-size;
+  container-name: maxchat;
+}
+
+@container maxchat (min-width: 880px) {
+  .max-messages > *,
+  .max-hero,
+  .max-inputbar > *,
+  .max-disclaimer {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+  .max-messages { padding-left: 24px; padding-right: 24px; }
+  .max-inputbar { padding-left: 24px; padding-right: 24px; }
+  /* User bubbles still right-align inside the centered column */
+  .max-msg-user { text-align: right; }
+  .max-msg-user .max-bubble { display: inline-block; max-width: 70%; }
+}
+
+/* Fallback for browsers without container query support: use fullscreen scope
+   (covers the most common "too wide" case — manually maximized window). */
+@supports not (container-type: inline-size) {
+  .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-messages > *,
+  .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-hero,
+  .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-inputbar > *,
+  .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-disclaimer {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+  .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-messages,
+  .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-inputbar {
+    padding-left: 24px; padding-right: 24px;
+  }
+  .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-msg-user { text-align: right; }
+  .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-msg-user .max-bubble {
+    display: inline-block; max-width: 70%;
+  }
+}
+
+/* =====================================================================
    Mobile bottom bar — Glowing AI Icon (replaces old mail icon)
    ===================================================================== */
 .mob-ai-icon {
