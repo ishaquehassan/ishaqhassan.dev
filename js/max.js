@@ -216,30 +216,42 @@
   }
 
   /* ------------------- Lead JSON detection ------------------- */
-  // Llama may emit a JSON block when intent is captured. We strip it from
-  // the visible bubble and render the lead card instead.
+  // Llama may emit a JSON block when intent is captured. We strip ALL
+  // fenced JSON blocks and template-y artifacts from the visible bubble.
+  // Only a parsed lead_ready:true object is surfaced as a lead card.
   function extractLead(text) {
     if (!text) return { clean: text, lead: null };
-    // Look for ```json {...} ``` or a bare JSON block on its own line
+    let lead = null;
+    let clean = text;
+
+    // 1) Pull the FIRST ```json …``` block (or <lead>…</lead>) and try to parse it.
     const jsonRe = /```json\s*([\s\S]*?)```|<lead>([\s\S]*?)<\/lead>/i;
-    const m = text.match(jsonRe);
-    if (!m) return { clean: text, lead: null };
-    const raw = (m[1] || m[2] || '').trim();
-    try {
-      const obj = JSON.parse(raw);
-      if (obj && obj.lead_ready === true) {
-        return {
-          clean: text.replace(jsonRe, '').trim(),
-          lead: {
+    const m = clean.match(jsonRe);
+    if (m) {
+      const raw = (m[1] || m[2] || '').trim();
+      try {
+        const obj = JSON.parse(raw);
+        if (obj && obj.lead_ready === true) {
+          lead = {
             name: String(obj.name || '').slice(0, 80),
             email: String(obj.email || '').slice(0, 120),
             intent: String(obj.intent || '').slice(0, 60),
             summary: String(obj.summary || '').slice(0, 600),
-          },
-        };
-      }
-    } catch (e) {}
-    return { clean: text, lead: null };
+          };
+        }
+      } catch (e) {}
+    }
+
+    // 2) Strip ALL fenced code blocks that look like a lead template,
+    //    and any header lines that introduce the template, regardless
+    //    of whether the JSON parsed.
+    clean = clean.replace(/```json[\s\S]*?```/gi, '');
+    clean = clean.replace(/```[\s\S]*?lead_ready[\s\S]*?```/gi, '');
+    clean = clean.replace(/<lead>[\s\S]*?<\/lead>/gi, '');
+    clean = clean.replace(/^[\s>*-]*(\*\*)?\s*(JSON\s*)?Lead\s*Ready\s*(Block|Object|Template)?(\*\*)?\s*:?\s*$/gim, '');
+    clean = clean.replace(/\n{3,}/g, '\n\n').trim();
+
+    return { clean: clean || '…', lead: lead };
   }
 
   /* ------------------- Network ------------------- */
