@@ -7781,15 +7781,22 @@ a.li-tl-company:hover { color: #7dd3fc; }
      max-width:100% and margin:6px 0 4px !important respectively. */
   .max-messages > *,
   .max-hero,
-  .max-inputbar > *,
   .max-disclaimer {
     max-width: 760px !important;
     margin-left: auto !important;
     margin-right: auto !important;
     width: 100% !important;
   }
+  /* The inputbar is a flex form with [textarea-wrap, send-button] as
+     siblings — don't cap the children individually (the button would
+     stretch to 760px). Cap the form itself and center it. */
+  .max-inputbar {
+    max-width: 760px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: calc(100% - 48px) !important;
+  }
   .max-messages { padding-left: 24px; padding-right: 24px; }
-  .max-inputbar { padding-left: 24px; padding-right: 24px; }
   /* User bubbles still right-align inside the centered column */
   .max-msg-user { text-align: right; }
   .max-msg-user .max-bubble { display: inline-block; max-width: 70%; }

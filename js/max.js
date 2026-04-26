@@ -214,11 +214,16 @@
       return '' + (tokens.length - 1) + '';
     };
 
+    // ORDER MATTERS. Stash returns "\x01<idx>\x02" where <idx> is a digit
+    // string. If NUM runs LAST it re-matches the placeholder's own digits,
+    // wraps them in <span class="cn"> and corrupts the unstash. Run NUM
+    // first so by the time COMMENT/STR/KW stash, the only remaining digits
+    // belong to placeholders — which the other regexes do not match.
     let out = escaped;
+    out = out.replace(NUM, (m) => stash('cn', m));
     out = out.replace(COMMENT, (m) => stash('cc', m));
     out = out.replace(STR, (m) => stash('cs', m));
     out = out.replace(KW, (m) => stash('ck', m));
-    out = out.replace(NUM, (m) => stash('cn', m));
     out = out.replace(/(\d+)/g, (_m, i) => tokens[Number(i)] || '');
     return out;
   }
