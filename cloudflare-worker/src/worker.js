@@ -410,22 +410,78 @@ function jsonResponse(obj, status, headers) {
   });
 }
 
-const rl = new Map();
-function checkRate(ip, cap, windowMs) {
+/* ============================================================
+   Abuse-mitigation primitives
+   ------------------------------------------------------------
+   These run inside a single Cloudflare Worker isolate. State is
+   per-isolate (CF spins multiple isolates under load), so the
+   limits below are best-effort caps — coordinated abuse from a
+   diverse pool of IPs across many isolates can still get
+   through. For that layer we rely on Cloudflare's built-in DDoS
+   protection. The caps here exist to:
+     1. blunt single-IP flooding (the realistic attack on a
+        free-tier Worker that pays per-token to OpenRouter)
+     2. enforce per-tenant body / history size limits
+     3. provide a worker-wide circuit breaker so a runaway loop
+        can't drain the OpenRouter wallet in seconds
+   ============================================================ */
+
+const rlBuckets = new Map(); // ip+key -> [timestamps]
+function checkRateMulti(key, tiers) {
+  // tiers: [[cap, windowMs], ...]. Returns the FIRST tier that
+  // would exceed (so caller can log which window tripped), or
+  // null if all tiers pass. On pass, records a hit in every tier.
   const now = Date.now();
-  const arr = (rl.get(ip) || []).filter((t) => now - t < windowMs);
-  if (arr.length >= cap) return false;
+  const widest = Math.max.apply(null, tiers.map((t) => t[1]));
+  const arr = (rlBuckets.get(key) || []).filter((t) => now - t < widest);
+  for (let i = 0; i < tiers.length; i++) {
+    const [cap, windowMs] = tiers[i];
+    const inWindow = arr.filter((t) => now - t < windowMs).length;
+    if (inWindow >= cap) return { tier: i, cap: cap, windowMs: windowMs };
+  }
   arr.push(now);
-  rl.set(ip, arr);
+  rlBuckets.set(key, arr);
+  return null;
+}
+
+// Worker-wide circuit breaker: protects the OpenRouter wallet
+// from a coordinated burst. Tracks total successful chat hits
+// across all IPs in the current isolate.
+const globalChat = [];
+function checkGlobalChatBreaker() {
+  const now = Date.now();
+  // Trim to last 60s window
+  while (globalChat.length && now - globalChat[0] > 60_000) globalChat.shift();
+  if (globalChat.length >= 300) return false; // 300 chats/min worker-wide
+  globalChat.push(now);
   return true;
 }
+
+// LRU-ish cleanup so the rate-limit Map doesn't grow unbounded
+// in long-lived isolates (the GC won't free entries on its own).
+function maybeGcRl() {
+  if (rlBuckets.size <= 5000) return;
+  const now = Date.now();
+  for (const [k, v] of rlBuckets) {
+    if (!v.length || now - v[v.length - 1] > 3_600_000) rlBuckets.delete(k);
+  }
+}
+
+// Hard caps on incoming request size. The chat endpoint
+// otherwise lets a caller paste megabytes of text and force
+// the worker to allocate / parse JSON for it before we even
+// look at message lengths.
+const MAX_BODY_BYTES = 16 * 1024; // 16 KB
 
 function sanitize(messages) {
   if (!Array.isArray(messages)) return [];
   return messages
     .filter((m) => m && typeof m === 'object' && (m.role === 'user' || m.role === 'assistant'))
     .slice(-16)
-    .map((m) => ({ role: m.role, content: String(m.content || '').slice(0, 1500) }))
+    // Per-message cap. The frontend already caps at 800 client-side for
+    // user messages — this is defense in depth + lets assistant turns
+    // (which can be longer) survive without leaking unbounded.
+    .map((m) => ({ role: m.role, content: String(m.content || '').slice(0, 1200) }))
     .filter((m) => m.content.length > 0);
 }
 
@@ -556,8 +612,53 @@ export default {
     const ua = request.headers.get('User-Agent') || '';
 
     if (url.pathname === '/chat' && request.method === 'POST') {
-      if (!checkRate('chat:' + ip, 12, 60_000)) {
-        return jsonResponse({ error: 'rate_limited', reply: 'Thoda slow, ek minute baad try karo.' }, 429, cors);
+      // Distributed rate limit (CF edge, shared across all isolates).
+      // Burst: 4 in 10s. Sustained: 15 in 60s. Either tripping returns 429.
+      try {
+        if (env.CHAT_RL_BURST) {
+          const r1 = await env.CHAT_RL_BURST.limit({ key: ip });
+          if (!r1.success) {
+            return jsonResponse({
+              error: 'rate_limited',
+              reply: 'Slow down a bit — try again in a minute.',
+            }, 429, cors);
+          }
+        }
+        if (env.CHAT_RL_MIN) {
+          const r2 = await env.CHAT_RL_MIN.limit({ key: ip });
+          if (!r2.success) {
+            return jsonResponse({
+              error: 'rate_limited',
+              reply: 'You have hit the chat limit for now. Take a short break and try again later.',
+            }, 429, cors);
+          }
+        }
+      } catch (e) {
+        // If the rate-limit binding errors out for any reason, fall back
+        // to the in-memory cap so we still have *some* protection.
+        // Mirrors the binding caps (BURST 8/10s, MIN 40/60s).
+        const rl = checkRateMulti('chat:' + ip, [[8, 10_000], [40, 60_000]]);
+        if (rl) {
+          return jsonResponse({
+            error: 'rate_limited',
+            reply: 'Slow down a bit — try again in a minute.',
+          }, 429, cors);
+        }
+      }
+
+      // Worker-wide circuit breaker: refuse cleanly if we're over
+      // 300 chats/min globally (protects wallet from coordinated abuse).
+      if (!checkGlobalChatBreaker()) {
+        return jsonResponse({
+          error: 'busy',
+          reply: 'Server is busy right now. Please try again shortly.',
+        }, 503, cors);
+      }
+
+      // Reject oversized bodies BEFORE parsing JSON.
+      const cl = parseInt(request.headers.get('Content-Length') || '0', 10);
+      if (cl && cl > MAX_BODY_BYTES) {
+        return jsonResponse({ error: 'too_large' }, 413, cors);
       }
 
       let body;
@@ -566,6 +667,17 @@ export default {
 
       const history = sanitize(body && body.messages);
       if (history.length === 0) return jsonResponse({ error: 'empty' }, 400, cors);
+
+      // Cap total history payload as a second line of defense — a caller
+      // could submit many short messages that individually pass the per-msg
+      // length cap but together blow up token usage. Sized so a normal
+      // 16-turn convo (16 × ~1000 chars avg) fits with headroom.
+      const totalChars = history.reduce((n, m) => n + (m.content || '').length, 0);
+      if (totalChars > 18_000) {
+        return jsonResponse({ error: 'history_too_long' }, 413, cors);
+      }
+
+      maybeGcRl();
 
       const last = history[history.length - 1];
       if (last.role === 'user') last.content = mapQuickIntent(last.content);
@@ -611,8 +723,21 @@ export default {
     }
 
     if (url.pathname === '/notify' && request.method === 'POST') {
-      if (!checkRate('notify:' + ip, 4, 300_000)) {
-        return jsonResponse({ error: 'rate_limited' }, 429, cors);
+      // Notify triggers an outbound email — much tighter than chat.
+      try {
+        if (env.NOTIFY_RL) {
+          const r = await env.NOTIFY_RL.limit({ key: ip });
+          if (!r.success) {
+            return jsonResponse({ error: 'rate_limited' }, 429, cors);
+          }
+        }
+      } catch (e) {
+        const rl = checkRateMulti('notify:' + ip, [[5, 60_000]]);
+        if (rl) return jsonResponse({ error: 'rate_limited' }, 429, cors);
+      }
+      const cl2 = parseInt(request.headers.get('Content-Length') || '0', 10);
+      if (cl2 && cl2 > MAX_BODY_BYTES) {
+        return jsonResponse({ error: 'too_large' }, 413, cors);
       }
 
       let body;

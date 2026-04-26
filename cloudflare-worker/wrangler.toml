@@ -6,10 +6,36 @@ compatibility_date = "2025-04-01"
 [ai]
 binding = "AI"
 
-# Optional: KV for rate-limit counters (uncomment after creating namespace)
-# [[kv_namespaces]]
-# binding = "MAX_RL"
-# id = "REPLACE_WITH_KV_NAMESPACE_ID"
+# Cloudflare's built-in distributed rate-limit binding (free tier).
+# Unlike in-memory Map state, these limits are enforced across all
+# Cloudflare isolates / colos so a single IP can't bypass by hitting
+# different workers in parallel.
+#
+# Calibrated GENEROUSLY so genuine humans (even power users with
+# rapid follow-ups) never hit the cap — only loop-style abuse does.
+# Reference: a normal user sends ~1 msg per 10-15s, so ~4-6/min.
+# These caps leave 5x headroom on top of that.
+#
+# CHAT_RL_BURST  = 8 hits / 10s   (only loops / scripts trip this)
+# CHAT_RL_MIN    = 40 hits / 60s  (5x normal-user envelope)
+# NOTIFY_RL      = 5 hits / 60s   (write-side endpoint, generous)
+[[unsafe.bindings]]
+name = "CHAT_RL_BURST"
+type = "ratelimit"
+namespace_id = "1101"
+simple = { limit = 8, period = 10 }
+
+[[unsafe.bindings]]
+name = "CHAT_RL_MIN"
+type = "ratelimit"
+namespace_id = "1102"
+simple = { limit = 40, period = 60 }
+
+[[unsafe.bindings]]
+name = "NOTIFY_RL"
+type = "ratelimit"
+namespace_id = "1103"
+simple = { limit = 5, period = 60 }
 
 [observability]
 enabled = true
