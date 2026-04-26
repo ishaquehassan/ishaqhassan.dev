@@ -101,15 +101,73 @@
     }[c]));
   }
 
+  // Highlight common code tokens (Dart/JS/Python/Go/Rust flavored)
+  function highlightCode(escaped) {
+    let out = escaped;
+    const KW = /\b(abstract|as|assert|async|await|break|case|catch|class|const|continue|default|deferred|do|dynamic|else|enum|export|extends|extension|external|factory|false|final|finally|for|function|get|hide|if|implements|import|in|interface|is|late|let|library|mixin|new|null|of|on|operator|part|rethrow|return|set|show|static|super|switch|sync|this|throw|true|try|typedef|var|void|while|with|yield|def|elif|None|True|False|and|or|not|pass|lambda|self|print|fn|use|pub|impl|trait|struct|mut|ref|package|func|chan|select|interface|type)\b/g;
+    out = out.replace(/(\/\/[^\n]*|#[^\n]*)/g, '<span class="cc">$1</span>');
+    out = out.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="cc">$1</span>');
+    out = out.replace(/(&quot;[^&\n]*?&quot;|&#39;[^&\n]*?&#39;|`[^`\n]*?`)/g, '<span class="cs">$1</span>');
+    out = out.replace(KW, '<span class="ck">$1</span>');
+    out = out.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="cn">$1</span>');
+    return out;
+  }
+
+  function buildCodeCard(lang, code) {
+    const langLabel = String(lang || 'code').toLowerCase();
+    const escaped = escapeHtml(String(code).replace(/\n+$/, ''));
+    const highlighted = highlightCode(escaped);
+    return (
+      '<div class="max-code" data-lang="' + escapeHtml(langLabel) + '">' +
+        '<div class="max-code-head">' +
+          '<span class="max-code-lang">' + escapeHtml(langLabel) + '</span>' +
+          '<button class="max-code-copy" type="button" onclick="window.maxCopyCode(this,event)">Copy</button>' +
+        '</div>' +
+        '<pre class="max-code-body"><code>' + highlighted + '</code></pre>' +
+      '</div>'
+    );
+  }
+
   function renderText(s) {
-    let out = escapeHtml(s);
+    let raw = String(s);
+    const blocks = [];
+    raw = raw.replace(/```([a-zA-Z0-9_+-]*)[ \t]*\r?\n?([\s\S]*?)```/g, (_m, lang, code) => {
+      const i = blocks.length;
+      blocks.push(buildCodeCard(lang, code));
+      return 'CB' + i + '';
+    });
+    let out = escapeHtml(raw);
     out = out.replace(/`([^`]+)`/g, '<code>$1</code>');
     out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     out = out.replace(/(^|[\s(])\*([^*\n]+)\*/g, '$1<em>$2</em>');
     out = out.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
     out = out.replace(/\n/g, '<br>');
+    out = out.replace(/CB(\d+)/g, (_m, i) => blocks[Number(i)] || '');
     return out;
   }
+
+  window.maxCopyCode = function (btn, ev) {
+    if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+    try {
+      const code = btn.parentNode.parentNode.querySelector('code');
+      const text = code ? code.innerText : '';
+      const done = () => {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(() => done());
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+    } catch (e) {}
+  };
 
   /* ------------------- View bindings ------------------- */
   function bindInstance(suffix) {
