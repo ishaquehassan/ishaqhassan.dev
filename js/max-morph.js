@@ -8,11 +8,10 @@
   'use strict';
 
   var body = document.body;
-  var blobMain, blobAi, panel, bar, input, sendBtn, closeBtn, messagesEl, chipsEl;
+  var blobMain, blobAi, panel, bar, input, sendBtn, closeBtn, messagesEl, chipsEl, splashEl;
   var contactTrigger, contactPopover;
   var dockContainer, dockAi, dockPill;
   var initialized = false;
-  var initialBotShown = false;
 
   function isMobile() { return window.matchMedia('(max-width: 768px)').matches; }
 
@@ -29,6 +28,8 @@
     contactPopover = document.getElementById('max-contact-popover');
     messagesEl = document.getElementById('max-panel-messages');
     chipsEl    = document.getElementById('max-panel-chips');
+    splashEl   = document.getElementById('max-splash');
+    if (messagesEl) messagesEl.classList.add('is-hidden');
     dockContainer = document.getElementById('dock-container');
     dockAi   = document.getElementById('dock-ai');
     dockPill = document.getElementById('dock');
@@ -156,10 +157,6 @@
         bar.style.width = barWidth + 'px';
         bar.style.transform = 'none';
 
-        if (!initialBotShown) {
-          showInitialBot();
-          initialBotShown = true;
-        }
         setTimeout(function () { if (input) input.focus(); }, 600);
         // Disable goo filter once merge is done so idle/active states are crisp
         setTimeout(function () { body.classList.remove('max-morphing'); }, 520);
@@ -201,12 +198,12 @@
     contactTrigger.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
 
-  function showInitialBot() {
-    appendMessage('bot', "Hey 👋 I'm Max, Ishaq's AI assistant. Looking to hire, book a talk, or get Flutter help? Pick a chip below or just type.");
-  }
-
   function appendMessage(role, text) {
     if (!messagesEl) return;
+    if (splashEl && !splashEl.classList.contains('is-hidden')) {
+      splashEl.classList.add('is-hidden');
+      messagesEl.classList.remove('is-hidden');
+    }
     var el = document.createElement('div');
     el.className = 'max-panel-msg ' + role;
     el.textContent = text;
