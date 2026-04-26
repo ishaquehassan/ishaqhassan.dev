@@ -15,7 +15,7 @@
   const MAX_CHARS = 800;
 
   const QUICK_REPLIES_INITIAL = [
-    'Hire karna hai',
+    'I want to hire Ishaq',
     'Speaking inquiry',
     'Flutter help',
     'About Ishaq',
@@ -369,7 +369,7 @@
     if (state.messages.length > 0) return;
     state.messages.push({
       role: 'assistant',
-      content: "Hey 👋 Max here, Ishaq's AI assistant. Aap Flutter help, hire/consulting, ya speaking ke liye chat karna chahte ho? Niche se choose karo ya seedha type karo.",
+      content: "Hey 👋 I'm Max, Ishaq's AI assistant. Looking to hire, book a talk, or get Flutter help? Pick a chip below or just type.",
     });
     saveSession(state);
   }
