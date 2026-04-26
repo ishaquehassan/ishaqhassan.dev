@@ -2787,16 +2787,36 @@ function updateMenuBarForWindow(winId) {
   if (goMenu) goMenu.innerHTML = cfg.go || defaultGo;
 }
 
-// ===== 404 NOTIFY: redirected from /404.html with attempted path =====
+// ===== 404 NOTIFY: bulletproof — fires only on a genuine fresh 404 redirect from same origin =====
 (function(){
   try{
-    var params = new URLSearchParams(location.search);
-    var notfound = params.get('notfound');
-    if (!notfound) return;
-    // Strip the param from URL so reloads/shares are clean
-    params.delete('notfound');
-    var clean = location.pathname + (params.toString() ? ('?' + params.toString()) : '') + location.hash;
-    history.replaceState({}, '', clean);
+    // 1) Read all flags
+    var hit = sessionStorage.getItem('ihp_404_hit');
+    var path = sessionStorage.getItem('ihp_404_path') || '';
+    var ts = parseInt(sessionStorage.getItem('ihp_404_ts') || '0', 10);
+    var origin = sessionStorage.getItem('ihp_404_origin') || '';
+    // 2) ALWAYS clear immediately so we can never double-fire even if a check below fails
+    sessionStorage.removeItem('ihp_404_hit');
+    sessionStorage.removeItem('ihp_404_path');
+    sessionStorage.removeItem('ihp_404_ts');
+    sessionStorage.removeItem('ihp_404_origin');
+    // 3) Hit flag must be exactly '1'
+    if (hit !== '1') return;
+    // 4) Origin must match current origin (cross-origin sessionStorage isn't shared, but defensive)
+    if (origin && origin !== location.origin) return;
+    // 5) Timestamp must exist and be within last 15s (no stale, no clock skew nonsense)
+    if (!ts || isNaN(ts)) return;
+    var age = Date.now() - ts;
+    if (age < 0 || age > 15000) return;
+    // 6) We must currently be on the homepage (the redirect target)
+    if (location.pathname !== '/' && location.pathname !== '/index.html') return;
+    // 7) Attempted path must look like a real URL path: starts with /, sane characters, length-bounded
+    if (!/^\/[A-Za-z0-9_\-./~%?&=#:+,@!]{0,512}$/.test(path)) return;
+    // 8) Strip query/hash/trailing-slash and reject if path is empty, root, or homepage variants
+    var p = path.replace(/[?#].*$/, '').replace(/\/+$/, '');
+    if (!p || p === '/' || p === '/index.html') return;
+    // 9) Reject obvious traversal/dupe-slash attempts
+    if (p.indexOf('..') !== -1 || p.indexOf('//') !== -1) return;
     // Wait for welcome notif to render first, then stack 404 below it.
     var fired = false;
     var deadline = Date.now() + 5000;

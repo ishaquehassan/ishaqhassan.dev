@@ -14,8 +14,14 @@
       if(s)s.parentNode.removeChild(s);
       return;
     }
-    var attempted=location.pathname+location.search+location.hash;
-    location.replace('/?notfound='+encodeURIComponent(attempted));
+    var attempted = location.pathname + location.search + location.hash;
+    try{
+      sessionStorage.setItem('ihp_404_hit', '1');
+      sessionStorage.setItem('ihp_404_path', attempted);
+      sessionStorage.setItem('ihp_404_ts', String(Date.now()));
+      sessionStorage.setItem('ihp_404_origin', location.origin);
+    }catch(e){}
+    location.replace('/');
   }catch(e){
     var s=document.getElementById('ihp-404-mask');
     if(s)s.parentNode.removeChild(s);
