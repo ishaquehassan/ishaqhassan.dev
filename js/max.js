@@ -146,7 +146,9 @@
   function renderChips(inst) {
     if (!inst || !inst.chipsEl) return;
     inst.chipsEl.innerHTML = '';
-    if (state.messages.length > 0) return; // only show on first turn
+    // Show chips until the user has sent at least one message
+    const hasUserMsg = state.messages.some((m) => m.role === 'user');
+    if (hasUserMsg) return;
     QUICK_REPLIES_INITIAL.forEach((q) => {
       const b = el('button', 'max-chip', q);
       b.type = 'button';
