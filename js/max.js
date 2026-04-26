@@ -184,6 +184,27 @@
   const state = loadSession() || { messages: [], lead: null, leadSent: false };
   if (typeof state.leadSent !== 'boolean') state.leadSent = false;
 
+  // Migrate sessions saved by an earlier version that DID NOT rewrite the
+  // bot message after a successful inquiry submit. If leadSent is true and
+  // any assistant message still carries [[FORM:<intent>]], rewrite it to
+  // [[INQUIRY_SENT:<intent>]] so the success card renders on reload instead
+  // of an empty form.
+  (function migrateSentForms() {
+    if (!state.leadSent) return;
+    const re = /\[\[FORM:([^\]]+)\]\]/i;
+    let mutated = false;
+    for (let i = 0; i < state.messages.length; i++) {
+      const m = state.messages[i];
+      if (!m || m.role !== 'assistant') continue;
+      const match = (m.content || '').match(re);
+      if (!match) continue;
+      const intent = String(match[1] || 'general').toLowerCase();
+      m.content = '[[INQUIRY_SENT:' + intent + ']]';
+      mutated = true;
+    }
+    if (mutated) saveSession(state);
+  })();
+
   /* ------------------- Helpers ------------------- */
   function el(tag, cls, html) {
     const e = document.createElement(tag);
@@ -775,24 +796,34 @@
       if (!res.ok) throw new Error('http_' + res.status);
       return res.json();
     }).then(function () {
-      // Replace the form's wrap. Also remove every preceding bot text
-      // message in the SAME turn (the lead-in like "Got it! Drop your
-      // details below." becomes redundant noise once the form is sent).
-      // Stop walking back at the first user message or non-bot element.
-      const wrapEl = form.closest('.max-msg') || form.parentNode;
-      const toRemove = [];
-      let prev = wrapEl ? wrapEl.previousElementSibling : null;
-      while (prev && prev.classList && prev.classList.contains('max-msg-bot') && !prev.classList.contains('max-msg-user')) {
-        toRemove.push(prev);
-        prev = prev.previousElementSibling;
-      }
-      toRemove.forEach((n) => n.parentNode && n.parentNode.removeChild(n));
-
-      const success = document.createElement('div');
-      success.className = 'max-msg max-msg-bot max-msg-cards';
-      success.innerHTML = buildInquirySentCardHTML(intent);
-      if (wrapEl && wrapEl.parentNode) wrapEl.parentNode.replaceChild(success, wrapEl);
-      try { state.leadSent = true; saveSession(state); } catch (e) {}
+      // Rewrite the bot message that contained [[FORM:<intent>]] to
+      // [[INQUIRY_SENT:<intent>]] so reload renders the success card from
+      // persisted state. Also drop preceding assistant messages from the
+      // SAME turn (the lead-in text becomes redundant noise after submit).
+      try {
+        const formTag = /\[\[FORM:[^\]]+\]\]/i;
+        let formIdx = -1;
+        for (let i = state.messages.length - 1; i >= 0; i--) {
+          const m = state.messages[i];
+          if (m && m.role === 'assistant' && formTag.test(m.content || '')) { formIdx = i; break; }
+          if (m && m.role === 'user') break;
+        }
+        if (formIdx !== -1) {
+          state.messages[formIdx].content = '[[INQUIRY_SENT:' + intent + ']]';
+          let j = formIdx - 1;
+          while (j >= 0 && state.messages[j].role === 'assistant') {
+            state.messages.splice(j, 1);
+            j--;
+          }
+        }
+        state.lead = null;
+        state.leadSent = true;
+        saveSession(state);
+      } catch (e) {}
+      // Full re-render from state. This guarantees the DOM matches the
+      // persisted shape (no leading lead-in, no trailing post-form text)
+      // and matches what reload would show.
+      bindAll().forEach((i) => renderAll(i));
     }).catch(function (e) {
       if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Send to Ishaq'; }
       if (status) {
@@ -817,6 +848,7 @@
     video: (p) => buildVideoCardsHTML(p),
     videos: (p) => buildVideoCardsHTML(p),
     form: (p) => buildInquiryFormHTML(p),
+    inquiry_sent: (p) => buildInquirySentCardHTML(String(p || 'general').toLowerCase()),
   };
 
   // Extract card tags from text. Supported:
