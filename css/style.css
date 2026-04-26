@@ -6843,56 +6843,67 @@ a.li-tl-company:hover { color: #7dd3fc; }
 .max-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
 .max-messages::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
 
-/* Bubbles */
+/* Messages — Claude-style: bot is full-width plain prose (no avatar,
+   no bubble), user gets a tight indigo bubble capped at 80%. */
 .max-msg {
   display: flex;
-  gap: 8px;
+  gap: 0;
+  width: 100%;
   max-width: 100%;
   animation: maxMsgIn .35s cubic-bezier(.18,.89,.32,1.28);
 }
 @keyframes maxMsgIn {
-  from { opacity: 0; transform: translateY(10px) scale(.96); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-.max-msg-bot { align-self: flex-start; }
-.max-msg-user { align-self: flex-end; flex-direction: row-reverse; }
 
-.max-msg-avatar {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #1f2030, #11121b);
-  border: 1.5px solid rgba(99,102,241,0.4);
-  font-size: 14px;
-  align-self: flex-end;
-  margin-bottom: 2px;
-}
-.max-msg-user .max-msg-avatar { display: none; }
-
-.max-bubble {
-  position: relative;
-  padding: 9px 13px;
-  border-radius: 18px;
-  font-size: 13.5px;
-  line-height: 1.5;
-  max-width: min(78%, 460px);
+/* Bot (assistant): no avatar, no bubble, just clean prose */
+.max-msg-bot { align-self: stretch; }
+.max-msg-bot .max-msg-avatar { display: none; }
+.max-msg-bot .max-bubble {
+  background: transparent;
+  color: var(--text);
+  padding: 4px 2px 8px;
+  border-radius: 0;
+  box-shadow: none;
+  max-width: 100%;
+  width: 100%;
+  font-size: 14.5px;
+  line-height: 1.62;
+  letter-spacing: -0.005em;
+  white-space: pre-wrap;
   word-wrap: break-word;
   word-break: break-word;
-  white-space: pre-wrap;
 }
-.max-msg-bot .max-bubble {
-  background: rgba(255,255,255,0.07);
-  color: var(--text);
-  border-bottom-left-radius: 6px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+
+/* User: right-aligned, bubble, capped at 80% */
+.max-msg-user {
+  align-self: flex-end;
+  justify-content: flex-end;
+  max-width: 80%;
 }
+.max-msg-user .max-msg-avatar { display: none; }
 .max-msg-user .max-bubble {
-  background: linear-gradient(135deg, #5b6cff, #6366f1);
+  background: linear-gradient(135deg, #6366f1 0%, #5b6cff 50%, #818cf8 100%);
   color: #fff;
+  padding: 10px 14px;
+  border-radius: 18px;
   border-bottom-right-radius: 6px;
-  box-shadow: 0 4px 12px rgba(99,102,241,0.32);
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 100%;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word;
+  box-shadow:
+    0 6px 20px rgba(99,102,241,0.30),
+    inset 0 1px 0 rgba(255,255,255,0.18);
 }
+
+/* Spacing between turns: tighter */
+.max-messages { gap: 6px; }
+.max-msg + .max-msg { margin-top: 6px; }
+.max-msg-bot + .max-msg-bot { margin-top: 2px; }
 
 /* Markdown-ish formatting inside bubbles */
 .max-bubble a { color: #a5b4fc; text-decoration: underline; text-underline-offset: 2px; }
@@ -6907,12 +6918,13 @@ a.li-tl-company:hover { color: #7dd3fc; }
 .max-bubble strong { font-weight: 700; }
 .max-bubble em { font-style: italic; opacity: .9; }
 
-/* Typing indicator */
+/* Typing indicator (inside bot bubble) — looks plain inline now */
+.max-msg-typing .max-bubble { padding: 6px 0 10px !important; }
 .max-typing {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 11px 14px;
+  gap: 5px;
+  padding: 0;
 }
 .max-typing span {
   width: 6px; height: 6px;
@@ -7404,15 +7416,8 @@ a.li-tl-company:hover { color: #7dd3fc; }
           mask-image: linear-gradient(180deg, transparent 0, #000 24px, #000 calc(100% - 8px), #000 100%);
 }
 
-/* Bot bubble: very subtle gradient + crisp inset highlight */
-.max-msg-bot .max-bubble {
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.085), rgba(255,255,255,0.045));
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.06),
-    0 1px 0 rgba(255,255,255,0.04);
-  letter-spacing: -0.005em;
-}
+/* Bot bubble polish overridden below to prose-mode (no bg, full width).
+   Kept-empty rule on purpose so future maintainers see it. */
 /* User bubble: deeper gradient + soft outer glow */
 .max-msg-user .max-bubble {
   background: linear-gradient(135deg, #6366f1 0%, #5b6cff 60%, #818cf8 100%);
