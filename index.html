@@ -882,163 +882,79 @@
 <!-- DOCK -->
 <div id="dock-container">
   <div id="dock">
-    <!-- Terminal (About): black terminal window with neon green prompt -->
-    <div class="dock-item" onclick="navigate('about')" role="button" aria-label="Open About Me">
-      <div class="dock-tooltip">About Me</div>
-      <div class="dock-icon about">
-        <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-          <rect x="3" y="5" width="34" height="30" rx="4" fill="#0a0e14" stroke="#1f2428" stroke-width="1"/>
-          <circle cx="8" cy="10" r="1.3" fill="#FF5F57"/>
-          <circle cx="12.5" cy="10" r="1.3" fill="#FEBC2E"/>
-          <circle cx="17" cy="10" r="1.3" fill="#28C840"/>
-          <text x="7" y="26" font-family="'JetBrains Mono',monospace" font-size="10" font-weight="700" fill="#39d353" style="filter:drop-shadow(0 0 2px rgba(57,211,83,0.7))">&gt;_</text>
-          <rect x="19" y="19" width="2" height="9" fill="#39d353" opacity="0.9">
-            <animate attributeName="opacity" values="0.9;0;0.9" dur="1s" repeatCount="indefinite"/>
-          </rect>
-        </svg>
+    <div class="dock-zone dock-zone-apps">
+      <!-- Terminal (About): black terminal window with neon green prompt -->
+      <div class="dock-item" onclick="navigate('about')" role="button" aria-label="Open About Me">
+        <div class="dock-tooltip">About Me</div>
+        <div class="dock-icon about">
+          <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+            <rect x="4" y="7" width="32" height="26" rx="4" fill="#fff"/>
+            <path d="M11 17 L15 21 L11 25" stroke="#0f1419" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <path d="M19 25 H27" stroke="#0f1419" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="dock-label">About</span>
+      </div>
+      <!-- Flutter PRs: official Flutter brand logo -->
+      <div class="dock-item" onclick="navigate('flutter')" role="button" aria-label="Open Flutter PRs">
+        <div class="dock-tooltip">Flutter PRs</div>
+        <div class="dock-icon flutter">
+          <img src="assets/tech/flutter.svg" alt="Flutter" width="28" height="28" style="width:54%;height:54%;object-fit:contain;filter:brightness(10);" />
+        </div>
+        <span class="dock-label">Flutter PRs</span>
+      </div>
+      <!-- Open Source: git branch graph -->
+      <div class="dock-item" onclick="navigate('oss')" role="button" aria-label="Open Open Source">
+        <div class="dock-tooltip">Open Source</div>
+        <div class="dock-icon oss">
+          <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+            <circle cx="10" cy="8" r="3" fill="#fff"/>
+            <circle cx="10" cy="20" r="3" fill="#fff"/>
+            <circle cx="10" cy="32" r="3" fill="#fff"/>
+            <circle cx="30" cy="14" r="3" fill="#fff"/>
+            <circle cx="30" cy="26" r="3" fill="#fff"/>
+            <path d="M10 11 v6 M10 23 v6" stroke="#fff" stroke-width="2"/>
+            <path d="M10 14 Q10 8 16 11 T30 14" stroke="#fff" stroke-width="2" fill="none" opacity="0.75"/>
+            <path d="M10 26 Q10 20 16 23 T30 26" stroke="#fff" stroke-width="2" fill="none" opacity="0.75"/>
+          </svg>
+        </div>
+        <span class="dock-label">Open Source</span>
+      </div>
+      <!-- Articles: cross-platform writing aggregator (Site + Medium + Dev.to) -->
+      <div class="dock-item" onclick="navigate('articles')" role="button" aria-label="Open Articles">
+        <div class="dock-tooltip">Articles</div>
+        <div class="dock-icon articles">
+          <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+            <rect x="6" y="4" width="28" height="32" rx="4" fill="#fff"/>
+            <path d="M12 14 H28 M12 20 H28 M12 26 H22" stroke="#0f1419" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="dock-label">Articles</span>
+      </div>
+      <!-- GitHub: Octocat on dark -->
+      <div class="dock-item" onclick="navigate('github')" role="button" aria-label="Open GitHub">
+        <div class="dock-tooltip">GitHub</div>
+        <div class="dock-icon github">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        </div>
+        <span class="dock-label">GitHub</span>
+      </div>
+      <!-- LinkedIn: brand "in" -->
+      <div class="dock-item" onclick="navigate('linkedin')" role="button" aria-label="Open LinkedIn">
+        <div class="dock-tooltip">LinkedIn</div>
+        <div class="dock-icon linkedin">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </div>
+        <span class="dock-label">LinkedIn</span>
       </div>
     </div>
-    <!-- Flutter PRs: official Flutter brand logo -->
-    <div class="dock-item" onclick="navigate('flutter')" role="button" aria-label="Open Flutter PRs">
-      <div class="dock-tooltip">Flutter PRs</div>
-      <div class="dock-icon flutter">
-        <img src="assets/tech/flutter.svg" alt="Flutter" width="28" height="28" style="width:54%;height:54%;object-fit:contain;filter:brightness(10);" />
-      </div>
-    </div>
-    <!-- Speaking: mic with radiating sound waves -->
-    <div class="dock-item" onclick="navigate('speaking')" role="button" aria-label="Open Speaking Events">
-      <div class="dock-tooltip">Speaking</div>
-      <div class="dock-icon speaking">
-        <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-          <path d="M8 18 q-2 0 -2 2 v0 q0 6 6 10" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/>
-          <path d="M32 18 q2 0 2 2 v0 q0 6 -6 10" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/>
-          <rect x="14" y="6" width="12" height="19" rx="6" fill="#fff"/>
-          <path d="M11 20 v1 a9 9 0 0018 0 v-1" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
-          <path d="M20 30 v4 M16 34 h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="20" cy="14" r="2.5" fill="#F7C948" opacity="0.8"/>
-        </svg>
-      </div>
-    </div>
-    <!-- Open Source: git branch graph -->
-    <div class="dock-item" onclick="navigate('oss')" role="button" aria-label="Open Open Source">
-      <div class="dock-tooltip">Open Source</div>
-      <div class="dock-icon oss">
-        <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-          <circle cx="10" cy="8" r="3" fill="#fff"/>
-          <circle cx="10" cy="20" r="3" fill="#fff"/>
-          <circle cx="10" cy="32" r="3" fill="#fff"/>
-          <circle cx="30" cy="14" r="3" fill="#fff"/>
-          <circle cx="30" cy="26" r="3" fill="#fff"/>
-          <path d="M10 11 v6 M10 23 v6" stroke="#fff" stroke-width="2"/>
-          <path d="M10 14 Q10 8 16 11 T30 14" stroke="#fff" stroke-width="2" fill="none" opacity="0.75"/>
-          <path d="M10 26 Q10 20 16 23 T30 26" stroke="#fff" stroke-width="2" fill="none" opacity="0.75"/>
-        </svg>
-      </div>
-    </div>
-    <!-- Tech Stack: layered chip / 3D cube stack -->
-    <div class="dock-item" onclick="navigate('tech')" role="button" aria-label="Open Tech Stack">
-      <div class="dock-tooltip">Tech Stack</div>
-      <div class="dock-icon tech">
-        <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-          <path d="M20 4 L34 11 L20 18 L6 11 Z" fill="#fff" opacity="0.95"/>
-          <path d="M6 11 L20 18 L34 11 L34 20 L20 27 L6 20 Z" fill="#fff" opacity="0.65"/>
-          <path d="M6 20 L20 27 L34 20 L34 29 L20 36 L6 29 Z" fill="#fff" opacity="0.4"/>
-        </svg>
-      </div>
-    </div>
-    <!-- Articles: cross-platform writing aggregator (Site + Medium + Dev.to) -->
-    <div class="dock-item" onclick="navigate('articles')" role="button" aria-label="Open Articles">
-      <div class="dock-tooltip">Articles</div>
-      <div class="dock-icon articles">
-        <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-          <defs>
-            <linearGradient id="art-grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stop-color="#7dd3fc"/>
-              <stop offset="0.55" stop-color="#38bdf8"/>
-              <stop offset="1" stop-color="#6366f1"/>
-            </linearGradient>
-          </defs>
-          <rect x="2" y="2" width="36" height="36" rx="9" fill="url(#art-grad)"/>
-          <path d="M10 13 H30 M10 19 H30 M10 25 H22" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity="0.95"/>
-          <circle cx="27.5" cy="25" r="2.4" fill="#fff" opacity="0.95"/>
-        </svg>
-      </div>
-    </div>
-    <!-- Contact: envelope with @ mark -->
-    <div class="dock-item" onclick="navigate('contact')" role="button" aria-label="Open Contact">
-      <div class="dock-tooltip">Contact</div>
-      <div class="dock-icon contact">
-        <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-          <rect x="5" y="9" width="30" height="22" rx="3" fill="#fff"/>
-          <path d="M5 12 L20 22 L35 12" stroke="#007AFF" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="20" cy="20" r="4" fill="none" stroke="#5856D6" stroke-width="1.5"/>
-          <path d="M24 20 v1.5 a2 2 0 004 0 v-1.5 a4 4 0 10-1.2 2.8" stroke="#5856D6" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        </svg>
-      </div>
-    </div>
-    <!-- GitHub: Octocat on dark -->
-    <div class="dock-item" onclick="navigate('github')" role="button" aria-label="Open GitHub">
-      <div class="dock-tooltip">GitHub</div>
-      <div class="dock-icon github">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-      </div>
-    </div>
-    <!-- LinkedIn: brand "in" -->
-    <div class="dock-item" onclick="navigate('linkedin')" role="button" aria-label="Open LinkedIn">
-      <div class="dock-tooltip">LinkedIn</div>
-      <div class="dock-icon linkedin">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-      </div>
-    </div>
-    <!-- Snake Neon: pixel snake + apple -->
-    <div class="dock-item" onclick="navigate('snake')" role="button" aria-label="Open Snake Game">
-      <div class="dock-tooltip">Snake Neon</div>
-      <div class="dock-icon snake" style="background:linear-gradient(135deg,#0a2e1a,#0d3320);">
-        <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-          <rect x="8" y="24" width="4" height="4" rx="0.5" fill="#39d353" style="filter:drop-shadow(0 0 3px rgba(57,211,83,0.9))"/>
-          <rect x="12" y="24" width="4" height="4" rx="0.5" fill="#39d353" style="filter:drop-shadow(0 0 3px rgba(57,211,83,0.9))"/>
-          <rect x="16" y="24" width="4" height="4" rx="0.5" fill="#39d353" style="filter:drop-shadow(0 0 3px rgba(57,211,83,0.9))"/>
-          <rect x="16" y="20" width="4" height="4" rx="0.5" fill="#39d353"/>
-          <rect x="16" y="16" width="4" height="4" rx="0.5" fill="#39d353"/>
-          <rect x="20" y="16" width="4" height="4" rx="0.5" fill="#26a641"/>
-          <rect x="24" y="16" width="4" height="4" rx="1.2" fill="#39d353" style="filter:drop-shadow(0 0 4px rgba(57,211,83,0.9))"/>
-          <circle cx="30" cy="11" r="2.5" fill="#FF5F57" style="filter:drop-shadow(0 0 4px rgba(255,95,87,0.7))"/>
-          <path d="M30 8.5 L30 7" stroke="#39d353" stroke-width="1.2" stroke-linecap="round"/>
-        </svg>
-      </div>
-    </div>
-    <!-- Flutter Course: graduation cap + play -->
-    <div class="dock-item" onclick="navigate('flutter-course')" role="button" aria-label="Open Flutter Course">
-      <div class="dock-tooltip">Flutter Course</div>
-      <div class="dock-icon course" style="background:linear-gradient(135deg,#0553B1,#54c5f8);">
-        <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-          <path d="M20 6 L34 13 L20 20 L6 13 Z" fill="#fff"/>
-          <path d="M12 16 v6 Q12 24 20 24 Q28 24 28 22 v-6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.85"/>
-          <path d="M34 13 v7" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="34" cy="21" r="1.5" fill="#fff"/>
-          <path d="M16 30 L24 34 L16 38 Z" fill="#fff" opacity="0.95"/>
-        </svg>
-      </div>
-    </div>
-    <!-- WiseSend: official app logo -->
-    <div class="dock-item" onclick="navigate('wisesend')" role="button" aria-label="Open WiseSend">
-      <div class="dock-tooltip">WiseSend</div>
-      <div class="dock-icon wisesend" style="overflow:hidden;box-shadow:0 8px 24px -6px rgba(14,165,233,0.5),0 0 0 1px rgba(255,255,255,0.08) inset;">
-        <img src="assets/wisesend-logo.jpg" alt="WiseSend" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">
-      </div>
-    </div>
-    <!-- Mission Control: 4 window grid -->
-    <div class="dock-item" onclick="toggleMissionControl()" role="button" aria-label="Toggle Mission Control">
-      <div class="dock-tooltip">Mission Control</div>
-      <div class="dock-icon mission" style="background:linear-gradient(135deg,#1a1a2e,#0f0f1e);">
-        <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-          <rect x="4" y="4" width="14" height="12" rx="1.8" fill="#fff"/>
-          <rect x="22" y="4" width="14" height="12" rx="1.8" fill="#fff"/>
-          <rect x="4" y="20" width="14" height="12" rx="1.8" fill="#fff"/>
-          <rect x="22" y="20" width="14" height="12" rx="1.8" fill="#fff"/>
-        </svg>
-      </div>
-    </div>
+  </div>
+  <!-- Standalone AI/Max pill -->
+  <div id="dock-ai" onclick="navigate('contact')" role="button" aria-label="Chat with Max, Ishaq's AI assistant">
+    <div class="dock-tooltip">Chat with Max</div>
+    <svg class="dock-ai-spark" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2.5l1.6 5.4a3 3 0 002.05 2.05L21 11.5l-5.35 1.55a3 3 0 00-2.05 2.05L12 20.5l-1.6-5.4a3 3 0 00-2.05-2.05L3 11.5l5.35-1.55a3 3 0 002.05-2.05L12 2.5z" fill="#fff"/>
+    </svg>
   </div>
 </div>
 
