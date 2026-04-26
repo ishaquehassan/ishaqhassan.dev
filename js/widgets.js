@@ -8,6 +8,8 @@ let musicAudio = null;
 let musicPlaying = false;
 
 function initMusicPlayer() {
+  // Guard: music widget removed in widgets cleanup. Bail if DOM not present.
+  if (!document.getElementById('music-play')) return;
   musicAudio = new Audio();
   musicAudio.preload = 'none';
   musicAudio.volume = 0.1;
