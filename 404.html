@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style id="ihp-404-mask">html{visibility:hidden}</style>
+<script>
+/* Humans → home with notification. Bots → full 404 content (HTTP 404 preserved by server). */
+(function(){
+  try{
+    var ua=(navigator.userAgent||'').toLowerCase();
+    var botRE=/bot|crawler|spider|slurp|lighthouse|googlebot|bingbot|yandex|baiduspider|duckduckbot|applebot|claudebot|anthropic-ai|gptbot|perplexitybot|facebookexternalhit|linkedinbot|twitterbot|telegrambot|whatsapp|slackbot|discordbot|embedly|preview/;
+    var stay=location.search.indexOf('stay=1')!==-1;
+    if(botRE.test(ua)||stay){
+      var s=document.getElementById('ihp-404-mask');
+      if(s)s.parentNode.removeChild(s);
+      return;
+    }
+    var attempted=location.pathname+location.search+location.hash;
+    location.replace('/?notfound='+encodeURIComponent(attempted));
+  }catch(e){
+    var s=document.getElementById('ihp-404-mask');
+    if(s)s.parentNode.removeChild(s);
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>404 Not Found | Ishaq Hassan</title>

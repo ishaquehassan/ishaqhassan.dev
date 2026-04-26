@@ -792,29 +792,41 @@ body {
   box-shadow: 0 0 20px rgba(57,211,83,0.3), inset 0 0 14px rgba(57,211,83,0.12);
 }
 
-/* ===== macOS NOTIFICATION ===== */
-#macos-notif {
+/* ===== macOS NOTIFICATION STACK ===== */
+#macos-notif-stack {
   position: fixed;
   top: 36px;
   right: 16px;
   width: 340px;
+  z-index: 99990;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.macos-notif {
+  position: relative;
   background: rgba(36,36,36,0.92);
   backdrop-filter: blur(12px) saturate(180%);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 14px;
   padding: 14px 16px;
-  z-index: 99990;
   display: flex;
   align-items: center;
   gap: 12px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.5);
   transform: translateX(calc(100% + 20px));
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin-top 0.35s cubic-bezier(0.16, 1, 0.3, 1), max-height 0.35s ease;
   cursor: pointer;
   touch-action: pan-x;
+  pointer-events: auto;
+  will-change: transform, opacity;
+  max-height: 200px;
 }
-#macos-notif.show { transform: translateX(0); }
+.macos-notif.show { transform: translateX(0); opacity: 1; }
+.macos-notif.dismiss { transform: translateX(calc(100% + 20px)); opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; margin-top: -10px; border-width: 0; pointer-events: none; }
 .notif-close {
   position: absolute; top: 4px; right: 6px;
   width: 18px; height: 18px; border-radius: 50%;
@@ -824,12 +836,12 @@ body {
   cursor: pointer; opacity: 0; transition: opacity 0.15s;
 }
 .notif-close:hover { background: rgba(255,255,255,0.2); color: #fff; }
-#macos-notif:hover .notif-close { opacity: 1; }
-#macos-notif img { width: 38px; height: 38px; border-radius: 8px; }
-.notif-text { flex: 1; }
+.macos-notif:hover .notif-close { opacity: 1; }
+.macos-notif img { width: 38px; height: 38px; border-radius: 8px; flex-shrink: 0; }
+.notif-text { flex: 1; min-width: 0; }
 .notif-app { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
-.notif-msg { font-size: 13px; color: #fff; margin-top: 2px; }
-.notif-time { font-size: 10px; color: rgba(255,255,255,0.3); align-self: flex-start; }
+.notif-msg { font-size: 13px; color: #fff; margin-top: 2px; word-break: break-word; }
+.notif-time { font-size: 10px; color: rgba(255,255,255,0.3); align-self: flex-start; flex-shrink: 0; }
 
 .status-dot {
   display: inline-block;
@@ -3564,7 +3576,8 @@ a.li-tl-company:hover { color: #7dd3fc; }
   #menubar, #desktop, #dock-container, .window, #noise-overlay { display: none !important; }
   #mobile-app { display: block !important; }
   #particle-canvas { display: none; }
-  #macos-notif { width: auto; left: 8px; right: 8px; top: 8px; border-radius: 12px; }
+  #macos-notif-stack { width: auto; left: 8px; right: 8px; top: 8px; }
+  .macos-notif { border-radius: 12px; }
   .mobile-expanded { z-index: 100000; }
 }
 

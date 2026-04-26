@@ -1,54 +1,82 @@
-// ===== macOS NOTIFICATION =====
-let notifTimeout = null;
-function showNotif(msg, app) {
-  const notif = document.getElementById('macos-notif');
-  document.getElementById('notif-msg').textContent = msg;
-  document.getElementById('notif-app').textContent = app || 'Ishaq OS';
-  notif.classList.add('show');
-  playSfx(sfxClick);
-  clearTimeout(notifTimeout);
-  notifTimeout = setTimeout(() => notif.classList.remove('show'), 5000);
-}
-function dismissNotif() {
-  document.getElementById('macos-notif').classList.remove('show');
-  clearTimeout(notifTimeout);
+// ===== macOS NOTIFICATION STACK =====
+function dismissNotif(item) {
+  if (!item) {
+    var stack = document.getElementById('macos-notif-stack');
+    item = stack && stack.lastElementChild;
+  }
+  if (!item || item.dataset.dismissing === '1') return;
+  item.dataset.dismissing = '1';
+  if (item._timer) { clearTimeout(item._timer); item._timer = null; }
+  item.classList.remove('show');
+  item.classList.add('dismiss');
+  setTimeout(function(){ if (item.parentNode) item.parentNode.removeChild(item); }, 420);
 }
 
-// Swipe to dismiss notification
-(function() {
-  const notif = document.getElementById('macos-notif');
-  let startX = 0, currentX = 0, swiping = false;
-  notif.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-    currentX = startX;
-    swiping = true;
-    notif.style.transition = 'none';
-  });
-  notif.addEventListener('touchmove', (e) => {
+function showNotif(msg, app, opts) {
+  opts = opts || {};
+  var stack = document.getElementById('macos-notif-stack');
+  if (!stack) return;
+  var item = document.createElement('div');
+  item.className = 'macos-notif';
+  var img = document.createElement('img');
+  img.src = 'assets/profile-photo.webp';
+  img.alt = 'Ishaq Hassan';
+  var close = document.createElement('div');
+  close.className = 'notif-close';
+  close.innerHTML = '&times;';
+  close.addEventListener('click', function(e){ e.stopPropagation(); dismissNotif(item); });
+  var text = document.createElement('div');
+  text.className = 'notif-text';
+  var appEl = document.createElement('div');
+  appEl.className = 'notif-app';
+  appEl.textContent = app || 'Ishaq OS';
+  var msgEl = document.createElement('div');
+  msgEl.className = 'notif-msg';
+  msgEl.textContent = msg;
+  text.appendChild(appEl); text.appendChild(msgEl);
+  var time = document.createElement('div');
+  time.className = 'notif-time';
+  time.textContent = 'now';
+  item.appendChild(img); item.appendChild(close); item.appendChild(text); item.appendChild(time);
+  item.addEventListener('click', function(){ dismissNotif(item); });
+  stack.appendChild(item);
+
+  // Swipe-to-dismiss
+  var startX = 0, currentX = 0, swiping = false;
+  item.addEventListener('touchstart', function(e){
+    startX = e.touches[0].clientX; currentX = startX; swiping = true;
+    item.style.transition = 'none';
+  }, { passive: true });
+  item.addEventListener('touchmove', function(e){
     if (!swiping) return;
     currentX = e.touches[0].clientX;
-    const dx = currentX - startX;
+    var dx = currentX - startX;
     if (Math.abs(dx) > 10) {
-      notif.style.transform = 'translateX(' + dx + 'px)';
-      notif.style.opacity = Math.max(0, 1 - Math.abs(dx) / 200);
+      item.style.transform = 'translateX(' + dx + 'px)';
+      item.style.opacity = Math.max(0, 1 - Math.abs(dx) / 200);
     }
-  });
-  notif.addEventListener('touchend', () => {
+  }, { passive: true });
+  item.addEventListener('touchend', function(){
     if (!swiping) return;
     swiping = false;
-    const dx = currentX - startX;
-    notif.style.transition = '';
+    var dx = currentX - startX;
+    item.style.transition = '';
     if (Math.abs(dx) > 80) {
-      notif.style.transform = 'translateX(' + (dx > 0 ? '120%' : '-120%') + ')';
-      notif.style.opacity = '0';
-      setTimeout(() => { notif.classList.remove('show'); notif.style.opacity = ''; }, 300);
-      clearTimeout(notifTimeout);
+      item.style.transform = 'translateX(' + (dx > 0 ? '120%' : '-120%') + ')';
+      item.style.opacity = '0';
+      setTimeout(function(){ dismissNotif(item); }, 200);
     } else {
-      notif.style.transform = 'translateX(0)';
-      notif.style.opacity = '1';
+      item.style.transform = '';
+      item.style.opacity = '';
     }
   });
-})();
+
+  try { if (typeof playSfx === 'function' && typeof sfxClick !== 'undefined') playSfx(sfxClick); } catch(e) {}
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ item.classList.add('show'); }); });
+  var ttl = (typeof opts.duration === 'number') ? opts.duration : 5000;
+  if (ttl > 0) item._timer = setTimeout(function(){ dismissNotif(item); }, ttl);
+  return item;
+}
 
 // ===== ABOUT DIALOG =====
 function detectSystemSpecs() {
@@ -2758,4 +2786,41 @@ function updateMenuBarForWindow(winId) {
   var goMenu = document.getElementById('menu-go');
   if (goMenu) goMenu.innerHTML = cfg.go || defaultGo;
 }
+
+// ===== 404 NOTIFY: redirected from /404.html with attempted path =====
+(function(){
+  try{
+    var params = new URLSearchParams(location.search);
+    var notfound = params.get('notfound');
+    if (!notfound) return;
+    // Strip the param from URL so reloads/shares are clean
+    params.delete('notfound');
+    var clean = location.pathname + (params.toString() ? ('?' + params.toString()) : '') + location.hash;
+    history.replaceState({}, '', clean);
+    // Wait for welcome notif to render first, then stack 404 below it.
+    var fired = false;
+    var deadline = Date.now() + 5000;
+    function fire404(){
+      if (fired || typeof showNotif !== 'function') return;
+      fired = true;
+      var isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+      var msg = isMobile
+        ? 'That page isn’t on my site. Have a look around.'
+        : 'That page isn’t on my site. Have a look around the desktop.';
+      showNotif(msg, 'Page Not Found', { duration: 9000 });
+    }
+    function waitForWelcome(){
+      var stack = document.getElementById('macos-notif-stack');
+      var welcomeUp = stack && stack.children.length > 0;
+      if (welcomeUp) {
+        setTimeout(fire404, 250);
+      } else if (Date.now() < deadline) {
+        setTimeout(waitForWelcome, 150);
+      } else {
+        fire404();
+      }
+    }
+    setTimeout(waitForWelcome, 600);
+  } catch(e) {}
+})();
 

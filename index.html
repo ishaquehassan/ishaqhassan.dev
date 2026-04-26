@@ -67,12 +67,12 @@
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
 <link rel="apple-touch-icon" href="/assets/profile-photo.png">
-<link rel="stylesheet" href="css/style.min.css?v=217">
+<link rel="stylesheet" href="css/style.min.css?v=218">
 
 <!-- JS: defer = parallel download during HTML parse, execute after DOM ready, in order -->
 <script src="js/articles-data.min.js?v=2" defer></script>
 <script src="js/articles-render.min.js?v=10" defer></script>
-<script src="js/app.min.js?v=119" defer></script>
+<script src="js/app.min.js?v=125" defer></script>
 <script src="js/widgets.min.js?v=67" defer></script>
 <script src="js/snake.min.js?v=68" defer></script>
 <script src="js/desktop.min.js?v=81" defer></script>
@@ -605,16 +605,8 @@
 </head>
 <body>
 
-<!-- macOS NOTIFICATION -->
-<div id="macos-notif" onclick="dismissNotif()">
-  <img src="assets/profile-photo.webp" alt="Ishaq Hassan">
-  <div class="notif-close" onclick="event.stopPropagation();dismissNotif()">&times;</div>
-  <div class="notif-text">
-    <div class="notif-app" id="notif-app">Ishaq OS</div>
-    <div class="notif-msg" id="notif-msg">Done playing? Now back to work 😂</div>
-  </div>
-  <div class="notif-time">now</div>
-</div>
+<!-- macOS NOTIFICATION STACK -->
+<div id="macos-notif-stack" aria-live="polite" aria-atomic="false"></div>
 
 <!-- NOISE TEXTURE OVERLAY -->
 <div id="noise-overlay"></div>
