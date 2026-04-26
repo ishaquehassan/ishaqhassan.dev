@@ -7760,6 +7760,101 @@ a.li-tl-company:hover { color: #7dd3fc; }
 }
 
 /* =====================================================================
+   Inline inquiry form card. Replaces the multi-turn hire-flow with one
+   clean form rendered inside the chat. Email + message required, every
+   other field optional.
+   ===================================================================== */
+.max-form {
+  display: block;
+  margin: 6px 0;
+  padding: 16px 16px 14px;
+  background:
+    linear-gradient(180deg, rgba(99,102,241,0.06), rgba(99,102,241,0.02)),
+    rgba(255,255,255,0.025);
+  border: 1px solid rgba(99,102,241,0.22);
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+  animation: maxMsgIn .35s ease;
+}
+.max-form-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.max-form-row { margin-bottom: 8px; }
+.max-form input[type="text"],
+.max-form input[type="email"],
+.max-form select,
+.max-form textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--text);
+  transition: border-color .15s ease, background .15s ease;
+  box-sizing: border-box;
+}
+.max-form input::placeholder,
+.max-form textarea::placeholder { color: rgba(255,255,255,0.38); }
+.max-form input:focus,
+.max-form select:focus,
+.max-form textarea:focus {
+  outline: none;
+  border-color: rgba(99,102,241,0.55);
+  background: rgba(255,255,255,0.06);
+}
+.max-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.max-form select option { background: #1a1b22; color: var(--text); }
+.max-form textarea { resize: vertical; min-height: 72px; }
+.max-form-submit {
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 11px 16px;
+  background: linear-gradient(180deg, #6366f1, #4f46e5);
+  border: 0;
+  color: #fff;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: filter .15s ease, transform .08s ease;
+  box-shadow: 0 6px 18px rgba(99,102,241,0.35);
+}
+.max-form-submit:hover { filter: brightness(1.08); }
+.max-form-submit:active { transform: translateY(1px); }
+.max-form-submit:disabled { opacity: 0.7; cursor: progress; }
+.max-form-status {
+  margin-top: 8px;
+  font-size: 12.5px;
+  min-height: 1em;
+}
+.max-form-status-err { color: #fca5a5; }
+
+@media (max-width: 480px) {
+  .max-form { padding: 14px 14px 12px; }
+  .max-form input,
+  .max-form select,
+  .max-form textarea { font-size: 16px; /* prevent iOS zoom */ }
+}
+
+/* =====================================================================
    Max chat — wide-container readability cap (full-screen / large windows)
    ChatGPT/Claude-style centered column. Without this, on full-screen or a
    wide-resized window the messages and rich cards stretch edge-to-edge

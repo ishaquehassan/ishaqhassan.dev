@@ -1,5 +1,5 @@
 /* =====================================================================
-   MAX — AI Contact Bot (v8)
+   MAX, AI Contact Bot (v8)
    - Wired to Cloudflare Worker proxy with Workers AI (Llama 3.3 70b).
    - Lead capture flow: bot asks "inform Ishaq now?" → user confirms →
      LLM emits JSON → frontend POSTs /notify → renders success + contact cards.
@@ -115,7 +115,7 @@
   ];
 
   const COURSE_CARD = {
-    title: 'Flutter — Basic to Advanced',
+    title: 'Flutter Basic to Advanced',
     sub: '35 free videos · Urdu · listed on docs.flutter.dev',
     href: 'https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5',
     bullets: ['Dart fundamentals', 'OOP', 'Flutter UI + Layout', 'State management', 'API & Networking', 'CI/CD + Deployment'],
@@ -218,7 +218,7 @@
     // string. If NUM runs LAST it re-matches the placeholder's own digits,
     // wraps them in <span class="cn"> and corrupts the unstash. Run NUM
     // first so by the time COMMENT/STR/KW stash, the only remaining digits
-    // belong to placeholders — which the other regexes do not match.
+    // belong to placeholders, which the other regexes do not match.
     let out = escaped;
     out = out.replace(NUM, (m) => stash('cn', m));
     out = out.replace(COMMENT, (m) => stash('cc', m));
@@ -642,6 +642,156 @@
     return true; // allow default href to open YouTube
   };
 
+  /* ---------- Inquiry form card ---------- */
+  const FORM_PRESETS = {
+    'hire-fulltime': {
+      title: 'Hire Ishaq, Full-time',
+      lead: "Drop your details below. I'll send it to Ishaq right away.",
+      fields: [
+        { name: 'role', placeholder: 'Role title (optional). e.g. Senior Flutter Engineer', type: 'text' },
+        { name: 'company', placeholder: 'Company / org (optional)', type: 'text' },
+      ],
+    },
+    'hire-project': {
+      title: 'Hire Ishaq, Project / Freelance',
+      lead: "Drop your details below. I'll send it to Ishaq right away.",
+      fields: [
+        { name: 'projectType', placeholder: 'Project type (optional)', type: 'select',
+          options: ['', 'Mobile (Flutter)', 'Mobile (React Native)', 'Web frontend', 'Backend / API', 'Full-stack', 'Other'] },
+        { name: 'timeline', placeholder: 'Timeline (optional). e.g. 2 months', type: 'text' },
+      ],
+    },
+    'hire-consultancy': {
+      title: 'Hire Ishaq, Consultancy',
+      lead: "Drop your details. I'll forward it.",
+      fields: [
+        { name: 'area', placeholder: 'Area (optional)', type: 'select',
+          options: ['', 'Architecture review', 'Code review', 'Mentoring', 'Interview prep', 'Flutter onboarding', 'Other'] },
+      ],
+    },
+    'speaking': {
+      title: 'Invite Ishaq to speak',
+      lead: 'Fill this and I will forward it to Ishaq.',
+      fields: [
+        { name: 'eventName', placeholder: 'Event name (optional)', type: 'text' },
+        { name: 'eventDate', placeholder: 'Date (optional). e.g. 15 May 2026', type: 'text' },
+        { name: 'format', placeholder: 'Format (optional)', type: 'select',
+          options: ['', 'In-person', 'Online', 'Hybrid'] },
+      ],
+    },
+    'collab': {
+      title: 'Collaborate with Ishaq',
+      lead: 'Tell Ishaq what you have in mind.',
+      fields: [],
+    },
+    'general': {
+      title: 'Contact Ishaq',
+      lead: 'Easiest way is the form below. Email + message is all I need.',
+      fields: [],
+    },
+  };
+
+  function buildInquiryFormHTML(param) {
+    const intent = (FORM_PRESETS[String(param || '').toLowerCase()] ? param : 'general').toLowerCase();
+    const preset = FORM_PRESETS[intent];
+    const id = 'maxform_' + Math.random().toString(36).slice(2, 9);
+    const extras = preset.fields.map((f) => {
+      if (f.type === 'select') {
+        const opts = f.options.map((o) => o
+          ? '<option value="' + escapeHtml(o) + '">' + escapeHtml(o) + '</option>'
+          : '<option value="">' + escapeHtml(f.placeholder) + '</option>'
+        ).join('');
+        return '<div class="max-form-row"><select name="' + f.name + '">' + opts + '</select></div>';
+      }
+      return '<div class="max-form-row"><input name="' + f.name + '" type="' + (f.type || 'text') + '" placeholder="' + escapeHtml(f.placeholder) + '" /></div>';
+    }).join('');
+    return (
+      '<form class="max-form" id="' + id + '" data-intent="' + escapeHtml(intent) + '" autocomplete="on" onsubmit="return window.maxSubmitInquiry(this,event)">' +
+        '<div class="max-form-title">' + escapeHtml(preset.title) + '</div>' +
+        '<div class="max-form-row"><input name="name" type="text" placeholder="Your name (optional)" autocomplete="name" /></div>' +
+        '<div class="max-form-row"><input name="email" type="email" placeholder="Email *" required autocomplete="email" /></div>' +
+        extras +
+        '<div class="max-form-row"><textarea name="message" rows="3" required placeholder="What do you want to tell Ishaq? *"></textarea></div>' +
+        '<button type="submit" class="max-form-submit">Send to Ishaq</button>' +
+        '<div class="max-form-status" aria-live="polite"></div>' +
+      '</form>'
+    );
+  }
+
+  // Compose a one-line summary by joining all non-empty optional fields.
+  function composeInquirySummary(formData, intent) {
+    const lines = [];
+    const get = (k) => (formData.get(k) || '').toString().trim();
+    if (intent === 'hire-fulltime') {
+      if (get('role')) lines.push('Role: ' + get('role'));
+      if (get('company')) lines.push('Company: ' + get('company'));
+    } else if (intent === 'hire-project') {
+      if (get('projectType')) lines.push('Type: ' + get('projectType'));
+      if (get('timeline')) lines.push('Timeline: ' + get('timeline'));
+    } else if (intent === 'hire-consultancy') {
+      if (get('area')) lines.push('Area: ' + get('area'));
+    } else if (intent === 'speaking') {
+      if (get('eventName')) lines.push('Event: ' + get('eventName'));
+      if (get('eventDate')) lines.push('Date: ' + get('eventDate'));
+      if (get('format')) lines.push('Format: ' + get('format'));
+    }
+    const msg = get('message');
+    if (msg) lines.push('Message: ' + msg);
+    return lines.join(' | ').slice(0, 600);
+  }
+
+  window.maxSubmitInquiry = function (form, ev) {
+    if (ev) ev.preventDefault();
+    const status = form.querySelector('.max-form-status');
+    const submitBtn = form.querySelector('.max-form-submit');
+    const intent = (form.getAttribute('data-intent') || 'general').toLowerCase();
+    const fd = new FormData(form);
+    const email = String(fd.get('email') || '').trim();
+    const message = String(fd.get('message') || '').trim();
+    const name = String(fd.get('name') || '').trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      if (status) { status.textContent = 'Please enter a valid email.'; status.className = 'max-form-status max-form-status-err'; }
+      return false;
+    }
+    if (!message) {
+      if (status) { status.textContent = 'Please add a short message for Ishaq.'; status.className = 'max-form-status max-form-status-err'; }
+      return false;
+    }
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
+    if (status) { status.textContent = ''; status.className = 'max-form-status'; }
+
+    const lead = {
+      name: name || '(anonymous)',
+      email: email,
+      intent: intent,
+      summary: composeInquirySummary(fd, intent),
+    };
+
+    fetch(MAX_API + '/notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lead: lead }),
+    }).then(function (res) {
+      if (!res.ok) throw new Error('http_' + res.status);
+      return res.json();
+    }).then(function () {
+      const wrapEl = form.closest('.max-msg') || form.parentNode;
+      const success = document.createElement('div');
+      success.className = 'max-msg max-msg-bot max-msg-cards';
+      success.innerHTML = buildLeadInformedCardHTML();
+      if (wrapEl && wrapEl.parentNode) wrapEl.parentNode.replaceChild(success, wrapEl);
+      // Persist into session so a refresh doesn't re-show the form.
+      try { state.leadSent = true; saveSession(state); } catch (e) {}
+    }).catch(function (e) {
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Send to Ishaq'; }
+      if (status) {
+        status.textContent = 'Could not send right now. Please try again, or email hello@ishaqhassan.dev directly.';
+        status.className = 'max-form-status max-form-status-err';
+      }
+    });
+    return false;
+  };
+
   const CARD_BUILDERS = {
     contact: () => buildContactCardsBlockHTML(),
     prs: () => buildPRsCardsHTML(),
@@ -655,6 +805,7 @@
     techstack: () => buildTechCardsHTML(),
     video: (p) => buildVideoCardsHTML(p),
     videos: (p) => buildVideoCardsHTML(p),
+    form: (p) => buildInquiryFormHTML(p),
   };
 
   // Extract card tags from text. Supported:
@@ -685,19 +836,26 @@
     return parts.filter((p) => p.kind === 'cards' || (p.value && p.value.length > 0));
   }
 
+  function buildLeadInformedCardHTML() {
+    return (
+      '<div class="max-informed-card">' +
+        '<div class="max-informed-head">' +
+          '<div class="max-informed-icon">✓</div>' +
+          '<div>' +
+            '<div class="max-informed-title">Ishaq has been notified</div>' +
+            '<div class="max-informed-sub">He will respond shortly. Busy schedule, but he checks lead emails fast.</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="max-informed-meanwhile">Meanwhile, browse his direct contact links</div>' +
+        buildContactCardsHTML() +
+      '</div>'
+    );
+  }
+
   function renderInformedCard(inst) {
     if (!inst) return;
-    const card = el('div', 'max-informed-card');
-    card.innerHTML =
-      '<div class="max-informed-head">' +
-        '<div class="max-informed-icon">✓</div>' +
-        '<div>' +
-          '<div class="max-informed-title">Ishaq has been notified</div>' +
-          '<div class="max-informed-sub">He will respond shortly. Busy schedule, but he checks lead emails fast.</div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="max-informed-meanwhile">Meanwhile, browse his direct contact links</div>' +
-      buildContactCardsHTML();
+    const card = el('div', 'max-informed-card-wrap');
+    card.innerHTML = buildLeadInformedCardHTML();
     inst.messagesEl.appendChild(card);
     scrollToBottom(inst, true);
   }
@@ -714,16 +872,16 @@
       '',
       lead.summary || '',
       '',
-      '— Sent via Max chat',
+      'Sent via Max chat',
     ].filter(Boolean).join('\n');
     const mailto = 'mailto:hello@ishaqhassan.dev?subject=' + subject + '&body=' + encodeURIComponent(bodyLines);
 
     card.innerHTML =
       '<div class="max-lead-title">📬 Lead Summary</div>' +
       '<div class="max-lead-rows">' +
-        '<div class="max-lead-key">Name</div><div class="max-lead-val">' + escapeHtml(lead.name || '—') + '</div>' +
-        '<div class="max-lead-key">Email</div><div class="max-lead-val">' + escapeHtml(lead.email || '—') + '</div>' +
-        '<div class="max-lead-key">Intent</div><div class="max-lead-val">' + escapeHtml(lead.intent || '—') + '</div>' +
+        '<div class="max-lead-key">Name</div><div class="max-lead-val">' + escapeHtml(lead.name || '-') + '</div>' +
+        '<div class="max-lead-key">Email</div><div class="max-lead-val">' + escapeHtml(lead.email || '-') + '</div>' +
+        '<div class="max-lead-key">Intent</div><div class="max-lead-val">' + escapeHtml(lead.intent || '-') + '</div>' +
         (lead.summary ? '<div class="max-lead-key">Details</div><div class="max-lead-val">' + escapeHtml(lead.summary) + '</div>' : '') +
       '</div>' +
       '<div class="max-lead-actions">' +
@@ -791,7 +949,7 @@
     clean = clean.replace(/<lead>[\s\S]*?<\/lead>/gi, '');
     clean = clean.replace(/^[\s>*-]*(\*\*)?\s*(JSON\s*)?Lead\s*Ready\s*(Block|Object|Template)?(\*\*)?\s*:?\s*$/gim, '');
 
-    // When a lead is being emitted, the success card already shows contact links —
+    // When a lead is being emitted, the success card already shows contact links.
     // strip any duplicate [[CARDS:contact]] tag (or [[contact]]) the model might add.
     if (lead) {
       clean = clean.replace(/\[\[(?:CARDS?:)?contact\]\]/gi, '');
