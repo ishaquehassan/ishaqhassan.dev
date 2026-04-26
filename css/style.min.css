@@ -7127,12 +7127,14 @@ a.li-tl-company:hover { color: #7dd3fc; }
 }
 
 /* Mobile chat sizing */
-.max-mob-content { display: flex; flex-direction: column; height: 100%; }
-.max-chat-mob { height: 100%; }
+.max-mob-content { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.max-chat-mob { height: 100%; flex: 1 1 auto; min-height: 0; }
 .max-chat-mob .max-messages { padding: 14px 14px 6px; }
 .max-chat-mob .max-bubble { font-size: 14px; max-width: 82%; }
 .max-chat-mob .max-hero { padding: 14px 14px 12px; }
-.max-mob-direct { display: flex; flex-direction: column; gap: 10px; }
+/* Direct panel ONLY visible when active. Use compound selector so it
+   can't override .max-panel { display:none } unconditionally. */
+.max-mob-direct.max-panel-active { display: flex; flex-direction: column; gap: 10px; }
 
 /* Responsive: tighten in narrower windows + mobile */
 @media (max-width: 640px) {
