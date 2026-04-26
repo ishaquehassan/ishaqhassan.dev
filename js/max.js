@@ -265,9 +265,18 @@
 
   async function sendMessage(textOverride) {
     if (sending) return;
-    const inst0 = bindAll()[0];
-    if (!inst0) return;
-    const raw = (textOverride != null ? textOverride : (inst0.inputEl.value || '')).trim();
+    const insts = bindAll();
+    if (insts.length === 0) return;
+    let raw = '';
+    if (textOverride != null) {
+      raw = String(textOverride).trim();
+    } else {
+      // Read from whichever instance (desktop or mobile) has a non-empty value
+      for (let i = 0; i < insts.length; i++) {
+        const v = (insts[i].inputEl.value || '').trim();
+        if (v) { raw = v; break; }
+      }
+    }
     if (!raw) return;
     if (raw.length > MAX_CHARS) return;
 
