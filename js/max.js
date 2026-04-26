@@ -414,6 +414,23 @@
       const insts = bindAll();
       insts.forEach((i) => setTab(i, tab));
     },
+    send: function (text) { return sendMessage(text); },
+    _state: function () {
+      const insts = bindAll();
+      return {
+        instCount: insts.length,
+        insts: insts.map((i) => ({
+          suffix: i.suffix,
+          inputId: i.inputEl && i.inputEl.id,
+          inputValue: i.inputEl && i.inputEl.value,
+          inputSameAsLive: i.inputEl === document.getElementById(i.inputEl.id),
+          formId: i.formEl && i.formEl.id,
+          formSameAsLive: i.formEl === document.getElementById(i.formEl.id),
+        })),
+        sending: sending,
+        messageCount: state.messages.length,
+      };
+    },
   };
 
   // Public helper used by mobile bento card "Direct Contact"
