@@ -7129,6 +7129,94 @@ a.li-tl-company:hover { color: #7dd3fc; }
 .max-panel-direct { padding: 0; }
 .max-panel-direct .contact-grid { margin-top: 4px; }
 
+/* === Informed card (after notify) + inline contact cards === */
+.max-informed-card {
+  margin: 8px 14px 10px;
+  padding: 14px 14px 12px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(34,197,94,0.10), rgba(99,102,241,0.10));
+  border: 1px solid rgba(34,197,94,0.28);
+  animation: maxMsgIn .35s ease;
+}
+.max-informed-head {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.max-informed-icon {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800;
+  box-shadow: 0 4px 12px rgba(34,197,94,0.4);
+}
+.max-informed-title {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  line-height: 1.3;
+}
+.max-informed-sub {
+  margin-top: 3px;
+  font-size: 12px; color: var(--text2);
+  line-height: 1.4;
+}
+.max-informed-meanwhile {
+  font-size: 11.5px; font-weight: 600;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin: 12px 0 8px;
+}
+
+/* Inline mini contact-card grid inside chat */
+.max-cc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.max-cc {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  text-decoration: none;
+  color: var(--text);
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
+  min-width: 0;
+}
+.max-cc:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.14);
+  transform: translateY(-1px);
+}
+.max-cc-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.max-cc-icon svg { width: 16px; height: 16px; }
+.max-cc-text { min-width: 0; flex: 1; }
+.max-cc-label {
+  font-size: 10px; font-weight: 700;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.max-cc-value {
+  font-size: 12px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 480px) {
+  .max-cc-grid { grid-template-columns: 1fr; }
+}
+
 /* Mobile bento badge for "AI" */
 .mob-bento .mob-bento-badge {
   position: absolute;
