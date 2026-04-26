@@ -719,18 +719,6 @@
         <div class="menu-dd-item" onclick="closeAllWindows()">Close All Windows<span class="shortcut">⌘W</span></div>
       </div>
     </div>
-    <div class="menu-parent hide-mobile" data-menu="edit">
-      <span class="menu-item">Edit</span>
-      <div class="menu-dropdown" id="menu-edit">
-        <div class="menu-dd-item disabled">Undo<span class="shortcut">⌘Z</span></div>
-        <div class="menu-dd-item disabled">Redo<span class="shortcut">⇧⌘Z</span></div>
-        <div class="menu-dd-sep"></div>
-        <div class="menu-dd-item disabled">Cut<span class="shortcut">⌘X</span></div>
-        <div class="menu-dd-item disabled">Copy<span class="shortcut">⌘C</span></div>
-        <div class="menu-dd-item disabled">Paste<span class="shortcut">⌘V</span></div>
-        <div class="menu-dd-item disabled">Select All<span class="shortcut">⌘A</span></div>
-      </div>
-    </div>
     <div class="menu-parent hide-mobile" data-menu="view">
       <span class="menu-item">View</span>
       <div class="menu-dropdown" id="menu-view">
@@ -755,10 +743,36 @@
     </div>
   </div>
   <div class="right">
-    <span id="menubar-battery">🔋 --%</span>
-    <span>📶</span>
+    <span id="menubar-music" class="menubar-icon-btn" onclick="toggleMusicPopover(event)" title="Now Playing" aria-haspopup="true" aria-expanded="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+    </span>
     <span id="spotlight-trigger" onclick="openSpotlight()" style="cursor:pointer;padding:0 8px;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.08);border-radius:5px;height:22px;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'" title="Search (⌘K)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" style="opacity:0.7;"><circle cx="10.5" cy="10.5" r="7.5"/><path d="M21 21l-4.35-4.35"/></svg><span style="font-size:11px;color:rgba(255,255,255,0.5);font-weight:500;">⌘K</span></span>
     <span id="menubar-time"></span>
+  </div>
+</div>
+
+<!-- Now Playing popover (anchored under music icon) -->
+<div id="music-popover" class="music-popover" role="dialog" aria-label="Now Playing">
+  <div class="music-pop-art" id="music-pop-art">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+  </div>
+  <div class="music-pop-info">
+    <div class="music-pop-track" id="music-pop-track">Hanging Lanterns</div>
+    <div class="music-pop-artist" id="music-pop-artist">Kalaido</div>
+    <div class="music-pop-controls">
+      <button type="button" class="music-pop-btn" id="music-pop-prev" aria-label="Previous">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+      </button>
+      <button type="button" class="music-pop-btn music-pop-play" id="music-pop-play" aria-label="Play">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button type="button" class="music-pop-btn" id="music-pop-next" aria-label="Next">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg>
+      </button>
+    </div>
+    <div class="music-pop-progress" id="music-pop-progress">
+      <div class="music-pop-progress-fill" id="music-pop-progress-fill"></div>
+    </div>
   </div>
 </div>
 
@@ -790,14 +804,6 @@
 <!-- DESKTOP WIDGETS -->
 <div id="desktop">
   <div class="widget-col">
-    <div class="widget" id="w-clock">
-      <div class="widget-title">Local Time</div>
-      <div class="clock-time-row">
-        <span class="clock-digits" id="clock-h">05</span><span class="clock-colon">:</span><span class="clock-digits" id="clock-m">17</span>
-        <span class="clock-ampm" id="clock-ampm">AM</span>
-      </div>
-      <div class="widget-sub" id="clock-date">Loading...</div>
-    </div>
     <div class="widget" id="w-status">
       <div class="widget-title">Status</div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
@@ -806,33 +812,39 @@
       </div>
       <div style="margin-top:10px;font-size:12px;color:var(--text2);">hello@ishaqhassan.dev</div>
     </div>
+    <div class="widget widget-activity" id="w-activity" onclick="window.open('https://github.com/ishaquehassan','_blank')" style="min-width:240px;cursor:pointer;">
+      <div class="widget-title">Activity</div>
+      <div id="gh-graph" style="margin-top:8px;overflow:hidden;"></div>
+      <div class="widget-sub" id="gh-total" style="margin-top:6px;">Loading contributions...</div>
+    </div>
+    <div class="widget widget-highlights" id="w-highlights">
+      <div class="widget-title">Highlights</div>
+      <div class="highlights-feat" onclick="navigate('flutter')" role="button" aria-label="Open Flutter PRs">
+        <div class="highlights-feat-num">6</div>
+        <div class="highlights-feat-text">
+          <div class="highlights-feat-title">Flutter framework PRs</div>
+          <div class="highlights-feat-sub">Merged into flutter/flutter</div>
+        </div>
+      </div>
+      <div class="highlights-grid">
+        <div class="highlights-cell" onclick="navigate('oss')" role="button" aria-label="Open Open Source">
+          <div class="highlights-num">64</div>
+          <div class="highlights-label">Stars</div>
+        </div>
+        <div class="highlights-cell" onclick="navigate('speaking')" role="button" aria-label="Open Speaking">
+          <div class="highlights-num">10+</div>
+          <div class="highlights-label">Talks</div>
+        </div>
+        <div class="highlights-cell" onclick="navigate('articles')" role="button" aria-label="Open Articles">
+          <div class="highlights-num">12+</div>
+          <div class="highlights-label">Articles</div>
+        </div>
+      </div>
+    </div>
     <div class="widget" id="w-wallpaper">
       <div class="widget-title">Wallpaper</div>
       <div class="wp-swatches" id="wp-swatches"></div>
       <div class="wp-name" id="wp-name">Dark Matter</div>
-    </div>
-  </div>
-  <div class="widget-col">
-    <div class="widget widget-highlights" id="w-highlights">
-      <div class="widget-title">Highlights</div>
-      <div class="highlights-grid">
-        <div class="highlights-cell" onclick="navigate('flutter')" role="button" aria-label="Open Flutter PRs">
-          <div class="highlights-num">6</div>
-          <div class="highlights-label">Flutter PRs merged</div>
-        </div>
-        <div class="highlights-cell" onclick="navigate('oss')" role="button" aria-label="Open Open Source">
-          <div class="highlights-num">64</div>
-          <div class="highlights-label">GitHub stars</div>
-        </div>
-        <div class="highlights-cell" onclick="navigate('speaking')" role="button" aria-label="Open Speaking">
-          <div class="highlights-num">10+</div>
-          <div class="highlights-label">Talks &amp; events</div>
-        </div>
-        <div class="highlights-cell" onclick="navigate('articles')" role="button" aria-label="Open Articles">
-          <div class="highlights-num">12+</div>
-          <div class="highlights-label">Articles published</div>
-        </div>
-      </div>
     </div>
   </div>
 </div>

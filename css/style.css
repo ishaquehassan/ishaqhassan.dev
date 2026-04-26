@@ -191,9 +191,7 @@ body {
   position: fixed;
   top: 0; left: 0; right: 0;
   height: 28px;
-  background: rgba(0,0,0,0.25);
-  backdrop-filter: saturate(180%) blur(10px);
-  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  background: transparent;
   contain: layout style paint;
   display: flex;
   align-items: center;
@@ -203,6 +201,7 @@ body {
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.01em;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
 }
 
 #menubar .left { display: flex; align-items: stretch; gap: 0; height: 28px; }
@@ -442,13 +441,15 @@ body {
 
 #gh-graph {
   display: grid;
-  grid-template-rows: repeat(7, 1fr);
+  grid-template-rows: repeat(7, 10px);
+  grid-auto-columns: 10px;
   grid-auto-flow: column;
-  gap: 2px;
+  gap: 3px;
+  justify-content: start;
 }
 .gh-cell {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 2px;
   background: rgba(255,255,255,0.04);
 }
@@ -4913,22 +4914,7 @@ a.li-tl-company:hover { color: #7dd3fc; }
   mix-blend-mode: overlay;
 }
 
-/* ===== CURSOR SPOTLIGHT (Desktop) ===== */
-#cursor-spotlight {
-  position: fixed;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, rgba(180,74,255,0.03) 30%, transparent 70%);
-  pointer-events: none;
-  z-index: 1;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.3s;
-  opacity: 0;
-  will-change: left, top;
-}
-
-#cursor-spotlight.active { opacity: 1; }
+#cursor-spotlight { display: none !important; }
 
 /* ===== CARD SHINE SWEEP ===== */
 .pr-card::after,
@@ -8137,4 +8123,165 @@ a.li-tl-company:hover { color: #7dd3fc; }
   font-size: 11px;
   color: var(--text2);
   margin-top: 4px;
+}
+
+/* Widgets cleanup tweaks: uniform width + compact padding */
+.widget-col .widget {
+  min-width: 260px;
+  width: 260px;
+}
+#w-status, #w-wallpaper { padding: 12px 16px; }
+#w-status > div { margin-top: 4px !important; }
+
+/* Highlights: featured Flutter PRs row + compact 3-cell row */
+.highlights-feat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(1,117,194,0.18), rgba(19,185,253,0.10));
+  border: 1px solid rgba(19,185,253,0.22);
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  margin-top: 8px;
+}
+.highlights-feat:hover {
+  background: linear-gradient(135deg, rgba(1,117,194,0.28), rgba(19,185,253,0.16));
+  border-color: rgba(19,185,253,0.4);
+  transform: translateY(-1px);
+}
+.highlights-feat-num {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.highlights-feat-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+.highlights-feat-sub {
+  font-size: 10px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 2px;
+}
+
+.highlights-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  align-items: stretch;
+  margin-top: 6px;
+}
+.highlights-cell {
+  padding: 10px 4px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 56px;
+}
+.highlights-num { font-size: 17px; }
+.highlights-label { font-size: 11px; line-height: 1.2; margin-top: 4px; }
+
+/* Compact clock widget */
+#w-clock { padding: 12px 16px; }
+#w-clock .clock-digits { font-size: 30px; letter-spacing: -1.2px; }
+#w-clock .clock-ampm { font-size: 10px; margin-top: 4px; }
+#w-clock .widget-sub { font-size: 11px; margin-top: 2px; }
+
+/* Menu bar music icon (Now Playing pattern) */
+.menubar-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 22px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  opacity: 0.85;
+}
+.menubar-icon-btn:hover { background: rgba(255,255,255,0.12); opacity: 1; }
+
+/* Now Playing popover under music icon */
+.music-popover {
+  position: fixed;
+  top: 34px;
+  right: 12px;
+  width: 280px;
+  padding: 12px;
+  background: rgba(28,30,34,0.96);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px) scale(0.97);
+  transform-origin: top right;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.music-popover.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+.music-pop-art {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.music-pop-info { flex: 1; min-width: 0; }
+.music-pop-track { color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.music-pop-artist { color: rgba(255,255,255,0.55); font-size: 11px; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.music-pop-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 6px;
+}
+.music-pop-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s ease;
+}
+.music-pop-btn:hover { background: rgba(255,255,255,0.14); }
+.music-pop-play { background: rgba(255,255,255,0.16); }
+.music-pop-progress {
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  margin-top: 8px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.music-pop-progress-fill {
+  height: 100%;
+  background: rgba(255,255,255,0.6);
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.1s linear;
 }
