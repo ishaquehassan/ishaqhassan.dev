@@ -7777,14 +7777,16 @@ a.li-tl-company:hover { color: #7dd3fc; }
 }
 
 @container maxchat (min-width: 880px) {
+  /* !important needed to beat .max-msg / .max-msg-cards which use
+     max-width:100% and margin:6px 0 4px !important respectively. */
   .max-messages > *,
   .max-hero,
   .max-inputbar > *,
   .max-disclaimer {
-    max-width: 760px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
+    max-width: 760px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 100% !important;
   }
   .max-messages { padding-left: 24px; padding-right: 24px; }
   .max-inputbar { padding-left: 24px; padding-right: 24px; }
@@ -7800,10 +7802,10 @@ a.li-tl-company:hover { color: #7dd3fc; }
   .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-hero,
   .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-inputbar > *,
   .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-disclaimer {
-    max-width: 760px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
+    max-width: 760px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 100% !important;
   }
   .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-messages,
   .window.fullscreen-space .max-chat:not(.max-chat-mob) .max-inputbar {
