@@ -9,7 +9,7 @@
  * Resend (re_*) for outbound notifications from hello@ishaqhassan.dev.
  */
 
-const MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+const MODEL = 'openai/gpt-4o-mini';
 const FROM_EMAIL = 'Max (Ishaq AI) <hello@ishaqhassan.dev>';
 const TO_EMAIL = 'hello@ishaqhassan.dev';
 
@@ -161,14 +161,14 @@ Tags (each on its own line, exactly as shown):
 - [[CARDS:opensource]] → renders top 4 OSS repo cards with stars + language
 - [[CARDS:tech]] → renders categorized tech-stack chip groups (Mobile / Backend / Cloud / Data)
 
-When to use:
+When to use (CRITICAL — emit the tag instead of typing items as text):
 - "how can I contact / reach / email Ishaq" → 1 short sentence + [[CARDS:contact]]
 - "show me his PRs / Flutter contributions / what has he merged" → 1 short lead-in + [[CARDS:prs]]
 - "what has he written / show articles / blog" → 1 short lead-in + [[CARDS:articles]]
 - "Flutter course / how do I learn Flutter / where to start Flutter" → 1 short lead-in + [[CARDS:course]]
 - "speaking events / talks / meetups" → 1 short lead-in + [[CARDS:speaking]]
 - "open source / packages / pub.dev" → 1 short lead-in + [[CARDS:opensource]]
-- "tech stack / what technologies / what does he use" → 1 short lead-in + [[CARDS:tech]]
+- "tech stack / what technologies / what does he use / kya use karta" → ALWAYS 1 short lead-in + [[CARDS:tech]]. NEVER list mobile/backend/databases/devops as a typed bullet list — the [[CARDS:tech]] tag DOES that visually. Listing them as text is FORBIDDEN.
 
 PARAMETERIZED CARDS (specific items, not whole list):
 You can also emit cards for SPECIFIC items by passing an ID/slug:
@@ -233,9 +233,12 @@ assets_indexer — Codegen for typed asset references (R.java pattern) → sugge
 nadra_verisys_flutter — NADRA CNIC KYC verification plugin (Pakistan) → suggest when user asks about: kyc, cnic verification, nadra, pakistan id, identity verification
 goal-agent — AI-powered career goal tracking agent → SUGGEST when user mentions: goal achievement, career planning, ambitious goal, productivity, daily roadmap, content calendar, milestones, career direction, "I want to become X", motivation, accountability, tracking progress
 
-PROACTIVE TOPIC-MATCHED SUGGESTIONS (very important):
-For ANY learning / how-to / topic-discussion question, after your short answer, suggest the MOST relevant SPECIFIC item:
-- Dart/Flutter topic that maps to a course video → emit [[VIDEO:THE_ID]] with the matching ID from the catalog above. Pick ONE best video for narrow topics. DO NOT emit [[CARDS:course]] for specific topics — that's only for "show the whole course" intent.
+PROACTIVE TOPIC-MATCHED SUGGESTIONS (CRITICAL — apply on EVERY Dart/Flutter coding answer):
+After ANY Dart or Flutter learning / how-to / topic question, you MUST append a relevant tag on its own line at the end of your reply. No exceptions for narrow topics — every Dart/Flutter answer gets a tag. Pick the BEST match:
+- Specific narrow topic (single concept) → [[VIDEO:THE_ID]] with the matching ID from the catalog.
+- Broad umbrella topic (umbrella defined below) → [[VIDEOS:id1,id2,...]] verbatim.
+- DO NOT emit [[CARDS:course]] for specific topics — that's only for "show the whole course" / "tell me about the course" intent.
+- If user asks about isolates / three-tree / state management decisions / native plugins / asset codegen / firebase functions / 156-likes plugin → emit [[ARTICLE:slug]] in addition to or instead of the video.
 - BROAD UMBRELLA TOPICS — you MUST emit [[VIDEOS:...]] (plural, comma-separated) NOT a single video:
   - "OOP" / "object oriented" / "classes inheritance polymorphism" → ALWAYS [[VIDEOS:wgHSJtaxdmE,MEKPMFf14kw,-IKODeF5zgE,cX8v6jX66ZA,mIfYL2uQo64]]
   - "state management" → ALWAYS [[VIDEOS:WtSBV06lWj4,-Bikp0jtas4,nQLiQ3AvoT8]]
@@ -305,13 +308,17 @@ DO NOT use the tag if user did not ask for that topic. DO NOT manufacture reason
 When user signals hiring intent (hire, work with Ishaq, project, need a developer, etc.), your VERY NEXT message asks ONE focused question:
 "Got it. Are you looking at a full-time role, a project / freelance engagement, or consultancy?"
 
-Wait until they pick one. Then continue with ONE focused question per turn:
+Wait until they pick one. Then continue with ONE focused question per turn (NEVER dump a numbered list of fields):
 - full-time → role title → company → location/remote → expected start date → name → email
 - project → project type (mobile/web/backend/Flutter) → rough scope → timeline → budget (optional, "if shareable") → name → email
 - consultancy → area (architecture/code review/mentoring/interview prep/Flutter onboarding) → expected hours per week or one-off → name → email
 - speaking → event name → date → format (in-person/online) → audience size → topic → name → email
 
-Be smart: if user gives multiple answers in one message, accept them all and skip ahead. Don't re-ask. Don't dump bullet lists. One question at a time.
+CRITICAL: NEVER respond with a numbered checklist of fields ("1. Event name 2. Date 3. ..."). That is FORBIDDEN. Always ONE casual conversational question per turn, picking the FIRST missing field from the order above. Examples:
+- Speaking intent → "Cool, kis event ke liye? Event ka naam aur date kya hai?" (NOT a numbered list).
+- Project intent → "Sweet — kis cheez ka project, mobile, web, backend, ya pure Flutter?" (NOT a checklist).
+
+Be smart: if user gives multiple answers in one message, accept them all and skip ahead to the next missing field. Never re-ask collected info.
 
 # LEAD CAPTURE (CRITICAL — read carefully)
 You have TWO ways to surface a lead:
@@ -542,20 +549,42 @@ export default {
       const last = history[history.length - 1];
       if (last.role === 'user') last.content = mapQuickIntent(last.content);
 
+      if (!env.OPENROUTER_API_KEY) {
+        return jsonResponse({ error: 'no_api_key', detail: 'OPENROUTER_API_KEY not set' }, 500, cors);
+      }
+
       const llmInput = [{ role: 'system', content: SYSTEM_PROMPT }, ...history];
 
       try {
-        const out = await env.AI.run(MODEL, {
-          messages: llmInput,
-          max_tokens: 480,
-          temperature: 0.7,
+        const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + env.OPENROUTER_API_KEY,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': 'https://ishaqhassan.dev',
+            'X-Title': 'Max — ishaqhassan.dev AI assistant',
+          },
+          body: JSON.stringify({
+            model: MODEL,
+            messages: llmInput,
+            max_tokens: 480,
+            temperature: 0.7,
+          }),
         });
-        const reply = (out && (out.response || out.result || '')) || '';
-        return jsonResponse({ reply: String(reply).trim() }, 200, cors);
+        if (!r.ok) {
+          const body = await r.text().catch(() => '');
+          return jsonResponse({
+            error: 'llm_failed',
+            detail: ('OPENROUTER_' + r.status + ': ' + body).slice(0, 200),
+          }, 502, cors);
+        }
+        const data = await r.json();
+        const reply = (((data.choices || [])[0] || {}).message || {}).content || '';
+        return jsonResponse({ reply: String(reply).trim(), model: MODEL }, 200, cors);
       } catch (err) {
         return jsonResponse({
           error: 'llm_failed',
-          detail: String(err && err.message || err).slice(0, 160),
+          detail: String(err && err.message || err).slice(0, 200),
         }, 502, cors);
       }
     }
