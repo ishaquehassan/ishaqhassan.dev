@@ -19,6 +19,56 @@
     'About Ishaq',
   ];
 
+  /* ------------------- Card Data ------------------- */
+  const PR_CARDS_MERGED = [
+    { num: 184572, title: 'Fix LicenseRegistry docs to reference NOTICES' },
+    { num: 184569, title: 'Add disposal guidance to CurvedAnimation and CurveTween docs' },
+    { num: 184545, title: 'Add clipBehavior parameter to AnimatedCrossFade' },
+    { num: 183109, title: 'Add scrollPadding property to DropdownMenu' },
+    { num: 183097, title: 'Fix RouteAware.didPushNext documentation inaccuracy' },
+    { num: 183081, title: 'Use double quotes in settings.gradle.kts template' },
+  ];
+  const PR_CARDS_OPEN = [
+    { num: 183110, title: 'Suppress browser word-selection in SelectableText (web right-click)' },
+    { num: 183079, title: 'Guard auto-scroll against Offset.infinite in ScrollableSelectionContainerDelegate' },
+    { num: 183062, title: 'Reset AppBar _scrolledUnder flag when scroll context changes' },
+  ];
+
+  const ARTICLE_CARDS = [
+    { tag: 'Flutter', title: 'How I Got 6 PRs Merged Into Flutter Framework', excerpt: '90-day path from triage to merge. Test-first bar, review etiquette.', mins: 10, href: '/blog/how-i-got-6-prs-merged-into-flutter.html' },
+    { tag: 'Architecture', title: "Flutter's Three-Tree Architecture Explained", excerpt: 'Widget configures, Element mounts, RenderObject paints. Where bugs hide.', mins: 12, href: '/blog/flutter-three-tree-architecture-explained.html' },
+    { tag: 'State', title: 'Flutter State Management 2026: A Decision Guide', excerpt: 'setState, Provider, Riverpod, Bloc, signals. When to use which.', mins: 14, href: '/blog/flutter-state-management-2026-guide.html' },
+    { tag: 'Plugins', title: 'Building Production Flutter Plugins (156 likes case study)', excerpt: 'Build, publish, maintain a plugin with 156 pub.dev likes.', mins: 11, href: '/blog/building-production-flutter-plugins-case-study.html' },
+  ];
+
+  const SPEAKING_CARDS = [
+    { date: 'Aug 2021', title: 'Flutter Bootcamp', org: 'GDG Kolachi', role: 'Lead Instructor', href: 'https://gdg.community.dev/events/details/google-gdg-kolachi-presents-flutter-bootcamp/' },
+    { date: '2025', title: 'Code to Create / Road to DevFest', org: 'NIC Karachi', role: 'Speaker', href: 'https://www.linkedin.com/posts/gdgkolachi_codetocreate-roadtodevfest2025-gdgkolachi-activity-7400908378081767424-EB-7' },
+    { date: 'May 2024', title: 'DevNCode Meetup IV: AI', org: 'The Nest I/O', role: 'Speaker', href: 'https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5' },
+    { date: '2024', title: 'Flutter Seminar', org: 'Iqra University', role: 'Keynote', href: 'https://www.linkedin.com/posts/itrathussainzaidi_flutter-iqrauniversity-seminar-activity-7192627199412232192-8t2X' },
+  ];
+
+  const OSS_CARDS = [
+    { name: 'document_scanner_flutter', desc: 'Flutter plugin: document scanning with edge detection', stars: '63★ · 135 forks', lang: 'Dart', href: 'https://github.com/ishaquehassan/document_scanner_flutter' },
+    { name: 'flutter_alarm_background_trigger', desc: 'Native Kotlin alarm plugin for Flutter', stars: '13★', lang: 'Kotlin', href: 'https://github.com/ishaquehassan/flutter_alarm_background_trigger' },
+    { name: 'assets_indexer', desc: 'Auto-generate typed asset references (R.java pattern)', stars: '9★', lang: 'Dart', href: 'https://github.com/ishaquehassan/assets_indexer' },
+    { name: 'goal-agent', desc: 'AI-powered career goal tracking agent', stars: 'OSS', lang: 'TypeScript', href: 'https://github.com/ishaquehassan/goal-agent' },
+  ];
+
+  const TECH_GROUPS = [
+    { label: 'Mobile', items: ['Flutter', 'Dart', 'Kotlin', 'Swift', 'React Native'] },
+    { label: 'Backend', items: ['Node.js', 'NestJS', 'Next.js', 'Python', 'Spring Boot', 'Go'] },
+    { label: 'Cloud / DevOps', items: ['Firebase', 'Cloudflare Workers', 'Docker', 'GitHub Actions', 'Linux'] },
+    { label: 'Data', items: ['PostgreSQL', 'MySQL', 'SQLite'] },
+  ];
+
+  const COURSE_CARD = {
+    title: 'Flutter — Basic to Advanced',
+    sub: '35 free videos · Urdu · listed on docs.flutter.dev',
+    href: 'https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5',
+    bullets: ['Dart fundamentals', 'OOP', 'Flutter UI + Layout', 'State management', 'API & Networking', 'CI/CD + Deployment'],
+  };
+
   const CONTACT_CARDS = [
     { label: 'Email', value: 'hello@ishaqhassan.dev', href: 'mailto:hello@ishaqhassan.dev', grad: 'linear-gradient(135deg,#22c55e,#16a34a)', svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="#fff" stroke-width="1.5"/></svg>' },
     { label: 'GitHub', value: '@ishaquehassan', href: 'https://github.com/ishaquehassan', grad: 'linear-gradient(135deg,#24292e,#40464d)', svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>' },
@@ -111,17 +161,43 @@
 
   function appendMessage(inst, msg, animate) {
     if (!inst) return null;
-    const wrap = el('div', 'max-msg max-msg-' + (msg.role === 'user' ? 'user' : 'bot'));
-    if (!animate) wrap.style.animation = 'none';
-    if (msg.role !== 'user') {
-      const av = el('div', 'max-msg-avatar', '⚡');
-      wrap.appendChild(av);
+    const isUser = msg.role === 'user';
+    if (isUser) {
+      const wrap = el('div', 'max-msg max-msg-user');
+      if (!animate) wrap.style.animation = 'none';
+      const bubble = el('div', 'max-bubble');
+      bubble.innerHTML = renderText(msg.content);
+      wrap.appendChild(bubble);
+      inst.messagesEl.appendChild(wrap);
+      return { wrap, bubble };
     }
-    const bubble = el('div', 'max-bubble');
-    bubble.innerHTML = renderText(msg.content);
-    wrap.appendChild(bubble);
-    inst.messagesEl.appendChild(wrap);
-    return { wrap, bubble };
+    // Bot: parse card tags and render mixed text + card blocks
+    const parts = splitCardTags(msg.content || '');
+    let firstWrap = null, lastBubble = null;
+    if (parts.length === 0) parts.push({ kind: 'text', value: '…' });
+    parts.forEach((p) => {
+      if (p.kind === 'text' && p.value) {
+        const wrap = el('div', 'max-msg max-msg-bot');
+        if (!animate) wrap.style.animation = 'none';
+        const av = el('div', 'max-msg-avatar', '⚡');
+        wrap.appendChild(av);
+        const bubble = el('div', 'max-bubble');
+        bubble.innerHTML = renderText(p.value);
+        wrap.appendChild(bubble);
+        inst.messagesEl.appendChild(wrap);
+        firstWrap = firstWrap || wrap;
+        lastBubble = bubble;
+      } else if (p.kind === 'cards') {
+        const fn = CARD_BUILDERS[p.type];
+        if (!fn) return;
+        const block = el('div', 'max-msg max-msg-bot max-msg-cards');
+        if (!animate) block.style.animation = 'none';
+        block.innerHTML = fn();
+        inst.messagesEl.appendChild(block);
+        firstWrap = firstWrap || block;
+      }
+    });
+    return { wrap: firstWrap, bubble: lastBubble };
   }
 
   function appendTyping(inst) {
@@ -159,6 +235,159 @@
       '</a>'
     )).join('');
     return '<div class="max-cc-grid">' + cards + '</div>';
+  }
+
+  /* ------------------- Card builders ------------------- */
+  function buildPRCard(pr, status) {
+    const cls = status === 'merged' ? 'max-pr-merged' : 'max-pr-open';
+    const label = status === 'merged' ? '✓ Merged' : '⟳ Open';
+    return (
+      '<a class="max-pr-card" href="https://github.com/flutter/flutter/pull/' + pr.num + '" target="_blank" rel="noopener noreferrer">' +
+        '<div class="max-pr-status ' + cls + '">' + label + '</div>' +
+        '<div class="max-pr-title">' + escapeHtml(pr.title) + '</div>' +
+        '<div class="max-pr-repo">flutter/flutter #' + pr.num + '</div>' +
+      '</a>'
+    );
+  }
+
+  function buildPRsCardsHTML() {
+    const merged = PR_CARDS_MERGED.map((p) => buildPRCard(p, 'merged')).join('');
+    const open = PR_CARDS_OPEN.map((p) => buildPRCard(p, 'open')).join('');
+    return (
+      '<div class="max-cards-block">' +
+        '<div class="max-cards-section">6 Merged into Flutter framework</div>' +
+        '<div class="max-pr-grid">' + merged + '</div>' +
+        '<div class="max-cards-section" style="margin-top:14px;">3 Open / In-review</div>' +
+        '<div class="max-pr-grid">' + open + '</div>' +
+        '<a class="max-cards-cta" href="/flutter-contributions">View all PRs →</a>' +
+      '</div>'
+    );
+  }
+
+  function buildArticleCard(a) {
+    return (
+      '<a class="max-art-card" href="' + escapeHtml(a.href) + '">' +
+        '<div class="max-art-tag">' + escapeHtml(a.tag) + '</div>' +
+        '<div class="max-art-title">' + escapeHtml(a.title) + '</div>' +
+        '<div class="max-art-excerpt">' + escapeHtml(a.excerpt) + '</div>' +
+        '<div class="max-art-meta">' + a.mins + ' min read</div>' +
+      '</a>'
+    );
+  }
+
+  function buildArticlesCardsHTML() {
+    const cards = ARTICLE_CARDS.map(buildArticleCard).join('');
+    return (
+      '<div class="max-cards-block">' +
+        '<div class="max-art-grid">' + cards + '</div>' +
+        '<a class="max-cards-cta" href="/articles/">View all articles →</a>' +
+      '</div>'
+    );
+  }
+
+  function buildSpeakingCardsHTML() {
+    const cards = SPEAKING_CARDS.map((s) => (
+      '<a class="max-spk-card" href="' + escapeHtml(s.href) + '" target="_blank" rel="noopener noreferrer">' +
+        '<div class="max-spk-date">' + escapeHtml(s.date) + '</div>' +
+        '<div class="max-spk-title">' + escapeHtml(s.title) + '</div>' +
+        '<div class="max-spk-org">' + escapeHtml(s.org) + ' · <span style="opacity:.7;">' + escapeHtml(s.role) + '</span></div>' +
+      '</a>'
+    )).join('');
+    return (
+      '<div class="max-cards-block">' +
+        '<div class="max-spk-grid">' + cards + '</div>' +
+        '<a class="max-cards-cta" href="/speaking">View all speaking events →</a>' +
+      '</div>'
+    );
+  }
+
+  function buildOSSCardsHTML() {
+    const cards = OSS_CARDS.map((o) => (
+      '<a class="max-oss-card" href="' + escapeHtml(o.href) + '" target="_blank" rel="noopener noreferrer">' +
+        '<div class="max-oss-head">' +
+          '<div class="max-oss-name">' + escapeHtml(o.name) + '</div>' +
+          '<div class="max-oss-stars">' + escapeHtml(o.stars) + '</div>' +
+        '</div>' +
+        '<div class="max-oss-desc">' + escapeHtml(o.desc) + '</div>' +
+        '<div class="max-oss-lang">' + escapeHtml(o.lang) + '</div>' +
+      '</a>'
+    )).join('');
+    return (
+      '<div class="max-cards-block">' +
+        '<div class="max-oss-grid">' + cards + '</div>' +
+        '<a class="max-cards-cta" href="/open-source">View all open source →</a>' +
+      '</div>'
+    );
+  }
+
+  function buildTechCardsHTML() {
+    const groups = TECH_GROUPS.map((g) => (
+      '<div class="max-tech-group">' +
+        '<div class="max-tech-label">' + escapeHtml(g.label) + '</div>' +
+        '<div class="max-tech-chips">' + g.items.map((i) => '<span class="max-tech-chip">' + escapeHtml(i) + '</span>').join('') + '</div>' +
+      '</div>'
+    )).join('');
+    return (
+      '<div class="max-cards-block">' + groups +
+        '<a class="max-cards-cta" href="/tech-stack">Full tech stack →</a>' +
+      '</div>'
+    );
+  }
+
+  function buildCourseCardHTML() {
+    const c = COURSE_CARD;
+    const bullets = c.bullets.map((b) => '<li>' + escapeHtml(b) + '</li>').join('');
+    return (
+      '<div class="max-cards-block">' +
+        '<a class="max-course-card" href="' + escapeHtml(c.href) + '" target="_blank" rel="noopener noreferrer">' +
+          '<div class="max-course-badge">FREE · 35 videos</div>' +
+          '<div class="max-course-title">' + escapeHtml(c.title) + '</div>' +
+          '<div class="max-course-sub">' + escapeHtml(c.sub) + '</div>' +
+          '<ul class="max-course-bullets">' + bullets + '</ul>' +
+          '<div class="max-course-cta">▶ Watch on YouTube</div>' +
+        '</a>' +
+      '</div>'
+    );
+  }
+
+  function buildContactCardsBlockHTML() {
+    return '<div class="max-cards-block">' + buildContactCardsHTML() + '</div>';
+  }
+
+  const CARD_BUILDERS = {
+    contact: buildContactCardsBlockHTML,
+    prs: buildPRsCardsHTML,
+    articles: buildArticlesCardsHTML,
+    course: buildCourseCardHTML,
+    speaking: buildSpeakingCardsHTML,
+    opensource: buildOSSCardsHTML,
+    oss: buildOSSCardsHTML,
+    tech: buildTechCardsHTML,
+    techstack: buildTechCardsHTML,
+  };
+
+  // Extract [[CARDS:type]] tags from text and split into segments.
+  // Returns array of { kind: 'text', value } | { kind: 'cards', type }
+  function splitCardTags(text) {
+    if (!text) return [{ kind: 'text', value: '' }];
+    const re = /\[\[CARDS?:([a-z_-]+)\]\]/gi;
+    const parts = [];
+    let last = 0;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      if (m.index > last) {
+        parts.push({ kind: 'text', value: text.slice(last, m.index).trim() });
+      }
+      const type = (m[1] || '').toLowerCase();
+      if (CARD_BUILDERS[type]) {
+        parts.push({ kind: 'cards', type: type });
+      }
+      last = m.index + m[0].length;
+    }
+    if (last < text.length) {
+      parts.push({ kind: 'text', value: text.slice(last).trim() });
+    }
+    return parts.filter((p) => p.kind === 'cards' || (p.value && p.value.length > 0));
   }
 
   function renderInformedCard(inst) {
