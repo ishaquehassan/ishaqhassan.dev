@@ -723,18 +723,6 @@
         <div class="menu-dd-item" onclick="closeAllWindows()">Close All Windows<span class="shortcut">⌘W</span></div>
       </div>
     </div>
-    <div class="menu-parent hide-mobile" data-menu="edit">
-      <span class="menu-item">Edit</span>
-      <div class="menu-dropdown" id="menu-edit">
-        <div class="menu-dd-item disabled">Undo<span class="shortcut">⌘Z</span></div>
-        <div class="menu-dd-item disabled">Redo<span class="shortcut">⇧⌘Z</span></div>
-        <div class="menu-dd-sep"></div>
-        <div class="menu-dd-item disabled">Cut<span class="shortcut">⌘X</span></div>
-        <div class="menu-dd-item disabled">Copy<span class="shortcut">⌘C</span></div>
-        <div class="menu-dd-item disabled">Paste<span class="shortcut">⌘V</span></div>
-        <div class="menu-dd-item disabled">Select All<span class="shortcut">⌘A</span></div>
-      </div>
-    </div>
     <div class="menu-parent hide-mobile" data-menu="view">
       <span class="menu-item">View</span>
       <div class="menu-dropdown" id="menu-view">
@@ -759,10 +747,36 @@
     </div>
   </div>
   <div class="right">
-    <span id="menubar-battery">🔋 --%</span>
-    <span>📶</span>
+    <span id="menubar-music" class="menubar-icon-btn" onclick="toggleMusicPopover(event)" title="Now Playing" aria-haspopup="true" aria-expanded="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+    </span>
     <span id="spotlight-trigger" onclick="openSpotlight()" style="cursor:pointer;padding:0 8px;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.08);border-radius:5px;height:22px;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'" title="Search (⌘K)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" style="opacity:0.7;"><circle cx="10.5" cy="10.5" r="7.5"/><path d="M21 21l-4.35-4.35"/></svg><span style="font-size:11px;color:rgba(255,255,255,0.5);font-weight:500;">⌘K</span></span>
     <span id="menubar-time"></span>
+  </div>
+</div>
+
+<!-- Now Playing popover (anchored under music icon) -->
+<div id="music-popover" class="music-popover" role="dialog" aria-label="Now Playing">
+  <div class="music-pop-art" id="music-pop-art">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+  </div>
+  <div class="music-pop-info">
+    <div class="music-pop-track" id="music-pop-track">Hanging Lanterns</div>
+    <div class="music-pop-artist" id="music-pop-artist">Kalaido</div>
+    <div class="music-pop-controls">
+      <button type="button" class="music-pop-btn" id="music-pop-prev" aria-label="Previous">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+      </button>
+      <button type="button" class="music-pop-btn music-pop-play" id="music-pop-play" aria-label="Play">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button type="button" class="music-pop-btn" id="music-pop-next" aria-label="Next">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg>
+      </button>
+    </div>
+    <div class="music-pop-progress" id="music-pop-progress">
+      <div class="music-pop-progress-fill" id="music-pop-progress-fill"></div>
+    </div>
   </div>
 </div>
 
@@ -794,14 +808,6 @@
 <!-- DESKTOP WIDGETS -->
 <div id="desktop">
   <div class="widget-col">
-    <div class="widget" id="w-clock">
-      <div class="widget-title">Local Time</div>
-      <div class="clock-time-row">
-        <span class="clock-digits" id="clock-h">05</span><span class="clock-colon">:</span><span class="clock-digits" id="clock-m">17</span>
-        <span class="clock-ampm" id="clock-ampm">AM</span>
-      </div>
-      <div class="widget-sub" id="clock-date">Loading...</div>
-    </div>
     <div class="widget" id="w-status">
       <div class="widget-title">Status</div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
@@ -810,30 +816,32 @@
       </div>
       <div style="margin-top:10px;font-size:12px;color:var(--text2);">hello@ishaqhassan.dev</div>
     </div>
-    <div class="widget" onclick="window.open('https://github.com/ishaquehassan','_blank')" id="w-github-graph" style="min-width:220px;cursor:pointer;">
-      <div class="widget-title">GitHub Activity</div>
+    <div class="widget widget-activity" id="w-activity" onclick="window.open('https://github.com/ishaquehassan','_blank')" style="min-width:240px;cursor:pointer;">
+      <div class="widget-title">Activity</div>
       <div id="gh-graph" style="margin-top:8px;overflow:hidden;"></div>
-      <div class="widget-sub" id="gh-total">Loading contributions...</div>
+      <div class="widget-sub" id="gh-total" style="margin-top:6px;">Loading contributions...</div>
     </div>
-    <div class="widget" id="w-music">
-      <div class="widget-title">Now Playing</div>
-      <div class="music-player">
-        <div class="music-art">🎵</div>
-        <div class="music-info">
-          <div class="music-track" id="music-track">Hanging Lanterns</div>
-          <div class="music-artist" id="music-artist">Kalaido</div>
+    <div class="widget widget-highlights" id="w-highlights">
+      <div class="widget-title">Highlights</div>
+      <div class="highlights-feat" onclick="navigate('flutter')" role="button" aria-label="Open Flutter PRs">
+        <div class="highlights-feat-num">6</div>
+        <div class="highlights-feat-text">
+          <div class="highlights-feat-title">Flutter framework PRs</div>
+          <div class="highlights-feat-sub">Merged into flutter/flutter</div>
         </div>
       </div>
-      <div class="music-controls">
-        <button class="music-btn" id="music-prev" title="Previous">⏮</button>
-        <button class="music-btn" id="music-play" title="Play">▶</button>
-        <button class="music-btn" id="music-next" title="Next">⏭</button>
-        <div class="music-progress" id="music-progress">
-          <div class="music-progress-fill" id="music-progress-fill"></div>
+      <div class="highlights-grid">
+        <div class="highlights-cell" onclick="navigate('oss')" role="button" aria-label="Open Open Source">
+          <div class="highlights-num">64</div>
+          <div class="highlights-label">Stars</div>
         </div>
-        <span class="music-time" id="music-time">0:00</span>
-        <div class="music-vol" id="music-vol">
-          <div class="music-vol-fill" id="music-vol-fill"></div>
+        <div class="highlights-cell" onclick="navigate('speaking')" role="button" aria-label="Open Speaking">
+          <div class="highlights-num">10+</div>
+          <div class="highlights-label">Talks</div>
+        </div>
+        <div class="highlights-cell" onclick="navigate('articles')" role="button" aria-label="Open Articles">
+          <div class="highlights-num">12+</div>
+          <div class="highlights-label">Articles</div>
         </div>
       </div>
     </div>
@@ -841,52 +849,6 @@
       <div class="widget-title">Wallpaper</div>
       <div class="wp-swatches" id="wp-swatches"></div>
       <div class="wp-name" id="wp-name">Dark Matter</div>
-    </div>
-  </div>
-  <div class="widget-col">
-    <div class="widget" onclick="navigate('flutter')" style="min-width:160px;">
-      <div class="widget-title">Flutter Framework</div>
-      <div style="display:flex;gap:16px;margin-top:6px;">
-        <div><div class="widget-value" style="font-size:28px;">6</div><div class="widget-sub">Merged</div></div>
-        <div><div class="widget-value" style="font-size:28px;">3</div><div class="widget-sub">Open</div></div>
-      </div>
-    </div>
-    <div class="widget" onclick="navigate('speaking')">
-      <div class="widget-title">Community</div>
-      <div style="display:flex;gap:16px;margin-top:6px;">
-        <div><div class="widget-value" style="font-size:28px;">10+</div><div class="widget-sub">Events</div></div>
-        <div><div class="widget-value" style="font-size:28px;">🎓</div><div class="widget-sub">GDG Mentor</div></div>
-      </div>
-    </div>
-    <div class="widget" onclick="navigate('oss')">
-      <div class="widget-title">Open Source</div>
-      <div style="display:flex;gap:12px;margin-top:6px;">
-        <div><div style="font-size:18px;font-weight:700;color:#FFD60A;">⭐ 64</div><div class="widget-sub">Stars</div></div>
-        <div><div style="font-size:18px;font-weight:700;color:#30D158;">🍴 135</div><div class="widget-sub">Forks</div></div>
-      </div>
-    </div>
-    <div class="widget" id="w-weather">
-      <div class="widget-title">Weather</div>
-      <div class="weather-permit" id="weather-permit">
-        <span style="font-size:24px;">📍</span>
-        <button class="weather-permit-btn" onclick="requestWeatherLocation()">
-          <span>🔒</span> Allow Location Access
-        </button>
-        <span style="font-size:9px;color:rgba(255,255,255,0.25);">Click to detect your weather</span>
-      </div>
-      <div class="weather-data" id="weather-data">
-        <div class="weather-main">
-          <span class="weather-icon" id="weather-icon">☀️</span>
-          <div>
-            <span class="weather-temp" id="weather-temp">--</span><span class="weather-unit">°C</span>
-          </div>
-        </div>
-        <div class="widget-sub" id="weather-city" style="margin-top:4px;">Detecting...</div>
-        <div class="weather-details">
-          <span id="weather-humidity">💧 --%</span>
-          <span id="weather-wind">💨 -- km/h</span>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -1041,6 +1003,70 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
       <span>x.com/ishaquehassan</span>
     </a>
+  </div>
+</div>
+
+<!-- DESKTOP ICONS (right side: folders + apps, macOS style) -->
+<div id="desktop-icons">
+  <div class="desk-icon" onclick="window.open('assets/resume.pdf','_blank')" role="button" aria-label="Open Resume" tabindex="0">
+    <div class="desk-icon-art desk-icon-folder">
+      <svg width="44" height="36" viewBox="0 0 64 52" fill="none">
+        <path d="M2 10c0-3.3 2.7-6 6-6h14l6 6h28c3.3 0 6 2.7 6 6v30c0 3.3-2.7 6-6 6H8c-3.3 0-6-2.7-6-6V10z" fill="url(#folderGrad)" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
+        <defs>
+          <linearGradient id="folderGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#7CC8FF"/>
+            <stop offset="1" stop-color="#338BD8"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="desk-icon-label">Resume</div>
+  </div>
+  <div class="desk-icon" onclick="navigate('flutter-course')" role="button" aria-label="Open Flutter Course" tabindex="0">
+    <div class="desk-icon-art desk-icon-app">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect x="2" y="2" width="36" height="36" rx="9" fill="url(#fcGrad)"/>
+        <defs>
+          <linearGradient id="fcGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#13B9FD"/>
+            <stop offset="1" stop-color="#0175C2"/>
+          </linearGradient>
+        </defs>
+        <path d="M14 14l8-7 8 7v3l-8 7-8-7v-3z" fill="#fff" opacity="0.95"/>
+        <path d="M16 22v6l6 4 6-4v-6" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="desk-icon-label">Flutter Course</div>
+  </div>
+  <div class="desk-icon" onclick="navigate('snake')" role="button" aria-label="Open Snake" tabindex="0">
+    <div class="desk-icon-art desk-icon-app desk-icon-snake">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect x="2" y="2" width="36" height="36" rx="9" fill="#0a0a0f"/>
+        <circle cx="12" cy="20" r="2.5" fill="#39FF14"/>
+        <circle cx="18" cy="20" r="2.5" fill="#39FF14"/>
+        <circle cx="24" cy="20" r="2.5" fill="#39FF14"/>
+        <circle cx="30" cy="20" r="2.8" fill="#39FF14"/>
+        <circle cx="29.5" cy="19" r="0.8" fill="#0a0a0f"/>
+      </svg>
+    </div>
+    <div class="desk-icon-label">Snake</div>
+  </div>
+  <div class="desk-icon" onclick="navigate('speaking')" role="button" aria-label="Open Speaking" tabindex="0">
+    <div class="desk-icon-art desk-icon-app desk-icon-speaking">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect x="2" y="2" width="36" height="36" rx="9" fill="url(#speakGrad)"/>
+        <defs>
+          <linearGradient id="speakGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#FF6B6B"/>
+            <stop offset="1" stop-color="#C44569"/>
+          </linearGradient>
+        </defs>
+        <path d="M20 10 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -8 0 v-6 a4 4 0 0 1 4 -4 z" fill="#fff"/>
+        <path d="M14 22 a6 6 0 0 0 12 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <line x1="20" y1="28" x2="20" y2="32" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="desk-icon-label">Speaking</div>
   </div>
 </div>
 
