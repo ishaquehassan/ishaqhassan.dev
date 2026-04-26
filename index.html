@@ -806,33 +806,6 @@
       </div>
       <div style="margin-top:10px;font-size:12px;color:var(--text2);">hello@ishaqhassan.dev</div>
     </div>
-    <div class="widget" onclick="window.open('https://github.com/ishaquehassan','_blank')" id="w-github-graph" style="min-width:220px;cursor:pointer;">
-      <div class="widget-title">GitHub Activity</div>
-      <div id="gh-graph" style="margin-top:8px;overflow:hidden;"></div>
-      <div class="widget-sub" id="gh-total">Loading contributions...</div>
-    </div>
-    <div class="widget" id="w-music">
-      <div class="widget-title">Now Playing</div>
-      <div class="music-player">
-        <div class="music-art">🎵</div>
-        <div class="music-info">
-          <div class="music-track" id="music-track">Hanging Lanterns</div>
-          <div class="music-artist" id="music-artist">Kalaido</div>
-        </div>
-      </div>
-      <div class="music-controls">
-        <button class="music-btn" id="music-prev" title="Previous">⏮</button>
-        <button class="music-btn" id="music-play" title="Play">▶</button>
-        <button class="music-btn" id="music-next" title="Next">⏭</button>
-        <div class="music-progress" id="music-progress">
-          <div class="music-progress-fill" id="music-progress-fill"></div>
-        </div>
-        <span class="music-time" id="music-time">0:00</span>
-        <div class="music-vol" id="music-vol">
-          <div class="music-vol-fill" id="music-vol-fill"></div>
-        </div>
-      </div>
-    </div>
     <div class="widget" id="w-wallpaper">
       <div class="widget-title">Wallpaper</div>
       <div class="wp-swatches" id="wp-swatches"></div>
@@ -840,47 +813,24 @@
     </div>
   </div>
   <div class="widget-col">
-    <div class="widget" onclick="navigate('flutter')" style="min-width:160px;">
-      <div class="widget-title">Flutter Framework</div>
-      <div style="display:flex;gap:16px;margin-top:6px;">
-        <div><div class="widget-value" style="font-size:28px;">6</div><div class="widget-sub">Merged</div></div>
-        <div><div class="widget-value" style="font-size:28px;">3</div><div class="widget-sub">Open</div></div>
-      </div>
-    </div>
-    <div class="widget" onclick="navigate('speaking')">
-      <div class="widget-title">Community</div>
-      <div style="display:flex;gap:16px;margin-top:6px;">
-        <div><div class="widget-value" style="font-size:28px;">10+</div><div class="widget-sub">Events</div></div>
-        <div><div class="widget-value" style="font-size:28px;">🎓</div><div class="widget-sub">GDG Mentor</div></div>
-      </div>
-    </div>
-    <div class="widget" onclick="navigate('oss')">
-      <div class="widget-title">Open Source</div>
-      <div style="display:flex;gap:12px;margin-top:6px;">
-        <div><div style="font-size:18px;font-weight:700;color:#FFD60A;">⭐ 64</div><div class="widget-sub">Stars</div></div>
-        <div><div style="font-size:18px;font-weight:700;color:#30D158;">🍴 135</div><div class="widget-sub">Forks</div></div>
-      </div>
-    </div>
-    <div class="widget" id="w-weather">
-      <div class="widget-title">Weather</div>
-      <div class="weather-permit" id="weather-permit">
-        <span style="font-size:24px;">📍</span>
-        <button class="weather-permit-btn" onclick="requestWeatherLocation()">
-          <span>🔒</span> Allow Location Access
-        </button>
-        <span style="font-size:9px;color:rgba(255,255,255,0.25);">Click to detect your weather</span>
-      </div>
-      <div class="weather-data" id="weather-data">
-        <div class="weather-main">
-          <span class="weather-icon" id="weather-icon">☀️</span>
-          <div>
-            <span class="weather-temp" id="weather-temp">--</span><span class="weather-unit">°C</span>
-          </div>
+    <div class="widget widget-highlights" id="w-highlights">
+      <div class="widget-title">Highlights</div>
+      <div class="highlights-grid">
+        <div class="highlights-cell" onclick="navigate('flutter')" role="button" aria-label="Open Flutter PRs">
+          <div class="highlights-num">6</div>
+          <div class="highlights-label">Flutter PRs merged</div>
         </div>
-        <div class="widget-sub" id="weather-city" style="margin-top:4px;">Detecting...</div>
-        <div class="weather-details">
-          <span id="weather-humidity">💧 --%</span>
-          <span id="weather-wind">💨 -- km/h</span>
+        <div class="highlights-cell" onclick="navigate('oss')" role="button" aria-label="Open Open Source">
+          <div class="highlights-num">64</div>
+          <div class="highlights-label">GitHub stars</div>
+        </div>
+        <div class="highlights-cell" onclick="navigate('speaking')" role="button" aria-label="Open Speaking">
+          <div class="highlights-num">10+</div>
+          <div class="highlights-label">Talks &amp; events</div>
+        </div>
+        <div class="highlights-cell" onclick="navigate('articles')" role="button" aria-label="Open Articles">
+          <div class="highlights-num">12+</div>
+          <div class="highlights-label">Articles published</div>
         </div>
       </div>
     </div>

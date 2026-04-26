@@ -8103,3 +8103,38 @@ a.li-tl-company:hover { color: #7dd3fc; }
   .max-disclaimer { display: none; } /* save real estate on phones */
 }
 
+
+/* =========================================================
+   HIGHLIGHTS widget (replaces Flutter/Community/OSS/Weather stack)
+   ========================================================= */
+.widget-highlights { min-width: 220px; }
+.highlights-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+.highlights-cell {
+  padding: 10px 8px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+.highlights-cell:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.12);
+  transform: translateY(-1px);
+}
+.highlights-num {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+}
+.highlights-label {
+  font-size: 11px;
+  color: var(--text2);
+  margin-top: 4px;
+}
