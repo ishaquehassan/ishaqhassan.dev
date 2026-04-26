@@ -8344,11 +8344,11 @@ body:not(.max-active) #max-bar { transition-delay: 0s; }
 /* ========== MAX PANEL (slides up from above bar) ========== */
 #max-panel {
   position: fixed;
-  bottom: calc(var(--dock-size) + 12px + 16px);
+  bottom: calc(var(--dock-size) + 12px + 14px);
   left: 50%;
   transform: translateX(-50%) translateY(20px);
-  width: min(720px, 88vw);
-  height: min(72vh, 640px);
+  width: min(600px, 82vw);
+  height: min(60vh, 540px);
   background: rgba(18,20,23,0.86);
   backdrop-filter: blur(28px) saturate(140%);
   -webkit-backdrop-filter: blur(28px) saturate(140%);
@@ -8378,7 +8378,73 @@ body.max-active #max-panel {
     visibility 0s linear 0s;
 }
 
-/* Header with hero + Contact button */
+/* Top bar with Contact button only */
+.max-panel-topbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 16px 0;
+  position: relative;
+}
+
+/* Splash (initial empty state, ChatGPT-style) */
+.max-splash {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 24px;
+  transition: opacity 0.28s ease, transform 0.32s ease;
+}
+.max-splash.is-hidden {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+.max-splash-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 460px;
+  text-align: center;
+}
+.max-splash-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+.max-splash-title {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.max-splash-sub {
+  color: rgba(255,255,255,0.55);
+  font-size: 13px;
+  line-height: 1.4;
+  max-width: 340px;
+}
+.max-splash-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Hide messages container until first message arrives */
+.max-panel-messages.is-hidden { display: none; }
+
+/* Header with hero + Contact button (legacy unused, kept for safety) */
 .max-panel-header {
   display: flex;
   align-items: center;
@@ -8477,15 +8543,25 @@ body.max-active #max-panel {
   gap: 10px;
 }
 .max-panel-msg {
-  max-width: 80%;
-  padding: 10px 14px;
-  border-radius: 14px;
+  max-width: 82%;
   font-size: 13px;
-  line-height: 1.45;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.92);
+}
+.max-panel-msg.bot {
+  align-self: flex-start;
+  padding: 2px 0;
+  max-width: 100%;
+}
+.max-panel-msg.user {
+  align-self: flex-end;
+  padding: 9px 13px;
+  border-radius: 14px;
+  border-top-right-radius: 4px;
+  background: rgba(19,185,253,0.18);
+  border: 1px solid rgba(19,185,253,0.28);
   color: #fff;
 }
-.max-panel-msg.bot { align-self: flex-start; background: rgba(255,255,255,0.06); border-top-left-radius: 4px; }
-.max-panel-msg.user { align-self: flex-end; background: rgba(255,255,255,0.14); border-top-right-radius: 4px; }
 
 .max-panel-chips {
   display: flex; flex-wrap: wrap;

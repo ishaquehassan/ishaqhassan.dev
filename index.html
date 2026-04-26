@@ -1003,29 +1003,33 @@
 
 <!-- MAX CHAT PANEL (slide-up from above the morphed bar) -->
 <div id="max-panel" aria-hidden="true">
-  <div class="max-panel-header">
-    <div class="max-chat-hero">
-      <div class="max-chat-hero-avatar">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M12 2.5l1.6 5.4a3 3 0 002.05 2.05L21 11.5l-5.35 1.55a3 3 0 00-2.05 2.05L12 20.5l-1.6-5.4a3 3 0 00-2.05-2.05L3 11.5l5.35-1.55a3 3 0 002.05-2.05L12 2.5z"/></svg>
-      </div>
-      <div class="max-chat-hero-text">
-        <div class="max-chat-hero-name">Max <span class="max-chat-hero-tag">Ishaq's AI</span></div>
-        <div class="max-chat-hero-sub"><span class="max-online-dot"></span> Online · Replies instantly</div>
-      </div>
-    </div>
+  <div class="max-panel-topbar">
     <button type="button" id="max-contact-trigger" class="max-contact-trigger" aria-haspopup="true" aria-expanded="false">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
       <span>Contact</span>
     </button>
   </div>
 
-  <div class="max-panel-messages" id="max-panel-messages" role="log" aria-live="polite"></div>
-  <div class="max-panel-chips" id="max-panel-chips">
-    <button type="button" class="max-chip-btn" data-chip="hire">I want to hire Ishaq</button>
-    <button type="button" class="max-chip-btn" data-chip="speaking">Speaking inquiry</button>
-    <button type="button" class="max-chip-btn" data-chip="flutter">Flutter help</button>
-    <button type="button" class="max-chip-btn" data-chip="about">About Ishaq</button>
+  <!-- Splash (initial state) -->
+  <div class="max-splash" id="max-splash">
+    <div class="max-splash-inner">
+      <div class="max-splash-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff"><path d="M12 2.5l1.6 5.4a3 3 0 002.05 2.05L21 11.5l-5.35 1.55a3 3 0 00-2.05 2.05L12 20.5l-1.6-5.4a3 3 0 00-2.05-2.05L3 11.5l5.35-1.55a3 3 0 002.05-2.05L12 2.5z"/></svg>
+      </div>
+      <div class="max-splash-title">Hey, I'm Max</div>
+      <div class="max-splash-sub">Ask me about hiring Ishaq, speaking, or Flutter.</div>
+      <div class="max-splash-chips" id="max-panel-chips">
+        <button type="button" class="max-chip-btn" data-chip="hire">I want to hire Ishaq</button>
+        <button type="button" class="max-chip-btn" data-chip="speaking">Speaking inquiry</button>
+        <button type="button" class="max-chip-btn" data-chip="flutter">Flutter help</button>
+        <button type="button" class="max-chip-btn" data-chip="course">Flutter course</button>
+        <button type="button" class="max-chip-btn" data-chip="about">About Ishaq</button>
+      </div>
+    </div>
   </div>
+
+  <!-- Chat messages (shown after first send) -->
+  <div class="max-panel-messages" id="max-panel-messages" role="log" aria-live="polite"></div>
 
   <!-- Contact dropdown (anchored to trigger button) -->
   <div id="max-contact-popover" class="max-contact-popover" role="dialog" aria-label="Contact links">
