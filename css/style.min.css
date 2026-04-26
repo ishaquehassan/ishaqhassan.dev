@@ -3365,210 +3365,83 @@ a.li-tl-company:hover { color: #7dd3fc; }
   }
 
   /* Boot screen adjustments */
-  #boot-logo img { width: 70px; height: 70px; }
-  #boot-logo::before { width: 96px; height: 96px; margin: -48px 0 0 -48px; }
-  #boot-logo::after { width: 120px; height: 120px; margin: -60px 0 0 -60px; }
-  #boot-monogram { font-size: 14px; letter-spacing: 5px; margin-top: 24px; }
-  #boot-bar-container { width: 160px; }
-  #boot-cta { display: none !important; }
+  #boot-logo img { width: 180px; }
+  #boot-bar-container { width: 180px; }
 }
 
 /* ===== BOOT SCREEN ===== */
 #boot-screen {
-  position: fixed; inset: 0; background: #0b1120;
+  position: fixed; inset: 0; background: #000;
   z-index: 99999; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s ease;
-  overflow: hidden;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
 }
-#boot-screen.fade-out { opacity: 0; transform: scale(1.08); filter: blur(12px); }
+#boot-screen.fade-out { opacity: 0; pointer-events: none; }
 
-/* Subtle ambient orbs */
-#boot-bg { position: absolute; inset: 0; pointer-events: none; }
-.boot-orb {
-  position: absolute; border-radius: 50%; pointer-events: none;
-}
-.boot-orb-1 {
-  width: 500px; height: 500px; top: 30%; left: 50%; margin-left: -250px;
-  background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
-  filter: blur(80px);
-  animation: boot-orb-float-1 8s ease-in-out infinite alternate;
-}
-.boot-orb-2 {
-  width: 400px; height: 400px; top: 35%; left: 40%; margin-left: -200px;
-  background: radial-gradient(circle, rgba(14,165,233,0.06) 0%, transparent 70%);
-  filter: blur(80px);
-  animation: boot-orb-float-2 10s ease-in-out infinite alternate;
-}
-.boot-orb-3 {
-  width: 300px; height: 300px; top: 25%; left: 60%;
-  background: radial-gradient(circle, rgba(125,211,252,0.05) 0%, transparent 70%);
-  filter: blur(70px);
-  animation: boot-orb-float-3 12s ease-in-out infinite alternate;
-}
-@keyframes boot-orb-float-1 {
-  0% { transform: translate(0, 0) scale(0.9); }
-  100% { transform: translate(-30px, 20px) scale(1.1); }
-}
-@keyframes boot-orb-float-2 {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(20px, -30px) scale(1.1); }
-}
-@keyframes boot-orb-float-3 {
-  0% { transform: translate(0, 0) scale(0.85); opacity: 0.6; }
-  100% { transform: translate(-20px, -20px) scale(1.05); opacity: 1; }
-}
-
-/* Profile photo with blue neon rings */
 #boot-logo {
-  position: relative; z-index: 1; margin-bottom: 0;
+  margin-bottom: 32px;
   opacity: 0;
-  animation: boot-logo-appear 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  -webkit-mask-image: linear-gradient(90deg, #000 50%, transparent 50%);
+  mask-image: linear-gradient(90deg, #000 50%, transparent 50%);
+  -webkit-mask-size: 200% 100%;
+  mask-size: 200% 100%;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+  animation:
+    boot-fade-in 0.5s ease 0.1s forwards,
+    boot-wordmark-reveal 2.6s cubic-bezier(0.4, 0, 0.2, 1) 0.4s forwards;
 }
 #boot-logo img {
-  width: 90px; height: 90px; border-radius: 50%; display: block;
-  border: 2px solid rgba(56,189,248,0.3);
-  box-shadow: 0 0 30px rgba(56,189,248,0.25), 0 0 60px rgba(14,165,233,0.12), 0 0 100px rgba(56,189,248,0.06);
-  filter: drop-shadow(0 0 15px rgba(56,189,248,0.3));
-  position: relative; z-index: 2;
+  width: 240px;
+  height: auto;
+  display: block;
 }
-#boot-logo::before {
-  content: ''; position: absolute;
-  top: 50%; left: 50%; width: 120px; height: 120px;
-  margin: -60px 0 0 -60px;
-  border-radius: 50%; border: 1px solid rgba(56,189,248,0.1);
-  animation: boot-ring-spin 20s linear infinite;
-  background: conic-gradient(from 0deg, transparent 0%, rgba(56,189,248,0.12) 25%, transparent 50%, rgba(125,211,252,0.08) 75%, transparent 100%);
-}
-#boot-logo::after {
-  content: ''; position: absolute;
-  top: 50%; left: 50%; width: 148px; height: 148px;
-  margin: -74px 0 0 -74px;
-  border-radius: 50%;
-  border: 1px dashed rgba(56,189,248,0.06);
-  animation: boot-ring-spin-r 30s linear infinite;
-}
-@keyframes boot-ring-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes boot-ring-spin-r { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
-
-/* IH Monogram below photo */
-#boot-monogram {
-  position: relative; z-index: 1;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-  font-size: 20px; font-weight: 200; letter-spacing: 10px;
-  color: rgba(125,211,252,0.6);
-  margin-top: 36px;
-  text-shadow: 0 0 20px rgba(56,189,248,0.3);
-  opacity: 0;
-  animation: boot-logo-appear 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+@keyframes boot-wordmark-reveal {
+  from { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+  to { -webkit-mask-position: 0 0; mask-position: 0 0; }
 }
 
-@keyframes boot-logo-appear {
-  from { opacity: 0; transform: scale(0.8) translateY(8px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-/* Progress bar - Tailwind style blue neon glow */
 #boot-bar-container {
-  width: 200px; height: 1px;
-  background: rgba(56,189,248,0.08);
-  border-radius: 1px; overflow: visible;
-  margin-top: 48px; position: relative; z-index: 1;
-  transition: opacity 0.4s ease;
+  width: 240px; height: 2px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 2px;
+  position: relative;
+  opacity: 0;
+  animation: boot-fade-in 0.5s ease 0.25s forwards;
+  overflow: visible;
 }
 #boot-bar-container.boot-hide { opacity: 0; }
 #boot-bar {
   height: 100%; width: 0%;
-  background: linear-gradient(90deg, rgba(56,189,248,0.2), #38bdf8, #7dd3fc);
-  border-radius: 1px;
-  box-shadow: 0 0 8px rgba(56,189,248,0.6), 0 0 20px rgba(56,189,248,0.3), 0 0 40px rgba(14,165,233,0.15);
+  border-radius: 2px;
+  background: linear-gradient(90deg,
+    #0f1e4a 0%,
+    #1e3a8a 30%,
+    #2563eb 60%,
+    #3b82f6 85%,
+    #38bdf8 100%);
   position: relative;
 }
 #boot-bar::after {
   content: '';
-  position: absolute; right: 0; top: -3px;
-  width: 6px; height: 7px;
-  background: #7dd3fc;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(125,211,252,0.8), 0 0 20px rgba(56,189,248,0.5), 0 0 40px rgba(14,165,233,0.3);
+  position: absolute;
+  right: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 30px; height: 100%;
+  max-width: 50%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #38bdf8 60%, #7dd3fc 100%);
+  box-shadow:
+    0 0 6px rgba(56,189,248,0.8),
+    0 0 18px rgba(56,189,248,0.5),
+    0 0 48px rgba(37,99,235,0.3),
+    0 0 100px rgba(37,99,235,0.15);
+  pointer-events: none;
 }
 
-/* CTA ready state */
-@keyframes boot-cta-gradient {
-  0% { background-position: 0% center; }
-  50% { background-position: 800% center; }
-  100% { background-position: 0% center; }
-}
-@keyframes boot-cta-appear {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 0.5; transform: translateY(0); }
-}
-@keyframes boot-cta-breathe {
-  0%, 100% {
-    opacity: 0.25;
-    text-shadow: 0 0 15px rgba(56,189,248,0.08);
-  }
-  50% {
-    opacity: 0.85;
-    text-shadow: 0 0 25px rgba(56,189,248,0.3), 0 0 50px rgba(14,165,233,0.15), 0 0 90px rgba(125,211,252,0.08);
-  }
-}
-#boot-cta {
-  position: absolute; bottom: 18%; left: 0; right: 0;
-  z-index: 1; text-align: center; cursor: pointer;
-  display: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-  font-size: 36px; font-weight: 100; letter-spacing: 18px;
-  text-transform: uppercase;
-  color: #7dd3fc;
-  text-shadow: 0 0 10px rgba(56,189,248,0.6), 0 0 30px rgba(56,189,248,0.3), 0 0 60px rgba(14,165,233,0.15);
-  will-change: opacity;
-  animation: boot-cta-appear 1.5s ease-out forwards, boot-cta-breathe 4s ease-in-out 1.5s infinite;
-}
-
-#boot-credit {
-  position: absolute; left: 0; right: 0; bottom: 28px;
-  z-index: 2; text-align: center;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-  font-size: 11px; font-weight: 500;
-  letter-spacing: 2.4px; text-transform: uppercase;
-  color: rgba(186,230,253,0.55);
-  opacity: 0;
-  animation: boot-credit-fade-in 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
-  pointer-events: auto;
-}
-#boot-credit .boot-heart {
-  display: inline-block;
-  margin: 0 4px;
-  font-size: 12px;
-  filter: drop-shadow(0 0 6px rgba(244,114,182,0.7)) drop-shadow(0 0 12px rgba(236,72,153,0.4));
-  animation: boot-heart-beat 1.4s ease-in-out infinite;
-}
-#boot-credit .boot-credit-link {
-  color: #7dd3fc;
-  text-decoration: none;
-  font-weight: 700;
-  text-shadow: 0 0 8px rgba(125,211,252,0.55), 0 0 18px rgba(84,197,248,0.25);
-  transition: color 0.2s, text-shadow 0.2s;
-}
-#boot-credit .boot-credit-link:hover {
-  color: #bae6fd;
-  text-shadow: 0 0 12px rgba(125,211,252,0.9), 0 0 24px rgba(84,197,248,0.5);
-}
-@keyframes boot-credit-fade-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes boot-heart-beat {
-  0%, 100% { transform: scale(1); }
-  15% { transform: scale(1.22); }
-  30% { transform: scale(1); }
-  45% { transform: scale(1.14); }
-  60% { transform: scale(1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  #boot-credit .boot-heart { animation: none; }
-  #boot-credit { animation: none; opacity: 1; }
+@keyframes boot-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ===== MOBILE APP STYLES ===== */
