@@ -35,16 +35,18 @@
   ];
 
   // Articles catalog (slug → metadata)
+  // siteSlug maps to /articles/<siteSlug>/ for in-site detail-view navigation.
+  // href is kept as a fallback (and for the right-click "open in new tab" affordance).
   const ARTICLE_CATALOG = {
-    'flutter-prs': { tag: 'Flutter', title: 'How I Got 6 PRs Merged Into Flutter Framework', excerpt: '90-day path from triage to merge. Test-first bar, review etiquette.', mins: 10, href: '/blog/how-i-got-6-prs-merged-into-flutter.html' },
-    'three-tree': { tag: 'Architecture', title: "Flutter's Three-Tree Architecture Explained", excerpt: 'Widget configures, Element mounts, RenderObject paints. Where bugs hide.', mins: 12, href: '/blog/flutter-three-tree-architecture-explained.html' },
-    'state-mgmt': { tag: 'State', title: 'Flutter State Management 2026: A Decision Guide', excerpt: 'setState, Provider, Riverpod, Bloc, signals. When to use which.', mins: 14, href: '/blog/flutter-state-management-2026-guide.html' },
-    'plugins-case': { tag: 'Plugins', title: 'Building Production Flutter Plugins (156 likes case study)', excerpt: 'Build, publish, maintain a plugin with 156 pub.dev likes.', mins: 11, href: '/blog/building-production-flutter-plugins-case-study.html' },
-    'isolates': { tag: 'Dart', title: 'Dart Isolates: The Missing Guide', excerpt: 'Concurrency, ports, real-world patterns for production Flutter.', mins: 8, href: 'https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e' },
-    'native-plugins': { tag: 'Native', title: 'A Journey with Flutter Native Plugin Development', excerpt: 'MethodChannel, EventChannel, PlatformView. Cross-platform plugin dev.', mins: 7, href: 'https://medium.com/nerd-for-tech/a-journey-with-flutter-native-plugin-development-for-ios-android-3f0dd4ab8061' },
-    'asset-indexer': { tag: 'Codegen', title: 'Indexing Assets in a Dart Class (R.java pattern)', excerpt: 'Auto-generate typed asset references with codegen.', mins: 6, href: 'https://medium.com/nerd-for-tech/indexing-assets-in-a-dart-class-just-like-r-java-flutter-3febf558a2bb' },
-    'kotlin-functions': { tag: 'Firebase', title: 'Firebase Cloud Functions Using Kotlin', excerpt: 'Cloud Functions in Kotlin via GraalVM. Setup, performance, caveats.', mins: 5, href: 'https://medium.com/@ishaqhassan/firebase-cloud-functions-using-kotlin-55631dd43f67' },
-    'devncode-ai': { tag: 'AI', title: 'DevnCode Meetup IV: Artificial Intelligence', excerpt: 'Recap of DevnCode AI meetup, talks, takeaways.', mins: 4, href: 'https://medium.com/devncode/devncode-meetup-iv-artificial-intelligence-df8c602de7d5' },
+    'flutter-prs': { siteSlug: 'flutter-prs-merged', tag: 'Flutter', title: 'How I Got 6 PRs Merged Into Flutter Framework', excerpt: '90-day path from triage to merge. Test-first bar, review etiquette.', mins: 10, href: '/articles/flutter-prs-merged/' },
+    'three-tree': { siteSlug: 'flutter-three-tree-architecture', tag: 'Architecture', title: "Flutter's Three-Tree Architecture Explained", excerpt: 'Widget configures, Element mounts, RenderObject paints. Where bugs hide.', mins: 12, href: '/articles/flutter-three-tree-architecture/' },
+    'state-mgmt': { siteSlug: 'flutter-state-management-2026', tag: 'State', title: 'Flutter State Management 2026: A Decision Guide', excerpt: 'setState, Provider, Riverpod, Bloc, signals. When to use which.', mins: 14, href: '/articles/flutter-state-management-2026/' },
+    'plugins-case': { siteSlug: 'flutter-plugins-case-study', tag: 'Plugins', title: 'Building Production Flutter Plugins (156 likes case study)', excerpt: 'Build, publish, maintain a plugin with 156 pub.dev likes.', mins: 11, href: '/articles/flutter-plugins-case-study/' },
+    'isolates': { siteSlug: 'dart-isolates-guide', tag: 'Dart', title: 'Dart Isolates: The Missing Guide', excerpt: 'Concurrency, ports, real-world patterns for production Flutter.', mins: 8, href: '/articles/dart-isolates-guide/' },
+    'native-plugins': { siteSlug: 'flutter-native-plugins-journey', tag: 'Native', title: 'A Journey with Flutter Native Plugin Development', excerpt: 'MethodChannel, EventChannel, PlatformView. Cross-platform plugin dev.', mins: 7, href: '/articles/flutter-native-plugins-journey/' },
+    'asset-indexer': { siteSlug: 'dart-asset-indexing', tag: 'Codegen', title: 'Indexing Assets in a Dart Class (R.java pattern)', excerpt: 'Auto-generate typed asset references with codegen.', mins: 6, href: '/articles/dart-asset-indexing/' },
+    'kotlin-functions': { siteSlug: 'firebase-kotlin-functions', tag: 'Firebase', title: 'Firebase Cloud Functions Using Kotlin', excerpt: 'Cloud Functions in Kotlin via GraalVM. Setup, performance, caveats.', mins: 5, href: '/articles/firebase-kotlin-functions/' },
+    'devncode-ai': { siteSlug: 'devncode-meetup-iv-ai', tag: 'AI', title: 'DevnCode Meetup IV: Artificial Intelligence', excerpt: 'Recap of DevnCode AI meetup, talks, takeaways.', mins: 4, href: '/articles/devncode-meetup-iv-ai/' },
   };
   // Default top-4 ordering when [[CARDS:articles]] (no slugs given)
   const ARTICLE_CARDS = [
@@ -196,15 +198,28 @@
     }[c]));
   }
 
-  // Highlight common code tokens (Dart/JS/Python/Go/Rust flavored)
+  // Highlight common code tokens (Dart/JS/Python/Go/Rust flavored).
+  // Uses a placeholder pass so later regexes can't match inside earlier-injected
+  // span tags (e.g. the keyword regex would otherwise match `class` inside
+  // <span class="cs"> and corrupt the HTML).
   function highlightCode(escaped) {
-    let out = escaped;
     const KW = /\b(abstract|as|assert|async|await|break|case|catch|class|const|continue|default|deferred|do|dynamic|else|enum|export|extends|extension|external|factory|false|final|finally|for|function|get|hide|if|implements|import|in|interface|is|late|let|library|mixin|new|null|of|on|operator|part|rethrow|return|set|show|static|super|switch|sync|this|throw|true|try|typedef|var|void|while|with|yield|def|elif|None|True|False|and|or|not|pass|lambda|self|print|fn|use|pub|impl|trait|struct|mut|ref|package|func|chan|select|interface|type)\b/g;
-    out = out.replace(/(\/\/[^\n]*|#[^\n]*)/g, '<span class="cc">$1</span>');
-    out = out.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="cc">$1</span>');
-    out = out.replace(/(&quot;[^&\n]*?&quot;|&#39;[^&\n]*?&#39;|`[^`\n]*?`)/g, '<span class="cs">$1</span>');
-    out = out.replace(KW, '<span class="ck">$1</span>');
-    out = out.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="cn">$1</span>');
+    const STR = /&quot;[^&\n]*?&quot;|&#39;[^&\n]*?&#39;|`[^`\n]*?`/g;
+    const COMMENT = /\/\/[^\n]*|#[^\n]*|\/\*[\s\S]*?\*\//g;
+    const NUM = /\b\d+(?:\.\d+)?\b/g;
+
+    const tokens = [];
+    const stash = (cls, text) => {
+      tokens.push('<span class="' + cls + '">' + text + '</span>');
+      return '' + (tokens.length - 1) + '';
+    };
+
+    let out = escaped;
+    out = out.replace(COMMENT, (m) => stash('cc', m));
+    out = out.replace(STR, (m) => stash('cs', m));
+    out = out.replace(KW, (m) => stash('ck', m));
+    out = out.replace(NUM, (m) => stash('cn', m));
+    out = out.replace(/(\d+)/g, (_m, i) => tokens[Number(i)] || '');
     return out;
   }
 
@@ -420,8 +435,9 @@
   }
 
   function buildArticleCard(a) {
+    const slug = a.siteSlug || (a.href || '').replace(/^.*\/articles\//, '').replace(/\/$/, '');
     return (
-      '<a class="max-art-card" href="' + escapeHtml(a.href) + '" target="_blank" rel="noopener noreferrer">' +
+      '<a class="max-art-card" href="' + escapeHtml(a.href) + '" onclick="return window.maxOpenArticle(\'' + escapeHtml(slug) + '\',event)">' +
         '<div class="max-art-tag">' + escapeHtml(a.tag) + '</div>' +
         '<div class="max-art-title">' + escapeHtml(a.title) + '</div>' +
         '<div class="max-art-excerpt">' + escapeHtml(a.excerpt) + '</div>' +
@@ -582,6 +598,23 @@
       if (!isMobile && typeof window.openWindow === 'function') {
         if (ev) { ev.preventDefault(); ev.stopPropagation(); }
         window.openWindow(m.win);
+        return false;
+      }
+    } catch (e) {}
+    return true;
+  };
+
+  // Open an article slug in-site: desktop uses openArticle (which calls navigate('articles', {slug})),
+  // mobile uses mobOpenArticle. Falls back to default href if neither is wired.
+  window.maxOpenArticle = function (slug, ev) {
+    try {
+      const isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+      const fn = isMobile && typeof window.mobOpenArticle === 'function'
+        ? window.mobOpenArticle
+        : (typeof window.openArticle === 'function' ? window.openArticle : null);
+      if (fn) {
+        if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+        fn(slug, ev);
         return false;
       }
     } catch (e) {}

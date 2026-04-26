@@ -562,6 +562,17 @@ function minimizeWindow(id) {
   setTimeout(() => { win.classList.remove('open'); }, 400);
 }
 
+// Close every open window except the given id. Used by the "Close Other Windows"
+// menu item that the menu-bar code injects into every app's File menu.
+function closeOtherWindows(keepId) {
+  if (!keepId) return;
+  document.querySelectorAll('.window.open').forEach(function(w) {
+    var id = (w.id || '').replace(/^win-/, '');
+    if (id && id !== keepId) closeWindow(id);
+  });
+}
+window.closeOtherWindows = closeOtherWindows;
+
 function maximizeWindow(id) {
   const win = document.getElementById('win-' + id);
   if (!win) return;
@@ -2769,9 +2780,18 @@ function updateMenuBarForWindow(winId) {
     }, 150);
   }
 
-  // Update name dropdown
+  // Update name dropdown. When an app is active and there are 2+ open windows,
+  // append a "Close Other Windows" item — macOS-style "Hide Others" affordance.
   var nameMenu = document.getElementById('menu-name');
-  if (nameMenu) nameMenu.innerHTML = menu ? (cfg.nameMenu || '<div class="menu-dd-item disabled">' + cfg.name + '</div>') : menuBarDefault.nameMenu;
+  if (nameMenu) {
+    var baseName = menu ? (cfg.nameMenu || '<div class="menu-dd-item disabled">' + cfg.name + '</div>') : menuBarDefault.nameMenu;
+    if (winId && document.querySelectorAll('.window.open').length > 1) {
+      var closeOthers = '<div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="closeOtherWindows(\'' + winId + '\')">Close Other Windows<span class="shortcut">⌥⌘W</span></div>';
+      nameMenu.innerHTML = baseName + closeOthers;
+    } else {
+      nameMenu.innerHTML = baseName;
+    }
+  }
 
   // Update File menu
   var fileMenu = document.getElementById('menu-file');
