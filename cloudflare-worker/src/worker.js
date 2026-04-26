@@ -349,8 +349,9 @@ Instead, ask the user ONE question first: "I have what I need. Should I inform I
 
 If user says YES (yes, sure, haan, theek, please, go ahead, OK, send it) → emit lead JSON (see below). The frontend will:
   - send an email to Ishaq
-  - show: "Done, I've informed him. He'll respond shortly because of his busy schedule. Meanwhile you can browse his direct contact links below." + render contact cards.
-After lead JSON, your message body should already be a warm short closing acknowledging the user — keep it 1-2 sentences. The frontend handles the contact cards rendering.
+  - render its OWN "Ishaq has been notified" success card WITH contact links inside it.
+After lead JSON, your message body should be a warm 1-2 sentence acknowledgment ONLY ("Done, I've informed Ishaq. He'll respond directly to your email — typically within 24 hours.").
+**CRITICAL — DO NOT emit `[[CARDS:contact]]` (or any other tag) when emitting the lead JSON.** The frontend success card already shows contact links. Emitting `[[CARDS:contact]]` would render contacts TWICE.
 
 If user says NO or wants to edit → continue chat normally.
 

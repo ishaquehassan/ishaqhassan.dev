@@ -752,6 +752,13 @@
     clean = clean.replace(/```[\s\S]*?lead_ready[\s\S]*?```/gi, '');
     clean = clean.replace(/<lead>[\s\S]*?<\/lead>/gi, '');
     clean = clean.replace(/^[\s>*-]*(\*\*)?\s*(JSON\s*)?Lead\s*Ready\s*(Block|Object|Template)?(\*\*)?\s*:?\s*$/gim, '');
+
+    // When a lead is being emitted, the success card already shows contact links —
+    // strip any duplicate [[CARDS:contact]] tag (or [[contact]]) the model might add.
+    if (lead) {
+      clean = clean.replace(/\[\[(?:CARDS?:)?contact\]\]/gi, '');
+    }
+
     clean = clean.replace(/\n{3,}/g, '\n\n').trim();
 
     return { clean: clean || '…', lead: lead };
