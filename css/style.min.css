@@ -7239,3 +7239,277 @@ a.li-tl-company:hover { color: #7dd3fc; }
   .mob-ai-ring, .mob-ai-halo, .mob-ai-spark, .mob-ai-pulse { animation: none !important; }
 }
 
+/* =====================================================================
+   Mobile bento — Chat with Max (AI) + Direct Contact cards
+   ===================================================================== */
+
+/* Premium feel for the Chat with Max bento */
+.mob-bento-ai {
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(168,85,247,0.18), transparent 55%),
+    radial-gradient(80% 60% at 100% 100%, rgba(56,189,248,0.16), transparent 55%),
+    rgba(99,102,241,0.10) !important;
+  border-color: rgba(168,85,247,0.30) !important;
+  position: relative;
+  overflow: hidden;
+}
+.mob-bento-ai::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from 0deg, rgba(168,85,247,0.55), rgba(56,189,248,0.45), rgba(244,114,182,0.45), rgba(168,85,247,0.55));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: .9;
+  animation: bentoAiBorderSpin 5s linear infinite;
+  pointer-events: none;
+}
+@keyframes bentoAiBorderSpin { to { transform: rotate(360deg); } }
+
+.mob-bento-ai-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 6px rgba(168,85,247,0.6)) drop-shadow(0 0 10px rgba(99,102,241,0.4));
+  animation: bentoAiSparkPulse 2.4s ease-in-out infinite;
+}
+@keyframes bentoAiSparkPulse {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50%      { transform: scale(1.07) rotate(6deg); }
+}
+
+.mob-bento-badge-ai {
+  background: linear-gradient(135deg, #a855f7, #6366f1) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 10px rgba(168,85,247,0.45);
+}
+
+/* Direct Contact bento — premium "stack of links" style */
+.mob-bento-direct {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(244,63,94,0.16), transparent 60%),
+    radial-gradient(80% 60% at 0% 100%, rgba(34,197,94,0.12), transparent 60%),
+    rgba(244,63,94,0.06) !important;
+  border-color: rgba(244,63,94,0.25) !important;
+}
+
+.mob-bento-direct-stack {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  height: 26px;
+}
+.mob-bento-direct-chip {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(12,12,14,0.85);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  transition: transform .25s ease;
+}
+.mob-bento-direct-chip + .mob-bento-direct-chip { margin-left: -10px; }
+.mob-bento-direct:hover .mob-bento-direct-chip:nth-child(1) { transform: translateX(-3px); }
+.mob-bento-direct:hover .mob-bento-direct-chip:nth-child(3) { transform: translateX(3px); }
+
+.mob-bento-badge-direct {
+  background: linear-gradient(135deg, #f43f5e, #fb7185) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 10px rgba(244,63,94,0.4);
+  letter-spacing: 0.06em !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mob-bento-ai::before, .mob-bento-ai-icon { animation: none !important; }
+}
+
+/* =====================================================================
+   Mobile chat — Claude-level full-screen layout
+   - Lock outer scroll, fill viewport minus header.
+   - Inputbar always visible at bottom.
+   - Internal messages list scrolls alone.
+   ===================================================================== */
+#mobile-connect-expanded {
+  /* Stop the outer scroll so the inputbar stays pinned to the bottom */
+  overflow: hidden !important;
+  /* Use small viewport units on iOS so the keyboard doesn't shrink past the input */
+  height: 100vh;
+  height: 100svh;
+}
+#mobile-connect-expanded .mobile-expanded-content.max-mob-content {
+  /* Fill the whole space below the 56px sticky header */
+  padding: 0 !important;
+  height: calc(100vh - 56px);
+  height: calc(100svh - 56px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+/* Disable the parent stagger-fade animation inside the chat — it
+   delays the bubbles and breaks layout briefly. */
+#mobile-connect-expanded .mobile-expanded-content > * { animation: none !important; }
+
+#mobile-connect-expanded .max-tabs-mob {
+  flex-shrink: 0;
+  position: relative;
+  top: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+#mobile-connect-expanded .max-panel-active[data-max-panel-mob="chat"] {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+#mobile-connect-expanded .max-panel-active[data-max-panel-mob="direct"] {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px !important;
+}
+#mobile-connect-expanded .max-chat-mob {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =====================================================================
+   Claude-level chat polish (desktop + mobile)
+   ===================================================================== */
+
+/* Hero refinement */
+.max-hero {
+  background:
+    linear-gradient(180deg, rgba(99,102,241,0.06), transparent 70%),
+    rgba(255,255,255,0.015);
+  backdrop-filter: blur(8px);
+}
+.max-hero-name {
+  background: linear-gradient(135deg, #fafafa, #cbd5e1);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Messages: top fade-mask for scroll polish */
+.max-messages {
+  position: relative;
+  scroll-padding-bottom: 24px;
+  padding-bottom: 12px;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 24px, #000 calc(100% - 8px), #000 100%);
+          mask-image: linear-gradient(180deg, transparent 0, #000 24px, #000 calc(100% - 8px), #000 100%);
+}
+
+/* Bot bubble: very subtle gradient + crisp inset highlight */
+.max-msg-bot .max-bubble {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.085), rgba(255,255,255,0.045));
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.06),
+    0 1px 0 rgba(255,255,255,0.04);
+  letter-spacing: -0.005em;
+}
+/* User bubble: deeper gradient + soft outer glow */
+.max-msg-user .max-bubble {
+  background: linear-gradient(135deg, #6366f1 0%, #5b6cff 60%, #818cf8 100%);
+  box-shadow:
+    0 6px 20px rgba(99,102,241,0.32),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  letter-spacing: -0.005em;
+}
+
+/* Quick chip refinement */
+.max-chip {
+  background: rgba(255,255,255,0.045);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+}
+.max-chip:hover {
+  background: rgba(99,102,241,0.16);
+  border-color: rgba(99,102,241,0.45);
+  box-shadow: 0 4px 14px rgba(99,102,241,0.2);
+}
+
+/* Input bar — Claude-style premium */
+.max-inputbar {
+  padding: 12px 12px max(12px, env(safe-area-inset-bottom));
+  background:
+    linear-gradient(180deg, transparent, rgba(10,10,12,0.45) 30%, rgba(10,10,12,0.85)) ,
+    rgba(18,18,22,0.55);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  position: relative;
+  z-index: 2;
+}
+.max-input-wrap {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 22px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 1px 0 rgba(0,0,0,0.25);
+  transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.max-input-wrap:focus-within {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(99,102,241,0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 0 0 3px rgba(99,102,241,0.15),
+    0 8px 24px rgba(99,102,241,0.18);
+}
+.max-input-wrap textarea {
+  padding: 11px 16px;
+  line-height: 1.45;
+}
+
+/* Send button — pill, gradient, soft glow */
+.max-send {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, #818cf8 0%, #6366f1 50%, #5b6cff 100%);
+  box-shadow:
+    0 6px 18px rgba(99,102,241,0.42),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.max-send:hover {
+  filter: brightness(1.06);
+  box-shadow:
+    0 8px 22px rgba(99,102,241,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.22);
+}
+
+/* Disclaimer subtle and out of the way */
+.max-disclaimer {
+  background: transparent;
+  font-size: 9.5px;
+  color: rgba(255,255,255,0.28);
+  padding: 0 16px 6px;
+  letter-spacing: 0.01em;
+}
+
+/* Mobile-specific tightening */
+@media (max-width: 640px) {
+  .max-hero { padding: 10px 14px 10px; }
+  .max-hero-avatar { width: 38px; height: 38px; }
+  .max-avatar-emoji { font-size: 17px; }
+  .max-hero-name { font-size: 14px; }
+  .max-hero-sub { font-size: 11px; }
+  .max-messages { padding: 14px 14px 4px; gap: 8px; }
+  .max-chips { padding: 6px 12px 8px; gap: 6px; }
+  .max-chip { padding: 7px 12px; font-size: 12px; }
+  .max-inputbar { padding: 8px 10px max(10px, env(safe-area-inset-bottom)); gap: 7px; }
+  .max-disclaimer { display: none; } /* save real estate on phones */
+}
+

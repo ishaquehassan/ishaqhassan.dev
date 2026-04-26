@@ -410,5 +410,23 @@
       bindAll().forEach(renderAll);
     },
     setEndpoint: function (url) { window.MAX_API_URL = url; },
+    switchTab: function (tab) {
+      const insts = bindAll();
+      insts.forEach((i) => setTab(i, tab));
+    },
+  };
+
+  // Public helper used by mobile bento card "Direct Contact"
+  window.openMobileDirectContact = function (event) {
+    if (event && event.stopPropagation) event.stopPropagation();
+    if (typeof window.expandMobileSection === 'function') {
+      window.expandMobileSection(event || { stopPropagation: function(){} }, 'connect');
+    }
+    // After the section expands, switch the inner tab to Direct
+    setTimeout(function () {
+      if (window.MaxChat && typeof window.MaxChat.switchTab === 'function') {
+        window.MaxChat.switchTab('direct');
+      }
+    }, 60);
   };
 })();
