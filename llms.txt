@@ -25,6 +25,7 @@ Ishaq Hassan is a Flutter Framework Contributor from Pakistan, based in Karachi.
 - Email: hello@ishaqhassan.dev
 
 ## Topic Pages
+- Flutter Core Contributor in Pakistan: https://ishaqhassan.dev/flutter-core-contributor-pakistan.html
 - Flutter Framework Contributor from Pakistan: https://ishaqhassan.dev/flutter-framework-contributor-pakistan.html
 - Flutter Developer in Pakistan: https://ishaqhassan.dev/flutter-developer-pakistan.html
 - Flutter Course in Urdu: https://ishaqhassan.dev/flutter-course-urdu.html
