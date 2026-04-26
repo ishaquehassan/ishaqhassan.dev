@@ -775,12 +775,23 @@
       if (!res.ok) throw new Error('http_' + res.status);
       return res.json();
     }).then(function () {
+      // Replace the form's wrap. Also remove every preceding bot text
+      // message in the SAME turn (the lead-in like "Got it! Drop your
+      // details below." becomes redundant noise once the form is sent).
+      // Stop walking back at the first user message or non-bot element.
       const wrapEl = form.closest('.max-msg') || form.parentNode;
+      const toRemove = [];
+      let prev = wrapEl ? wrapEl.previousElementSibling : null;
+      while (prev && prev.classList && prev.classList.contains('max-msg-bot') && !prev.classList.contains('max-msg-user')) {
+        toRemove.push(prev);
+        prev = prev.previousElementSibling;
+      }
+      toRemove.forEach((n) => n.parentNode && n.parentNode.removeChild(n));
+
       const success = document.createElement('div');
       success.className = 'max-msg max-msg-bot max-msg-cards';
-      success.innerHTML = buildLeadInformedCardHTML();
+      success.innerHTML = buildInquirySentCardHTML(intent);
       if (wrapEl && wrapEl.parentNode) wrapEl.parentNode.replaceChild(success, wrapEl);
-      // Persist into session so a refresh doesn't re-show the form.
       try { state.leadSent = true; saveSession(state); } catch (e) {}
     }).catch(function (e) {
       if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Send to Ishaq'; }
@@ -847,6 +858,34 @@
           '</div>' +
         '</div>' +
         '<div class="max-informed-meanwhile">Meanwhile, browse his direct contact links</div>' +
+        buildContactCardsHTML() +
+      '</div>'
+    );
+  }
+
+  // Inquiry-specific success card shown after a form is submitted.
+  // Tighter than the generic Lead-Informed card: a single sentence
+  // confirming the inquiry was sent, plus contact links.
+  function buildInquirySentCardHTML(intent) {
+    const labels = {
+      'hire-fulltime':  'Your full-time hiring inquiry has been sent to Ishaq.',
+      'hire-project':   'Your project inquiry has been sent to Ishaq.',
+      'hire-consultancy':'Your consultancy inquiry has been sent to Ishaq.',
+      'speaking':       'Your speaking invite has been sent to Ishaq.',
+      'collab':         'Your collab proposal has been sent to Ishaq.',
+      'general':        'Your message has been sent to Ishaq.',
+    };
+    const title = labels[intent] || labels.general;
+    return (
+      '<div class="max-informed-card">' +
+        '<div class="max-informed-head">' +
+          '<div class="max-informed-icon">✓</div>' +
+          '<div>' +
+            '<div class="max-informed-title">' + escapeHtml(title) + '</div>' +
+            '<div class="max-informed-sub">He typically responds within 24 hours via email.</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="max-informed-meanwhile">Meanwhile, you can also reach him directly</div>' +
         buildContactCardsHTML() +
       '</div>'
     );
