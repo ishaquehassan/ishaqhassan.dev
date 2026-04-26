@@ -7248,8 +7248,7 @@ a.li-tl-company:hover { color: #7dd3fc; }
   .max-tabs { padding: 8px 10px 6px; gap: 5px; }
   .max-tab { padding: 7px 11px; font-size: 12px; }
   .max-msg-bot .max-bubble { font-size: 14.5px; padding: 4px 0 8px; max-width: 100%; width: 100%; }
-  .max-msg-user .max-bubble { font-size: 14px; padding: 10px 13px; }
-  .max-msg-user { max-width: 80%; }
+  .max-msg-user .max-bubble { font-size: 14px; padding: 9px 13px; max-width: 78%; }
   .max-messages { padding: 14px 12px 6px; }
   .max-chips { padding: 4px 12px 10px; }
   .max-inputbar { padding: 8px 10px 10px; }
