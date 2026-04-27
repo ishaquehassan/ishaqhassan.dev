@@ -251,24 +251,26 @@ function requestWeatherLocation() {
   );
 }
 
+function _setText(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+
 function renderWeatherData(data, fallbackCity, lat, lon) {
   const cw = data.current_weather;
-  document.getElementById('weather-temp').textContent = Math.round(cw.temperature);
-  document.getElementById('weather-wind').textContent = '💨 ' + Math.round(cw.windspeed) + ' km/h';
-  document.getElementById('weather-icon').textContent = getWeatherIcon(cw.weathercode);
+  _setText('weather-temp', Math.round(cw.temperature));
+  _setText('weather-wind', '💨 ' + Math.round(cw.windspeed) + ' km/h');
+  _setText('weather-icon', getWeatherIcon(cw.weathercode));
   const hIdx = data.hourly.time.findIndex(t => t >= cw.time.substring(0, 13));
-  if (hIdx >= 0) document.getElementById('weather-humidity').textContent = '💧 ' + data.hourly.relative_humidity_2m[hIdx] + '%';
+  if (hIdx >= 0) _setText('weather-humidity', '💧 ' + data.hourly.relative_humidity_2m[hIdx] + '%');
   if (fallbackCity) {
-    document.getElementById('weather-city').textContent = fallbackCity;
+    _setText('weather-city', fallbackCity);
   } else {
     fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json')
       .then(r => r.json())
       .then(geo => {
         const city = geo.address.city || geo.address.town || geo.address.state || 'Unknown';
         const country = geo.address.country_code ? geo.address.country_code.toUpperCase() : '';
-        document.getElementById('weather-city').textContent = city + (country ? ', ' + country : '');
+        _setText('weather-city', city + (country ? ', ' + country : ''));
       })
-      .catch(() => document.getElementById('weather-city').textContent = 'Your Location');
+      .catch(() => _setText('weather-city', 'Your Location'));
   }
 }
 
@@ -299,8 +301,8 @@ function fetchWeather(lat, lon, fallbackCity) {
       renderWeatherData(data, fallbackCity, lat, lon);
     })
     .catch(() => {
-      document.getElementById('weather-temp').textContent = '--';
-      document.getElementById('weather-city').textContent = 'Failed to load';
+      _setText('weather-temp', '--');
+      _setText('weather-city', 'Failed to load');
     });
 }
 
@@ -410,7 +412,7 @@ function fetchMobWeather(lat, lon, fallbackCity) {
     .then(r => r.json())
     .then(data => {
       const cw = data.current_weather;
-      document.getElementById('mob-weather-temp').textContent = Math.round(cw.temperature);
+      var __mtEl=document.getElementById('mob-weather-temp'); if(__mtEl) __mtEl.textContent = Math.round(cw.temperature);
       document.getElementById('mob-weather-wind').textContent = '💨 '+Math.round(cw.windspeed)+' km/h';
       document.getElementById('mob-weather-icon').textContent = getWeatherIcon(cw.weathercode);
       const hIdx = data.hourly.time.findIndex(t => t >= cw.time.substring(0,13));
