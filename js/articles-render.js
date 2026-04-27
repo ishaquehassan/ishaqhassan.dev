@@ -304,6 +304,8 @@
       }
       var content = section.querySelector('.article-full-content');
       if (content) content.innerHTML = html;
+      // Internal vs external link routing is handled globally by app.js
+      // (delegated click + auto-target). No per-article rewiring needed.
       section.setAttribute('data-loaded', '1');
       // Body is in DOM — build TOC for the right rail (desktop only).
       try { buildAndMountToc(rootEl, article); } catch(e) {}

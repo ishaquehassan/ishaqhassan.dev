@@ -353,10 +353,10 @@ function snakeSetDir(dx, dy) {
   if (ref.x === dx && ref.y === dy) return;
   if (dx !== 0 || dy !== 0) {
     snakeDirQueue.push({x:dx, y:dy});
-    if (snakeDirQueue.length > 2) snakeDirQueue.shift();
-    // Instant tick if 25%+ of interval passed, snappy response
+    if (snakeDirQueue.length > 3) snakeDirQueue.shift();
+    // Instant tick if 10%+ of interval passed, snappy response
     const elapsed = performance.now() - snakeLastTick;
-    if (elapsed > snakeGetSpeed() * 0.25) {
+    if (elapsed > snakeGetSpeed() * 0.10) {
       clearTimeout(snakeInterval);
       snakeLastTick = performance.now();
       snakeTick();
@@ -1325,11 +1325,11 @@ function mobSnakeDir(dx, dy) {
   if (ref.x === dx && ref.y === dy) return;
   if (dx !== 0 || dy !== 0) {
     S.dirQueue.push({x:dx, y:dy});
-    if (S.dirQueue.length > 2) S.dirQueue.shift();
-    // Instant tick if 25%+ of interval elapsed for snappy response
+    if (S.dirQueue.length > 3) S.dirQueue.shift();
+    // Instant tick if 10%+ of interval elapsed for snappy response
     var speed = Math.max(20, snakeBaseSpeed - Math.floor(S.score / 3) * 2.65);
     var elapsed = performance.now() - S.lastTick;
-    if (elapsed > speed * 0.25) {
+    if (elapsed > speed * 0.10) {
       clearTimeout(S.interval);
       S.lastTick = performance.now();
       mobSnakeTick();

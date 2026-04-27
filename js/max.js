@@ -307,6 +307,26 @@
 
   /* ------------------- View bindings ------------------- */
   function bindInstance(suffix) {
+    // Morph instance: dock-pill liquid-morph chat panel (different DOM IDs).
+    if (suffix === 'morph') {
+      const messagesEl = document.getElementById('max-panel-messages');
+      const chipsEl = document.getElementById('max-panel-chips');
+      const inputEl = document.getElementById('max-bar-input');
+      const sendBtn = document.getElementById('max-bar-send');
+      const formEl = document.getElementById('max-bar');
+      if (!messagesEl || !inputEl || !sendBtn) return null;
+      return { tabsEl: null, messagesEl, chipsEl, inputEl, formEl, sendBtn, suffix: 'morph' };
+    }
+    // Mobile sheet instance: liquid-morph from bottom dock AI pill.
+    if (suffix === 'mobsheet') {
+      const messagesEl = document.getElementById('max-mob-panel-messages');
+      const chipsEl = document.getElementById('max-mob-panel-chips');
+      const inputEl = document.getElementById('max-mob-bar-input');
+      const sendBtn = document.getElementById('max-mob-bar-send');
+      const formEl = document.getElementById('max-mob-bar');
+      if (!messagesEl || !inputEl || !sendBtn) return null;
+      return { tabsEl: null, messagesEl, chipsEl, inputEl, formEl, sendBtn, suffix: 'mobsheet' };
+    }
     const id = (s) => 'max-' + s + (suffix ? '-' + suffix : '');
     const tabsEl = document.getElementById(suffix ? 'max-tabs-mob' : 'max-tabs');
     const messagesEl = document.getElementById(id('messages'));
@@ -351,6 +371,28 @@
     }
     renderChips(inst);
     scrollToBottom(inst, false);
+    syncMorphSplash(inst);
+  }
+
+  // Morph panel: swap between splash (default) and message stream after
+  // the user sends their first message. Splash + messages are siblings,
+  // not parent/child, so toggle classes on each. Called from renderAll
+  // AND from the sendMessage path so the swap is immediate after a user
+  // message, not deferred until a full renderAll runs.
+  function syncMorphSplash(inst) {
+    if (!inst) return;
+    if (inst.suffix === 'morph') {
+      const splash = document.getElementById('max-splash');
+      const hasUserMsg = state.messages.some((m) => m.role === 'user');
+      if (splash) splash.classList.toggle('is-hidden', hasUserMsg);
+      inst.messagesEl.classList.toggle('is-hidden', !hasUserMsg);
+      return;
+    }
+    if (inst.suffix === 'mobsheet') {
+      const panel = document.getElementById('max-mob-panel');
+      const hasUserMsg = state.messages.some((m) => m.role === 'user');
+      if (panel) panel.classList.toggle('has-messages', hasUserMsg);
+    }
   }
 
   function appendMessage(inst, msg, animate) {
@@ -412,6 +454,16 @@
 
   function renderChips(inst) {
     if (!inst || !inst.chipsEl) return;
+    // Morph + mobsheet instances keep their static .max-chip-btn elements
+    // (rendered in index.html with custom styling). Just attach click → sendMessage once.
+    if (inst.suffix === 'morph' || inst.suffix === 'mobsheet') {
+      Array.from(inst.chipsEl.querySelectorAll('.max-chip-btn')).forEach((btn) => {
+        if (btn._maxBound) return;
+        btn._maxBound = true;
+        btn.addEventListener('click', () => sendMessage(btn.textContent.trim()));
+      });
+      return;
+    }
     inst.chipsEl.innerHTML = '';
     const hasUserMsg = state.messages.some((m) => m.role === 'user');
     if (hasUserMsg) return;
@@ -1085,13 +1137,18 @@
       i.inputEl.value = '';
       i.inputEl.style.height = 'auto';
       if (i.sendBtn) i.sendBtn.disabled = true;
-      if (i.chipsEl) i.chipsEl.innerHTML = '';
+      // Morph chips are static markup inside the splash and don't need to
+      // be wiped (the splash is hidden after first user msg via syncMorphSplash).
+      if (i.chipsEl && i.suffix !== 'morph') i.chipsEl.innerHTML = '';
     });
 
     const userMsg = { role: 'user', content: raw };
     state.messages.push(userMsg);
     saveSession(state);
-    bindAll().forEach((i) => appendMessage(i, userMsg, true));
+    bindAll().forEach((i) => {
+      appendMessage(i, userMsg, true);
+      syncMorphSplash(i);
+    });
     bindAll().forEach((i) => scrollToBottom(i, true));
 
     try { if (window.gtag) window.gtag('event', 'max_message_send', { len: raw.length }); } catch (e) {}
@@ -1168,6 +1225,10 @@
     if (d) list.push(d);
     const m = bindInstance('mob');
     if (m) list.push(m);
+    const morph = bindInstance('morph');
+    if (morph) list.push(morph);
+    const mobsheet = bindInstance('mobsheet');
+    if (mobsheet) list.push(mobsheet);
     instCache = list;
     return list;
   }
@@ -1179,10 +1240,20 @@
         b.addEventListener('click', () => setTab(inst, b.getAttribute(attr)));
       });
     }
-    inst.formEl.addEventListener('submit', (e) => {
-      e.preventDefault();
-      sendMessage();
-    });
+    // Form-submit when formEl is a real <form>; otherwise (morph: a div)
+    // attach explicit click on the send button. Don't double-bind, because
+    // a real form's button[type=submit] would fire submit twice.
+    if (inst.formEl && inst.formEl.tagName === 'FORM') {
+      inst.formEl.addEventListener('submit', (e) => {
+        e.preventDefault();
+        sendMessage();
+      });
+    } else if (inst.sendBtn) {
+      inst.sendBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        sendMessage();
+      });
+    }
     inst.inputEl.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -1272,15 +1343,64 @@
     },
   };
 
+  function setMobileConnectMode(mode, originEl) {
+    var win = document.getElementById('mobile-connect-expanded');
+    if (!win) return;
+    if (mode === 'chat') {
+      win.classList.add('is-chat-mode');
+    } else {
+      win.classList.remove('is-chat-mode');
+    }
+    // Anchor liquid-morph to the origin element rect (icon center)
+    if (originEl && originEl.getBoundingClientRect) {
+      var r = originEl.getBoundingClientRect();
+      var cx = r.left + r.width / 2;
+      var cy = r.top + r.height / 2;
+      var rad = Math.max(r.width, r.height) / 2;
+      win.style.setProperty('--morph-x', cx + 'px');
+      win.style.setProperty('--morph-y', cy + 'px');
+      win.style.setProperty('--morph-r0', rad + 'px');
+      win.classList.add('is-morphing-in');
+      originEl.classList.add('is-firing');
+      setTimeout(function () {
+        win.classList.remove('is-morphing-in');
+        originEl.classList.remove('is-firing');
+      }, 600);
+    }
+  }
+
   window.openMobileDirectContact = function (event) {
     if (event && event.stopPropagation) event.stopPropagation();
+    var origin = (event && (event.currentTarget || event.target.closest('.mob-bento'))) || null;
     if (typeof window.expandMobileSection === 'function') {
       window.expandMobileSection(event || { stopPropagation: function(){} }, 'connect');
     }
+    setMobileConnectMode('direct', origin);
     setTimeout(function () {
       if (window.MaxChat && typeof window.MaxChat.switchTab === 'function') {
         window.MaxChat.switchTab('direct');
       }
     }, 60);
   };
+
+  /* Mobile Max now opens via the dedicated #max-mob-panel sheet with a
+     liquid-blob morph from the dock AI pill (see js/mobile-max-morph.js).
+     This thin wrapper delegates to openMobMax and ensures the mobile chat
+     instance is bound before the panel becomes interactive. */
+  window.openMobileMaxChat = function (event) {
+    if (event && event.stopPropagation) event.stopPropagation();
+    if (typeof window.openMobMax === 'function') {
+      window.openMobMax(event);
+    }
+  };
+
+  /* The 'mobsheet' instance is bound via bindAll() at init. Nothing else
+     to do on open/close beyond focusing the input. */
+  window.maxMobOnPanelOpen = function () {
+    setTimeout(function () {
+      var input = document.getElementById('max-mob-bar-input');
+      if (input) { try { input.focus({ preventScroll: true }); } catch (e) { input.focus(); } }
+    }, 480);
+  };
+  window.maxMobOnPanelClose = function () {};
 })();

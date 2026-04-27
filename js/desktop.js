@@ -79,6 +79,7 @@ function initResize() {
       win.appendChild(handle);
     });
 
+    if (win.querySelector(':scope > .exit-fullscreen')) return;
     var exitBtn = document.createElement('button');
     exitBtn.className = 'exit-fullscreen';
     exitBtn.textContent = 'Exit Full Screen';
@@ -133,7 +134,7 @@ window.addEventListener('load', () => {
   const bar = document.getElementById('boot-bar');
   const screen = document.getElementById('boot-screen');
   const bootText = document.getElementById('boot-text');
-  var swoosh = new Audio('assets/swoosh.mp3');
+  var swoosh = new Audio('/assets/swoosh.mp3');
   swoosh.volume = 1.0;
   swoosh.preload = 'auto';
 
@@ -150,13 +151,13 @@ window.addEventListener('load', () => {
       }
     }).catch(function(){});
   }
-  fetch('assets/github-contributions.json')
+  fetch('/assets/github-contributions.json')
     .then(r => r.json())
     .then(data => {
       const graph = document.getElementById('gh-graph');
       const total = document.getElementById('gh-total');
       if (graph) {
-        const weeks = data.weeks.slice(-26);
+        const weeks = data.weeks.slice(-17);
         weeks.forEach(week => {
           week.contributionDays.forEach(day => {
             const cell = document.createElement('div');
@@ -463,6 +464,30 @@ window.addEventListener('popstate', function(e) {
       renderMobileFlutterCourseGrid();
     }
     return;
+  }
+  // Mobile article detail open + back pressed: collapse to article list, stay in
+  // the articles section instead of dropping the user all the way back to home.
+  // Trigger when the previous step was /articles/<slug>/ and we are now on
+  // /articles/ (or anywhere that isn't a per-article slug).
+  if (activeMobileSection === 'articles') {
+    var stage = document.getElementById('mob-articles-stage');
+    var inDetail = stage && stage.classList.contains('mob-articles-stage-detail');
+    var newPath = (location.pathname || '/').replace(/\/+$/, '');
+    var stillOnArticleSlug = /^\/articles\/[a-z0-9-]+$/i.test(newPath);
+    if (inDetail && !stillOnArticleSlug) {
+      if (typeof window.mobRenderArticleList === 'function') {
+        try { window.mobRenderArticleList(); } catch(_) {}
+      }
+      return;
+    }
+    // Already on list view, but URL might still be /articles/<slug> — re-sync.
+    if (!inDetail && stillOnArticleSlug) {
+      var m = newPath.match(/^\/articles\/([a-z0-9-]+)$/i);
+      if (m && typeof window.mobRenderArticleDetail === 'function') {
+        try { window.mobRenderArticleDetail(m[1]); } catch(_) {}
+      }
+      return;
+    }
   }
   if (activeMobileSection) {
     closeMobileSection(activeMobileSection);
@@ -1011,11 +1036,14 @@ function enterFullscreen(winId) {
   win.style.transition = 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
   win.classList.add('fullscreen-space');
   document.body.classList.add('has-fullscreen');
+  var fsShellEnter = document.getElementById('dock-shell');
+  if (fsShellEnter) fsShellEnter.classList.remove('fs-dock-peek');
   setTimeout(function() { win.style.transition = ''; }, 550);
   if (inMissionControl) closeMissionControl();
 }
 
-function exitFullscreen(winId) {
+function exitFullscreen(winId, opts) {
+  var skipSizeAnim = !!(opts && opts.skipSizeAnim);
   var fs = fullscreenState[winId];
   if (!fs) return;
   var win = document.getElementById('win-' + winId);
@@ -1032,20 +1060,31 @@ function exitFullscreen(winId) {
   currentDesktopId = fs.fromDesktop;
   restoreDesktopState(fs.fromDesktop);
 
-  // Animate window back to original size
   if (win) {
     win.classList.remove('fullscreen-space');
-    win.classList.add('open');
-    openWindows[winId] = true;
-    win.style.transition = 'all 0.45s cubic-bezier(0.25, 1, 0.5, 1)';
-    // Force reflow then apply saved dimensions
-    win.offsetHeight;
-    win.style.top = fs.top;
-    win.style.left = fs.left;
-    win.style.width = fs.width;
-    win.style.height = fs.height;
-    win.style.zIndex = fs.zIndex;
-    setTimeout(function() { win.style.transition = ''; }, 500);
+    if (skipSizeAnim) {
+      // Restore saved dimensions instantly (no transition) so the next caller
+      // can apply its own close animation cleanly.
+      win.style.transition = 'none';
+      win.style.top = fs.top;
+      win.style.left = fs.left;
+      win.style.width = fs.width;
+      win.style.height = fs.height;
+      win.style.zIndex = fs.zIndex;
+      win.offsetHeight; // commit
+      win.style.transition = '';
+    } else {
+      win.classList.add('open');
+      openWindows[winId] = true;
+      win.style.transition = 'all 0.45s cubic-bezier(0.25, 1, 0.5, 1)';
+      win.offsetHeight;
+      win.style.top = fs.top;
+      win.style.left = fs.left;
+      win.style.width = fs.width;
+      win.style.height = fs.height;
+      win.style.zIndex = fs.zIndex;
+      setTimeout(function() { win.style.transition = ''; }, 500);
+    }
   }
 
   delete fullscreenState[winId];
@@ -1089,17 +1128,24 @@ document.addEventListener('mousedown', (e) => {
   }
 });
 
-// Fullscreen: show dock when mouse at bottom edge
+// Fullscreen: dock auto-peek when cursor at bottom edge, hide when it leaves the dock zone.
 document.addEventListener('mousemove', function(e) {
   if (!document.body.classList.contains('has-fullscreen')) return;
-  var dock = document.getElementById('dock-container');
-  if (!dock) return;
-  if (e.clientY >= window.innerHeight - 5) {
-    dock.classList.add('fs-dock-peek');
+  var shell = document.getElementById('dock-shell');
+  if (!shell) return;
+  if (e.clientY >= window.innerHeight - 6) {
+    shell.classList.add('fs-dock-peek');
+    return;
   }
-});
-document.getElementById('dock-container').addEventListener('mouseleave', function() {
-  this.classList.remove('fs-dock-peek');
+  if (!shell.classList.contains('fs-dock-peek')) return;
+  // Only consider hiding once the dock has finished sliding into view; while it's sliding,
+  // the rect can still report off-screen and we'd flicker the peek class off.
+  var rect = shell.getBoundingClientRect();
+  if (rect.top <= 0) return;
+  // Add a small buffer so micro-jitter at the top edge of the dock doesn't yank it away.
+  if (e.clientY < rect.top - 8) {
+    shell.classList.remove('fs-dock-peek');
+  }
 });
 
 // Double-click titlebar to maximize
@@ -1179,7 +1225,7 @@ function restoreDesktopState(dId) {
 // Sync dock active dots with current open windows
 function syncDockIndicators() {
   const dockItems = document.querySelectorAll('.dock-item');
-  const names = ['about','flutter','speaking','oss','tech','articles','contact','github','linkedin','snake','flutter-course'];
+  const names = ['about','flutter','oss','articles','github','linkedin'];
   names.forEach((id, idx) => {
     if (!dockItems[idx]) return;
     if (openWindows[id]) {

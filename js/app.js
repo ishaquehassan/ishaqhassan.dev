@@ -19,7 +19,7 @@ function showNotif(msg, app, opts) {
   var item = document.createElement('div');
   item.className = 'macos-notif';
   var img = document.createElement('img');
-  img.src = 'assets/profile-photo.webp';
+  img.src = '/assets/profile-photo.webp';
   img.alt = 'Ishaq Hassan';
   var close = document.createElement('div');
   close.className = 'notif-close';
@@ -276,8 +276,10 @@ function updateClock() {
   if (hEl) hEl.textContent = h;
   if (mEl) mEl.textContent = m;
   if (apEl) apEl.textContent = ampm;
-  document.getElementById('clock-date').textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
-  document.getElementById('menubar-time').textContent = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }) + ' ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+  const dateEl = document.getElementById('clock-date');
+  if (dateEl) dateEl.textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+  const mbTime = document.getElementById('menubar-time');
+  if (mbTime) mbTime.textContent = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }) + ' ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
 }
 setInterval(updateClock, 1000);
 updateClock();
@@ -286,9 +288,11 @@ updateClock();
 if (navigator.getBattery) {
   navigator.getBattery().then(bat => {
     function updateBat() {
+      const battEl = document.getElementById('menubar-battery');
+      if (!battEl) return;
       const pct = Math.round(bat.level * 100);
       const icon = bat.charging ? '⚡' : (pct > 20 ? '🔋' : '🪫');
-      document.getElementById('menubar-battery').textContent = icon + ' ' + pct + '%';
+      battEl.textContent = icon + ' ' + pct + '%';
     }
     updateBat();
     bat.addEventListener('levelchange', updateBat);
@@ -465,9 +469,9 @@ function openWindow(id, skipPosition) {
     }
   }
 
-  // Bounce dock icon
+  // Bounce dock icon (only for windows that have a dock entry)
   const dockItems = document.querySelectorAll('.dock-item');
-  const names = ['about','flutter','speaking','oss','tech','articles','contact','github','linkedin','snake','flutter-course'];
+  const names = ['about','flutter','oss','articles','github','linkedin'];
   const idx = names.indexOf(id);
   if (idx >= 0 && dockItems[idx]) {
     dockItems[idx].querySelector('.dock-icon').classList.add('dock-bounce');
@@ -530,6 +534,12 @@ function openWindow(id, skipPosition) {
 function closeWindow(id) {
   const win = document.getElementById('win-' + id);
   if (!win) return;
+  const wasFullscreen = win.classList.contains('fullscreen-space');
+  if (wasFullscreen) {
+    // Restore menubar/dock/desktop chrome IMMEDIATELY so they slide back in
+    // while the window stays full-size and fades out in place.
+    document.body.classList.remove('has-fullscreen');
+  }
   if (id === 'snake') snakeReset();
   if (id === 'flutter-course') stopAllFlutterCourseVideos();
   if (id === 'fc-player') { var pif = document.getElementById('fc-pw-iframe'); if (pif) pif.src = ''; fcCurrentVideo = null; }
@@ -541,7 +551,11 @@ function closeWindow(id) {
   }
   win.classList.add('closing');
   setTimeout(() => {
-    win.classList.remove('open','closing','hidden-desktop');
+    // Cleanup fullscreen state AFTER fade-out (window already invisible)
+    if (wasFullscreen && typeof exitFullscreen === 'function') {
+      try { exitFullscreen(id, { skipSizeAnim: true }); } catch(e) {}
+    }
+    win.classList.remove('open','closing','hidden-desktop','fullscreen-space');
     delete openWindows[id];
     if (typeof syncDockIndicators === 'function') syncDockIndicators();
     updateMenuBarForWindow(null);
@@ -696,16 +710,24 @@ function startTerminal() {
 }
 
 // ===== LINKEDIN TABS =====
-function switchLiTab(tab) {
+function switchLiTab(tab, btn) {
   document.querySelectorAll('.li-panel').forEach(p => p.style.display = 'none');
   document.querySelectorAll('.li-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('li-' + tab).style.display = 'block';
-  event.target.classList.add('active');
+  var panel = document.getElementById('li-' + tab);
+  if (panel) panel.style.display = 'block';
+  var win = document.getElementById('win-linkedin');
+  if (win) {
+    win.querySelectorAll('.fshell-sidebar .sb-item[data-li-tab]').forEach(function (b) {
+      b.classList.toggle('sb-active', b.getAttribute('data-li-tab') === tab);
+    });
+  }
+  var clicked = btn || (typeof event !== 'undefined' && event && event.currentTarget) || null;
+  if (clicked && clicked.classList) clicked.classList.add('active');
 }
 
 // ===== SOUND EFFECTS =====
-const sfxClick = new Audio('assets/music/click.mp3');
-const sfxHover = new Audio('assets/music/hover.mp3');
+const sfxClick = new Audio('/assets/music/click.mp3');
+const sfxHover = new Audio('/assets/music/hover.mp3');
 sfxClick.volume = 0.3;
 sfxHover.volume = 0.15;
 
@@ -958,7 +980,7 @@ function renderMobileFlutterCourseGrid() {
   var info = '<div class="mfc-playlist-info">' +
     '<div class="mfc-playlist-title">Flutter: Basic to Advanced</div>' +
     '<a class="mfc-playlist-channel" href="https://www.youtube.com/@ishaquehassan" target="_blank">' +
-      '<div class="mfc-channel-avatar"><img src="assets/tech/flutter.svg" width="18" height="18"></div>' +
+      '<div class="mfc-channel-avatar"><img src="/assets/tech/flutter.svg" width="18" height="18"></div>' +
       '<span>by Tech Idara</span>' +
     '</a>' +
     '<div class="mfc-playlist-meta">Playlist · 35 videos · Urdu · 7 sections</div>' +
@@ -1024,7 +1046,7 @@ function playMfcVideo(i, evt) {
       '<div class="mfc-player-meta"><span class="mfc-player-counter">' + v.s + ' · Video ' + (i + 1) + ' of ' + fcVideos.length + '</span></div>' +
     '</div>' +
     '<a class="mfc-channel-row" href="https://www.youtube.com/@ishaquehassan" target="_blank">' +
-      '<div class="mfc-channel-avatar"><img src="assets/tech/flutter.svg" width="18" height="18"></div>' +
+      '<div class="mfc-channel-avatar"><img src="/assets/tech/flutter.svg" width="18" height="18"></div>' +
       '<div class="mfc-channel-name">Tech Idara</div>' +
       '<a href="https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5" target="_blank" class="mfc-section-pill-m" onclick="event.stopPropagation()">Flutter Course</a>' +
     '</a>' +
@@ -1915,6 +1937,16 @@ function applyUrlRoute(shouldMaximize) {
     }
     var id = windowIdFromCurrentUrl();
     if (!id) return;
+    // Contact: open the morph overlay instead of the underlying window.
+    if (id === 'contact' && typeof window.openContactMorph === 'function') {
+      try { updateMetaForWindow('contact'); } catch(e) {}
+      // Canonicalise ?w=contact → /contact
+      if (location.search.indexOf('w=contact') !== -1) {
+        try { history.replaceState({w: 'contact'}, '', WINDOW_PATHS.contact); } catch(e) {}
+      }
+      setTimeout(function(){ try { window.openContactMorph(); } catch(e) {} }, 50);
+      return;
+    }
     var win = document.getElementById('win-' + id);
     if (!win) return;
     var wasClosed = !openWindows[id];
@@ -1960,9 +1992,43 @@ function applyUrlRoute(shouldMaximize) {
 }
 
 function navigate(id, opts) {
+  var slug = (opts && opts.slug) ? String(opts.slug) : null;
+  // On mobile there are no draggable windows — each section lives in a
+  // pre-rendered #mobile-<slug>-expanded panel toggled via expandMobileSection.
+  // Open the equivalent mobile surface and skip the desktop window-open path.
+  if (!isDesktopViewport()) {
+    var section = MOBILE_SECTION_MAP[id];
+    if (section && typeof expandMobileSection === 'function') {
+      try { expandMobileSection(null, section); } catch(e) {}
+    }
+    if (id === 'articles') {
+      if (slug && typeof window.mobRenderArticleDetail === 'function') {
+        try { window.mobRenderArticleDetail(slug); } catch(e) {}
+      } else if (typeof window.mobRenderArticleList === 'function') {
+        try { window.mobRenderArticleList(); } catch(e) {}
+      }
+    }
+    if (WINDOW_PATHS[id]) {
+      var mPath = WINDOW_PATHS[id] + (slug ? '/' + slug + '/' : '');
+      if (location.pathname !== mPath) {
+        try { history.pushState({w: id, slug: slug}, '', mPath); } catch(e) {}
+      }
+      try { updateMetaForWindow(id); } catch(e) {}
+    }
+    return;
+  }
+  // Contact uses a custom liquid-morph overlay on desktop instead of a window.
+  if (id === 'contact' && typeof window.openContactMorph === 'function') {
+    try { window.openContactMorph(); } catch(e) {}
+    var contactPath = WINDOW_PATHS.contact;
+    if (contactPath && location.pathname !== contactPath) {
+      try { history.pushState({w: 'contact'}, '', contactPath); } catch(e) {}
+      try { updateMetaForWindow('contact'); } catch(e) {}
+    }
+    return;
+  }
   openWindow(id);
   if (!WINDOW_PATHS[id]) return;
-  var slug = (opts && opts.slug) ? String(opts.slug) : null;
   var path = WINDOW_PATHS[id] + (slug ? '/' + slug + '/' : '');
   if (location.pathname === path) {
     // Already at this URL: still re-render the detail view if articles slug provided
@@ -2013,6 +2079,15 @@ function navigate(id, opts) {
 
 window.addEventListener('popstate', function() {
   var id = windowIdFromCurrentUrl();
+  // Contact morph: open/close based on URL transition
+  var morphActive = document.body.classList.contains('contact-morph-active');
+  if (id === 'contact' && typeof window.openContactMorph === 'function') {
+    if (!morphActive) try { window.openContactMorph(); } catch(e) {}
+    return;
+  }
+  if (id !== 'contact' && morphActive && typeof window.closeContactMorph === 'function') {
+    try { window.closeContactMorph(); } catch(e) {}
+  }
   if (id) {
     var win = document.getElementById('win-' + id);
     if (!win) return;
@@ -2040,7 +2115,84 @@ window.addEventListener('popstate', function() {
   }
 });
 
-try { window.navigate = navigate; window.applyUrlRoute = applyUrlRoute; window.updateMetaForWindow = updateMetaForWindow; window.deeplinkAnimateCenter = deeplinkAnimateCenter; window.deeplinkAnimateMaximize = deeplinkAnimateCenter; } catch(e) {}
+try { window.navigate = navigate; window.applyUrlRoute = applyUrlRoute; window.updateMetaForWindow = updateMetaForWindow; window.deeplinkAnimateCenter = deeplinkAnimateCenter; window.deeplinkAnimateMaximize = deeplinkAnimateCenter; window.PATH_TO_WINDOW = PATH_TO_WINDOW; window.WINDOW_PATHS = WINDOW_PATHS; } catch(e) {}
+
+/* ===== GLOBAL LINK ROUTER =====
+   One delegated click handler covers every <a> in every window:
+   • External link → open in a new tab (force target=_blank semantics, never reload our SPA).
+   • Internal site link with a known window route → SPA navigate(), no full reload.
+   • Internal link to an unknown path / asset → leave default browser behaviour.
+   • Modifier-click (cmd/ctrl/shift/alt/middle) is always passed through so power-users
+     keep their browser shortcuts.
+   The handler runs in bubble phase AFTER any inline onclick, and skips anchors that
+   already have an onclick (those carry their own intent — dock items, embedded CTA, etc.). */
+(function(){
+  var SITE_HOST_RE = /^(www\.)?ishaqhassan\.dev$/i;
+
+  function isPassThroughHref(href){
+    if (!href) return true;
+    var f = href.charAt(0);
+    if (f === '#') return true;
+    return href.indexOf('mailto:') === 0
+        || href.indexOf('tel:') === 0
+        || href.indexOf('javascript:') === 0
+        || href.indexOf('sms:') === 0;
+  }
+
+  function resolveInternalSpec(pathname){
+    var path = (pathname || '/').replace(/\/+$/, '') || '/';
+    if (window.PATH_TO_WINDOW && window.PATH_TO_WINDOW[path]) {
+      return { winId: window.PATH_TO_WINDOW[path], slug: null };
+    }
+    var artM = path.match(/^\/articles\/([a-z0-9-]+)$/i);
+    if (artM) return { winId: 'articles', slug: artM[1] };
+    var blogM = path.match(/^\/blog\/([a-z0-9-]+)\.html$/i);
+    if (blogM && Array.isArray(window.ARTICLES)) {
+      var blogPath = '/blog/' + blogM[1] + '.html';
+      for (var i = 0; i < window.ARTICLES.length; i++) {
+        var art = window.ARTICLES[i];
+        if (art && art.canonicalUrl && art.canonicalUrl.indexOf(blogPath) >= 0) {
+          return { winId: 'articles', slug: art.slug };
+        }
+      }
+    }
+    return null;
+  }
+
+  document.addEventListener('click', function(ev){
+    if (ev.defaultPrevented) return;
+    if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey || ev.button === 1) return;
+    var a = ev.target && ev.target.closest && ev.target.closest('a[href]');
+    if (!a) return;
+    var raw = a.getAttribute('href');
+    if (isPassThroughHref(raw)) return;
+
+    var url;
+    try { url = new URL(raw, location.origin); } catch(_) { return; }
+
+    var hostIsExternal = !!url.host && url.host !== location.host && !SITE_HOST_RE.test(url.host);
+
+    if (hostIsExternal) {
+      // Already opens in a new tab? Browser handles it.
+      if ((a.getAttribute('target') || '').toLowerCase() === '_blank') return;
+      ev.preventDefault();
+      try { window.open(url.href, '_blank', 'noopener,noreferrer'); } catch(_) { window.location.href = url.href; }
+      return;
+    }
+
+    // Internal: respect existing inline handlers (dock items, custom CTAs).
+    if (a.hasAttribute('onclick')) return;
+
+    var spec = resolveInternalSpec(url.pathname);
+    if (!spec) return; // unknown internal path (asset, file, etc.) — let browser handle.
+    ev.preventDefault();
+    try {
+      if (typeof window.navigate === 'function') {
+        window.navigate(spec.winId, spec.slug ? { slug: spec.slug } : null);
+      }
+    } catch(_) {}
+  });
+})();
 
 /* ===== FINDER SHELL (native macOS Finder layout: sidebar + content) =====
    Runs on DOMContentLoaded. Reshapes eligible windows into:
@@ -2797,9 +2949,13 @@ function updateMenuBarForWindow(winId) {
   var fileMenu = document.getElementById('menu-file');
   if (fileMenu) fileMenu.innerHTML = cfg.file || menuBarDefault.file;
 
-  // Update View menu
+  // Update View menu. Per-app `cfg.view` already includes its own Mission
+  // Control entry; append Mission Control ONLY to the fallback (when an app
+  // didn't define a custom view menu) — avoids the duplicate item.
   var viewMenu = document.getElementById('menu-view');
-  if (viewMenu) viewMenu.innerHTML = (cfg.view || '<div class="menu-dd-item" onclick="openAllWindows()">Open All Windows</div>') + '<div class="menu-dd-item" onclick="toggleMissionControl()">Mission Control<span class="shortcut">F3</span></div>';
+  if (viewMenu) {
+    viewMenu.innerHTML = cfg.view || '<div class="menu-dd-item" onclick="openAllWindows()">Open All Windows</div><div class="menu-dd-item" onclick="toggleMissionControl()">Mission Control<span class="shortcut">F3</span></div>';
+  }
 
   // Update Go menu
   var defaultGo = '<div class="menu-dd-item" onclick="window.open(\'https://github.com/ishaquehassan\')">GitHub<span class="shortcut">⇧⌘G</span></div><div class="menu-dd-item" onclick="window.open(\'https://linkedin.com/in/ishaquehassan\')">LinkedIn<span class="shortcut">⇧⌘L</span></div><div class="menu-dd-item" onclick="window.open(\'https://medium.com/@ishaqhassan\')">Medium<span class="shortcut">⇧⌘M</span></div><div class="menu-dd-item" onclick="window.open(\'https://stackoverflow.com/users/2094696/ishaq-hassan\')">Stack Overflow</div><div class="menu-dd-sep"></div><div class="menu-dd-item" onclick="window.open(\'mailto:hello@ishaqhassan.dev\')">Email</div>';
@@ -2863,4 +3019,40 @@ function updateMenuBarForWindow(winId) {
     setTimeout(waitForWelcome, 600);
   } catch(e) {}
 })();
+
+/* ===== Finder-shell sidebar helpers (filter + search) ===== */
+window.fshellFilter = function (btn, winId, filter) {
+  try {
+    var win = document.getElementById('win-' + winId);
+    if (!win) return;
+    var content = win.querySelector('.fshell-content');
+    if (!content) return;
+    if (filter === 'all') content.removeAttribute('data-filter');
+    else content.setAttribute('data-filter', filter);
+    var sidebar = win.querySelector('.fshell-sidebar');
+    if (sidebar) {
+      sidebar.querySelectorAll('.sb-item[data-fshell-filter]').forEach(function (b) {
+        b.classList.toggle('sb-active', b === btn);
+      });
+    }
+  } catch (e) {}
+};
+window.fshellSearch = function (input, winId) {
+  try {
+    var win = document.getElementById('win-' + winId);
+    if (!win) return;
+    var content = win.querySelector('.fshell-content');
+    if (!content) return;
+    var q = (input.value || '').trim().toLowerCase();
+    var cards = content.querySelectorAll('[data-filter-val]');
+    if (!q) {
+      cards.forEach(function (c) { c.style.display = ''; });
+      return;
+    }
+    cards.forEach(function (c) {
+      var text = (c.textContent || '').toLowerCase();
+      c.style.display = text.indexOf(q) !== -1 ? '' : 'none';
+    });
+  } catch (e) {}
+};
 
