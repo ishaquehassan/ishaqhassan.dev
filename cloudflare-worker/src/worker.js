@@ -434,9 +434,17 @@ const QUICK_INTENTS = {
   'about ishaq': 'Tell me more about Ishaq Hassan.',
 };
 
+const LOCALHOST_RE = /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0)(:\d+)?$/;
+
+function isOriginAllowed(origin, allowList) {
+  if (!origin) return false;
+  if (allowList.includes(origin)) return true;
+  return LOCALHOST_RE.test(origin);
+}
+
 function corsHeaders(origin, allowed) {
   const allowList = (allowed || '').split(',').map((s) => s.trim()).filter(Boolean);
-  const ok = origin && allowList.includes(origin);
+  const ok = isOriginAllowed(origin, allowList);
   return {
     'Access-Control-Allow-Origin': ok ? origin : allowList[0] || '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -673,7 +681,7 @@ export default {
     }
 
     const allowList = (env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim());
-    if (origin && !allowList.includes(origin)) {
+    if (origin && !isOriginAllowed(origin, allowList)) {
       return jsonResponse({ error: 'origin_blocked' }, 403, cors);
     }
 
