@@ -3259,7 +3259,10 @@ a.sb-item { text-decoration: none; }
   box-sizing: border-box;
 }
 .mob-terminal-inputbar .terminal-input {
-  font-size: 16px; /* prevent iOS zoom on focus */
+  /* Match the placeholder + terminal output scale so typing doesn't jump.
+     iOS-Safari may auto-zoom on focus below 16px; accepted tradeoff for
+     visual consistency with the rest of the terminal. */
+  font-size: 11px;
   letter-spacing: -0.1px;
   padding: 6px 0;
   flex: 1 1 auto;
