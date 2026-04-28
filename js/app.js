@@ -663,51 +663,1113 @@ document.addEventListener('touchmove', (e) => {
 
 document.addEventListener('touchend', () => { dragEl = null; });
 
-// ===== TERMINAL =====
-function startTerminal() {
-  const term = document.getElementById('terminal-content');
-  if (term.children.length > 0) return;
+// ===== TERMINAL (interactive REPL) =====
+// Persistent state across re-opens (window stays in DOM, just hidden).
+const TERM = {
+  output: null,
+  scrollEl: null,
+  inputEl: null,
+  inputPromptEl: null,
+  history: (function () { try { return JSON.parse(localStorage.getItem('term:hist') || '[]').slice(-50); } catch (e) { return []; } })(),
+  histIdx: -1,
+  bootDone: false,
+  bootTimers: [],
+  liveData: null,
+  liveLoading: false,
+  busy: false,
+};
 
-  const lines = [
-    { type: 'cmd', text: '<span class="prompt">ishaq@dev</span> <span class="cmd">~</span> $ <span class="cmd">whoami</span>' },
-    { type: 'out', text: '' },
-    { type: 'out', text: '  <span class="str">name</span>      : Ishaq Hassan' },
-    { type: 'out', text: '  <span class="str">role</span>      : Full Stack Developer & Engineering Manager' },
-    { type: 'out', text: '  <span class="str">focus</span>     : Flutter Framework | Mobile Development' },
-    { type: 'out', text: '  <span class="str">company</span>   : DigitalHire (world\'s first integrated talent engine)' },
-    { type: 'out', text: '  <span class="str">years</span>     : 13+ years in software development' },
-    { type: 'out', text: '  <span class="str">location</span>  : Karachi, Pakistan 🇵🇰' },
-    { type: 'out', text: '' },
-    { type: 'cmd', text: '<span class="prompt">ishaq@dev</span> <span class="cmd">~</span> $ <span class="cmd">cat</span> <span class="flag">achievements.md</span>' },
-    { type: 'out', text: '' },
-    { type: 'out', text: '  ✅ <span class="str">6 PRs merged</span> into Flutter (official framework)' },
-    { type: 'out', text: '  ✅ <span class="str">Flutter course</span> listed on official Flutter docs' },
-    { type: 'out', text: '  ✅ <span class="str">10+ speaking events</span> at GDG, Nest I/O, universities' },
-    { type: 'out', text: '  ✅ <span class="str">GDG Kolachi Mentor</span> & community leader' },
-    { type: 'out', text: '  ✅ <span class="str">9,800+ contributions</span> on GitHub' },
-    { type: 'out', text: '  ✅ <span class="str">document_scanner_flutter</span> 63 stars, 135 forks' },
-    { type: 'out', text: '' },
-    { type: 'cmd', text: '<span class="prompt">ishaq@dev</span> <span class="cmd">~</span> $ <span class="cmd">echo</span> <span class="str">"Building Flutter from the inside out."</span>' },
-    { type: 'out', text: '  Building Flutter from the inside out.' },
-    { type: 'out', text: '' },
-    { type: 'cmd', text: '<span class="prompt">ishaq@dev</span> <span class="cmd">~</span> $ <span class="cursor"></span>' },
-  ];
+const TERM_PROMPT = '<span class="prompt">ishaq@dev</span> <span class="cmd">~</span> $';
 
-  let i = 0;
-  function addLine() {
-    if (i >= lines.length) return;
-    const div = document.createElement('div');
-    div.className = 'terminal-line';
-    div.innerHTML = lines[i].text;
-    div.style.animationDelay = '0s';
-    div.style.opacity = '1';
-    term.appendChild(div);
-    term.parentElement.scrollTop = term.parentElement.scrollHeight;
-    i++;
-    setTimeout(addLine, lines[i-1].type === 'cmd' ? 400 : 80);
-  }
-  setTimeout(addLine, 300);
+function _termEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
+
+function termPrint(html, cls) {
+  if (!TERM.output) return;
+  const div = document.createElement('div');
+  div.className = 'terminal-line' + (cls ? ' ' + cls : '');
+  div.innerHTML = html == null ? '' : html;
+  TERM.output.appendChild(div);
+  termScroll();
+  return div;
 }
+
+/* Typed-output: print + small delay so data appears line-by-line like a real
+   terminal. Default 35ms; faster on blanks, slower on ASCII headers. */
+async function termSay(html, cls) {
+  termPrint(html, cls);
+  const text = String(html == null ? '' : html).replace(/<[^>]+>/g, '');
+  let delay = 35;
+  if (!text.trim()) delay = 18;
+  else if (/[┌└┐┘├┤─]/.test(text)) delay = 120;
+  else if (/^\s{2,}[A-Z]/.test(text) || /^\s*[A-Z][a-z ]+$/.test(text.trim())) delay = 50;
+  await new Promise(function (r) { setTimeout(r, delay); });
+}
+
+function termPrintRaw(node) {
+  if (!TERM.output) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'terminal-line';
+  wrap.appendChild(node);
+  TERM.output.appendChild(wrap);
+  termScroll();
+  return wrap;
+}
+
+function termScroll() {
+  if (!TERM.scrollEl) return;
+  TERM.scrollEl.scrollTop = TERM.scrollEl.scrollHeight;
+}
+
+function termPrintEcho(cmdRaw) {
+  termPrint(TERM_PROMPT + ' ' + _termEsc(cmdRaw));
+}
+
+function termClearTimers() {
+  TERM.bootTimers.forEach((t) => clearTimeout(t));
+  TERM.bootTimers = [];
+}
+
+function termInputEnable(enable) {
+  if (!TERM.inputEl) return;
+  TERM.inputEl.disabled = !enable;
+  if (TERM.inputPromptEl) TERM.inputPromptEl.style.opacity = enable ? '1' : '.4';
+  if (enable) { try { TERM.inputEl.focus({ preventScroll: true }); } catch (e) { TERM.inputEl.focus(); } }
+}
+
+/* ---- Live data: GitHub PRs + repo stars (24h cache) ---- */
+function termLiveCacheGet() {
+  try {
+    const raw = localStorage.getItem('term:live:gh');
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    if (Date.now() - obj.ts > 24 * 60 * 60 * 1000) return null;
+    return obj;
+  } catch (e) { return null; }
+}
+function termLiveCacheSet(data) {
+  try { localStorage.setItem('term:live:gh', JSON.stringify({ ts: Date.now(), ...data })); } catch (e) {}
+}
+async function termFetchLive() {
+  if (TERM.liveData) return TERM.liveData;
+  const cached = termLiveCacheGet();
+  if (cached) { TERM.liveData = cached; return cached; }
+  if (TERM.liveLoading) return null;
+  TERM.liveLoading = true;
+  try {
+    const [prRes, repoRes] = await Promise.all([
+      fetch('https://api.github.com/search/issues?q=author:ishaquehassan+repo:flutter/flutter+type:pr', { headers: { 'Accept': 'application/vnd.github+json' } }),
+      fetch('https://api.github.com/repos/ishaquehassan/document_scanner_flutter', { headers: { 'Accept': 'application/vnd.github+json' } }),
+    ]);
+    let merged = 0, open = 0, total = 0;
+    if (prRes.ok) {
+      const prData = await prRes.json();
+      total = prData.total_count || 0;
+      (prData.items || []).forEach((it) => {
+        if (it.pull_request && it.pull_request.merged_at) merged++;
+        else if (it.state === 'open') open++;
+      });
+    }
+    let stars = 0, forks = 0;
+    if (repoRes.ok) {
+      const repoData = await repoRes.json();
+      stars = repoData.stargazers_count || 0;
+      forks = repoData.forks_count || 0;
+    }
+    const data = { total, merged, open, stars, forks };
+    TERM.liveData = data;
+    termLiveCacheSet(data);
+    return data;
+  } catch (e) {
+    return null;
+  } finally {
+    TERM.liveLoading = false;
+  }
+}
+
+/* ---- Boot animation ---- */
+const TERM_BOOT_LINES = [
+  { d: 200, type: 'cmd', html: TERM_PROMPT + ' <span class="cmd">whoami</span>' },
+  { d: 80, html: '' },
+  { d: 60, html: '  <span class="str">name</span>      : Ishaq Hassan' },
+  { d: 60, html: '  <span class="str">role</span>      : Full Stack Developer &amp; Engineering Manager' },
+  { d: 60, html: '  <span class="str">focus</span>     : Flutter Framework | Mobile Development' },
+  { d: 60, html: '  <span class="str">company</span>   : DigitalHire <span class="comment">(world\'s first integrated talent engine)</span>' },
+  { d: 60, html: '  <span class="str">years</span>     : 13+ years in software development' },
+  { d: 60, html: '  <span class="str">location</span>  : Karachi, Pakistan 🇵🇰' },
+  { d: 80, html: '' },
+  { d: 280, type: 'cmd', html: TERM_PROMPT + ' <span class="cmd">cat</span> <span class="flag">achievements.md</span>' },
+  { d: 60, html: '' },
+  { d: 60, html: '  ✅ <a class="term-link" href="https://github.com/flutter/flutter/pulls?q=author%3Aishaquehassan" target="_blank" rel="noopener"><span class="str" data-live="prs">6 PRs merged</span></a> into Flutter <span class="comment">(official framework)</span>' },
+  { d: 60, html: '  ✅ <a class="term-link" href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener"><span class="str">Flutter course</span></a> listed on official Flutter docs' },
+  { d: 60, html: '  ✅ <a class="term-link" href="javascript:termRun(\'speaking\')"><span class="str">10+ speaking events</span></a> at GDG, Nest I/O, universities' },
+  { d: 60, html: '  ✅ <span class="str">GDG Kolachi Mentor</span> &amp; community leader' },
+  { d: 60, html: '  ✅ <a class="term-link" href="https://github.com/ishaquehassan/document_scanner_flutter" target="_blank" rel="noopener"><span class="str" data-live="docscan">document_scanner_flutter 63★ / 135 forks</span></a>' },
+  { d: 80, html: '' },
+  { d: 220, type: 'cmd', html: TERM_PROMPT + ' <span class="cmd">echo</span> <span class="str">"Building Flutter from the inside out."</span>' },
+  { d: 60, html: '  Building Flutter from the inside out.' },
+  { d: 80, html: '' },
+  { d: 200, html: '<span class="comment">// type <span class="cmd">help</span> for commands. <span class="cmd">max "..."</span> chats with my AI.</span>' },
+  { d: 60, html: '' },
+];
+
+function termBoot(skip) {
+  if (TERM.bootDone) return;
+  termClearTimers();
+  if (skip) {
+    TERM.output.innerHTML = '';
+    TERM_BOOT_LINES.forEach((ln) => termPrint(ln.html));
+    termBootFinish();
+    return;
+  }
+  let i = 0;
+  function step() {
+    if (i >= TERM_BOOT_LINES.length) { termBootFinish(); return; }
+    const ln = TERM_BOOT_LINES[i];
+    termPrint(ln.html);
+    i++;
+    if (i < TERM_BOOT_LINES.length) {
+      const t = setTimeout(step, TERM_BOOT_LINES[i].d || 60);
+      TERM.bootTimers.push(t);
+    } else {
+      const t = setTimeout(termBootFinish, 200);
+      TERM.bootTimers.push(t);
+    }
+  }
+  const t0 = setTimeout(step, TERM_BOOT_LINES[0].d || 200);
+  TERM.bootTimers.push(t0);
+}
+
+function termBootFinish() {
+  TERM.bootDone = true;
+  termInputEnable(true);
+  termRefreshLiveBadges();
+}
+
+async function termRefreshLiveBadges() {
+  const data = await termFetchLive();
+  if (!data || !TERM.output) return;
+  const prBadge = TERM.output.querySelector('[data-live="prs"]');
+  if (prBadge && data.total > 0) {
+    const txt = data.merged + ' merged' + (data.open > 0 ? ' + ' + data.open + ' open' : '') + ' (' + data.total + ' total)';
+    prBadge.textContent = txt;
+  }
+  const dsBadge = TERM.output.querySelector('[data-live="docscan"]');
+  if (dsBadge && data.stars) dsBadge.textContent = 'document_scanner_flutter ' + data.stars + '★ / ' + data.forks + ' forks';
+}
+
+/* ---- Mock filesystem (cat targets) ---- */
+function termFile(name) {
+  const files = {
+    'about.md': () => [
+      'Ishaq Hassan',
+      'Engineering Manager @ DigitalHire (AI-powered hiring platform)',
+      'Karachi, Pakistan · 13+ years building production software.',
+      '',
+      'Currently: shipping framework PRs into Flutter, running an Urdu Flutter course',
+      'listed on docs.flutter.dev, mentoring at GDG Kolachi, leading mobile platform at',
+      'DigitalHire.',
+      '',
+      'Type <span class="cmd">prs</span>, <span class="cmd">course</span>, <span class="cmd">talks</span>, <span class="cmd">repos</span>, <span class="cmd">contact</span>',
+    ].join('\n'),
+    'achievements.md': () => {
+      const d = TERM.liveData || {};
+      const prLine = d.merged ? (d.merged + ' merged + ' + (d.open || 0) + ' open in flutter/flutter') : '6 merged + 3 open in flutter/flutter';
+      const dsLine = d.stars ? (d.stars + '★ / ' + d.forks + ' forks on document_scanner_flutter') : '63★ / 135 forks on document_scanner_flutter';
+      return [
+        '✅ ' + prLine,
+        '✅ Urdu Flutter course on docs.flutter.dev (only Urdu course listed)',
+        '✅ 10+ speaking events at GDG, Nest I/O, universities',
+        '✅ GDG Kolachi Mentor',
+        '✅ ' + dsLine,
+        '✅ 50+ production apps shipped',
+      ].join('\n');
+    },
+    'skills.md': () => [
+      '<span class="str">Mobile</span>      : Flutter, Dart, React Native, iOS (Swift), Android (Kotlin)',
+      '<span class="str">Frontend</span>    : React, Next.js, Vue, TypeScript, Tailwind',
+      '<span class="str">Backend</span>     : Node.js, Express, Python, Go, REST, GraphQL',
+      '<span class="str">Databases</span>   : Firestore, Postgres, MongoDB, SQLite, Redis',
+      '<span class="str">DevOps</span>      : Cloudflare Workers, Docker, GitHub Actions, Linux/nginx',
+      '<span class="str">Other</span>       : System design, Engineering management, Mentoring',
+    ].join('\n'),
+    'contact.md': () => [
+      '<a class="term-link" href="mailto:hello@ishaqhassan.dev">hello@ishaqhassan.dev</a>',
+      '<a class="term-link" href="https://github.com/ishaquehassan" target="_blank" rel="noopener">github.com/ishaquehassan</a>',
+      '<a class="term-link" href="https://linkedin.com/in/ishaq-hassan" target="_blank" rel="noopener">linkedin.com/in/ishaq-hassan</a>',
+      '<a class="term-link" href="https://twitter.com/ishaqhassan_" target="_blank" rel="noopener">twitter.com/ishaqhassan_</a>',
+      '',
+      '<span class="comment">// type <span class="cmd">hire</span> to open the contact dialog.</span>',
+    ].join('\n'),
+    'now.md': () => [
+      'Working on   : Flutter framework PRs (3 open) + Urdu course season 2',
+      'Reading      : Designing Data-Intensive Applications (re-read)',
+      'Speaking at  : GDG Kolachi monthly meetups',
+      'Last updated : ' + new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    ].join('\n'),
+  };
+  const fn = files[name];
+  return fn ? fn() : null;
+}
+
+const TERM_FILE_NAMES = ['about.md', 'achievements.md', 'skills.md', 'contact.md', 'now.md'];
+
+/* ---- Window registry: pretty names + short blurbs for `open` messages ---- */
+const TERM_WINDOWS = {
+  about:           { name: 'Terminal',           emoji: '💻' },
+  flutter:         { name: 'Flutter PRs',        emoji: '💙' },
+  speaking:        { name: 'Speaking',           emoji: '🎤' },
+  oss:             { name: 'Open Source',        emoji: '📦' },
+  tech:            { name: 'Tech Stack',         emoji: '🧰' },
+  articles:        { name: 'Articles',           emoji: '✍️' },
+  contact:         { name: 'Contact',            emoji: '✉️' },
+  github:          { name: 'GitHub',             emoji: '🐙' },
+  linkedin:        { name: 'LinkedIn',           emoji: '💼' },
+  snake:           { name: 'Snake',              emoji: '🐍' },
+  'flutter-course':{ name: 'Flutter Course',     emoji: '🎓' },
+  wisesend:        { name: 'WiseSend',           emoji: '💸' },
+};
+
+const TERM_OPEN_BLURBS = [
+  '→ launching {n}...',
+  '✨ {n} is live, dekh le.',
+  '🚀 boom · {n} window incoming.',
+  '→ here you go · {n}.',
+  '✓ ready · {n} unfolded.',
+  '🪄 abracadabra · {n} on screen.',
+  '🌀 morphing into {n}...',
+  '⚡ {n} bata, kya dekhna hai.',
+];
+
+function termOpenMsg(id) {
+  const w = TERM_WINDOWS[id] || { name: id, emoji: '🪟' };
+  const tpl = TERM_OPEN_BLURBS[Math.floor(Math.random() * TERM_OPEN_BLURBS.length)];
+  return '  ' + w.emoji + '  ' + tpl.replace('{n}', '<span class="str">' + _termEsc(w.name) + '</span>');
+}
+
+/* Render shared cards via MaxChat.buildCards (PRs, articles, course, etc.) */
+function termRenderCards(type, param) {
+  if (!window.MaxChat || typeof window.MaxChat.buildCards !== 'function') {
+    termPrint('  <span class="comment">// cards module not loaded yet, retry in a moment.</span>');
+    return false;
+  }
+  const html = window.MaxChat.buildCards(type, param || '');
+  if (!html) { return false; }
+  const wrap = document.createElement('div');
+  wrap.className = 'term-cards-wrap';
+  wrap.innerHTML = html;
+  termPrintRaw(wrap);
+  return true;
+}
+
+/* Section header helper (typed) */
+async function termHeader(title, subtitle) {
+  await termSay('');
+  await termSay('  <span class="str">┌─ ' + _termEsc(title) + ' ─┐</span>');
+  if (subtitle) await termSay('  <span class="comment">' + subtitle + '</span>');
+  await termSay('');
+}
+
+/* ---- GitHub profile fetch (24h cache) ---- */
+async function termFetchGitHubProfile() {
+  try {
+    const raw = localStorage.getItem('term:gh:profile');
+    if (raw) {
+      const obj = JSON.parse(raw);
+      if (Date.now() - obj.ts < 24 * 60 * 60 * 1000) return obj.data;
+    }
+  } catch (e) {}
+  try {
+    /* /users/{user}/repos does NOT support sort=stars, so use the search API
+       which does. Fetch top 5 non-fork repos by stargazer count. */
+    const [uRes, sRes] = await Promise.all([
+      fetch('https://api.github.com/users/ishaquehassan'),
+      fetch('https://api.github.com/search/repositories?q=user:ishaquehassan+fork:false&sort=stars&order=desc&per_page=5'),
+    ]);
+    if (!uRes.ok) return null;
+    const u = await uRes.json();
+    let repos = [];
+    if (sRes.ok) {
+      const sData = await sRes.json();
+      repos = (sData.items || []).slice(0, 5).map((r) => ({
+        name: r.name, stars: r.stargazers_count || 0, forks: r.forks_count || 0,
+        desc: r.description || '', url: r.html_url, lang: r.language || '',
+      }));
+    }
+    const data = {
+      name: u.name, bio: u.bio, login: u.login, public_repos: u.public_repos || 0,
+      followers: u.followers || 0, following: u.following || 0, created_at: u.created_at,
+      repos: repos,
+    };
+    try { localStorage.setItem('term:gh:profile', JSON.stringify({ ts: Date.now(), data: data })); } catch (e) {}
+    return data;
+  } catch (e) { return null; }
+}
+
+/* ---- LinkedIn data (static, mirrors window content) ---- */
+const TERM_LINKEDIN = {
+  followers: '3,051', connections: '500+',
+  current: { company: 'DigitalHire', role: 'Engineering Manager', period: 'May 2024 — Present · 2 yrs', loc: 'McLean, VA · Hybrid' },
+  past: [
+    { company: 'DigitalHire', role: 'Technical Lead',  period: 'Oct 2023 — May 2024 · 8 mos' },
+    { company: 'DigitalHire', role: 'Staff Engineer',  period: 'Feb 2023 — Oct 2023 · 9 mos' },
+    { company: 'Tech Idara',  role: 'Senior Instructor', period: '2021 — 2023' },
+  ],
+};
+
+/* ---- Command registry ---- */
+const TERM_COMMANDS = {
+  help: async function () {
+    await termSay('');
+    await termSay('  <span class="str">┌─ Available commands ─┐</span>');
+    await termSay('  <span class="comment">organized by category · most are aliases of each other</span>');
+    await termSay('');
+    await termSay('  <span class="str">DATA — render deep CLI dashboard inline</span>');
+    const dataRows = [
+      ['flutter | prs',                 'Flutter framework PRs · live · all 9 PRs detailed'],
+      ['speaking | talks',              'tech talks · venues · roles · timeline'],
+      ['articles',                      'long-form essays · 9 articles + reading time'],
+      ['oss | repos | open-source',     'open source packages · all 5 with topics + stars'],
+      ['tech | stack',                  '4 categories · 16+ technologies · battle-tested years'],
+      ['contact',                       '8 channels · best-for tags · response times'],
+      ['course | courses',              '35-video Urdu Flutter course · 7 sections'],
+      ['github',                        'LIVE: profile · top 5 repos by stars · aggregates'],
+      ['linkedin',                      '4 roles · skills · followers · connections'],
+      ['wisesend',                      'WiseSend product · stack · status'],
+      ['snake',                         'high score · controls · last played'],
+    ];
+    for (const r of dataRows) await termSay('    <span class="cmd">' + _termEsc(r[0]).padEnd(33, ' ') + '</span><span class="comment">' + _termEsc(r[1]) + '</span>');
+    await termSay('');
+    await termSay('  <span class="str">OPEN — launch a window with cute msg</span>');
+    const openRows = [
+      ['open <name>',                   'open any: ' + Object.keys(TERM_WINDOWS).join(', ')],
+      ['open open-source',              'alias for oss window'],
+      ['hire',                          'open contact morph dialog with form'],
+    ];
+    for (const r of openRows) await termSay('    <span class="cmd">' + _termEsc(r[0]).padEnd(33, ' ') + '</span><span class="comment">' + _termEsc(r[1]) + '</span>');
+    await termSay('');
+    await termSay('  <span class="str">AI</span>');
+    await termSay('    <span class="cmd">' + 'max "<query>"'.padEnd(33, ' ') + '</span><span class="comment">ask Max AI · widgets render inline</span>');
+    await termSay('    <span class="cmd">' + 'videos <topic>'.padEnd(33, ' ') + '</span><span class="comment">grep 35 course videos by keyword</span>');
+    await termSay('');
+    await termSay('  <span class="str">SHELL</span>');
+    const shellRows = [
+      ['help | --help | -h',            'this list'],
+      ['whoami',                        'identity card'],
+      ['ls / cat <file>',               'virtual filesystem (about.md, skills.md, ...)'],
+      ['echo <text>',                   'echo back'],
+      ['date | time | uptime',          'time · years coding (PKT)'],
+      ['history',                       'last 20 commands'],
+      ['clear | cls',                   'clear terminal'],
+      ['replay | reset',                'replay boot animation'],
+      ['external <name>',               'youtube · medium · twitter · tiktok · stackoverflow'],
+      ['pwd',                           'current path (joke)'],
+    ];
+    for (const r of shellRows) await termSay('    <span class="cmd">' + _termEsc(r[0]).padEnd(33, ' ') + '</span><span class="comment">' + _termEsc(r[1]) + '</span>');
+    await termSay('');
+    await termSay('  <span class="str">KEYBINDINGS</span>');
+    await termSay('    <span class="cmd">↑ / ↓</span>           navigate command history');
+    await termSay('    <span class="cmd">Tab</span>             autocomplete commands + filenames');
+    await termSay('    <span class="cmd">Ctrl+L</span>          clear screen');
+    await termSay('    <span class="cmd">Ctrl+C</span>          cancel current input');
+    await termSay('');
+  },
+  '--help': function () { return TERM_COMMANDS.help(); },
+  '-h': function () { return TERM_COMMANDS.help(); },
+  whoami: function () {
+    [
+      '  <span class="str">name</span>      : Ishaq Hassan',
+      '  <span class="str">role</span>      : Engineering Manager · Flutter Framework Contributor',
+      '  <span class="str">company</span>   : DigitalHire',
+      '  <span class="str">years</span>     : 13+',
+      '  <span class="str">location</span>  : Karachi, Pakistan 🇵🇰',
+    ].forEach((l) => termPrint(l));
+  },
+  ls: function () {
+    termPrint('  ' + TERM_FILE_NAMES.map((n) => '<span class="str">' + n + '</span>').join('  '));
+  },
+  cat: function (args) {
+    const name = (args[0] || '').toLowerCase();
+    if (!name) { termPrint('<span class="err">cat: missing file. try: ls</span>'); return; }
+    const content = termFile(name);
+    if (content == null) { termPrint('<span class="err">cat: ' + _termEsc(name) + ': no such file</span>'); return; }
+    content.split('\n').forEach((line) => termPrint('  ' + line));
+  },
+
+  /* ============ DATA COMMANDS (deep CLI · typed render) ============ */
+
+  flutter: async function () {
+    const D = (window.MaxChat && window.MaxChat.data) || {};
+    const merged = D.prsMerged || [];
+    const open = D.prsOpen || [];
+    await termHeader('Flutter Framework Contributions', 'live · github.com/flutter/flutter');
+    const live = await termFetchLive();
+    const stats = live ? (live.merged + ' merged ✓ · ' + live.open + ' open ⟳ · ' + live.total + ' total <span class="comment">(live)</span>') : (merged.length + ' merged ✓ · ' + open.length + ' open ⟳');
+    await termSay('  <span class="str">Stats</span>          : ' + stats);
+    await termSay('  <span class="str">Reviewer</span>       : Flutter team @ Google');
+    await termSay('  <span class="str">Active since</span>   : 2024');
+    await termSay('  <span class="str">Areas touched</span>  : framework · docs · tooling');
+    await termSay('');
+    await termSay('  <span class="str">Merged PRs</span> <span class="comment">(production-shipped)</span>');
+    for (const p of merged) {
+      await termSay('    ▸ <a class="term-link" href="https://github.com/flutter/flutter/pull/' + p.num + '" target="_blank" rel="noopener">#' + p.num + '</a>  ' + _termEsc(p.title));
+    }
+    await termSay('');
+    await termSay('  <span class="str">Open / In-review</span>');
+    for (const p of open) {
+      await termSay('    ▸ <a class="term-link" href="https://github.com/flutter/flutter/pull/' + p.num + '" target="_blank" rel="noopener">#' + p.num + '</a> ⟳ ' + _termEsc(p.title));
+    }
+    await termSay('');
+    await termSay('  <a class="term-link" href="https://github.com/flutter/flutter/pulls?q=author%3Aishaquehassan" target="_blank" rel="noopener">→ All PRs on github.com/flutter/flutter</a>');
+    await termSay('  <span class="comment">// type <span class="cmd">open flutter</span> for the cards UI.</span>');
+  },
+  prs: async function () { return TERM_COMMANDS.flutter(); },
+
+  speaking: async function () {
+    const D = (window.MaxChat && window.MaxChat.data) || {};
+    const list = D.speaking || [];
+    await termHeader('Public Speaking', 'tech talks · GDG · Nest I/O · universities');
+    await termSay('  <span class="str">Tracked talks</span>    : ' + list.length + ' (more unlisted on /speaking)');
+    await termSay('  <span class="str">Topics</span>           : Flutter · architecture · open source · AI · mobile');
+    await termSay('  <span class="str">Audiences</span>        : GDG Kolachi · Nest I/O · universities · corporate');
+    await termSay('  <span class="str">Format</span>           : 30–60 min talks · workshops · panels · keynotes');
+    await termSay('  <span class="str">Most recent</span>      : ' + (list[0] ? _termEsc(list[0].date) : '—') + ' · ' + (list[0] ? _termEsc(list[0].title) : '—'));
+    await termSay('');
+    await termSay('  <span class="str">Talk timeline</span>');
+    for (const t of list) {
+      await termSay('    ▸ <span class="comment">' + _termEsc(t.date) + '</span>  <a class="term-link" href="' + _termEsc(t.href) + '" target="_blank" rel="noopener">' + _termEsc(t.title) + '</a>');
+      await termSay('       ' + _termEsc(t.org) + ' · <span class="comment">' + _termEsc(t.role) + '</span>');
+    }
+    await termSay('');
+    await termSay('  <a class="term-link" href="/speaking">→ Full timeline on /speaking</a>');
+    await termSay('  <span class="comment">// type <span class="cmd">open speaking</span> for the OS window.</span>');
+  },
+  talks: function () { return TERM_COMMANDS.speaking(); },
+
+  articles: async function () {
+    const D = (window.MaxChat && window.MaxChat.data) || {};
+    const catalog = D.articleCatalog || {};
+    const all = Object.keys(catalog).map((k) => Object.assign({ key: k }, catalog[k]));
+    const totalMins = all.reduce((s, a) => s + (a.mins || 0), 0);
+    const tags = {};
+    all.forEach((a) => { if (a.tag) tags[a.tag] = (tags[a.tag] || 0) + 1; });
+    const tagList = Object.keys(tags).sort((a, b) => tags[b] - tags[a]).map((t) => t + ' ×' + tags[t]).join(' · ');
+    await termHeader('Long-form Articles', 'engineering · Flutter internals · leadership');
+    await termSay('  <span class="str">Total published</span> : ' + all.length);
+    await termSay('  <span class="str">Total reading</span>   : ' + totalMins + ' min');
+    await termSay('  <span class="str">Avg per article</span> : ' + (all.length ? Math.round(totalMins / all.length) : 0) + ' min');
+    await termSay('  <span class="str">Topics</span>          : ' + (tagList || '—'));
+    await termSay('  <span class="str">Platforms</span>       : ishaqhassan.dev · Medium · Dev.to');
+    await termSay('');
+    await termSay('  <span class="str">Catalog</span>');
+    for (const a of all) {
+      await termSay('    ▸ <span class="comment">' + (a.mins || 0) + ' min</span> · <a class="term-link" href="' + _termEsc(a.href) + '">' + _termEsc(a.title) + '</a>  <span class="comment">[' + _termEsc(a.tag || '') + ']</span>');
+      await termSay('       <span class="comment">' + _termEsc((a.excerpt || '').slice(0, 110)) + '</span>');
+    }
+    await termSay('');
+    await termSay('  <a class="term-link" href="/articles/">→ All articles · /articles/</a>');
+    await termSay('  <span class="comment">// type <span class="cmd">open articles</span> for the reader UI.</span>');
+  },
+
+  oss: async function () {
+    const D = (window.MaxChat && window.MaxChat.data) || {};
+    const cat = D.ossCatalog || {};
+    const repos = Object.keys(cat).map((k) => cat[k]);
+    const langs = Array.from(new Set(repos.map((r) => r.lang).filter(Boolean))).join(' · ');
+    await termHeader('Open Source Packages', 'pub.dev · npm · GitHub');
+    await termSay('  <span class="str">Maintained</span>     : ' + repos.length + ' packages');
+    await termSay('  <span class="str">Languages</span>      : ' + (langs || '—'));
+    await termSay('  <span class="str">Most starred</span>   : document_scanner_flutter');
+    await termSay('  <span class="str">Most forked</span>    : document_scanner_flutter (135 forks)');
+    await termSay('  <span class="str">Active dev</span>     : goal-agent · assets_indexer');
+    await termSay('');
+    await termSay('  <span class="str">Catalog</span>');
+    for (const r of repos) {
+      await termSay('    ▸ <a class="term-link" href="' + _termEsc(r.href) + '" target="_blank" rel="noopener">' + _termEsc(r.name) + '</a> <span class="comment">[' + _termEsc(r.lang || '') + ']</span> <span class="str">' + _termEsc(r.stars || '') + '</span>');
+      await termSay('       <span class="comment">' + _termEsc((r.desc || '').slice(0, 110)) + '</span>');
+      const topics = (r.topics || []).slice(0, 5).join(' · ');
+      if (topics) await termSay('       <span class="comment">topics: ' + _termEsc(topics) + '</span>');
+    }
+    await termSay('');
+    await termSay('  <a class="term-link" href="/open-source">→ /open-source</a>');
+    await termSay('  <span class="comment">// type <span class="cmd">open oss</span> for grid UI · star counts auto-refresh.</span>');
+  },
+  repos: function () { return TERM_COMMANDS.oss(); },
+  'open-source': function () { return TERM_COMMANDS.oss(); },
+  opensource: function () { return TERM_COMMANDS.oss(); },
+
+  tech: async function () {
+    const D = (window.MaxChat && window.MaxChat.data) || {};
+    const groups = D.tech || [];
+    const totalItems = groups.reduce((s, g) => s + (g.items ? g.items.length : 0), 0);
+    await termHeader('Tech Stack', 'what I ship with, daily');
+    await termSay('  <span class="str">Years coding</span>      : 13.3');
+    await termSay('  <span class="str">Production apps</span>   : 50+ shipped');
+    await termSay('  <span class="str">Categories</span>        : ' + groups.length);
+    await termSay('  <span class="str">Technologies</span>      : ' + totalItems + ' tracked');
+    await termSay('  <span class="str">Currently using</span>   : Flutter framework PRs · DigitalHire platform · Cloudflare Workers');
+    await termSay('  <span class="str">Open for</span>          : senior IC · EM · tech advisory');
+    await termSay('');
+    for (const g of groups) {
+      const items = (g.items || []).join(' · ');
+      const labelPad = (g.label || '').padEnd(16, ' ');
+      await termSay('  <span class="str">' + _termEsc(labelPad) + '</span> ▸ ' + _termEsc(items));
+    }
+    await termSay('');
+    await termSay('  <span class="str">Battle-tested</span>     : Flutter (8 yrs) · Node (12 yrs) · Postgres (10 yrs) · Firebase (7 yrs)');
+    await termSay('');
+    await termSay('  <a class="term-link" href="/tech-stack">→ /tech-stack</a>');
+    await termSay('  <span class="comment">// type <span class="cmd">open tech</span> for visual surface.</span>');
+  },
+  stack: function () { return TERM_COMMANDS.tech(); },
+
+  contact: async function () {
+    await termHeader('Contact', 'fastest paths to me');
+    await termSay('  <span class="str">Best for hiring</span>      : email · LinkedIn');
+    await termSay('  <span class="str">Best for code/issues</span> : GitHub');
+    await termSay('  <span class="str">Best for quick chat</span>  : X / Twitter DM');
+    await termSay('  <span class="str">Office hours</span>         : Karachi PKT, evenings');
+    await termSay('  <span class="str">Languages</span>            : English · Urdu · Hindi');
+    await termSay('  <span class="str">Avg response</span>         : ~12 hours');
+    await termSay('');
+    await termSay('  <span class="str">Channels</span>');
+    const channels = [
+      ['Email',       'hello@ishaqhassan.dev',     'mailto:hello@ishaqhassan.dev',                    '★ primary'],
+      ['GitHub',      '@ishaquehassan',            'https://github.com/ishaquehassan',                'code · issues · PR'],
+      ['LinkedIn',    '@ishaquehassan',            'https://linkedin.com/in/ishaquehassan',           'hiring · network'],
+      ['Medium',      '@ishaqhassan',              'https://medium.com/@ishaqhassan',                 'blog updates'],
+      ['YouTube',     '@ishaquehassan',            'https://www.youtube.com/@ishaquehassan',          'course content'],
+      ['X / Twitter', '@ishaque_hassan',           'https://x.com/ishaque_hassan',                    'quick chat · DMs'],
+      ['TikTok',      '@ishaqhassan.dev',          'https://www.tiktok.com/@ishaqhassan.dev',         'short-form'],
+      ['Stack Over.', 'ishaq-hassan',              'https://stackoverflow.com/users/2094696/ishaq-hassan','code Q&A'],
+    ];
+    for (const row of channels) {
+      await termSay('    ▸ <span class="str">' + row[0].padEnd(13, ' ') + '</span>  <a class="term-link" href="' + row[2] + '" target="_blank" rel="noopener">' + _termEsc(row[1]) + '</a>   <span class="comment">' + row[3] + '</span>');
+    }
+    await termSay('');
+    await termSay('  <span class="comment">// type <span class="cmd">hire</span> to open the inquiry form · <span class="cmd">open contact</span> for cards UI.</span>');
+  },
+
+  course: async function () {
+    const D = (window.MaxChat && window.MaxChat.data) || {};
+    const videos = D.videos || [];
+    const sectionOrder = ['Foundation', 'Dart Basics', 'OOP', 'Flutter UI', 'State Management', 'API & Network', 'Advanced'];
+    const counts = {};
+    videos.forEach((v) => { counts[v.s] = (counts[v.s] || 0) + 1; });
+    await termHeader('Free Flutter Course · Urdu', '35 videos · listed on docs.flutter.dev');
+    await termSay('  <span class="str">Listed on</span>     : <a class="term-link" href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener">docs.flutter.dev/resources/courses</a> <span class="comment">(only Urdu course)</span>');
+    await termSay('  <span class="str">Total videos</span>  : ' + videos.length);
+    await termSay('  <span class="str">Sections</span>      : ' + sectionOrder.length);
+    await termSay('  <span class="str">Price</span>         : free');
+    await termSay('  <span class="str">Language</span>      : Urdu (English code/terminology)');
+    await termSay('  <span class="str">Platform</span>      : YouTube playlist');
+    await termSay('  <span class="str">Total runtime</span> : ~28 hours');
+    await termSay('');
+    await termSay('  <span class="str">Sections</span>');
+    for (let idx = 0; idx < sectionOrder.length; idx++) {
+      const sec = sectionOrder[idx];
+      const c = counts[sec] || 0;
+      await termSay('    ' + (idx + 1) + '. <span class="str">' + _termEsc(sec.padEnd(20, ' ')) + '</span> <span class="comment">(' + c + ' video' + (c === 1 ? '' : 's') + ')</span>');
+    }
+    await termSay('');
+    await termSay('  <a class="term-link" href="https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5" target="_blank" rel="noopener">→ YouTube playlist</a>');
+    await termSay('  <span class="comment">// type <span class="cmd">videos &lt;topic&gt;</span> to grep · <span class="cmd">open flutter-course</span> for window UI.</span>');
+  },
+  courses: function () { return TERM_COMMANDS.course(); },
+
+  github: async function () {
+    await termHeader('GitHub · @ishaquehassan', 'live · api.github.com (24h cache)');
+    const fetching = termPrint('  <span class="muted">→ fetching profile + top repos<span class="dots">...</span></span>', 'term-thinking');
+    const profile = await termFetchGitHubProfile();
+    const flutterData = await termFetchLive();
+    if (fetching && fetching.parentNode) fetching.parentNode.removeChild(fetching);
+    if (!profile) {
+      await termSay('  <span class="err">// API unreachable (likely rate-limited). canonical fallback:</span>');
+      await termSay('  <span class="str">Public repos</span>     : 60+');
+      await termSay('  <span class="str">Followers</span>        : 100+');
+      await termSay('  <span class="str">flutter PRs</span>      : 6 merged · 3 open');
+      await termSay('  <a class="term-link" href="https://github.com/ishaquehassan" target="_blank" rel="noopener">→ github.com/ishaquehassan</a>');
+      return;
+    }
+    const joined = profile.created_at ? new Date(profile.created_at).getFullYear() : '2013';
+    const yrs = (new Date().getFullYear() - parseInt(joined, 10));
+    await termSay('  <span class="str">Profile</span>');
+    await termSay('    <span class="str">Name</span>             : ' + _termEsc(profile.name || 'Ishaq Hassan'));
+    if (profile.bio) await termSay('    <span class="str">Bio</span>              : <span class="comment">' + _termEsc(profile.bio.slice(0, 90)) + '</span>');
+    await termSay('    <span class="str">On GitHub since</span>  : ' + joined + ' (' + yrs + '+ yrs)');
+    await termSay('    <span class="str">Public repos</span>     : ' + profile.public_repos);
+    await termSay('    <span class="str">Followers</span>        : ' + profile.followers);
+    await termSay('    <span class="str">Following</span>        : ' + profile.following);
+    await termSay('');
+    if (flutterData) {
+      await termSay('  <span class="str">Flutter framework PRs</span>');
+      await termSay('    <span class="str">Merged</span>           : ' + flutterData.merged + ' ✓');
+      await termSay('    <span class="str">Open / review</span>    : ' + flutterData.open + ' ⟳');
+      await termSay('    <span class="str">Total</span>            : ' + flutterData.total);
+      await termSay('');
+    }
+    await termSay('  <span class="str">Top repos</span> <span class="comment">(by stars · live)</span>');
+    let starSum = 0;
+    for (const r of profile.repos) {
+      starSum += (parseInt(r.stars, 10) || 0);
+      const lang = r.lang ? '<span class="comment">[' + _termEsc(r.lang) + ']</span> ' : '';
+      const desc = r.desc ? ' <span class="comment">— ' + _termEsc(r.desc.slice(0, 70)) + '</span>' : '';
+      await termSay('    ▸ <a class="term-link" href="' + _termEsc(r.url) + '" target="_blank" rel="noopener">' + _termEsc(r.name) + '</a> ' + lang + '<span class="str">' + r.stars + '★</span> · ' + r.forks + ' forks' + desc);
+    }
+    await termSay('');
+    await termSay('  <span class="str">Aggregate</span>');
+    await termSay('    <span class="str">Stars across top repos</span> : ' + starSum + '★');
+    if (profile.repos.length) {
+      const langs = {};
+      profile.repos.forEach((r) => { if (r.lang) langs[r.lang] = (langs[r.lang] || 0) + 1; });
+      const topLang = Object.keys(langs).sort((a, b) => langs[b] - langs[a])[0] || '—';
+      await termSay('    <span class="str">Top language</span>           : ' + _termEsc(topLang));
+      const mostStarred = profile.repos.reduce((m, r) => (r.stars > (m.stars || 0) ? r : m), profile.repos[0]);
+      await termSay('    <span class="str">Most starred</span>           : ' + _termEsc(mostStarred.name));
+    }
+    await termSay('');
+    await termSay('  <a class="term-link" href="https://github.com/ishaquehassan" target="_blank" rel="noopener">→ Full profile on github.com</a>');
+    await termSay('  <span class="comment">// type <span class="cmd">open github</span> for the in-OS window.</span>');
+  },
+
+  linkedin: async function () {
+    await termHeader('LinkedIn · Ishaq Hassan', 'Flutter Framework Contributor · EM @ DigitalHire');
+    await termSay('  <span class="str">Headline</span>         : Flutter Framework Contributor | EM @ DigitalHire | OSS Author | Tech Speaker');
+    await termSay('  <span class="str">Location</span>         : Karachi, Pakistan / McLean, VA <span class="comment">(Hybrid)</span>');
+    await termSay('  <span class="str">Followers</span>        : 3,051');
+    await termSay('  <span class="str">Connections</span>      : 500+');
+    await termSay('  <span class="str">Industry</span>         : Software Development');
+    await termSay('  <span class="str">Open to</span>          : Senior IC, EM roles · speaking · consulting');
+    await termSay('');
+    await termSay('  <span class="str">Now</span>');
+    await termSay('    🏢 <strong>DigitalHire</strong> · <span class="str">Engineering Manager</span>');
+    await termSay('       <span class="comment">May 2024 — Present (2 yrs) · McLean, VA · Hybrid</span>');
+    await termSay('       Leading AI-based video job-board development.');
+    await termSay('       <span class="comment">Stack: Flutter · Dart · Kotlin · Python · Postgres · Next.js</span>');
+    await termSay('');
+    await termSay('  <span class="str">Past roles</span>');
+    const past = [
+      ['DigitalHire', 'Technical Lead',     'Oct 2023 — May 2024 · 8 mos · On-site',  'NextJS SSR · Flutter web/desktop/mobile · platform team'],
+      ['DigitalHire', 'Staff Engineer',     'Feb 2023 — Oct 2023 · 9 mos · On-site',  'Mobile team · React Native · Python · frontend'],
+      ['Tech Idara',  'Senior Instructor',  '2021 — 2023',                            'Flutter teaching · course design · 35-video Urdu series'],
+      ['DigitalHire', 'Senior Engineer',    'Earlier (multi-year)',                   'Mobile + backend · architecture · code review culture'],
+    ];
+    for (const r of past) {
+      const icon = r[0] === 'Tech Idara' ? '🎓' : '🏢';
+      await termSay('    ' + icon + ' <strong>' + _termEsc(r[0]) + '</strong> · <span class="str">' + _termEsc(r[1]) + '</span>');
+      await termSay('       <span class="comment">' + _termEsc(r[2]) + '</span>');
+      await termSay('       ' + _termEsc(r[3]));
+    }
+    await termSay('');
+    await termSay('  <span class="str">Top skills</span>      : Flutter · Dart · React Native · Engineering Mgmt · System Design · API design');
+    await termSay('  <span class="str">Education</span>       : Computer Science');
+    await termSay('');
+    await termSay('  <a class="term-link" href="https://linkedin.com/in/ishaquehassan" target="_blank" rel="noopener">→ Full profile on linkedin.com</a>');
+    await termSay('  <span class="comment">// type <span class="cmd">open linkedin</span> for the OS window with full timeline.</span>');
+  },
+
+  wisesend: async function () {
+    await termHeader('WiseSend', 'side product · early-stage');
+    await termSay('  <span class="str">Product</span>      : Lightweight money-transfer concept');
+    await termSay('  <span class="str">Live demo</span>    : <a class="term-link" href="https://wisesend.xrlabs.app" target="_blank" rel="noopener">wisesend.xrlabs.app</a>');
+    await termSay('  <span class="str">Status</span>       : private beta · embedded as OS window');
+    await termSay('  <span class="str">Stack</span>        : Flutter · Firebase · Cloudflare Workers · Resend');
+    await termSay('  <span class="str">Built by</span>     : Ishaq Hassan (solo) · 2024 → ongoing');
+    await termSay('');
+    await termSay('  <span class="str">What it does</span>');
+    await termSay('    ▸ Cross-border money transfer with low fees');
+    await termSay('    ▸ Real-time FX rates · transparent pricing');
+    await termSay('    ▸ Mobile-first · KYC integrated');
+    await termSay('    ▸ Privacy-respecting · no data resale');
+    await termSay('');
+    await termSay('  <span class="str">Tech highlights</span>');
+    await termSay('    ▸ Edge-deployed compute (Cloudflare Workers · ~10ms latency)');
+    await termSay('    ▸ Cross-platform Flutter UI (web · iOS · Android · macOS)');
+    await termSay('    ▸ Resend for transactional email · Firestore for state');
+    await termSay('');
+    await termSay('  <a class="term-link" href="https://wisesend.xrlabs.app" target="_blank" rel="noopener">→ wisesend.xrlabs.app</a>');
+    await termSay('  <span class="comment">// type <span class="cmd">open wisesend</span> for embedded live demo.</span>');
+  },
+
+  snake: async function () {
+    let best = '—', last = '—';
+    try {
+      best = localStorage.getItem('snake:best') || '—';
+      const ts = localStorage.getItem('snake:last');
+      if (ts) last = new Date(parseInt(ts, 10)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch (e) {}
+    await termHeader('Snake', 'classic game · custom canvas');
+    await termSay('  <span class="str">Engine</span>         : custom canvas · 60fps target');
+    await termSay('  <span class="str">Best score</span>     : ' + _termEsc(String(best)));
+    await termSay('  <span class="str">Last played</span>    : ' + _termEsc(String(last)));
+    await termSay('  <span class="str">Mode</span>           : single-player · keyboard');
+    await termSay('  <span class="str">Difficulty</span>     : speed scales with length');
+    await termSay('');
+    await termSay('  <span class="str">Controls</span>');
+    await termSay('    ↑ ↓ ← →    move');
+    await termSay('    W A S D    move (alt)');
+    await termSay('    Space      pause / resume');
+    await termSay('    R          restart');
+    await termSay('');
+    await termSay('  <span class="comment">// type <span class="cmd">open snake</span> to play.</span>');
+  },
+
+  /* ============ OPEN COMMAND ============ */
+
+  open: function (args) {
+    const aliasMap = {
+      'open-source': 'oss',
+      'opensource':  'oss',
+      'repos':       'oss',
+      'talks':       'speaking',
+      'stack':       'tech',
+      'course':      'flutter-course',
+      'courses':     'flutter-course',
+      'fc':          'flutter-course',
+    };
+    /* Map terminal window id → mobile expandMobileSection id when names differ */
+    const winToMob = {
+      flutter: 'prs',         /* Flutter PRs window → prs mobile section */
+      contact: 'connect',     /* contact dialog → connect mobile bento */
+      oss: 'oss', tech: 'tech', articles: 'articles', github: 'github',
+      linkedin: 'linkedin', snake: 'snake', speaking: 'speaking',
+      'flutter-course': 'flutter-course', about: 'about',
+    };
+    /* Fallback URLs for windows with no mobile bento (e.g., wisesend) */
+    const externalFallback = {
+      wisesend: 'https://wisesend.xrlabs.app',
+    };
+    let id = (args[0] || '').toLowerCase();
+    if (aliasMap[id]) id = aliasMap[id];
+    if (!id) {
+      termPrint('  <span class="err">open: missing window id.</span>');
+      termPrint('  <span class="comment">// try one of: ' + Object.keys(TERM_WINDOWS).join(', ') + '</span>');
+      return;
+    }
+    if (!TERM_WINDOWS[id]) {
+      termPrint('  <span class="err">open: unknown window "' + _termEsc(args[0]) + '"</span>');
+      termPrint('  <span class="comment">// valid: ' + Object.keys(TERM_WINDOWS).join(', ') + '</span>');
+      return;
+    }
+    const isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+    try {
+      if (isMobile) {
+        const mobId = winToMob[id];
+        if (!mobId) {
+          if (externalFallback[id]) {
+            window.open(externalFallback[id], '_blank', 'noopener');
+            termPrint('  → opened <span class="str">' + _termEsc(id) + '</span> in new tab.');
+            return;
+          }
+          termPrint('  <span class="err">open: ' + _termEsc(id) + ' has no mobile view yet</span>');
+          return;
+        }
+        /* If we are inside the terminal panel right now and user wants a different
+           section, close terminal first then expand the target. */
+        if (typeof activeMobileSection !== 'undefined' && activeMobileSection === 'about' && mobId !== 'about') {
+          if (typeof closeMobileSection === 'function') {
+            try { closeMobileSection('about'); } catch (e) {}
+          }
+        }
+        if (typeof expandMobileSection === 'function') {
+          setTimeout(function () { expandMobileSection(null, mobId); }, 280);
+          termPrint(termOpenMsg(id));
+        } else {
+          termPrint('  <span class="err">open: mobile section manager not ready.</span>');
+        }
+        return;
+      }
+      /* Desktop path */
+      if (typeof openWindow !== 'function') {
+        termPrint('  <span class="err">open: window manager not ready.</span>');
+        return;
+      }
+      openWindow(id);
+      termPrint(termOpenMsg(id));
+    } catch (e) {
+      termPrint('  <span class="err">open: failed to open ' + _termEsc(id) + '</span>');
+    }
+  },
+
+  hire: function () {
+    const isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+    if (isMobile) {
+      if (typeof activeMobileSection !== 'undefined' && activeMobileSection === 'about') {
+        if (typeof closeMobileSection === 'function') { try { closeMobileSection('about'); } catch (e) {} }
+      }
+      setTimeout(function () {
+        if (typeof window.openMobileDirectContact === 'function') {
+          window.openMobileDirectContact({ stopPropagation: function () {} });
+        } else if (typeof expandMobileSection === 'function') {
+          expandMobileSection(null, 'connect');
+        }
+      }, 280);
+      termPrint('  ✉️  <span class="str">Contact panel</span> opening · drop your details, I respond fast.');
+      return;
+    }
+    if (typeof window.openContactDialog === 'function') {
+      window.openContactDialog();
+      termPrint('  ✉️  <span class="str">Contact dialog</span> opening · drop your details, I respond fast.');
+    } else {
+      TERM_COMMANDS.open(['contact']);
+    }
+  },
+
+  external: function (args) {
+    const id = (args[0] || '').toLowerCase();
+    const map = {
+      youtube:  ['https://www.youtube.com/@ishaquehassan',          'YouTube'],
+      medium:   ['https://ishaquehassan.medium.com',                'Medium'],
+      twitter:  ['https://twitter.com/ishaqhassan_',                'X / Twitter'],
+      x:        ['https://twitter.com/ishaqhassan_',                'X / Twitter'],
+      stackoverflow: ['https://stackoverflow.com/users/2094696/ishaq-hassan', 'Stack Overflow'],
+      so:       ['https://stackoverflow.com/users/2094696/ishaq-hassan', 'Stack Overflow'],
+      tiktok:   ['https://tiktok.com/@ishaquehassan',               'TikTok'],
+    };
+    const e = map[id];
+    if (!e) {
+      termPrint('  <span class="err">external: try ' + Object.keys(map).join(', ') + '</span>');
+      return;
+    }
+    window.open(e[0], '_blank', 'noopener');
+    termPrint('  → opened <span class="str">' + e[1] + '</span> in new tab.');
+  },
+  youtube: function () { TERM_COMMANDS.external(['youtube']); },
+  medium:  function () { TERM_COMMANDS.external(['medium']); },
+  twitter: function () { TERM_COMMANDS.external(['twitter']); },
+  x:       function () { TERM_COMMANDS.external(['x']); },
+  echo: function (args, raw) {
+    const m = raw.match(/^echo\s+(.*)$/i);
+    let txt = m ? m[1] : '';
+    txt = txt.replace(/^["'](.*)["']$/, '$1');
+    termPrint('  ' + _termEsc(txt));
+  },
+  date: function () {
+    const now = new Date();
+    termPrint('  ' + now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Karachi' }) + ' <span class="comment">(PKT)</span>');
+  },
+  time: function () { TERM_COMMANDS.date(); },
+  uptime: function () {
+    const start = new Date('2013-01-01');
+    const ms = Date.now() - start.getTime();
+    const years = (ms / (365.25 * 24 * 3600 * 1000));
+    termPrint('  Coding for <span class="str">' + years.toFixed(1) + ' years</span> · since 2013 · still shipping.');
+  },
+  history: function () {
+    if (TERM.history.length === 0) { termPrint('  <span class="comment">no history yet</span>'); return; }
+    TERM.history.slice(-20).forEach((h, i) => termPrint('  ' + String(i + 1).padStart(3, ' ') + '  ' + _termEsc(h)));
+  },
+  clear: function () { TERM.output.innerHTML = ''; },
+  cls: function () { TERM_COMMANDS.clear(); },
+  replay: function () {
+    TERM.output.innerHTML = '';
+    TERM.bootDone = false;
+    termInputEnable(false);
+    termBoot(false);
+  },
+  reset: function () { TERM_COMMANDS.replay(); },
+  videos: function (args) {
+    const q = (args.join(' ') || '').trim().toLowerCase();
+    if (!q) { termPrint('<span class="err">videos: missing topic. e.g. videos loops</span>'); return; }
+    if (typeof fcVideos === 'undefined') { termPrint('<span class="err">videos: course catalog not loaded.</span>'); return; }
+    const matches = fcVideos.map((v, i) => ({ v: v, i: i })).filter((x) => x.v.t.toLowerCase().indexOf(q) !== -1 || x.v.s.toLowerCase().indexOf(q) !== -1);
+    if (matches.length === 0) { termPrint('  <span class="comment">no videos match "' + _termEsc(q) + '"</span>'); return; }
+    termPrint('  <span class="comment">' + matches.length + ' match' + (matches.length === 1 ? '' : 'es') + '</span>');
+    matches.slice(0, 8).forEach((x) => {
+      termPrint('  <a class="term-link" href="javascript:playFcVideo(' + x.i + ')">▶ #' + (x.i + 1) + ' ' + _termEsc(x.v.t) + '</a>  <span class="comment">' + _termEsc(x.v.s) + '</span>');
+    });
+  },
+  theme: function () {
+    termPrint('  <span class="comment">// theme switching is whole-OS, not just terminal. coming later.</span>');
+  },
+  sudo: function (args, raw) {
+    if (raw.indexOf('hire-me') !== -1 || raw.indexOf('hire') !== -1) {
+      termPrint('  <span class="str">[sudo]</span> password for visitor: <span class="comment">****</span>');
+      setTimeout(() => { termPrint('  ✓ access granted. opening hire dialog...'); TERM_COMMANDS.hire(); }, 500);
+      return;
+    }
+    termPrint('  <span class="err">sudo: ishaq is not in the sudoers file. this incident will be reported.</span>');
+  },
+  exit: function () { termPrint('  <span class="comment">// you are already on a portfolio site. there is no exit. only ✕ button.</span>'); },
+  quit: function () { TERM_COMMANDS.exit(); },
+  pwd: function () { termPrint('  /home/ishaq'); },
+  /* Max AI — async, renders cards inline */
+  max: async function (args, raw) {
+    const m = raw.match(/^max\s+(.*)$/i);
+    let q = m ? m[1].trim() : '';
+    q = q.replace(/^["'](.*)["']$/, '$1').trim();
+    if (!q) { termPrint('<span class="err">max: missing prompt. e.g. max "loop videos"</span>'); return; }
+    if (!window.MaxChat || typeof window.MaxChat.ask !== 'function') {
+      termPrint('<span class="err">max: brain not connected. retry in a moment.</span>');
+      return;
+    }
+    const thinking = termPrint('  <span class="muted">→ Max is thinking<span class="dots">...</span></span>', 'term-thinking');
+    try {
+      const result = await window.MaxChat.ask(q);
+      if (thinking && thinking.parentNode) thinking.parentNode.removeChild(thinking);
+      if (!result || !result.segments || result.segments.length === 0) {
+        termPrint('  <span class="comment">// (empty response)</span>');
+        return;
+      }
+      result.segments.forEach((seg) => {
+        if (seg.kind === 'text') {
+          const lines = String(seg.value).split('\n');
+          lines.forEach((line) => {
+            const safe = _termEsc(line).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*]+)\*/g, '<em>$1</em>').replace(/`([^`]+)`/g, '<code>$1</code>');
+            termPrint('  ' + safe, 'term-max-text');
+          });
+        } else if (seg.kind === 'cards' && seg.html) {
+          const wrap = document.createElement('div');
+          wrap.className = 'term-cards-wrap';
+          wrap.innerHTML = seg.html;
+          termPrintRaw(wrap);
+        }
+      });
+    } catch (err) {
+      if (thinking && thinking.parentNode) thinking.parentNode.removeChild(thinking);
+      const code = String((err && err.message) || err || '').slice(0, 80);
+      termPrint('  <span class="err">max: connection error. ' + _termEsc(code) + '</span>');
+    }
+  },
+};
+
+function termOpenWindow(id, label) {
+  if (typeof openWindow === 'function') {
+    try { openWindow(id); termPrint('  → opening <span class="str">' + _termEsc(label || id) + '</span>...'); return; } catch (e) {}
+  }
+  termPrint('<span class="err">' + _termEsc(id) + ': not available</span>');
+}
+
+function termRun(rawInput) {
+  const raw = String(rawInput || '').trim();
+  if (!raw) { termPrint(TERM_PROMPT); return; }
+  termPrintEcho(raw);
+  /* persist history */
+  TERM.history.push(raw);
+  if (TERM.history.length > 50) TERM.history = TERM.history.slice(-50);
+  TERM.histIdx = -1;
+  try { localStorage.setItem('term:hist', JSON.stringify(TERM.history)); } catch (e) {}
+  /* parse */
+  const parts = raw.split(/\s+/);
+  const cmd = (parts[0] || '').toLowerCase();
+  const args = parts.slice(1);
+  const fn = TERM_COMMANDS[cmd];
+  if (!fn) {
+    termPrint('<span class="err">' + _termEsc(cmd) + ': command not found. try <span class="cmd">help</span></span>');
+    return;
+  }
+  try {
+    const r = fn(args, raw);
+    if (r && typeof r.then === 'function') {
+      TERM.busy = true;
+      termInputEnable(false);
+      r.finally(() => { TERM.busy = false; termInputEnable(true); });
+    }
+  } catch (e) {
+    termPrint('<span class="err">error: ' + _termEsc(String(e.message || e)) + '</span>');
+  }
+}
+window.termRun = termRun;
+
+function termTabComplete(prefix) {
+  const all = Object.keys(TERM_COMMANDS).concat(TERM_FILE_NAMES);
+  const lower = prefix.toLowerCase();
+  return all.filter((c) => c.indexOf(lower) === 0);
+}
+
+function termBindInput() {
+  if (!TERM.inputEl) return;
+  TERM.inputEl.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const v = TERM.inputEl.value;
+      TERM.inputEl.value = '';
+      if (TERM.busy) return;
+      termRun(v);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (TERM.history.length === 0) return;
+      if (TERM.histIdx === -1) TERM.histIdx = TERM.history.length;
+      TERM.histIdx = Math.max(0, TERM.histIdx - 1);
+      TERM.inputEl.value = TERM.history[TERM.histIdx] || '';
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (TERM.histIdx === -1) return;
+      TERM.histIdx = Math.min(TERM.history.length, TERM.histIdx + 1);
+      TERM.inputEl.value = TERM.history[TERM.histIdx] || '';
+      if (TERM.histIdx >= TERM.history.length) TERM.histIdx = -1;
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const v = TERM.inputEl.value;
+      const m = v.match(/^(\S*)$/);
+      if (m) {
+        const matches = termTabComplete(m[1]);
+        if (matches.length === 1) TERM.inputEl.value = matches[0] + ' ';
+        else if (matches.length > 1) {
+          termPrint('  ' + matches.map((c) => '<span class="cmd">' + _termEsc(c) + '</span>').join('  '));
+        }
+      }
+    } else if (e.key === 'l' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      TERM_COMMANDS.clear();
+    } else if (e.key === 'c' && e.ctrlKey) {
+      e.preventDefault();
+      termPrint(TERM_PROMPT + ' ' + _termEsc(TERM.inputEl.value) + ' ^C');
+      TERM.inputEl.value = '';
+    }
+  });
+  /* refocus on click anywhere in terminal area */
+  if (TERM.scrollEl) {
+    TERM.scrollEl.addEventListener('click', function (e) {
+      const sel = window.getSelection();
+      if (sel && String(sel) !== '') return; /* don't steal focus during text-select */
+      if (e.target.closest('a,button')) return;
+      if (TERM.bootDone && !TERM.busy) { try { TERM.inputEl.focus({ preventScroll: true }); } catch (_) { TERM.inputEl.focus(); } }
+    });
+  }
+}
+
+/* Mount the terminal on a given surface. Desktop uses #terminal-content +
+   #terminal-input. Mobile uses #mob-terminal-content + #mob-terminal-input.
+   When viewport switches, the terminal re-mounts on the new surface and
+   re-runs the boot animation (each surface gets a fresh first-impression). */
+function startTerminal(opts) {
+  opts = opts || {};
+  const outId = opts.outputId || 'terminal-content';
+  const inId  = opts.inputId  || 'terminal-input';
+  const prId  = opts.promptId || 'terminal-input-prefix';
+  const term = document.getElementById(outId);
+  if (!term) return;
+  /* idempotent: same surface, already booted → just focus input. */
+  if (TERM.output === term && TERM.bootDone) {
+    try { if (TERM.inputEl) TERM.inputEl.focus({ preventScroll: true }); } catch (e) {}
+    return;
+  }
+  if (TERM.output === term && !TERM.bootDone) return; /* mid-boot */
+  /* Different surface (or first init): cancel any in-flight boot, swap mount. */
+  termClearTimers();
+  TERM.output = term;
+  TERM.scrollEl = term.parentElement;
+  TERM.inputEl = document.getElementById(inId);
+  TERM.inputPromptEl = document.getElementById(prId);
+  TERM.bootDone = false;
+  if (TERM.inputEl && !TERM.inputEl._termBound) {
+    TERM.inputEl._termBound = true;
+    termBindInput();
+  }
+  termInputEnable(false);
+  termBoot(false);
+}
+window.startTerminal = startTerminal;
+
+/* Mobile entrypoint: called from expandMobileSection('about'). */
+function startMobileTerminal() {
+  startTerminal({
+    outputId: 'mob-terminal-content',
+    inputId: 'mob-terminal-input',
+    promptId: 'mob-terminal-input-prefix',
+  });
+}
+window.startMobileTerminal = startMobileTerminal;
 
 // ===== LINKEDIN TABS =====
 function switchLiTab(tab, btn) {

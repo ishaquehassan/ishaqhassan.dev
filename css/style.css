@@ -2862,7 +2862,20 @@ a.sb-item { text-decoration: none; }
 .terminal .flag { color: #d2a8ff; }
 .terminal .str { color: #a5d6ff; }
 .terminal .comment { color: #6e7681; }
+.terminal .err { color: #ff7b72; }
+.terminal .muted { color: #8b949e; }
 .terminal .output { color: #c9d1d9; margin-left: 0; }
+.terminal code {
+  background: #1c2128;
+  border: 1px solid #2d333b;
+  border-radius: 4px;
+  padding: 0 5px;
+  font-family: inherit;
+  font-size: 12px;
+  color: #d2a8ff;
+}
+.terminal strong { color: #f0f6fc; font-weight: 600; }
+.terminal em { color: #d2a8ff; font-style: italic; }
 .terminal .cursor {
   display: inline-block;
   width: 8px; height: 16px;
@@ -2875,7 +2888,402 @@ a.sb-item { text-decoration: none; }
 
 .terminal-line {
   opacity: 0;
-  animation: typeLine 0.3s forwards;
+  animation: typeLine 0.25s ease-out forwards;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+@keyframes typeLine {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Terminal links */
+.terminal a.term-link {
+  color: #58a6ff;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(88, 166, 255, 0.4);
+  transition: color .15s, border-color .15s;
+}
+.terminal a.term-link:hover {
+  color: #79c0ff;
+  border-bottom-color: #79c0ff;
+}
+.terminal a.term-link .str { color: inherit; }
+
+/* Thinking dots */
+.terminal .term-thinking .dots {
+  display: inline-block;
+  width: 18px;
+  text-align: left;
+  animation: termDots 1.2s steps(4, end) infinite;
+}
+@keyframes termDots {
+  0% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
+}
+
+/* Scroll container for the terminal output area */
+.terminal-body { padding: 0; }
+.terminal-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 14px 18px 4px;
+  scroll-behavior: smooth;
+}
+.terminal-scroll::-webkit-scrollbar { width: 8px; }
+.terminal-scroll::-webkit-scrollbar-track { background: transparent; }
+.terminal-scroll::-webkit-scrollbar-thumb {
+  background: #2d333b;
+  border-radius: 4px;
+}
+.terminal-scroll::-webkit-scrollbar-thumb:hover { background: #444c56; }
+
+/* Input bar pinned at bottom */
+.terminal-inputbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px 12px;
+  border-top: 1px solid #1c1f25;
+  background: #0a0d12;
+  font-family: 'JetBrains Mono', 'Menlo', monospace;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.terminal-prompt-prefix {
+  flex-shrink: 0;
+  user-select: none;
+  white-space: nowrap;
+}
+.terminal-prompt-prefix .prompt { color: var(--green); }
+.terminal-prompt-prefix .cmd { color: #79c0ff; }
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f0f6fc;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.5;
+  caret-color: var(--green);
+  padding: 2px 0;
+  min-width: 0;
+}
+.terminal-input::placeholder { color: #4a525c; font-style: italic; }
+.terminal-input:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Card containers rendered inside the terminal (Max AI output) */
+.terminal .term-cards-wrap {
+  margin: 10px 0 14px;
+  padding: 14px;
+  background: #16181d;
+  border: 1px solid #1f2229;
+  border-radius: 10px;
+}
+.terminal .term-cards-wrap .max-cards-block { padding: 0; background: transparent; }
+.terminal .term-cards-wrap .max-pr-grid,
+.terminal .term-cards-wrap .max-art-grid,
+.terminal .term-cards-wrap .max-spk-grid,
+.terminal .term-cards-wrap .max-oss-grid,
+.terminal .term-cards-wrap .max-video-grid {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.terminal .term-cards-wrap .max-cards-section {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8b949e;
+  margin-bottom: 8px;
+  font-family: 'JetBrains Mono', 'Menlo', monospace;
+}
+.terminal .term-cards-wrap a { font-family: 'SF Pro Display', system-ui, sans-serif; }
+
+/* When terminal is wider than 600px, allow 2-column card grids */
+@media (min-width: 640px) {
+  .terminal .term-cards-wrap .max-pr-grid,
+  .terminal .term-cards-wrap .max-art-grid,
+  .terminal .term-cards-wrap .max-spk-grid,
+  .terminal .term-cards-wrap .max-oss-grid,
+  .terminal .term-cards-wrap .max-video-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ===== MOBILE TERMINAL ===== */
+/* Sexy mini-terminal preview card with mac dots + animated prompt */
+.mob-bento.mob-bento-terminal {
+  background: linear-gradient(135deg, #0d1218 0%, #161b23 100%) !important;
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  position: relative;
+  overflow: hidden;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 14px !important;
+  padding: 14px 16px !important;
+  min-height: 70px !important;
+}
+.mob-bento.mob-bento-terminal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 60% at 0% 0%, rgba(56,189,248,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.mob-bento.mob-bento-terminal .mob-card-glow { display: none; }
+
+/* Tiny terminal-window chip on the left */
+.mob-term-screen {
+  width: 64px;
+  height: 50px;
+  background: #050709;
+  border: 1px solid #2d333b;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 5px 7px 6px;
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    inset 0 0 0 1px rgba(0,0,0,0.4);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.mob-term-dots {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.mob-term-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: block;
+}
+.mob-term-dots i:nth-child(1) { background: #ff5f57; }
+.mob-term-dots i:nth-child(2) { background: #febc2e; }
+.mob-term-dots i:nth-child(3) { background: #28c840; }
+.mob-term-prompt {
+  font-family: 'JetBrains Mono', 'Menlo', monospace;
+  font-size: 10px;
+  color: #58a6ff;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.mob-term-typed { color: #79c0ff; }
+.mob-term-caret {
+  width: 4px;
+  height: 9px;
+  background: #58a6ff;
+  display: inline-block;
+  animation: termCursorBlink 1s steps(2) infinite;
+}
+@keyframes termCursorBlink { 50% { opacity: 0; } }
+
+/* Title + subtitle stack on the right of the chip */
+.mob-term-meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+  z-index: 1;
+}
+.mob-term-title {
+  font-family: 'JetBrains Mono', 'Menlo', monospace;
+  font-size: 15px;
+  font-weight: 600;
+  color: #f0f6fc;
+  letter-spacing: 0.1px;
+  line-height: 1.1;
+}
+.mob-term-sub {
+  font-family: 'JetBrains Mono', 'Menlo', monospace;
+  font-size: 10.5px;
+  color: rgba(125, 211, 252, 0.7);
+  letter-spacing: 0.05px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+/* REPL badge — cyan, mono, neat */
+.mob-bento.mob-bento-terminal .mob-bento-badge {
+  background: rgba(88, 166, 255, 0.14) !important;
+  color: #58a6ff !important;
+  border: 1px solid rgba(88, 166, 255, 0.32) !important;
+  font-family: 'JetBrains Mono', 'Menlo', monospace !important;
+  font-size: 9.5px !important;
+  letter-spacing: 0.7px !important;
+  padding: 4px 9px !important;
+  position: static !important;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 8px rgba(88,166,255,0.45);
+}
+
+/* Tap feedback */
+.mob-bento.mob-bento-terminal:active {
+  transform: scale(0.98);
+  border-color: rgba(125, 211, 252, 0.32);
+}
+.mob-bento.mob-bento-terminal:active .mob-term-screen {
+  border-color: rgba(125, 211, 252, 0.4);
+  box-shadow:
+    0 4px 14px rgba(56,189,248,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+/* Mobile expanded terminal panel — fills the full viewport, no inner scroll
+   leak. Header is position:fixed at top (56px), body is absolute below it. */
+.mobile-terminal-expanded {
+  background: #0e1015;
+  padding-top: 0 !important;
+  overflow: hidden !important;
+}
+.mobile-terminal-expanded .mobile-expanded-header {
+  background: #0a0d12;
+  border-bottom: 1px solid #1c1f25;
+}
+.mobile-terminal-expanded .mobile-expanded-title {
+  font-family: 'JetBrains Mono', 'Menlo', monospace;
+  font-size: 14px;
+  color: #f0f6fc;
+  letter-spacing: 0.4px;
+}
+
+.mobile-terminal-body {
+  padding: 0;
+  background: #0e1015;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+.mobile-terminal-body .terminal-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 8px 4px;
+  -webkit-overflow-scrolling: touch;
+}
+.mobile-terminal-body .terminal {
+  font-size: 10.5px;
+  line-height: 1.55;
+  letter-spacing: -0.1px;
+}
+.mobile-terminal-body .terminal-line {
+  white-space: pre-wrap;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+/* Slimmer indent inside the mobile terminal — saves ~16 chars per line */
+.mobile-terminal-body .terminal a.term-link {
+  border-bottom: none;
+  text-decoration: underline;
+  text-decoration-color: rgba(88,166,255,0.35);
+  text-underline-offset: 2px;
+}
+/* Tighter card grid on mobile terminal */
+.mobile-terminal-body .terminal .term-cards-wrap {
+  margin: 6px 0 8px;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+/* Suggestion chips row — horizontal scroll, sticky-ish above the input bar */
+.mob-terminal-suggestions {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-top: 1px solid #1c1f25;
+  background: #0a0d12;
+  flex-shrink: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.mob-terminal-suggestions::-webkit-scrollbar { display: none; }
+.mob-terminal-suggestions button {
+  flex-shrink: 0;
+  background: #16181d;
+  border: 1px solid #1f2229;
+  color: #79c0ff;
+  font-family: 'JetBrains Mono', 'Menlo', monospace;
+  font-size: 11.5px;
+  padding: 6px 11px;
+  border-radius: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, border-color .15s, color .15s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.mob-terminal-suggestions button:hover,
+.mob-terminal-suggestions button:active {
+  background: #1c1f25;
+  border-color: rgba(88, 166, 255, 0.35);
+  color: #f0f6fc;
+}
+
+.mob-terminal-inputbar {
+  padding: 8px 10px 10px;
+  background: #0a0d12;
+  border-top: 1px solid #1c1f25;
+  font-size: 11px;
+  gap: 6px;
+}
+.mob-terminal-inputbar .terminal-input {
+  font-size: 16px; /* prevent iOS zoom on focus */
+  letter-spacing: -0.1px;
+}
+.mob-terminal-inputbar .terminal-prompt-prefix {
+  font-size: 11px;
+  letter-spacing: -0.1px;
+}
+.mob-terminal-suggestions {
+  padding: 6px 8px;
+  gap: 5px;
+}
+.mob-terminal-suggestions button {
+  font-size: 10.5px;
+  padding: 5px 9px;
+  border-radius: 12px;
+  letter-spacing: -0.1px;
+}
+
+/* Smaller card grids inside the mobile terminal */
+@media (max-width: 768px) {
+  .terminal .term-cards-wrap {
+    margin: 8px 0 12px;
+    padding: 10px;
+  }
+  .terminal .term-cards-wrap .max-pr-grid,
+  .terminal .term-cards-wrap .max-art-grid,
+  .terminal .term-cards-wrap .max-spk-grid,
+  .terminal .term-cards-wrap .max-oss-grid,
+  .terminal .term-cards-wrap .max-video-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ===== CONTENT STYLES ===== */

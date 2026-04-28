@@ -1331,6 +1331,44 @@
     },
     send: function (text) { return sendMessage(text); },
     scrollBottom: function (smooth) { scrollAllToBottom(!!smooth); },
+    /* Stateless one-shot ask: doesn't touch chat history. Returns
+       { clean, segments } where each segment is either
+       { kind:'text', value } or { kind:'cards', type, param, html }.
+       Used by the terminal REPL (max command) so cards render inline. */
+    ask: async function (text) {
+      const q = String(text || '').trim();
+      if (!q) return { clean: '', segments: [] };
+      const reply = await callLLM([{ role: 'user', content: q }]);
+      const cleaned = extractLead(reply).clean;
+      const parts = splitCardTags(cleaned);
+      const segments = parts.map((p) => {
+        if (p.kind === 'text') return { kind: 'text', value: p.value };
+        const builder = CARD_BUILDERS[p.type];
+        const html = builder ? builder(p.param) : '';
+        return { kind: 'cards', type: p.type, param: p.param, html: html };
+      }).filter((s) => s.kind === 'text' ? !!s.value : !!s.html);
+      return { clean: cleaned, segments: segments };
+    },
+    /* Direct card builder access for terminal shortcuts that don't need LLM. */
+    buildCards: function (type, param) {
+      const fn = CARD_BUILDERS[(type || '').toLowerCase()];
+      return fn ? fn(param || '') : '';
+    },
+    /* Read-only data accessors for terminal CLI rendering. Returns shallow
+       references to canonical arrays — terminal must NOT mutate. */
+    data: {
+      get prsMerged()    { return PR_CARDS_MERGED; },
+      get prsOpen()      { return PR_CARDS_OPEN; },
+      get articles()     { return ARTICLE_CARDS; },
+      get articleCatalog() { return ARTICLE_CATALOG; },
+      get speaking()     { return SPEAKING_CARDS; },
+      get oss()          { return OSS_CARDS; },
+      get ossCatalog()   { return OSS_CATALOG; },
+      get tech()         { return TECH_GROUPS; },
+      get course()       { return COURSE_CARD; },
+      get videos()       { return FC_VIDEOS; },
+      get contacts()     { return CONTACT_CARDS; },
+    },
     _state: function () {
       const insts = bindAll();
       return {

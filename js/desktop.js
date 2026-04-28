@@ -416,7 +416,8 @@ function expandMobileSection(evt, section) {
     'github': 'mobile-github-expanded',
     'linkedin': 'mobile-linkedin-expanded',
     'medium': 'mobile-medium-expanded',
-    'flutter-course': 'mobile-flutter-course-expanded'
+    'flutter-course': 'mobile-flutter-course-expanded',
+    'about': 'mobile-about-expanded'
   };
   const elem = document.getElementById(map[section]);
   if (elem) {
@@ -435,6 +436,9 @@ function expandMobileSection(evt, section) {
     history.pushState({mobileSection: section}, '');
     if (section === 'snake') initMobSnake();
     if (section === 'flutter-course') renderMobileFlutterCourseGrid();
+    if (section === 'about' && typeof startMobileTerminal === 'function') {
+      setTimeout(startMobileTerminal, 60);
+    }
   }
 }
 
@@ -506,7 +510,8 @@ function closeMobileSection(section) {
     'snake': 'mobile-snake-expanded',
     'github': 'mobile-github-expanded',
     'linkedin': 'mobile-linkedin-expanded',
-    'flutter-course': 'mobile-flutter-course-expanded'
+    'flutter-course': 'mobile-flutter-course-expanded',
+    'about': 'mobile-about-expanded'
   };
   if (section === 'flutter-course' && typeof stopAllFlutterCourseVideos === 'function') stopAllFlutterCourseVideos();
   if (section === 'snake' && typeof mobSnakeUnlockScroll === 'function') mobSnakeUnlockScroll();
