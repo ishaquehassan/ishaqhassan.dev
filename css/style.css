@@ -3165,8 +3165,11 @@ a.sb-item { text-decoration: none; }
   letter-spacing: 0.4px;
 }
 
-.mobile-terminal-body {
-  padding: 0;
+/* Edge-to-edge body inside the mobile terminal panel.
+   Spec-bumped via the wrapper class so it beats `.mobile-expanded-content`
+   (which lives later in this file and applies 20px 16px 40px padding).      */
+.mobile-terminal-expanded .mobile-terminal-body {
+  padding: 0 !important;
   background: #0e1015;
   display: flex;
   flex-direction: column;
@@ -3177,12 +3180,12 @@ a.sb-item { text-decoration: none; }
   bottom: 0;
   overflow: hidden;
 }
-.mobile-terminal-body .terminal-scroll {
+.mobile-terminal-expanded .mobile-terminal-body .terminal-scroll {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 8px 8px 4px;
+  padding: 4px 6px 2px;
   -webkit-overflow-scrolling: touch;
 }
 .mobile-terminal-body .terminal {
@@ -3213,7 +3216,7 @@ a.sb-item { text-decoration: none; }
 .mob-terminal-suggestions {
   display: flex;
   gap: 6px;
-  padding: 8px 12px;
+  padding: 6px 8px;
   overflow-x: auto;
   overflow-y: hidden;
   border-top: 1px solid #1c1f25;
@@ -3246,7 +3249,7 @@ a.sb-item { text-decoration: none; }
 }
 
 .mob-terminal-inputbar {
-  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+  padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
   background: #0a0d12;
   border-top: 1px solid #1c1f25;
   font-size: 11px;
