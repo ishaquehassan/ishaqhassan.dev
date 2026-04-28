@@ -3246,19 +3246,58 @@ a.sb-item { text-decoration: none; }
 }
 
 .mob-terminal-inputbar {
-  padding: 8px 10px 10px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
   background: #0a0d12;
   border-top: 1px solid #1c1f25;
   font-size: 11px;
-  gap: 6px;
+  gap: 8px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 .mob-terminal-inputbar .terminal-input {
   font-size: 16px; /* prevent iOS zoom on focus */
   letter-spacing: -0.1px;
+  padding: 6px 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
 }
+/* Placeholder is shown at the same scale as terminal output, NOT 16px */
+.mob-terminal-inputbar .terminal-input::placeholder {
+  font-size: 11px;
+  letter-spacing: 0;
+  font-style: italic;
+  color: #4a525c;
+}
+.mob-terminal-inputbar .terminal-input::-webkit-input-placeholder { font-size: 11px; font-style: italic; color: #4a525c; }
+.mob-terminal-inputbar .terminal-input::-moz-placeholder { font-size: 11px; font-style: italic; color: #4a525c; opacity: 1; }
 .mob-terminal-inputbar .terminal-prompt-prefix {
   font-size: 11px;
   letter-spacing: -0.1px;
+}
+/* Send button — visible cyan paper-plane on mobile */
+.mob-terminal-send {
+  background: rgba(88, 166, 255, 0.14);
+  border: 1px solid rgba(88, 166, 255, 0.3);
+  color: #58a6ff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .15s, border-color .15s;
+}
+.mob-terminal-send:active {
+  background: rgba(88, 166, 255, 0.28);
+  border-color: rgba(88, 166, 255, 0.5);
 }
 .mob-terminal-suggestions {
   padding: 6px 8px;

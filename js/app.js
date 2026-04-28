@@ -1768,8 +1768,63 @@ function startMobileTerminal() {
     inputId: 'mob-terminal-input',
     promptId: 'mob-terminal-input-prefix',
   });
+  termSetupMobileViewport();
 }
 window.startMobileTerminal = startMobileTerminal;
+
+/* Mobile form submit handler — Android soft keyboard's "Go"/"Send" button
+   reliably triggers form submit even when keydown.key is unset (IME 229). */
+function mobTerminalSubmit(ev) {
+  if (ev) ev.preventDefault();
+  if (TERM.busy) return false;
+  const v = TERM.inputEl ? TERM.inputEl.value : '';
+  /* Empty submit (e.g., Enter pressed twice, keydown handler already ran) */
+  if (!v || !v.trim()) return false;
+  if (TERM.inputEl) TERM.inputEl.value = '';
+  termRun(v);
+  /* Keep focus so keyboard stays open for next command */
+  if (TERM.inputEl) {
+    setTimeout(function () { try { TERM.inputEl.focus({ preventScroll: true }); } catch (e) { TERM.inputEl.focus(); } }, 0);
+  }
+  return false;
+}
+window.mobTerminalSubmit = mobTerminalSubmit;
+
+/* Mobile virtual-keyboard handling: when the soft keyboard opens it shrinks
+   the visualViewport but NOT the layout viewport. We mirror the visible area
+   to the panel so the input bar stays above the keyboard. */
+let _termVVBound = false;
+function termSetupMobileViewport() {
+  if (_termVVBound) { _termSyncMobileViewport(); return; }
+  if (!window.visualViewport) return;
+  _termVVBound = true;
+  const vv = window.visualViewport;
+  vv.addEventListener('resize', _termSyncMobileViewport);
+  vv.addEventListener('scroll', _termSyncMobileViewport);
+  /* When the input gets focused, scroll it into view above the keyboard. */
+  if (TERM.inputEl) {
+    TERM.inputEl.addEventListener('focus', function () {
+      setTimeout(_termSyncMobileViewport, 80);
+      setTimeout(_termSyncMobileViewport, 320);
+      setTimeout(termScroll, 360);
+    });
+  }
+  _termSyncMobileViewport();
+}
+function _termSyncMobileViewport() {
+  const panel = document.getElementById('mobile-about-expanded');
+  if (!panel) return;
+  if (!window.visualViewport) return;
+  const vh = window.visualViewport.height;
+  const offY = window.visualViewport.offsetTop || 0;
+  /* Make the panel exactly as tall as the visible viewport, anchored to the
+     visible top — so the input bar sits at the bottom of the visible area. */
+  panel.style.height = vh + 'px';
+  panel.style.top = offY + 'px';
+  panel.style.bottom = 'auto';
+  termScroll();
+}
+window._termSyncMobileViewport = _termSyncMobileViewport;
 
 // ===== LINKEDIN TABS =====
 function switchLiTab(tab, btn) {
