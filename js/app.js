@@ -694,14 +694,16 @@ function termPrint(html, cls) {
 }
 
 /* Typed-output: print + small delay so data appears line-by-line like a real
-   terminal. Default 35ms; faster on blanks, slower on ASCII headers. */
+   terminal. Default 35ms desktop / 18ms mobile (smaller surface, faster scan).
+   Faster on blanks, slower on ASCII headers. */
 async function termSay(html, cls) {
   termPrint(html, cls);
   const text = String(html == null ? '' : html).replace(/<[^>]+>/g, '');
-  let delay = 35;
-  if (!text.trim()) delay = 18;
-  else if (/[┌└┐┘├┤─]/.test(text)) delay = 120;
-  else if (/^\s{2,}[A-Z]/.test(text) || /^\s*[A-Z][a-z ]+$/.test(text.trim())) delay = 50;
+  const mob = TERM.scrollEl && TERM.scrollEl.id === 'mob-terminal-scroll';
+  let delay = mob ? 18 : 35;
+  if (!text.trim()) delay = mob ? 10 : 18;
+  else if (/[┌└┐┘├┤─]/.test(text)) delay = mob ? 60 : 120;
+  else if (/^\s{2,}[A-Z]/.test(text) || /^\s*[A-Z][a-z ]+$/.test(text.trim())) delay = mob ? 28 : 50;
   await new Promise(function (r) { setTimeout(r, delay); });
 }
 
@@ -957,6 +959,16 @@ function termOpenMsg(id) {
   return '  ' + w.emoji + '  ' + tpl.replace('{n}', '<span class="str">' + _termEsc(w.name) + '</span>');
 }
 
+/* True when the active terminal surface is the mobile one. Used by data
+   commands to switch to a compact, non-cluttered render (no excerpt
+   sub-lines, fewer stat rows, single-line footer). */
+function _isTermMobile() {
+  if (!TERM.scrollEl) return false;
+  if (TERM.scrollEl.id === 'mob-terminal-scroll') return true;
+  if (TERM.scrollEl.closest && TERM.scrollEl.closest('.mobile-terminal-expanded')) return true;
+  return false;
+}
+
 /* Render shared cards via MaxChat.buildCards (PRs, articles, course, etc.) */
 function termRenderCards(type, param) {
   if (!window.MaxChat || typeof window.MaxChat.buildCards !== 'function') {
@@ -1030,17 +1042,29 @@ const TERM_LINKEDIN = {
 /* ---- Command registry ---- */
 const TERM_COMMANDS = {
   help: async function () {
+    const mob = _isTermMobile();
+    const padW = mob ? 16 : 33;
     await termSay('');
-    await termSay('  <span class="str">┌─ Available commands ─┐</span>');
-    await termSay('  <span class="comment">organized by category · most are aliases of each other</span>');
+    await termSay('  <span class="str">┌─ Commands ─┐</span>');
     await termSay('');
-    await termSay('  <span class="str">DATA — render deep CLI dashboard inline</span>');
-    const dataRows = [
-      ['flutter | prs',                 'Flutter framework PRs · live · all 9 PRs detailed'],
+    await termSay('  <span class="str">DATA</span>');
+    const dataRows = mob ? [
+      ['flutter',  'PRs · live'],
+      ['speaking', 'talks · timeline'],
+      ['articles', '9 articles'],
+      ['oss',      '5 packages · stars'],
+      ['tech',     'stack · categories'],
+      ['contact',  '8 channels'],
+      ['course',   '35-video Urdu course'],
+      ['github',   'live · top repos'],
+      ['linkedin', 'roles · skills'],
+      ['snake',    'best score · controls'],
+    ] : [
+      ['flutter | prs',                 'Flutter PRs · live · 9 PRs detailed'],
       ['speaking | talks',              'tech talks · venues · roles · timeline'],
       ['articles',                      'long-form essays · 9 articles + reading time'],
-      ['oss | repos | open-source',     'open source packages · all 5 with topics + stars'],
-      ['tech | stack',                  '4 categories · 16+ technologies · battle-tested years'],
+      ['oss | repos | open-source',     'open source packages · 5 with topics + stars'],
+      ['tech | stack',                  '4 categories · 16+ techs · battle-tested years'],
       ['contact',                       '8 channels · best-for tags · response times'],
       ['course | courses',              '35-video Urdu Flutter course · 7 sections'],
       ['github',                        'LIVE: profile · top 5 repos by stars · aggregates'],
@@ -1048,22 +1072,30 @@ const TERM_COMMANDS = {
       ['wisesend',                      'WiseSend product · stack · status'],
       ['snake',                         'high score · controls · last played'],
     ];
-    for (const r of dataRows) await termSay('    <span class="cmd">' + _termEsc(r[0]).padEnd(33, ' ') + '</span><span class="comment">' + _termEsc(r[1]) + '</span>');
+    for (const r of dataRows) await termSay('    <span class="cmd">' + _termEsc(r[0]).padEnd(padW, ' ') + '</span><span class="comment">' + _termEsc(r[1]) + '</span>');
     await termSay('');
-    await termSay('  <span class="str">OPEN — launch a window with cute msg</span>');
-    const openRows = [
-      ['open <name>',                   'open any: ' + Object.keys(TERM_WINDOWS).join(', ')],
-      ['open open-source',              'alias for oss window'],
-      ['hire',                          'open contact morph dialog with form'],
-    ];
-    for (const r of openRows) await termSay('    <span class="cmd">' + _termEsc(r[0]).padEnd(33, ' ') + '</span><span class="comment">' + _termEsc(r[1]) + '</span>');
+    await termSay('  <span class="str">OPEN</span>');
+    if (mob) {
+      await termSay('    <span class="cmd">' + 'open <name>'.padEnd(padW, ' ') + '</span><span class="comment">open any window</span>');
+      await termSay('    <span class="cmd">' + 'hire'.padEnd(padW, ' ') + '</span><span class="comment">inline inquiry form</span>');
+    } else {
+      await termSay('    <span class="cmd">' + 'open <name>'.padEnd(padW, ' ') + '</span><span class="comment">open any: ' + Object.keys(TERM_WINDOWS).join(', ') + '</span>');
+      await termSay('    <span class="cmd">' + 'open open-source'.padEnd(padW, ' ') + '</span><span class="comment">alias for oss window</span>');
+      await termSay('    <span class="cmd">' + 'hire'.padEnd(padW, ' ') + '</span><span class="comment">inline inquiry form + contact cards</span>');
+    }
     await termSay('');
     await termSay('  <span class="str">AI</span>');
-    await termSay('    <span class="cmd">' + 'max "<query>"'.padEnd(33, ' ') + '</span><span class="comment">ask Max AI · widgets render inline</span>');
-    await termSay('    <span class="cmd">' + 'videos <topic>'.padEnd(33, ' ') + '</span><span class="comment">grep 35 course videos by keyword</span>');
+    await termSay('    <span class="cmd">' + 'max "<query>"'.padEnd(padW, ' ') + '</span><span class="comment">ask Max AI · cards render inline</span>');
+    await termSay('    <span class="cmd">' + 'videos <topic>'.padEnd(padW, ' ') + '</span><span class="comment">grep course videos</span>');
     await termSay('');
     await termSay('  <span class="str">SHELL</span>');
-    const shellRows = [
+    const shellRows = mob ? [
+      ['help',     'this list'],
+      ['whoami',   'identity card'],
+      ['ls / cat', 'virtual fs'],
+      ['clear',    'clear screen'],
+      ['history',  'recent commands'],
+    ] : [
       ['help | --help | -h',            'this list'],
       ['whoami',                        'identity card'],
       ['ls / cat <file>',               'virtual filesystem (about.md, skills.md, ...)'],
@@ -1075,13 +1107,12 @@ const TERM_COMMANDS = {
       ['external <name>',               'youtube · medium · twitter · tiktok · stackoverflow'],
       ['pwd',                           'current path (joke)'],
     ];
-    for (const r of shellRows) await termSay('    <span class="cmd">' + _termEsc(r[0]).padEnd(33, ' ') + '</span><span class="comment">' + _termEsc(r[1]) + '</span>');
-    await termSay('');
-    await termSay('  <span class="str">KEYBINDINGS</span>');
-    await termSay('    <span class="cmd">↑ / ↓</span>           navigate command history');
-    await termSay('    <span class="cmd">Tab</span>             autocomplete commands + filenames');
-    await termSay('    <span class="cmd">Ctrl+L</span>          clear screen');
-    await termSay('    <span class="cmd">Ctrl+C</span>          cancel current input');
+    for (const r of shellRows) await termSay('    <span class="cmd">' + _termEsc(r[0]).padEnd(padW, ' ') + '</span><span class="comment">' + _termEsc(r[1]) + '</span>');
+    if (!mob) {
+      await termSay('');
+      await termSay('  <span class="str">KEYS</span>');
+      await termSay('    <span class="cmd">↑ / ↓</span>           history · <span class="cmd">Tab</span> autocomplete · <span class="cmd">Ctrl+L</span> clear · <span class="cmd">Ctrl+C</span> cancel');
+    }
     await termSay('');
   },
   '--help': function () { return TERM_COMMANDS.help(); },
@@ -1112,17 +1143,21 @@ const TERM_COMMANDS = {
     const D = (window.MaxChat && window.MaxChat.data) || {};
     const merged = D.prsMerged || [];
     const open = D.prsOpen || [];
+    const mob = _isTermMobile();
     await termHeader('Flutter Framework Contributions', 'live · github.com/flutter/flutter');
     const live = await termFetchLive();
-    const stats = live ? (live.merged + ' merged ✓ · ' + live.open + ' open ⟳ · ' + live.total + ' total <span class="comment">(live)</span>') : (merged.length + ' merged ✓ · ' + open.length + ' open ⟳');
-    await termSay('  <span class="str">Stats</span>          : ' + stats);
-    await termSay('  <span class="str">Reviewer</span>       : Flutter team @ Google');
-    await termSay('  <span class="str">Active since</span>   : 2024');
-    await termSay('  <span class="str">Areas touched</span>  : framework · docs · tooling');
+    const stats = live ? (live.merged + ' merged ✓ · ' + live.open + ' open ⟳ · ' + live.total + ' total') : (merged.length + ' merged ✓ · ' + open.length + ' open ⟳');
+    await termSay('  <span class="str">Stats</span>     : ' + stats);
+    if (!mob) {
+      await termSay('  <span class="str">Reviewer</span>  : Flutter team @ Google');
+      await termSay('  <span class="str">Active</span>    : since 2024 · framework · docs · tooling');
+    } else {
+      await termSay('  <span class="str">Active</span>    : since 2024');
+    }
     await termSay('');
-    await termSay('  <span class="str">Merged PRs</span> <span class="comment">(production-shipped)</span>');
+    await termSay('  <span class="str">Merged PRs</span>');
     for (const p of merged) {
-      await termSay('    ▸ <a class="term-link" href="https://github.com/flutter/flutter/pull/' + p.num + '" target="_blank" rel="noopener">#' + p.num + '</a>  ' + _termEsc(p.title));
+      await termSay('    ▸ <a class="term-link" href="https://github.com/flutter/flutter/pull/' + p.num + '" target="_blank" rel="noopener">#' + p.num + '</a> ' + _termEsc(p.title));
     }
     await termSay('');
     await termSay('  <span class="str">Open / In-review</span>');
@@ -1130,29 +1165,32 @@ const TERM_COMMANDS = {
       await termSay('    ▸ <a class="term-link" href="https://github.com/flutter/flutter/pull/' + p.num + '" target="_blank" rel="noopener">#' + p.num + '</a> ⟳ ' + _termEsc(p.title));
     }
     await termSay('');
-    await termSay('  <a class="term-link" href="https://github.com/flutter/flutter/pulls?q=author%3Aishaquehassan" target="_blank" rel="noopener">→ All PRs on github.com/flutter/flutter</a>');
-    await termSay('  <span class="comment">// type <span class="cmd">open flutter</span> for the cards UI.</span>');
+    await termSay('  <a class="term-link" href="https://github.com/flutter/flutter/pulls?q=author%3Aishaquehassan" target="_blank" rel="noopener">→ all on github</a> · <span class="comment">type <span class="cmd">open flutter</span> for cards.</span>');
   },
   prs: async function () { return TERM_COMMANDS.flutter(); },
 
   speaking: async function () {
     const D = (window.MaxChat && window.MaxChat.data) || {};
     const list = D.speaking || [];
+    const mob = _isTermMobile();
     await termHeader('Public Speaking', 'tech talks · GDG · Nest I/O · universities');
-    await termSay('  <span class="str">Tracked talks</span>    : ' + list.length + ' (more unlisted on /speaking)');
-    await termSay('  <span class="str">Topics</span>           : Flutter · architecture · open source · AI · mobile');
-    await termSay('  <span class="str">Audiences</span>        : GDG Kolachi · Nest I/O · universities · corporate');
-    await termSay('  <span class="str">Format</span>           : 30–60 min talks · workshops · panels · keynotes');
-    await termSay('  <span class="str">Most recent</span>      : ' + (list[0] ? _termEsc(list[0].date) : '—') + ' · ' + (list[0] ? _termEsc(list[0].title) : '—'));
+    await termSay('  <span class="str">Talks</span>     : ' + list.length + ' tracked');
+    if (!mob) {
+      await termSay('  <span class="str">Topics</span>    : Flutter · architecture · open source · AI · mobile');
+      await termSay('  <span class="str">Audiences</span> : GDG Kolachi · Nest I/O · universities · corporate');
+      await termSay('  <span class="str">Format</span>    : 30–60 min talks · workshops · panels · keynotes');
+    } else {
+      await termSay('  <span class="str">Topics</span>    : Flutter · architecture · OSS · mobile');
+    }
+    await termSay('  <span class="str">Latest</span>    : ' + (list[0] ? _termEsc(list[0].date) + ' · ' + _termEsc(list[0].title) : '—'));
     await termSay('');
-    await termSay('  <span class="str">Talk timeline</span>');
+    await termSay('  <span class="str">Timeline</span>');
     for (const t of list) {
-      await termSay('    ▸ <span class="comment">' + _termEsc(t.date) + '</span>  <a class="term-link" href="' + _termEsc(t.href) + '" target="_blank" rel="noopener">' + _termEsc(t.title) + '</a>');
-      await termSay('       ' + _termEsc(t.org) + ' · <span class="comment">' + _termEsc(t.role) + '</span>');
+      await termSay('    ▸ <span class="comment">' + _termEsc(t.date) + '</span> <a class="term-link" href="' + _termEsc(t.href) + '" target="_blank" rel="noopener">' + _termEsc(t.title) + '</a>');
+      if (!mob) await termSay('       ' + _termEsc(t.org) + ' · <span class="comment">' + _termEsc(t.role) + '</span>');
     }
     await termSay('');
-    await termSay('  <a class="term-link" href="/speaking">→ Full timeline on /speaking</a>');
-    await termSay('  <span class="comment">// type <span class="cmd">open speaking</span> for the OS window.</span>');
+    await termSay('  <a class="term-link" href="/speaking">→ /speaking</a> · <span class="comment">type <span class="cmd">open speaking</span> for window.</span>');
   },
   talks: function () { return TERM_COMMANDS.speaking(); },
 
@@ -1164,21 +1202,22 @@ const TERM_COMMANDS = {
     const tags = {};
     all.forEach((a) => { if (a.tag) tags[a.tag] = (tags[a.tag] || 0) + 1; });
     const tagList = Object.keys(tags).sort((a, b) => tags[b] - tags[a]).map((t) => t + ' ×' + tags[t]).join(' · ');
+    const mob = _isTermMobile();
     await termHeader('Long-form Articles', 'engineering · Flutter internals · leadership');
-    await termSay('  <span class="str">Total published</span> : ' + all.length);
-    await termSay('  <span class="str">Total reading</span>   : ' + totalMins + ' min');
-    await termSay('  <span class="str">Avg per article</span> : ' + (all.length ? Math.round(totalMins / all.length) : 0) + ' min');
-    await termSay('  <span class="str">Topics</span>          : ' + (tagList || '—'));
-    await termSay('  <span class="str">Platforms</span>       : ishaqhassan.dev · Medium · Dev.to');
+    await termSay('  <span class="str">Published</span> : ' + all.length + ' · <span class="comment">' + totalMins + ' min total</span>');
+    if (!mob) {
+      await termSay('  <span class="str">Avg read</span>  : ' + (all.length ? Math.round(totalMins / all.length) : 0) + ' min');
+      await termSay('  <span class="str">Topics</span>    : ' + (tagList || '—'));
+      await termSay('  <span class="str">Platforms</span> : ishaqhassan.dev · Medium · Dev.to');
+    }
     await termSay('');
     await termSay('  <span class="str">Catalog</span>');
     for (const a of all) {
-      await termSay('    ▸ <span class="comment">' + (a.mins || 0) + ' min</span> · <a class="term-link" href="' + _termEsc(a.href) + '">' + _termEsc(a.title) + '</a>  <span class="comment">[' + _termEsc(a.tag || '') + ']</span>');
-      await termSay('       <span class="comment">' + _termEsc((a.excerpt || '').slice(0, 110)) + '</span>');
+      await termSay('    ▸ <span class="comment">' + (a.mins || 0) + 'm</span> <a class="term-link" href="' + _termEsc(a.href) + '">' + _termEsc(a.title) + '</a>');
+      if (!mob && a.excerpt) await termSay('       <span class="comment">' + _termEsc(a.excerpt.slice(0, 110)) + '</span>');
     }
     await termSay('');
-    await termSay('  <a class="term-link" href="/articles/">→ All articles · /articles/</a>');
-    await termSay('  <span class="comment">// type <span class="cmd">open articles</span> for the reader UI.</span>');
+    await termSay('  <a class="term-link" href="/articles/">→ /articles/</a> · <span class="comment">type <span class="cmd">open articles</span> for reader UI.</span>');
   },
 
   oss: async function () {
@@ -1186,23 +1225,22 @@ const TERM_COMMANDS = {
     const cat = D.ossCatalog || {};
     const repos = Object.keys(cat).map((k) => cat[k]);
     const langs = Array.from(new Set(repos.map((r) => r.lang).filter(Boolean))).join(' · ');
+    const mob = _isTermMobile();
     await termHeader('Open Source Packages', 'pub.dev · npm · GitHub');
-    await termSay('  <span class="str">Maintained</span>     : ' + repos.length + ' packages');
-    await termSay('  <span class="str">Languages</span>      : ' + (langs || '—'));
-    await termSay('  <span class="str">Most starred</span>   : document_scanner_flutter');
-    await termSay('  <span class="str">Most forked</span>    : document_scanner_flutter (135 forks)');
-    await termSay('  <span class="str">Active dev</span>     : goal-agent · assets_indexer');
+    await termSay('  <span class="str">Packages</span>  : ' + repos.length + (langs ? ' · <span class="comment">' + langs + '</span>' : ''));
+    await termSay('  <span class="str">Top</span>       : document_scanner_flutter');
+    if (!mob) {
+      await termSay('  <span class="str">Forks</span>     : 135+ on document_scanner_flutter');
+      await termSay('  <span class="str">Active</span>    : goal-agent · assets_indexer');
+    }
     await termSay('');
     await termSay('  <span class="str">Catalog</span>');
     for (const r of repos) {
       await termSay('    ▸ <a class="term-link" href="' + _termEsc(r.href) + '" target="_blank" rel="noopener">' + _termEsc(r.name) + '</a> <span class="comment">[' + _termEsc(r.lang || '') + ']</span> <span class="str">' + _termEsc(r.stars || '') + '</span>');
-      await termSay('       <span class="comment">' + _termEsc((r.desc || '').slice(0, 110)) + '</span>');
-      const topics = (r.topics || []).slice(0, 5).join(' · ');
-      if (topics) await termSay('       <span class="comment">topics: ' + _termEsc(topics) + '</span>');
+      if (!mob && r.desc) await termSay('       <span class="comment">' + _termEsc(r.desc.slice(0, 110)) + '</span>');
     }
     await termSay('');
-    await termSay('  <a class="term-link" href="/open-source">→ /open-source</a>');
-    await termSay('  <span class="comment">// type <span class="cmd">open oss</span> for grid UI · star counts auto-refresh.</span>');
+    await termSay('  <a class="term-link" href="/open-source">→ /open-source</a> · <span class="comment">type <span class="cmd">open oss</span> for grid UI.</span>');
   },
   repos: function () { return TERM_COMMANDS.oss(); },
   'open-source': function () { return TERM_COMMANDS.oss(); },
@@ -1212,52 +1250,61 @@ const TERM_COMMANDS = {
     const D = (window.MaxChat && window.MaxChat.data) || {};
     const groups = D.tech || [];
     const totalItems = groups.reduce((s, g) => s + (g.items ? g.items.length : 0), 0);
+    const mob = _isTermMobile();
     await termHeader('Tech Stack', 'what I ship with, daily');
-    await termSay('  <span class="str">Years coding</span>      : 13.3');
-    await termSay('  <span class="str">Production apps</span>   : 50+ shipped');
-    await termSay('  <span class="str">Categories</span>        : ' + groups.length);
-    await termSay('  <span class="str">Technologies</span>      : ' + totalItems + ' tracked');
-    await termSay('  <span class="str">Currently using</span>   : Flutter framework PRs · DigitalHire platform · Cloudflare Workers');
-    await termSay('  <span class="str">Open for</span>          : senior IC · EM · tech advisory');
+    await termSay('  <span class="str">Coding</span>    : 13.3 yrs · 50+ apps shipped');
+    if (!mob) {
+      await termSay('  <span class="str">Tracked</span>   : ' + totalItems + ' techs in ' + groups.length + ' categories');
+      await termSay('  <span class="str">Now</span>       : Flutter PRs · DigitalHire · Cloudflare Workers');
+      await termSay('  <span class="str">Open for</span>  : senior IC · EM · tech advisory');
+    } else {
+      await termSay('  <span class="str">Now</span>       : Flutter PRs · DigitalHire · CF Workers');
+    }
     await termSay('');
+    const padW = mob ? 9 : 16;
     for (const g of groups) {
       const items = (g.items || []).join(' · ');
-      const labelPad = (g.label || '').padEnd(16, ' ');
+      const labelPad = (g.label || '').padEnd(padW, ' ');
       await termSay('  <span class="str">' + _termEsc(labelPad) + '</span> ▸ ' + _termEsc(items));
     }
     await termSay('');
-    await termSay('  <span class="str">Battle-tested</span>     : Flutter (8 yrs) · Node (12 yrs) · Postgres (10 yrs) · Firebase (7 yrs)');
-    await termSay('');
-    await termSay('  <a class="term-link" href="/tech-stack">→ /tech-stack</a>');
-    await termSay('  <span class="comment">// type <span class="cmd">open tech</span> for visual surface.</span>');
+    if (!mob) await termSay('  <span class="str">Battle-tested</span> : Flutter (8 yrs) · Node (12 yrs) · Postgres (10 yrs) · Firebase (7 yrs)');
+    await termSay('  <a class="term-link" href="/tech-stack">→ /tech-stack</a> · <span class="comment">type <span class="cmd">open tech</span> for visual surface.</span>');
   },
   stack: function () { return TERM_COMMANDS.tech(); },
 
   contact: async function () {
+    const mob = _isTermMobile();
     await termHeader('Contact', 'fastest paths to me');
-    await termSay('  <span class="str">Best for hiring</span>      : email · LinkedIn');
-    await termSay('  <span class="str">Best for code/issues</span> : GitHub');
-    await termSay('  <span class="str">Best for quick chat</span>  : X / Twitter DM');
-    await termSay('  <span class="str">Office hours</span>         : Karachi PKT, evenings');
-    await termSay('  <span class="str">Languages</span>            : English · Urdu · Hindi');
-    await termSay('  <span class="str">Avg response</span>         : ~12 hours');
+    if (!mob) {
+      await termSay('  <span class="str">Hiring</span>    : email · LinkedIn');
+      await termSay('  <span class="str">Code/PR</span>   : GitHub');
+      await termSay('  <span class="str">Chat</span>      : X / Twitter DM');
+      await termSay('  <span class="str">Hours</span>     : Karachi PKT, evenings');
+      await termSay('  <span class="str">Languages</span> : English · Urdu · Hindi');
+      await termSay('  <span class="str">Response</span>  : ~12 hours');
+    } else {
+      await termSay('  <span class="str">Best for</span>  : hiring → email/LinkedIn · code → GitHub');
+      await termSay('  <span class="str">Response</span>  : ~12 hr · Karachi PKT');
+    }
     await termSay('');
     await termSay('  <span class="str">Channels</span>');
     const channels = [
-      ['Email',       'hello@ishaqhassan.dev',     'mailto:hello@ishaqhassan.dev',                    '★ primary'],
-      ['GitHub',      '@ishaquehassan',            'https://github.com/ishaquehassan',                'code · issues · PR'],
-      ['LinkedIn',    '@ishaquehassan',            'https://linkedin.com/in/ishaquehassan',           'hiring · network'],
-      ['Medium',      '@ishaqhassan',              'https://medium.com/@ishaqhassan',                 'blog updates'],
-      ['YouTube',     '@ishaquehassan',            'https://www.youtube.com/@ishaquehassan',          'course content'],
-      ['X / Twitter', '@ishaque_hassan',           'https://x.com/ishaque_hassan',                    'quick chat · DMs'],
-      ['TikTok',      '@ishaqhassan.dev',          'https://www.tiktok.com/@ishaqhassan.dev',         'short-form'],
-      ['Stack Over.', 'ishaq-hassan',              'https://stackoverflow.com/users/2094696/ishaq-hassan','code Q&A'],
+      ['Email',     'hello@ishaqhassan.dev', 'mailto:hello@ishaqhassan.dev',                    '★'],
+      ['GitHub',    '@ishaquehassan',        'https://github.com/ishaquehassan',                'code'],
+      ['LinkedIn',  '@ishaquehassan',        'https://linkedin.com/in/ishaquehassan',           'hiring'],
+      ['Medium',    '@ishaqhassan',          'https://medium.com/@ishaqhassan',                 'blog'],
+      ['YouTube',   '@ishaquehassan',        'https://www.youtube.com/@ishaquehassan',          'course'],
+      ['X',         '@ishaque_hassan',       'https://x.com/ishaque_hassan',                    'DMs'],
+      ['TikTok',    '@ishaqhassan.dev',      'https://www.tiktok.com/@ishaqhassan.dev',         'short'],
+      ['Stack Ov.', 'ishaq-hassan',          'https://stackoverflow.com/users/2094696/ishaq-hassan','Q&A'],
     ];
+    const padW = mob ? 9 : 12;
     for (const row of channels) {
-      await termSay('    ▸ <span class="str">' + row[0].padEnd(13, ' ') + '</span>  <a class="term-link" href="' + row[2] + '" target="_blank" rel="noopener">' + _termEsc(row[1]) + '</a>   <span class="comment">' + row[3] + '</span>');
+      await termSay('    ▸ <span class="str">' + row[0].padEnd(padW, ' ') + '</span> <a class="term-link" href="' + row[2] + '" target="_blank" rel="noopener">' + _termEsc(row[1]) + '</a> <span class="comment">· ' + row[3] + '</span>');
     }
     await termSay('');
-    await termSay('  <span class="comment">// type <span class="cmd">hire</span> to open the inquiry form · <span class="cmd">open contact</span> for cards UI.</span>');
+    await termSay('  <span class="comment">type <span class="cmd">hire</span> for inquiry form · <span class="cmd">open contact</span> for cards.</span>');
   },
 
   course: async function () {
@@ -1266,96 +1313,106 @@ const TERM_COMMANDS = {
     const sectionOrder = ['Foundation', 'Dart Basics', 'OOP', 'Flutter UI', 'State Management', 'API & Network', 'Advanced'];
     const counts = {};
     videos.forEach((v) => { counts[v.s] = (counts[v.s] || 0) + 1; });
+    const mob = _isTermMobile();
     await termHeader('Free Flutter Course · Urdu', '35 videos · listed on docs.flutter.dev');
-    await termSay('  <span class="str">Listed on</span>     : <a class="term-link" href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener">docs.flutter.dev/resources/courses</a> <span class="comment">(only Urdu course)</span>');
-    await termSay('  <span class="str">Total videos</span>  : ' + videos.length);
-    await termSay('  <span class="str">Sections</span>      : ' + sectionOrder.length);
-    await termSay('  <span class="str">Price</span>         : free');
-    await termSay('  <span class="str">Language</span>      : Urdu (English code/terminology)');
-    await termSay('  <span class="str">Platform</span>      : YouTube playlist');
-    await termSay('  <span class="str">Total runtime</span> : ~28 hours');
+    await termSay('  <span class="str">Videos</span>    : ' + videos.length + ' · ' + sectionOrder.length + ' sections · ~28h');
+    if (!mob) {
+      await termSay('  <span class="str">Listed</span>    : <a class="term-link" href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener">docs.flutter.dev/resources/courses</a> <span class="comment">(only Urdu course)</span>');
+      await termSay('  <span class="str">Language</span>  : Urdu (English code/terminology)');
+      await termSay('  <span class="str">Platform</span>  : YouTube · free');
+    } else {
+      await termSay('  <span class="str">Lang</span>      : Urdu · free on YouTube');
+      await termSay('  <span class="str">Listed</span>    : <a class="term-link" href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener">official Flutter docs</a>');
+    }
     await termSay('');
     await termSay('  <span class="str">Sections</span>');
+    const padW = mob ? 14 : 20;
     for (let idx = 0; idx < sectionOrder.length; idx++) {
       const sec = sectionOrder[idx];
       const c = counts[sec] || 0;
-      await termSay('    ' + (idx + 1) + '. <span class="str">' + _termEsc(sec.padEnd(20, ' ')) + '</span> <span class="comment">(' + c + ' video' + (c === 1 ? '' : 's') + ')</span>');
+      await termSay('    ' + (idx + 1) + '. <span class="str">' + _termEsc(sec.padEnd(padW, ' ')) + '</span> <span class="comment">(' + c + ')</span>');
     }
     await termSay('');
-    await termSay('  <a class="term-link" href="https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5" target="_blank" rel="noopener">→ YouTube playlist</a>');
-    await termSay('  <span class="comment">// type <span class="cmd">videos &lt;topic&gt;</span> to grep · <span class="cmd">open flutter-course</span> for window UI.</span>');
+    await termSay('  <a class="term-link" href="https://www.youtube.com/playlist?list=PLX97VxArfzkmXeUqUxeKW7XS8oYraH7A5" target="_blank" rel="noopener">→ YouTube playlist</a> · <span class="comment">type <span class="cmd">videos &lt;topic&gt;</span> to grep.</span>');
   },
   courses: function () { return TERM_COMMANDS.course(); },
 
   github: async function () {
+    const mob = _isTermMobile();
     await termHeader('GitHub · @ishaquehassan', 'live · api.github.com (24h cache)');
     const fetching = termPrint('  <span class="muted">→ fetching profile + top repos<span class="dots">...</span></span>', 'term-thinking');
     const profile = await termFetchGitHubProfile();
     const flutterData = await termFetchLive();
     if (fetching && fetching.parentNode) fetching.parentNode.removeChild(fetching);
     if (!profile) {
-      await termSay('  <span class="err">// API unreachable (likely rate-limited). canonical fallback:</span>');
-      await termSay('  <span class="str">Public repos</span>     : 60+');
-      await termSay('  <span class="str">Followers</span>        : 100+');
-      await termSay('  <span class="str">flutter PRs</span>      : 6 merged · 3 open');
+      await termSay('  <span class="err">// API unreachable (rate-limited). fallback:</span>');
+      await termSay('  <span class="str">Repos</span>     : 60+ · <span class="str">Followers</span> : 100+');
+      await termSay('  <span class="str">Flutter</span>   : 6 merged · 3 open');
       await termSay('  <a class="term-link" href="https://github.com/ishaquehassan" target="_blank" rel="noopener">→ github.com/ishaquehassan</a>');
       return;
     }
     const joined = profile.created_at ? new Date(profile.created_at).getFullYear() : '2013';
     const yrs = (new Date().getFullYear() - parseInt(joined, 10));
-    await termSay('  <span class="str">Profile</span>');
-    await termSay('    <span class="str">Name</span>             : ' + _termEsc(profile.name || 'Ishaq Hassan'));
-    if (profile.bio) await termSay('    <span class="str">Bio</span>              : <span class="comment">' + _termEsc(profile.bio.slice(0, 90)) + '</span>');
-    await termSay('    <span class="str">On GitHub since</span>  : ' + joined + ' (' + yrs + '+ yrs)');
-    await termSay('    <span class="str">Public repos</span>     : ' + profile.public_repos);
-    await termSay('    <span class="str">Followers</span>        : ' + profile.followers);
-    await termSay('    <span class="str">Following</span>        : ' + profile.following);
-    await termSay('');
-    if (flutterData) {
-      await termSay('  <span class="str">Flutter framework PRs</span>');
-      await termSay('    <span class="str">Merged</span>           : ' + flutterData.merged + ' ✓');
-      await termSay('    <span class="str">Open / review</span>    : ' + flutterData.open + ' ⟳');
-      await termSay('    <span class="str">Total</span>            : ' + flutterData.total);
-      await termSay('');
+    if (mob) {
+      await termSay('  <span class="str">Name</span>      : ' + _termEsc(profile.name || 'Ishaq Hassan'));
+      await termSay('  <span class="str">Since</span>     : ' + joined + ' (' + yrs + '+ yrs)');
+      await termSay('  <span class="str">Repos</span>     : ' + profile.public_repos + ' · <span class="str">Followers</span> : ' + profile.followers);
+    } else {
+      await termSay('  <span class="str">Profile</span>');
+      await termSay('    <span class="str">Name</span>          : ' + _termEsc(profile.name || 'Ishaq Hassan'));
+      if (profile.bio) await termSay('    <span class="str">Bio</span>           : <span class="comment">' + _termEsc(profile.bio.slice(0, 90)) + '</span>');
+      await termSay('    <span class="str">Since</span>         : ' + joined + ' (' + yrs + '+ yrs)');
+      await termSay('    <span class="str">Public repos</span>  : ' + profile.public_repos);
+      await termSay('    <span class="str">Followers</span>     : ' + profile.followers + ' · following ' + profile.following);
     }
+    if (flutterData) {
+      await termSay('  <span class="str">Flutter</span>   : ' + flutterData.merged + ' merged ✓ · ' + flutterData.open + ' open ⟳');
+    }
+    await termSay('');
     await termSay('  <span class="str">Top repos</span> <span class="comment">(by stars · live)</span>');
     let starSum = 0;
     for (const r of profile.repos) {
       starSum += (parseInt(r.stars, 10) || 0);
       const lang = r.lang ? '<span class="comment">[' + _termEsc(r.lang) + ']</span> ' : '';
-      const desc = r.desc ? ' <span class="comment">— ' + _termEsc(r.desc.slice(0, 70)) + '</span>' : '';
-      await termSay('    ▸ <a class="term-link" href="' + _termEsc(r.url) + '" target="_blank" rel="noopener">' + _termEsc(r.name) + '</a> ' + lang + '<span class="str">' + r.stars + '★</span> · ' + r.forks + ' forks' + desc);
+      if (mob) {
+        await termSay('    ▸ <a class="term-link" href="' + _termEsc(r.url) + '" target="_blank" rel="noopener">' + _termEsc(r.name) + '</a> ' + lang + '<span class="str">' + r.stars + '★</span>');
+      } else {
+        const desc = r.desc ? ' <span class="comment">— ' + _termEsc(r.desc.slice(0, 70)) + '</span>' : '';
+        await termSay('    ▸ <a class="term-link" href="' + _termEsc(r.url) + '" target="_blank" rel="noopener">' + _termEsc(r.name) + '</a> ' + lang + '<span class="str">' + r.stars + '★</span> · ' + r.forks + ' forks' + desc);
+      }
     }
     await termSay('');
-    await termSay('  <span class="str">Aggregate</span>');
-    await termSay('    <span class="str">Stars across top repos</span> : ' + starSum + '★');
     if (profile.repos.length) {
       const langs = {};
       profile.repos.forEach((r) => { if (r.lang) langs[r.lang] = (langs[r.lang] || 0) + 1; });
       const topLang = Object.keys(langs).sort((a, b) => langs[b] - langs[a])[0] || '—';
-      await termSay('    <span class="str">Top language</span>           : ' + _termEsc(topLang));
-      const mostStarred = profile.repos.reduce((m, r) => (r.stars > (m.stars || 0) ? r : m), profile.repos[0]);
-      await termSay('    <span class="str">Most starred</span>           : ' + _termEsc(mostStarred.name));
+      await termSay('  <span class="str">Stars</span>     : ' + starSum + '★ across top repos · top lang: ' + _termEsc(topLang));
     }
-    await termSay('');
-    await termSay('  <a class="term-link" href="https://github.com/ishaquehassan" target="_blank" rel="noopener">→ Full profile on github.com</a>');
-    await termSay('  <span class="comment">// type <span class="cmd">open github</span> for the in-OS window.</span>');
+    await termSay('  <a class="term-link" href="https://github.com/ishaquehassan" target="_blank" rel="noopener">→ github.com/ishaquehassan</a> · <span class="comment">type <span class="cmd">open github</span> for window.</span>');
   },
 
   linkedin: async function () {
+    const mob = _isTermMobile();
     await termHeader('LinkedIn · Ishaq Hassan', 'Flutter Framework Contributor · EM @ DigitalHire');
-    await termSay('  <span class="str">Headline</span>         : Flutter Framework Contributor | EM @ DigitalHire | OSS Author | Tech Speaker');
-    await termSay('  <span class="str">Location</span>         : Karachi, Pakistan / McLean, VA <span class="comment">(Hybrid)</span>');
-    await termSay('  <span class="str">Followers</span>        : 3,051');
-    await termSay('  <span class="str">Connections</span>      : 500+');
-    await termSay('  <span class="str">Industry</span>         : Software Development');
-    await termSay('  <span class="str">Open to</span>          : Senior IC, EM roles · speaking · consulting');
+    if (mob) {
+      await termSay('  <span class="str">Role</span>      : EM @ DigitalHire · Flutter Framework Contributor');
+      await termSay('  <span class="str">Followers</span> : 3,051 · 500+ connections');
+      await termSay('  <span class="str">Open to</span>   : Senior IC, EM · speaking · consulting');
+    } else {
+      await termSay('  <span class="str">Headline</span>    : Flutter Framework Contributor | EM @ DigitalHire | OSS Author | Tech Speaker');
+      await termSay('  <span class="str">Location</span>    : Karachi, Pakistan / McLean, VA <span class="comment">(Hybrid)</span>');
+      await termSay('  <span class="str">Followers</span>   : 3,051 · 500+ connections');
+      await termSay('  <span class="str">Industry</span>    : Software Development');
+      await termSay('  <span class="str">Open to</span>     : Senior IC, EM roles · speaking · consulting');
+    }
     await termSay('');
     await termSay('  <span class="str">Now</span>');
     await termSay('    🏢 <strong>DigitalHire</strong> · <span class="str">Engineering Manager</span>');
-    await termSay('       <span class="comment">May 2024 — Present (2 yrs) · McLean, VA · Hybrid</span>');
-    await termSay('       Leading AI-based video job-board development.');
-    await termSay('       <span class="comment">Stack: Flutter · Dart · Kotlin · Python · Postgres · Next.js</span>');
+    await termSay('       <span class="comment">May 2024 — Present · McLean, VA</span>');
+    if (!mob) {
+      await termSay('       Leading AI-based video job-board development.');
+      await termSay('       <span class="comment">Stack: Flutter · Dart · Kotlin · Python · Postgres · Next.js</span>');
+    }
     await termSay('');
     await termSay('  <span class="str">Past roles</span>');
     const past = [
@@ -1368,37 +1425,35 @@ const TERM_COMMANDS = {
       const icon = r[0] === 'Tech Idara' ? '🎓' : '🏢';
       await termSay('    ' + icon + ' <strong>' + _termEsc(r[0]) + '</strong> · <span class="str">' + _termEsc(r[1]) + '</span>');
       await termSay('       <span class="comment">' + _termEsc(r[2]) + '</span>');
-      await termSay('       ' + _termEsc(r[3]));
+      if (!mob) await termSay('       ' + _termEsc(r[3]));
     }
     await termSay('');
-    await termSay('  <span class="str">Top skills</span>      : Flutter · Dart · React Native · Engineering Mgmt · System Design · API design');
-    await termSay('  <span class="str">Education</span>       : Computer Science');
-    await termSay('');
-    await termSay('  <a class="term-link" href="https://linkedin.com/in/ishaquehassan" target="_blank" rel="noopener">→ Full profile on linkedin.com</a>');
-    await termSay('  <span class="comment">// type <span class="cmd">open linkedin</span> for the OS window with full timeline.</span>');
+    if (!mob) {
+      await termSay('  <span class="str">Top skills</span>  : Flutter · Dart · React Native · Engineering Mgmt · System Design');
+      await termSay('  <span class="str">Education</span>   : Computer Science');
+    } else {
+      await termSay('  <span class="str">Skills</span>    : Flutter · Dart · RN · EM · System Design');
+    }
+    await termSay('  <a class="term-link" href="https://linkedin.com/in/ishaquehassan" target="_blank" rel="noopener">→ linkedin.com/in/ishaquehassan</a>');
   },
 
   wisesend: async function () {
+    const mob = _isTermMobile();
     await termHeader('WiseSend', 'side product · early-stage');
-    await termSay('  <span class="str">Product</span>      : Lightweight money-transfer concept');
-    await termSay('  <span class="str">Live demo</span>    : <a class="term-link" href="https://wisesend.xrlabs.app" target="_blank" rel="noopener">wisesend.xrlabs.app</a>');
-    await termSay('  <span class="str">Status</span>       : private beta · embedded as OS window');
-    await termSay('  <span class="str">Stack</span>        : Flutter · Firebase · Cloudflare Workers · Resend');
-    await termSay('  <span class="str">Built by</span>     : Ishaq Hassan (solo) · 2024 → ongoing');
+    await termSay('  <span class="str">Product</span>   : Lightweight money-transfer concept');
+    await termSay('  <span class="str">Demo</span>      : <a class="term-link" href="https://wisesend.xrlabs.app" target="_blank" rel="noopener">wisesend.xrlabs.app</a>');
+    await termSay('  <span class="str">Stack</span>     : Flutter · Firebase · CF Workers · Resend');
+    if (!mob) {
+      await termSay('  <span class="str">Status</span>    : private beta · embedded as OS window');
+      await termSay('  <span class="str">Built by</span>  : Ishaq Hassan (solo) · 2024 → ongoing');
+      await termSay('');
+      await termSay('  <span class="str">What</span>');
+      await termSay('    ▸ Cross-border transfers · low fees');
+      await termSay('    ▸ Real-time FX · transparent pricing');
+      await termSay('    ▸ Mobile-first · KYC integrated');
+    }
     await termSay('');
-    await termSay('  <span class="str">What it does</span>');
-    await termSay('    ▸ Cross-border money transfer with low fees');
-    await termSay('    ▸ Real-time FX rates · transparent pricing');
-    await termSay('    ▸ Mobile-first · KYC integrated');
-    await termSay('    ▸ Privacy-respecting · no data resale');
-    await termSay('');
-    await termSay('  <span class="str">Tech highlights</span>');
-    await termSay('    ▸ Edge-deployed compute (Cloudflare Workers · ~10ms latency)');
-    await termSay('    ▸ Cross-platform Flutter UI (web · iOS · Android · macOS)');
-    await termSay('    ▸ Resend for transactional email · Firestore for state');
-    await termSay('');
-    await termSay('  <a class="term-link" href="https://wisesend.xrlabs.app" target="_blank" rel="noopener">→ wisesend.xrlabs.app</a>');
-    await termSay('  <span class="comment">// type <span class="cmd">open wisesend</span> for embedded live demo.</span>');
+    await termSay('  <a class="term-link" href="https://wisesend.xrlabs.app" target="_blank" rel="noopener">→ wisesend.xrlabs.app</a>' + (mob ? '' : ' · <span class="comment">type <span class="cmd">open wisesend</span> for embedded demo.</span>'));
   },
 
   snake: async function () {
@@ -1408,20 +1463,19 @@ const TERM_COMMANDS = {
       const ts = localStorage.getItem('snake:last');
       if (ts) last = new Date(parseInt(ts, 10)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     } catch (e) {}
+    const mob = _isTermMobile();
     await termHeader('Snake', 'classic game · custom canvas');
-    await termSay('  <span class="str">Engine</span>         : custom canvas · 60fps target');
-    await termSay('  <span class="str">Best score</span>     : ' + _termEsc(String(best)));
-    await termSay('  <span class="str">Last played</span>    : ' + _termEsc(String(last)));
-    await termSay('  <span class="str">Mode</span>           : single-player · keyboard');
-    await termSay('  <span class="str">Difficulty</span>     : speed scales with length');
+    await termSay('  <span class="str">Best</span>      : ' + _termEsc(String(best)) + ' · <span class="str">last</span> ' + _termEsc(String(last)));
+    if (!mob) {
+      await termSay('  <span class="str">Engine</span>    : custom canvas · 60fps target');
+      await termSay('  <span class="str">Mode</span>      : single-player · keyboard');
+      await termSay('  <span class="str">Difficulty</span>: scales with length');
+      await termSay('');
+      await termSay('  <span class="str">Controls</span>');
+      await termSay('    ↑ ↓ ← → / WASD   move · Space pause · R restart');
+    }
     await termSay('');
-    await termSay('  <span class="str">Controls</span>');
-    await termSay('    ↑ ↓ ← →    move');
-    await termSay('    W A S D    move (alt)');
-    await termSay('    Space      pause / resume');
-    await termSay('    R          restart');
-    await termSay('');
-    await termSay('  <span class="comment">// type <span class="cmd">open snake</span> to play.</span>');
+    await termSay('  <span class="comment">type <span class="cmd">open snake</span> to play.</span>');
   },
 
   /* ============ OPEN COMMAND ============ */
