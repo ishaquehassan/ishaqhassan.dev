@@ -33,9 +33,9 @@ DigitalHire (Feb 2023 - Present)
 - Tech Idara (Dec 2021 - Sep 2024), Senior Instructor. Built the 35-video Urdu Flutter course now listed on docs.flutter.dev/resources/courses.
 - AeroGlobe (Jun 2022 - May 2024), Technical Lead. React Native, Python, frontend.
 - Sastaticket.pk (Jan 2022 - Mar 2024), Engineering Consultant. Architecture, Flutter, CI/CD, GitHub Actions.
-- Pocket Systems (Jan 2020 - Dec 2022), Co-Founder. React Native, socket programming, international market.
+- Pocket Systems (Jan 2020 - Dec 2022), Senior Software Engineer. React Native, socket programming, international market.
 - Optimyse, Estonia (Feb 2019 - Dec 2021), Lead Software Engineer. Full stack teams, cross-platform mobile.
-- Cyber Avanza (Sep 2016 - Dec 2018), Co-Founder. Native Android / iOS.
+- Cyber Avanza (Sep 2016 - Dec 2018), Senior Software Engineer. Native Android / iOS.
 - VividVisionz (Feb 2013 - Feb 2019), Mobile + Web Developer for 6 years. Android, iOS, PHP, MySQL, JavaScript.
 
 ## Flutter Framework Contributions (flutter/flutter on GitHub)

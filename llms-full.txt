@@ -26,7 +26,7 @@ Ishaq Hassan is a Full Stack Developer and Engineering Manager based in Karachi,
 - Technologies: Architecture, Flutter, CI/CD, GitHub Actions
 
 ### Pocket Systems (Jan 2020 - Dec 2022)
-- Role: Co-Founder
+- Role: Senior Software Engineer
 - Technologies: React Native, Socket Programming, international market
 
 ### Optimyse, Estonia (Feb 2019 - Dec 2021)
@@ -34,7 +34,7 @@ Ishaq Hassan is a Full Stack Developer and Engineering Manager based in Karachi,
 - Description: Full stack teams, cross-platform mobile development
 
 ### Cyber Avanza (Sep 2016 - Dec 2018)
-- Role: Co-Founder
+- Role: Senior Software Engineer
 - Technologies: Android/iOS native development
 
 ### VividVisionz (Feb 2013 - Feb 2019)
