@@ -3187,6 +3187,10 @@ a.sb-item { text-decoration: none; }
   overflow-x: hidden;
   padding: 4px 6px 2px;
   -webkit-overflow-scrolling: touch;
+  /* Disable scroll anchoring so JS-driven scrollTop = scrollHeight
+     reliably follows newly appended terminal lines without the browser
+     trying to preserve the user's previous scroll position. */
+  overflow-anchor: none;
 }
 .mobile-terminal-body .terminal {
   font-size: 10.5px;

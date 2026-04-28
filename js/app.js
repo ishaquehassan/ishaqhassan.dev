@@ -717,7 +717,18 @@ function termPrintRaw(node) {
 
 function termScroll() {
   if (!TERM.scrollEl) return;
-  TERM.scrollEl.scrollTop = TERM.scrollEl.scrollHeight;
+  const el = TERM.scrollEl;
+  /* First pass: covers cases where layout is already up-to-date.
+     Second pass on next frame: handles the common case where the line we
+     just appended hasn't been laid out yet, so scrollHeight is stale and
+     the user briefly sees text appear *below* the viewport before catching
+     up. The double-pass keeps the bottom pinned smoothly on mobile too. */
+  el.scrollTop = el.scrollHeight;
+  if (TERM._scrollRaf) return;
+  TERM._scrollRaf = requestAnimationFrame(function () {
+    TERM._scrollRaf = 0;
+    el.scrollTop = el.scrollHeight;
+  });
 }
 
 function termPrintEcho(cmdRaw) {
