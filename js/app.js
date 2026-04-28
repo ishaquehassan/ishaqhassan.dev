@@ -1502,27 +1502,20 @@ const TERM_COMMANDS = {
   },
 
   hire: function () {
-    const isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
-    if (isMobile) {
-      if (typeof activeMobileSection !== 'undefined' && activeMobileSection === 'about') {
-        if (typeof closeMobileSection === 'function') { try { closeMobileSection('about'); } catch (e) {} }
-      }
-      setTimeout(function () {
-        if (typeof window.openMobileDirectContact === 'function') {
-          window.openMobileDirectContact({ stopPropagation: function () {} });
-        } else if (typeof expandMobileSection === 'function') {
-          expandMobileSection(null, 'connect');
-        }
-      }, 280);
-      termPrint('  ✉️  <span class="str">Contact panel</span> opening · drop your details, I respond fast.');
+    /* Inline Max inquiry flow — never leaves the terminal. Renders the
+       project-hire form + contact fallback cards directly. The form's
+       onsubmit hits the existing window.maxSubmitInquiry pipeline, which
+       posts to the Resend-backed worker endpoint. */
+    termPrint('  ✉️  <span class="str">Hire Ishaq</span> · drop your details, Max routes it straight to my inbox.');
+    termPrint('  <span class="comment">// form-first; reply normally within ~12 hours.</span>');
+    termPrint('');
+    if (!termRenderCards('form', 'hire-project')) {
+      termPrint('  <span class="err">form: not loaded yet, retry in a moment.</span>');
       return;
     }
-    if (typeof window.openContactDialog === 'function') {
-      window.openContactDialog();
-      termPrint('  ✉️  <span class="str">Contact dialog</span> opening · drop your details, I respond fast.');
-    } else {
-      TERM_COMMANDS.open(['contact']);
-    }
+    termPrint('');
+    termPrint('  <span class="comment">// or reach me directly:</span>');
+    termRenderCards('contact');
   },
 
   external: function (args) {
