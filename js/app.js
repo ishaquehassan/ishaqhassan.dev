@@ -2908,6 +2908,32 @@ var WINDOW_PATHS = {
 var PATH_TO_WINDOW = {};
 Object.keys(WINDOW_PATHS).forEach(function(id){ PATH_TO_WINDOW[WINDOW_PATHS[id]] = id; });
 
+// SEO landing-page slug → window id. Used by `?ref=<slug>` redirect handler so when a user
+// lands on `/?ref=flutter-course-urdu` (auto-redirect from /flutter-course-urdu.html) the
+// matching window opens AND the URL bar canonicalises to `/<window-path>/` (which already
+// has window-specific OG meta + bot-aware redirect, so future shares show the right preview).
+var REF_TO_WINDOW = {
+  'flutter-course-urdu': 'flutter-course',
+  'hire-flutter-developer': 'contact',
+  'flutter-consultant': 'contact',
+  'flutter-framework-contributor': 'flutter',
+  'flutter-framework-contributor-pakistan': 'flutter',
+  'flutter-core-contributor-pakistan': 'flutter',
+  'flutter-core-contributor-asia': 'flutter',
+  'flutter-expert': 'flutter',
+  'flutter-expert-pakistan': 'flutter',
+  'flutter-community-leader': 'speaking',
+  'flutter-community-leader-pakistan': 'speaking',
+  'top-flutter-developers': 'about',
+  'top-flutter-developers-in-pakistan': 'about',
+  'top-flutter-developers-in-karachi': 'about',
+  'top-flutter-developers-in-industry': 'about',
+  'best-flutter-developer': 'about',
+  'best-flutter-developer-pakistan': 'about',
+  'senior-flutter-engineer-pakistan': 'about',
+  'flutter-developer-pakistan': 'about'
+};
+
 // Which desktop windows have an equivalent mobile expanded section.
 // Keys: desktop window id. Values: mobile section slug (id of #mobile-<slug>-expanded).
 // `about` and `wisesend` are desktop-only and intentionally omitted.
@@ -2947,6 +2973,8 @@ function windowIdFromCurrentUrl() {
     var sp = new URLSearchParams(location.search);
     var p = sp.get('w');
     if (p && WINDOW_PATHS[p]) return p;
+    var r = sp.get('ref');
+    if (r && REF_TO_WINDOW[r]) return REF_TO_WINDOW[r];
     var path = location.pathname.replace(/\/+$/, '') || '/';
     if (PATH_TO_WINDOW[path]) return PATH_TO_WINDOW[path];
     // Per-article deep link: /articles/<slug>/ maps to articles window.
@@ -3034,8 +3062,11 @@ function applyUrlRoute(shouldMaximize) {
       var mid = windowIdFromCurrentUrl();
       if (mid) {
         var mSlug = (mid === 'articles') ? articleSlugFromCurrentUrl() : null;
-        // Canonicalise URL first (?w=X → pretty path) and update share metadata
-        if (location.search.indexOf('w=') !== -1 && WINDOW_PATHS[mid]) {
+        // Canonicalise URL first (?w=X or ?ref=X → pretty path) and update share metadata.
+        // ?ref=<seo-slug> comes from SEO landing-page redirects; replacing it with the
+        // window's canonical path means any subsequent "copy URL & share" pulls a meta-rich path.
+        var hasShortLink = /[?&](w|ref)=/.test(location.search);
+        if (hasShortLink && WINDOW_PATHS[mid]) {
           var canonical = WINDOW_PATHS[mid] + (mSlug ? '/' + mSlug + '/' : '');
           try { history.replaceState({w: mid, slug: mSlug || null}, '', canonical); } catch(e) {}
         }
@@ -3057,8 +3088,8 @@ function applyUrlRoute(shouldMaximize) {
     // Contact: open the morph overlay instead of the underlying window.
     if (id === 'contact' && typeof window.openContactMorph === 'function') {
       try { updateMetaForWindow('contact'); } catch(e) {}
-      // Canonicalise ?w=contact → /contact
-      if (location.search.indexOf('w=contact') !== -1) {
+      // Canonicalise ?w=contact / ?ref=<slug-mapped-to-contact> → /contact
+      if (/[?&](w|ref)=/.test(location.search)) {
         try { history.replaceState({w: 'contact'}, '', WINDOW_PATHS.contact); } catch(e) {}
       }
       setTimeout(function(){ try { window.openContactMorph(); } catch(e) {} }, 50);
@@ -3079,7 +3110,7 @@ function applyUrlRoute(shouldMaximize) {
     win.style.zIndex = ++activeZ;
     if (typeof updateMenuBarForWindow === 'function') updateMenuBarForWindow(id);
     var deepSlug = (id === 'articles') ? articleSlugFromCurrentUrl() : null;
-    if (location.search.indexOf('w=') !== -1) {
+    if (/[?&](w|ref)=/.test(location.search)) {
       var pretty = WINDOW_PATHS[id] + (deepSlug ? '/' + deepSlug + '/' : '');
       try { history.replaceState({w: id, slug: deepSlug || null}, '', pretty); } catch(e) {}
     }
