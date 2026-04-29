@@ -304,11 +304,25 @@ Custom Flutter workshops for your team. In English or Urdu. Covers anything from
 
 <h2>Engagement Models</h2>
 <ul>
-<li><strong>One-off audit</strong>, fixed scope, 2,5 day turnaround</li>
+<li><strong>One-off audit</strong>, fixed scope, 2 to 5 day turnaround</li>
 <li><strong>Hourly consulting</strong>, ad-hoc technical questions, pair-programming, reviews</li>
 <li><strong>Retainer</strong>, weekly hours locked for ongoing advisory</li>
 <li><strong>Workshop</strong>, half-day or full-day team training (onsite or remote)</li>
 </ul>
+
+<h2>Sample Audit Findings</h2>
+<p>The patterns below show up repeatedly in production Flutter codebases. They are also the highest-impact wins in a typical 5-day audit:</p>
+<ul>
+<li><strong>Unbounded image decode</strong>, full-resolution images decoded into widgets sized at 200x200. Memory pressure and frame drops during scroll. Fix is two lines per image plus a project-level Image cacheWidth lint.</li>
+<li><strong>Repeated MediaQuery.of(context) inside build</strong>, causing entire sub-trees to rebuild on keyboard show or rotation. Fix is to lift to a parent or use selectors.</li>
+<li><strong>Provider chain drift</strong>, where the same model is provided in three places at three levels. Fix is to consolidate at the route level.</li>
+<li><strong>BuildContext leaked into futures</strong>, the canonical post-async-gap crash. Fix is mounted-checks plus a custom lint.</li>
+<li><strong>State management bleeding into widgets</strong>, where widgets call repository functions directly. Fix is a thin view-model layer that the widget consumes.</li>
+<li><strong>CI runtime growing without test isolation</strong>, where slow integration tests block fast unit tests. Fix is a tagged test split with parallel CI matrix.</li>
+</ul>
+
+<h2>Working Methodology</h2>
+<p>Every engagement follows the same diagnose-then-fix discipline: capture the data first (DevTools timeline, build size profile, dependency graph, CI logs), then prioritize by impact-over-effort, then ship one fix at a time with a regression test. The output is always a written report you can share with your team after the engagement ends. No magic, no rescue cowboying, no dependency on the consultant being permanently around.</p>
 
 <h2>Contact</h2>
 <p>Reach out via <a href="mailto:hello@ishaqhassan.dev">hello@ishaqhassan.dev</a> with a short description of your project, current stack, and what kind of engagement you're looking for. Typical response within 24 hours.</p>
