@@ -3215,11 +3215,7 @@ function applyUrlRoute(shouldMaximize) {
       var pretty = WINDOW_PATHS[id] + (deepSlug ? '/' + deepSlug + '/' : '');
       try { history.replaceState({w: id, slug: deepSlug || null}, '', pretty); } catch(e) {}
     }
-    if (landerMode) {
-      setTimeout(function(){ __landerInjectSeoIntoWindow(id); }, 80);
-    } else {
-      updateMetaForWindow(id);
-    }
+    if (!landerMode) updateMetaForWindow(id);
     // Articles: switch detail/list view based on URL slug
     if (id === 'articles') {
       if (deepSlug && typeof window.renderArticleDetail === 'function') {
