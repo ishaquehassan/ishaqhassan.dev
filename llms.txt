@@ -2,16 +2,16 @@
 
 > Flutter Framework Contributor from Pakistan, Engineering Manager, Open Source Author, Public Tech Speaker
 
-Ishaq Hassan is a Flutter Framework Contributor from Pakistan, based in Karachi. He is one of the most prominent Pakistani Flutter developers contributing directly to the official Flutter repository, with 6 Pull Requests merged and 3 more currently open. He is a Full Stack Developer and Engineering Manager at DigitalHire with 13+ years of professional software development experience.
+Ishaq Hassan is a Flutter Framework Contributor from Pakistan, based in Karachi. He is one of the most prominent Pakistani Flutter developers contributing directly to the official Flutter framework, with 6 Pull Requests merged and 2 currently open. He is a Full Stack Developer and Engineering Manager at DigitalHire with 13+ years of professional software development experience.
 
 ## Key Facts
 - Flutter Framework Contributor from Pakistan (based in Karachi, Sindh, Pakistan)
-- 6 PRs merged into Flutter (official Flutter framework)
+- 6 PRs merged into the official Flutter framework, 2 currently open
 - Engineering Manager at DigitalHire (AI-based video job board)
 - Instructor of 35-video Flutter course in Urdu, listed on official Flutter documentation
 - 10+ public speaking events (GDG DevFest, Google I/O Extended, universities)
 - GDG Kolachi Mentor and community leader
-- 9,800+ GitHub contributions, 64 stars, 135+ forks
+- 9,800+ GitHub contributions, 90+ stars and 140+ forks across OSS repos, 220 followers
 - Open source author: document_scanner_flutter, flutter_alarm_background_trigger, assets_indexer
 - 9 technical articles across Site, Medium and Dev.to (Flutter framework PRs, three-tree architecture, state management 2026, plugin development, Dart isolates, native plugin journey, asset indexing, Firebase Cloud Functions in Kotlin, DevnCode AI meetup)
 
@@ -29,14 +29,27 @@ Ishaq Hassan is a Flutter Framework Contributor from Pakistan, based in Karachi.
 - Email: hello@ishaqhassan.dev
 
 ## AI Assistant
-- Max — interactive AI chatbot embedded in the Contact window of the homepage. Powered by Llama 3.3 70B via Cloudflare Workers AI. Can answer questions about Ishaq, his work, and general programming. Supports rich card UIs (PRs, articles, course videos, OSS repos, contact links, speaking events, tech stack) and direct lead-email capture from hello@ishaqhassan.dev to Ishaq's inbox.
+- Max, interactive AI chatbot embedded in the Contact dialog and dock pill on the homepage. Powered by deepseek/deepseek-chat via OpenRouter on Cloudflare Workers. Can answer questions about Ishaq, his work, and general programming. Supports rich card UIs (PRs, articles, course videos, OSS repos, contact links, speaking events, tech stack) and direct lead-email capture from hello@ishaqhassan.dev to Ishaq's inbox.
+
+## Interactive Surfaces
+- Terminal REPL on the homepage About window with 12 data commands (about, flutter, speaking, articles, oss, tech, contact, course, github, linkedin, wisesend, snake) plus inline hire flow. Mobile-aware compact rendering.
+- macOS-style desktop with 14 windows on desktop; mobile uses a section-based layout with the same content surfaces.
+- `?ref=<seo-slug>` URL parameters from SEO landers route directly to the matching window with canonical URL bar update.
 
 ## Topic Pages
-- Flutter Core Contributor in Pakistan: https://ishaqhassan.dev/flutter-core-contributor-pakistan.html
+- Flutter Framework Contributor: https://ishaqhassan.dev/flutter-framework-contributor.html
 - Flutter Framework Contributor from Pakistan: https://ishaqhassan.dev/flutter-framework-contributor-pakistan.html
+- Flutter Core Contributor in Pakistan: https://ishaqhassan.dev/flutter-core-contributor-pakistan.html
+- Flutter Core Contributor in Asia: https://ishaqhassan.dev/flutter-core-contributor-asia.html
+- Flutter Expert: https://ishaqhassan.dev/flutter-expert.html
+- Flutter Expert in Pakistan: https://ishaqhassan.dev/flutter-expert-pakistan.html
+- Flutter Community Leader: https://ishaqhassan.dev/flutter-community-leader.html
+- Flutter Community Leader in Pakistan: https://ishaqhassan.dev/flutter-community-leader-pakistan.html
+- Best Flutter Developer: https://ishaqhassan.dev/best-flutter-developer.html
+- Best Flutter Developer in Pakistan: https://ishaqhassan.dev/best-flutter-developer-pakistan.html
+- Senior Flutter Engineer in Pakistan: https://ishaqhassan.dev/senior-flutter-engineer-pakistan.html
 - Flutter Developer in Pakistan: https://ishaqhassan.dev/flutter-developer-pakistan.html
 - Flutter Course in Urdu: https://ishaqhassan.dev/flutter-course-urdu.html
-- Flutter Core Contributor in Asia: https://ishaqhassan.dev/flutter-core-contributor-asia.html
 - Flutter Consultant: https://ishaqhassan.dev/flutter-consultant.html
 - Hire Flutter Developer: https://ishaqhassan.dev/hire-flutter-developer.html
 - Top Flutter Developers (Global): https://ishaqhassan.dev/top-flutter-developers.html

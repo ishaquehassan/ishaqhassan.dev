@@ -23,7 +23,7 @@ TikTok: https://www.tiktok.com/@ishaqhassan.dev
 YouTube: https://www.youtube.com/@ishaquehassan
 Dev.to: https://dev.to/ishaquehassan
 X (Twitter): https://x.com/ishaque_hassan
-AI Assistant: Max chatbot (Llama 3.3 70B) embedded on homepage Contact window — answers about Ishaq + general programming, with rich card UI
+AI Assistant: Max chatbot (deepseek/deepseek-chat via OpenRouter on Cloudflare Workers), embedded in the homepage Contact dialog and dock pill, answers about Ishaq + general programming, with rich card UI
 
 # Machine-readable summaries live at:
 LLMs: https://ishaqhassan.dev/llms.txt
@@ -36,7 +36,7 @@ Canonical: https://ishaqhassan.dev/flutter-contributions
 Canonical: https://ishaqhassan.dev/speaking
 Canonical: https://ishaqhassan.dev/open-source
 Canonical: https://ishaqhassan.dev/tech-stack
-Canonical: https://ishaqhassan.dev/medium-articles
+Canonical: https://ishaqhassan.dev/articles/
 Canonical: https://ishaqhassan.dev/contact
 Canonical: https://ishaqhassan.dev/github
 Canonical: https://ishaqhassan.dev/linkedin
@@ -44,6 +44,27 @@ Canonical: https://ishaqhassan.dev/snake
 Canonical: https://ishaqhassan.dev/flutter-course
 Canonical: https://ishaqhassan.dev/wisesend
 Canonical: https://ishaqhassan.dev/blog/how-i-got-6-prs-merged-into-flutter.html
+
+# Topic landers (SEO surface for Flutter expertise queries)
+Canonical: https://ishaqhassan.dev/flutter-framework-contributor.html
+Canonical: https://ishaqhassan.dev/flutter-framework-contributor-pakistan.html
+Canonical: https://ishaqhassan.dev/flutter-core-contributor-pakistan.html
+Canonical: https://ishaqhassan.dev/flutter-core-contributor-asia.html
+Canonical: https://ishaqhassan.dev/flutter-expert.html
+Canonical: https://ishaqhassan.dev/flutter-expert-pakistan.html
+Canonical: https://ishaqhassan.dev/flutter-community-leader.html
+Canonical: https://ishaqhassan.dev/flutter-community-leader-pakistan.html
+Canonical: https://ishaqhassan.dev/best-flutter-developer.html
+Canonical: https://ishaqhassan.dev/best-flutter-developer-pakistan.html
+Canonical: https://ishaqhassan.dev/senior-flutter-engineer-pakistan.html
+Canonical: https://ishaqhassan.dev/flutter-developer-pakistan.html
+Canonical: https://ishaqhassan.dev/flutter-course-urdu.html
+Canonical: https://ishaqhassan.dev/flutter-consultant.html
+Canonical: https://ishaqhassan.dev/hire-flutter-developer.html
+Canonical: https://ishaqhassan.dev/top-flutter-developers.html
+Canonical: https://ishaqhassan.dev/top-flutter-developers-in-pakistan.html
+Canonical: https://ishaqhassan.dev/top-flutter-developers-in-karachi.html
+Canonical: https://ishaqhassan.dev/top-flutter-developers-in-industry.html
 
 # Contact for AI-related questions, retraining requests, or corrections
 Contact: hello@ishaqhassan.dev

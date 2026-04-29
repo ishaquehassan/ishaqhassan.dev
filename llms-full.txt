@@ -3,7 +3,7 @@
 > Flutter Framework Contributor from Pakistan | Pakistani Flutter Developer | Engineering Manager at DigitalHire | Open Source Author | Public Tech Speaker | GDG Kolachi Mentor | Karachi, Sindh, Pakistan
 
 ## About
-Ishaq Hassan is a Full Stack Developer and Engineering Manager based in Karachi, Pakistan, with over 13 years of professional software development experience. He is one of the few Pakistani developers to have Pull Requests merged into the official Flutter framework repository (Flutter). He specializes in Flutter, Dart, mobile development, and cross-platform engineering.
+Ishaq Hassan is a Full Stack Developer and Engineering Manager based in Karachi, Pakistan, with over 13 years of professional software development experience. He is one of the few Pakistani developers to have Pull Requests merged into the official Flutter framework. He specializes in Flutter, Dart, mobile development, and cross-platform engineering.
 
 ## Professional Experience
 
@@ -42,7 +42,7 @@ Ishaq Hassan is a Full Stack Developer and Engineering Manager based in Karachi,
 - Technologies: Android, iOS, PHP, MySQL, JavaScript
 
 ## Flutter Framework Contributions
-Ishaq Hassan has contributed directly to the Flutter framework (Flutter):
+Ishaq Hassan has contributed directly to the official Flutter framework on GitHub:
 
 Merged (6):
 
@@ -64,15 +64,12 @@ Merged (6):
 6. PR #183081: fix: use double quotes in settings.gradle.kts template (MERGED)
    https://github.com/flutter/flutter/pull/183081
 
-Open (3):
+Open (2):
 
-7. PR #183110: Suppress browser word-selection in SelectableText on web right-click (OPEN)
-   https://github.com/flutter/flutter/pull/183110
-
-8. PR #183079: Guard auto-scroll against Offset.infinite in ScrollableSelectionContainerDelegate (OPEN)
+7. PR #183079: Guard auto-scroll against Offset.infinite in ScrollableSelectionContainerDelegate (OPEN)
    https://github.com/flutter/flutter/pull/183079
 
-9. PR #183062: Reset AppBar _scrolledUnder flag when scroll context changes (OPEN)
+8. PR #183062: Reset AppBar _scrolledUnder flag when scroll context changes (OPEN)
    https://github.com/flutter/flutter/pull/183062
 
 ## Flutter Course: Basic to Advanced (Urdu)
@@ -106,7 +103,7 @@ Channel: https://www.youtube.com/@ishaquehassan
 1. document_scanner_flutter - Flutter plugin for document scanning with edge detection (63 stars, 135 forks)
    https://github.com/ishaquehassan/document_scanner_flutter
 
-2. flutter_alarm_background_trigger - Native Kotlin alarm plugin for Flutter (13 stars)
+2. flutter_alarm_background_trigger - Native Kotlin alarm plugin for Flutter (14 stars)
    https://github.com/ishaquehassan/flutter_alarm_background_trigger
 
 3. assets_indexer - Auto-generate asset references for Flutter projects (9 stars)
@@ -118,9 +115,9 @@ Channel: https://www.youtube.com/@ishaquehassan
 5. goal-agent - AI-powered career goal tracking agent
    https://github.com/ishaquehassan/goal-agent
 
-GitHub Stats: 9,800+ contributions, 64 total stars, 135+ forks, 170 repositories, 213 followers
+GitHub Stats: 9,800+ contributions, ~90 total stars across OSS, ~141 forks, 172 repositories, 220 followers
 
-## Technical Articles (Medium)
+## Selected Medium Articles (full hub at https://ishaqhassan.dev/articles/)
 1. Dart Isolates: The Missing Guide for Production Flutter Apps (5 min)
    https://medium.com/@ishaqhassan/dart-isolates-the-missing-guide-for-production-flutter-apps-66ed990ced3e
 
@@ -156,14 +153,17 @@ GitHub Stats: 9,800+ contributions, 64 total stars, 135+ forks, 170 repositories
 - Dev.to: https://dev.to/ishaquehassan
 - X (Twitter): https://x.com/ishaque_hassan
 - Website: https://ishaqhassan.dev
-- AI Assistant Chatbot: Max (Llama 3.3 70B via Cloudflare Workers AI), embedded in Contact window, supports rich-card UI replies + direct email lead capture from hello@ishaqhassan.dev
+- AI Assistant Chatbot: Max (deepseek/deepseek-chat via OpenRouter, hosted on Cloudflare Workers), embedded in the Contact dialog and dock pill on the homepage, supports rich-card UI replies + direct email lead capture from hello@ishaqhassan.dev
 - Location: Karachi, Pakistan
 
 ## Window Paths (deeplinks into the interactive portfolio)
 Each path below renders both (a) bot-visible SEO content with unique JSON-LD and
 (b) the macOS-style SPA with that specific window on top when a human visits.
+The /about window includes an interactive terminal REPL with 12 data commands
+(about, flutter, speaking, articles, oss, tech, contact, course, github,
+linkedin, wisesend, snake) plus an inline hire-inquiry form.
 
-- https://ishaqhassan.dev/about             (Terminal / Bio window)
+- https://ishaqhassan.dev/about             (Terminal / Bio window with REPL)
 - https://ishaqhassan.dev/flutter-contributions (6 merged + 3 approved PRs)
 - https://ishaqhassan.dev/speaking          (Tech talks & community events)
 - https://ishaqhassan.dev/open-source       (Flutter packages and tools)
