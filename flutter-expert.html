@@ -102,6 +102,19 @@
 <li>Fractional CTO / Technical Advisor for Flutter-first products</li>
 </ul>
 
+<h2>The 2026 Flutter Stack Opinion</h2>
+<p>Senior teams expect a Flutter expert to hold a defensible opinion on the current stack, not a list of shrugs. The current default-recommendation set:</p>
+<ul>
+<li><strong>State management</strong>, Riverpod with code-generation for new projects, BLoC for existing teams already on it, Signals for prototypes.</li>
+<li><strong>Routing</strong>, GoRouter for anything beyond a simple two-screen app, with explicit type-safe routes via the gen helpers.</li>
+<li><strong>Networking</strong>, Dio with interceptor middleware for retry, auth, and logging. Avoid hand-rolled http unless intentionally minimizing surface.</li>
+<li><strong>Persistence</strong>, Drift for relational, Isar for document-style with reactive queries, SharedPreferences only for tiny UI state.</li>
+<li><strong>Code generation</strong>, build_runner with watch mode in CI for freezed, json_serializable, riverpod_generator, drift_dev.</li>
+<li><strong>Testing</strong>, widget tests for UI, mocktail for mocks, integration_test for end-to-end with screenshot diffs via the alchemist or golden_toolkit packages.</li>
+<li><strong>CI/CD</strong>, GitHub Actions for most teams, Codemagic for Flutter-specific signing complexity, Fastlane lanes invoked from CI for the actual upload.</li>
+</ul>
+<p>The reasoning behind each pick is the engagement deliverable, not just the pick itself.</p>
+
 <h2>What You Get From The First Meeting</h2>
 <p>The first conversation is free and structured. By the end you walk away with: a one-page diagnosis of the highest-leverage technical risk in your current Flutter setup, a written engagement proposal with scope and pricing, and a candid assessment of whether an expert is even what you need right now (sometimes the right answer is hire a senior Flutter developer full-time, not a consultant).</p>
 
