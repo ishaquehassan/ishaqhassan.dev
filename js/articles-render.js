@@ -641,12 +641,39 @@
       + '</section>';
   }
 
+  var _mobListScrollTop = 0;
+
   function mobRenderArticleList(){
     var list = document.querySelector('#mob-articles-stage .mob-articles-list');
     if (!list) return;
-    list.innerHTML = (window.ARTICLES || []).map(function(a, i){ return mobCardHtml(a, i); }).join('');
     var stage = document.getElementById('mob-articles-stage');
-    if (stage) stage.classList.remove('mob-articles-stage-detail');
+    var det = document.querySelector('#mob-articles-stage .mob-articles-detail');
+    var panel = document.getElementById('mobile-articles-expanded');
+    var inDetail = stage && stage.classList.contains('mob-articles-stage-detail');
+    // Build list once; re-rendering wipes the DOM and trashes scroll state.
+    if (!list.firstElementChild) {
+      list.innerHTML = (window.ARTICLES || []).map(function(a, i){ return mobCardHtml(a, i); }).join('');
+    }
+    if (!stage) return;
+    var restore = function(){
+      if (panel && _mobListScrollTop > 0) {
+        panel.scrollTop = _mobListScrollTop;
+      }
+    };
+    if (inDetail && det) {
+      // Animate the detail panel off-screen, then drop detail-mode and
+      // restore the saved scroll position on the list panel.
+      det.classList.add('closing');
+      setTimeout(function(){
+        stage.classList.remove('mob-articles-stage-detail');
+        det.classList.remove('closing');
+        det.innerHTML = '';
+        restore();
+      }, 320);
+    } else {
+      stage.classList.remove('mob-articles-stage-detail');
+      restore();
+    }
   }
 
   function mobRenderArticleDetail(slug){
@@ -655,6 +682,17 @@
     var stage = document.getElementById('mob-articles-stage');
     var det = document.querySelector('#mob-articles-stage .mob-articles-detail');
     if (!stage || !det) return;
+    // Save the list scroll position so we can restore it when the user
+    // navigates back from the detail screen.
+    var panel = document.getElementById('mobile-articles-expanded');
+    if (panel && !stage.classList.contains('mob-articles-stage-detail')) {
+      _mobListScrollTop = panel.scrollTop || 0;
+    }
+    var list = document.querySelector('#mob-articles-stage .mob-articles-list');
+    if (list && !list.firstElementChild) {
+      list.innerHTML = (window.ARTICLES || []).map(function(a, i){ return mobCardHtml(a, i); }).join('');
+    }
+    det.classList.remove('closing');
     det.innerHTML = mobDetailHtml(article);
     stage.classList.add('mob-articles-stage-detail');
     var scroll = det.querySelector('.mob-art-detail-scroll');

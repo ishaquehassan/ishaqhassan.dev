@@ -2201,7 +2201,7 @@ function playMfcVideo(i, evt) {
       c.style.transformOrigin = cx + 'px ' + cy + 'px';
       c.style.animation = 'none';
       c.offsetHeight;
-      c.style.animation = 'mfcPlayerIn 0.35s cubic-bezier(0.16,1,0.3,1) forwards';
+      c.style.animation = 'mfcPlayerIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards';
     }
   }
   // Build up-next list (prev + next 3)
@@ -2254,14 +2254,14 @@ function mobileFlutterCourseBack() {
   if (fcCurrentVideo !== null) {
     var c = document.getElementById('mfc-content');
     if (c) {
-      c.style.animation = 'mfcPlayerOut 0.3s cubic-bezier(0.4,0,0.2,1) forwards';
+      c.style.animation = 'mfcPlayerOut 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards';
       setTimeout(function() {
         fcCurrentVideo = null;
         document.getElementById('mfc-title').textContent = 'Flutter Course';
         renderMobileFlutterCourseGrid();
         c.style.animation = '';
         c.style.transformOrigin = '';
-      }, 300);
+      }, 420);
     }
   } else {
     closeMobileSection('flutter-course');

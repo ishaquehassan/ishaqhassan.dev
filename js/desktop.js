@@ -421,13 +421,20 @@ function expandMobileSection(evt, section) {
   };
   const elem = document.getElementById(map[section]);
   if (elem) {
-    // Shared element transition from tap point
-    if (evt) {
-      var src = evt.currentTarget || evt.target.closest('.mobile-section-card');
-      if (src) {
+    // Liquid morph origin: clip-path circle expands from the tapped icon's
+    // center. CSS keyframes consume --morph-x / --morph-y so the same vars
+    // drive both enter (liquidMorphIn) and exit (liquidMorphOut). Fallback
+    // origin (50% / 100%, bottom-center) lives on the .mobile-expanded base.
+    if (evt && evt.target) {
+      var src = (evt.currentTarget && evt.currentTarget.getBoundingClientRect)
+        ? evt.currentTarget
+        : (evt.target.closest && (evt.target.closest('.mobile-section-card') || evt.target.closest('.mob-bento') || evt.target.closest('.mob-dock-pill') || evt.target.closest('button')));
+      if (src && src.getBoundingClientRect) {
         var r = src.getBoundingClientRect();
         var cx = r.left + r.width / 2;
         var cy = r.top + r.height / 2;
+        elem.style.setProperty('--morph-x', cx + 'px');
+        elem.style.setProperty('--morph-y', cy + 'px');
         elem.style.transformOrigin = cx + 'px ' + cy + 'px';
       }
     }
@@ -454,14 +461,14 @@ window.addEventListener('popstate', function(e) {
     // Reverse animation on content
     var c = document.getElementById('mfc-content');
     if (c) {
-      c.style.animation = 'mfcPlayerOut 0.3s cubic-bezier(0.4,0,0.2,1) forwards';
+      c.style.animation = 'mfcPlayerOut 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards';
       setTimeout(function() {
         fcCurrentVideo = null;
         document.getElementById('mfc-title').textContent = 'Flutter Course';
         renderMobileFlutterCourseGrid();
         c.style.animation = '';
         c.style.transformOrigin = '';
-      }, 300);
+      }, 420);
     } else {
       fcCurrentVideo = null;
       document.getElementById('mfc-title').textContent = 'Flutter Course';
@@ -529,7 +536,7 @@ function closeMobileSection(section) {
   const elem = document.getElementById(map[section]);
   if (elem) {
     elem.classList.add('closing');
-    setTimeout(() => { elem.style.display = 'none'; elem.classList.remove('closing'); }, 350);
+    setTimeout(() => { elem.style.display = 'none'; elem.classList.remove('closing'); }, 420);
   }
   activeMobileSection = null;
 }

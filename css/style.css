@@ -2239,16 +2239,28 @@ body.has-fullscreen .window:not(.fullscreen-space) { display: none !important; }
   animation: none !important;
   transform: none !important;
 }
+/* Article detail enters as a liquid morph (scale + blur fade + edge slide)
+   instead of a hard horizontal slide — keeps the language consistent with the
+   parent .mobile-expanded liquid morph. */
 #mob-articles-stage.mob-articles-stage-detail .mob-articles-detail {
   display: flex; flex-direction: column;
   position: fixed; inset: 0;
   background: #0b1120;
   z-index: 1000;
-  animation: mob-art-slide-in 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: mob-art-liquid-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
-@keyframes mob-art-slide-in {
-  from { transform: translateX(100%); opacity: 0.6; }
-  to   { transform: translateX(0); opacity: 1; }
+#mob-articles-stage.mob-articles-stage-detail .mob-articles-detail.closing {
+  animation: mob-art-liquid-out 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes mob-art-liquid-in {
+  0%   { transform: scale(0.96) translateX(6%); opacity: 0; filter: blur(8px) saturate(140%); }
+  50%  { opacity: 1; filter: blur(0) saturate(100%); }
+  100% { transform: scale(1) translateX(0); opacity: 1; filter: blur(0) saturate(100%); }
+}
+@keyframes mob-art-liquid-out {
+  0%   { transform: scale(1) translateX(0); opacity: 1; filter: blur(0) saturate(100%); }
+  50%  { opacity: 1; }
+  100% { transform: scale(0.96) translateX(6%); opacity: 0; filter: blur(8px) saturate(140%); }
 }
 
 .mob-articles-list {
@@ -4491,13 +4503,20 @@ a.li-tl-company:hover { color: #7dd3fc; }
 
 .mobile-section-header { display: contents; }
 
+/* Liquid morph entry/exit. The clip-path circle expands from the tapped icon
+   (--morph-x / --morph-y, set by JS from event rect); fallback origin is the
+   bottom-center to mirror the dock-pill morph language used by Max AI. The
+   filter+scale layered on top adds a subtle softening so the pane materialises
+   rather than hard-cuts. */
 .mobile-expanded {
+  --morph-x: 50%;
+  --morph-y: 100%;
   position: fixed;
   inset: 0;
   background: #0b1120;
   z-index: 1001;
   overflow-y: auto;
-  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: liquidMorphIn 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   padding-top: 60px;
 }
 #mobile-snake-expanded {
@@ -4507,18 +4526,46 @@ a.li-tl-company:hover { color: #7dd3fc; }
   -webkit-overflow-scrolling: auto;
 }
 
-@keyframes slideUp {
-  from { transform: scale(0.92) translateY(20px); opacity: 0; border-radius: 24px; filter: blur(8px); }
-  to { transform: scale(1) translateY(0); opacity: 1; border-radius: 0; filter: blur(0); }
+@keyframes liquidMorphIn {
+  0% {
+    clip-path: circle(0% at var(--morph-x) var(--morph-y));
+    -webkit-clip-path: circle(0% at var(--morph-x) var(--morph-y));
+    opacity: 0;
+    filter: blur(10px) saturate(140%);
+    transform: scale(0.985);
+  }
+  35% { opacity: 1; }
+  65% { filter: blur(0) saturate(100%); }
+  100% {
+    clip-path: circle(170% at var(--morph-x) var(--morph-y));
+    -webkit-clip-path: circle(170% at var(--morph-x) var(--morph-y));
+    opacity: 1;
+    filter: blur(0) saturate(100%);
+    transform: scale(1);
+  }
 }
 
 .mobile-expanded.closing {
-  animation: slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: liquidMorphOut 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-@keyframes slideDown {
-  from { transform: scale(1); opacity: 1; border-radius: 0; filter: blur(0); }
-  to { transform: scale(0.92) translateY(20px); opacity: 0; border-radius: 24px; filter: blur(8px); }
+@keyframes liquidMorphOut {
+  0% {
+    clip-path: circle(170% at var(--morph-x) var(--morph-y));
+    -webkit-clip-path: circle(170% at var(--morph-x) var(--morph-y));
+    opacity: 1;
+    filter: blur(0) saturate(100%);
+    transform: scale(1);
+  }
+  35% { filter: blur(0) saturate(100%); }
+  65% { opacity: 1; }
+  100% {
+    clip-path: circle(0% at var(--morph-x) var(--morph-y));
+    -webkit-clip-path: circle(0% at var(--morph-x) var(--morph-y));
+    opacity: 0;
+    filter: blur(10px) saturate(140%);
+    transform: scale(0.985);
+  }
 }
 
 .mobile-expanded-header {
@@ -4585,25 +4632,26 @@ a.li-tl-company:hover { color: #7dd3fc; }
   padding: 20px 16px 40px;
 }
 
-/* Stagger animation for content items inside expanded views */
-.mobile-expanded-content > * {
-  animation: mobContentFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.mobile-expanded-content > *:nth-child(1) { animation-delay: 0.05s; }
-.mobile-expanded-content > *:nth-child(2) { animation-delay: 0.08s; }
-.mobile-expanded-content > *:nth-child(3) { animation-delay: 0.11s; }
-.mobile-expanded-content > *:nth-child(4) { animation-delay: 0.14s; }
-.mobile-expanded-content > *:nth-child(5) { animation-delay: 0.17s; }
-.mobile-expanded-content > *:nth-child(6) { animation-delay: 0.20s; }
-.mobile-expanded-content > *:nth-child(7) { animation-delay: 0.23s; }
-.mobile-expanded-content > *:nth-child(8) { animation-delay: 0.26s; }
-.mobile-expanded-content > *:nth-child(9) { animation-delay: 0.29s; }
-.mobile-expanded-content > *:nth-child(10) { animation-delay: 0.32s; }
-.mobile-expanded-content > *:nth-child(n+11) { animation-delay: 0.35s; }
+/* Inner stagger removed: outer .mobile-expanded slideUp handles the entire
+   liquid morph entry. Stacking a per-child fade-in caused a "second wave"
+   after the outer dissolve completed, reading as a double-animate glitch. */
 
-@keyframes mobContentFadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Same principle for per-section staggers that live inside .mobile-expanded:
+   article cards (.mob-art-card) and max chips (.max-chip) ship their own
+   cascading entry animation; inside the mobile overlay the outer slideUp
+   already handles the reveal, so flatten those staggers to keep entry as a
+   single liquid pass. */
+.mobile-expanded .mob-art-card {
+  animation: none !important;
+  animation-delay: 0s !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+.mobile-expanded .max-chip {
+  animation: none !important;
+  animation-delay: 0s !important;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 /* Section headings inside expanded views */
@@ -7227,13 +7275,20 @@ a.li-tl-company:hover { color: #7dd3fc; }
 }
 .mfc-search-result-meta { font-size: 11px; color: #8A8F98; margin-top: 4px; }
 
+/* Liquid scale-in for the mobile video player — matches the morph language
+   of the parent section (clip-path morph) by easing scale + blur + opacity
+   from the tapped card origin (transform-origin set inline by JS). */
 @keyframes mfcPlayerIn {
-  from { transform: scale(0.5); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  0%   { transform: scale(0.7); opacity: 0; filter: blur(10px) saturate(140%); }
+  45%  { opacity: 1; }
+  70%  { filter: blur(0) saturate(100%); }
+  100% { transform: scale(1); opacity: 1; filter: blur(0) saturate(100%); }
 }
 @keyframes mfcPlayerOut {
-  from { transform: scale(1); opacity: 1; }
-  to { transform: scale(0.5); opacity: 0; }
+  0%   { transform: scale(1); opacity: 1; filter: blur(0) saturate(100%); }
+  35%  { filter: blur(0) saturate(100%); }
+  65%  { opacity: 1; }
+  100% { transform: scale(0.7); opacity: 0; filter: blur(10px) saturate(140%); }
 }
 
 /* Player mobile - YouTube style */
@@ -9040,9 +9095,8 @@ a.li-tl-company:hover { color: #7dd3fc; }
   overflow: hidden;
   min-height: 0;
 }
-/* Disable the parent stagger-fade animation inside the chat — it
-   delays the bubbles and breaks layout briefly. */
-#mobile-connect-expanded .mobile-expanded-content > * { animation: none !important; }
+/* (Connect override for parent stagger-fade no longer needed — the global
+   stagger was removed; outer slideUp handles entry uniformly.) */
 
 #mobile-connect-expanded .max-tabs-mob {
   flex-shrink: 0;
@@ -10980,29 +11034,67 @@ body.contact-morph-closing .cm-form-section {
 
 /* ---- Expanded view shell ---- */
 .mobile-expanded { background: #0b0d11 !important; }
+/* Premium frosted-glass title bar (mobile only).
+   Translucent panel + heavy blur + saturate so the content scrolling beneath
+   bleeds through with a faint chromatic shift; hairline gradient border keeps
+   the bar separated from the body without a hard line. */
 .mobile-expanded-header {
-  background: #0b0d11 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  background: linear-gradient(180deg, rgba(14,16,21,0.72) 0%, rgba(11,13,17,0.62) 100%) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px rgba(0,0,0,0.28) !important;
 }
-.mobile-expanded-header::after { display: none !important; }
+.mobile-expanded-header::after {
+  display: block !important;
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.10) 50%, transparent 100%) !important;
+}
 .mobile-expanded-title {
   color: #fafafa !important;
-  text-shadow: none !important;
+  text-shadow: 0 0 18px rgba(125,211,252,0.12) !important;
   text-transform: none !important;
-  letter-spacing: 0 !important;
+  letter-spacing: 0.1px !important;
   font-size: 16px !important;
+  font-weight: 700 !important;
 }
+/* Sexy circular glass back button. Slight inner highlight + outer ambient
+   shadow give it depth; press state contracts smoothly with cyan ring. */
 .mobile-back-btn {
-  background: #16181d !important;
-  border-color: rgba(255,255,255,0.08) !important;
-  color: #e5e7eb !important;
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  color: #f0f6fc !important;
+  backdrop-filter: blur(12px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 6px 14px rgba(0,0,0,0.32) !important;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.2s ease,
+              border-color 0.2s ease,
+              box-shadow 0.2s ease,
+              color 0.2s ease !important;
+}
+.mobile-back-btn:hover {
+  background: linear-gradient(180deg, rgba(125,211,252,0.10) 0%, rgba(125,211,252,0.04) 100%) !important;
+  border-color: rgba(125,211,252,0.28) !important;
+  color: #7dd3fc !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.10) inset,
+              0 8px 22px rgba(56,189,248,0.18),
+              0 0 0 1px rgba(125,211,252,0.18) !important;
 }
 .mobile-back-btn:active {
-  background: #1c1f25 !important;
-  border-color: rgba(255,255,255,0.14) !important;
-  box-shadow: none !important;
+  transform: scale(0.9) !important;
+  background: linear-gradient(180deg, rgba(125,211,252,0.18) 0%, rgba(125,211,252,0.08) 100%) !important;
+  border-color: rgba(125,211,252,0.45) !important;
+  color: #7dd3fc !important;
+  box-shadow: 0 0 0 4px rgba(125,211,252,0.10),
+              0 4px 14px rgba(56,189,248,0.30),
+              0 1px 0 rgba(255,255,255,0.06) inset !important;
 }
 .mob-section-heading {
   color: rgba(255,255,255,0.55) !important;
@@ -11066,21 +11158,53 @@ body.contact-morph-closing .cm-form-section {
 .mob-art-card:active { border-color: rgba(255,255,255,0.12) !important; }
 .mob-art-card.featured { border-color: rgba(125,211,252,0.28) !important; }
 .mob-art-chips { border-top-color: rgba(255,255,255,0.06) !important; }
+/* Article-detail appbar: same premium glass treatment as the section header. */
 .mob-art-appbar {
-  background: #0b0d11 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border-bottom-color: rgba(255,255,255,0.06) !important;
+  background: linear-gradient(180deg, rgba(14,16,21,0.72) 0%, rgba(11,13,17,0.62) 100%) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px rgba(0,0,0,0.28) !important;
+}
+.mob-art-appbar::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.10) 50%, transparent 100%) !important;
+  pointer-events: none !important;
 }
 .mob-art-back {
-  background: #16181d !important;
-  border-color: rgba(255,255,255,0.08) !important;
-  color: #e5e7eb !important;
+  width: 38px !important;
+  height: 38px !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  color: #f0f6fc !important;
+  backdrop-filter: blur(12px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 6px 14px rgba(0,0,0,0.32) !important;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.2s ease,
+              border-color 0.2s ease,
+              box-shadow 0.2s ease,
+              color 0.2s ease !important;
+}
+.mob-art-back:hover {
+  background: linear-gradient(180deg, rgba(125,211,252,0.10) 0%, rgba(125,211,252,0.04) 100%) !important;
+  border-color: rgba(125,211,252,0.28) !important;
+  color: #7dd3fc !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.10) inset,
+              0 8px 22px rgba(56,189,248,0.18),
+              0 0 0 1px rgba(125,211,252,0.18) !important;
 }
 .mob-art-back:active {
-  background: #1c1f25 !important;
+  transform: scale(0.9) !important;
+  background: linear-gradient(180deg, rgba(125,211,252,0.18) 0%, rgba(125,211,252,0.08) 100%) !important;
+  border-color: rgba(125,211,252,0.45) !important;
   color: #7dd3fc !important;
-  border-color: rgba(125,211,252,0.3) !important;
+  box-shadow: 0 0 0 4px rgba(125,211,252,0.10),
+              0 4px 14px rgba(56,189,248,0.30),
+              0 1px 0 rgba(255,255,255,0.06) inset !important;
 }
 .mob-art-cta {
   background: #1c1f25 !important;
@@ -11836,36 +11960,16 @@ body.contact-morph-closing .cm-form-section {
 /* When in chat mode, hide the in-chat .max-hero (it duplicates the topbar) */
 #mobile-connect-expanded.is-chat-mode .max-chat-mob > .max-hero { display: none; }
 
-/* ---- Liquid morph open from the dock AI icon ----
-   Chat mode bypasses the default .mobile-expanded slideUp (single animation).  */
-#mobile-connect-expanded.is-chat-mode { animation: none !important; }
-#mobile-connect-expanded.is-chat-mode.is-morphing-in,
-#mobile-connect-expanded.is-morphing-in {
+/* Connect-window's morph now uses the unified .mobile-expanded liquidMorphIn
+   (no duplicate animation). is-morphing-in / is-morphing-out classes only set
+   the origin variables — picked up by the base liquid keyframe. This removes
+   the old double-animation glitch where slideUp + mobMaxMorphIn ran together
+   and the slideUp restarted when the morph class was removed. */
+#mobile-connect-expanded.is-morphing-in,
+#mobile-connect-expanded.is-morphing-out {
+  /* origin vars set inline by JS — these defaults are fallback only */
   --morph-x: 50%;
   --morph-y: 100%;
-  --morph-r0: 22px;
-  animation: mobMaxMorphIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both !important;
-  transform-origin: var(--morph-x) var(--morph-y);
-}
-@keyframes mobMaxMorphIn {
-  0% {
-    clip-path: circle(var(--morph-r0) at var(--morph-x) var(--morph-y));
-    opacity: 0.85;
-    filter: blur(2px);
-  }
-  60% { opacity: 1; filter: blur(0); }
-  100% {
-    clip-path: circle(160% at var(--morph-x) var(--morph-y));
-    opacity: 1;
-    filter: blur(0);
-  }
-}
-#mobile-connect-expanded.is-morphing-out {
-  animation: mobMaxMorphOut 0.32s cubic-bezier(0.4, 0, 1, 1) both !important;
-}
-@keyframes mobMaxMorphOut {
-  0%   { clip-path: circle(160% at var(--morph-x, 50%) var(--morph-y, 100%)); opacity: 1; }
-  100% { clip-path: circle(var(--morph-r0, 22px) at var(--morph-x, 50%) var(--morph-y, 100%)); opacity: 0; }
 }
 
 /* Subtle glow burst behind the dock icon while morph is opening */
@@ -11885,8 +11989,12 @@ body.contact-morph-closing .cm-form-section {
 
 @media (prefers-reduced-motion: reduce) {
   .mob-max-tb-ring, .mob-max-tb-dot { animation: none !important; }
-  #mobile-connect-expanded.is-morphing-in,
-  #mobile-connect-expanded.is-morphing-out { animation: none !important; }
+  .mobile-expanded,
+  .mobile-expanded.closing,
+  #mob-articles-stage.mob-articles-stage-detail .mob-articles-detail,
+  #mob-articles-stage.mob-articles-stage-detail .mob-articles-detail.closing,
+  .mfc-content-anim-in,
+  .mfc-content-anim-out { animation: none !important; }
 }
 
 /* =====================================================================
