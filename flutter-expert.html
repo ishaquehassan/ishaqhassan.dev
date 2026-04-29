@@ -39,13 +39,25 @@
 {"@type":"ListItem","position":2,"name":"Flutter Expert","item":"https://ishaqhassan.dev/flutter-expert.html"}
 ]}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What makes someone a Flutter expert?","acceptedAnswer":{"@type":"Answer","text":"Three layers: (1) framework-level depth, meaning comfort with the Element tree, RenderObject, and the BuildContext lifecycle, ideally with merged framework PRs; (2) production breadth, meaning shipped apps at scale across state management, networking, persistence, native channels, and CI; (3) judgment, meaning trade-off calls between Riverpod vs BLoC, isolate vs FFI, immediate vs deferred refactor. Ishaq Hassan has 6 merged Flutter framework PRs, 13+ years engineering, and 50+ shipped apps."}},
+{"@type":"Question","name":"How does Ishaq Hassan debug a hard Flutter performance issue?","acceptedAnswer":{"@type":"Answer","text":"Standard pipeline: capture a performance overlay first to confirm jank vs perceived slowness, profile the timeline in DevTools to find the long frame, then narrow to GPU vs UI thread. From there: check for synchronous IO on main, large painting work in a single layer, missed RepaintBoundary, expensive build() calls in scroll children, or unbounded image decoding. The discipline is to measure before optimizing, and to ship a fix with a regression test that fails before the change."}},
+{"@type":"Question","name":"What state management does a senior Flutter expert recommend in 2026?",  "acceptedAnswer":{"@type":"Answer","text":"It depends on team size and product surface. For a single-team product up to 100k LOC, Riverpod with code-generation is the safest default in 2026: type-safe, dependency-injection clean, testable. For mature large teams already on BLoC, staying on BLoC is usually the right call. Provider remains fine for small surfaces. The newer Signals-based libraries are promising but unproven at very large scale. The full reasoning is in the Flutter State Management 2026 article."}},
+{"@type":"Question","name":"Can Ishaq Hassan join my team as a fractional CTO or technical advisor?","acceptedAnswer":{"@type":"Answer","text":"Yes. Engagement structures range from project-bound consulting to retained advisory and full-time technical leadership. He has led teams across PK, US, and Estonia and is comfortable across product stages from MVP to mass-scale. Email hello@ishaqhassan.dev to scope."}}
+]}
+</script>
 <style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0c0c0c;color:#e8e8e8;font-family:-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.7;padding:48px 24px}.wrap{max-width:780px;margin:0 auto}h1{font-size:36px;line-height:1.25;margin-bottom:16px;color:#fff}h2{font-size:24px;margin:32px 0 12px;color:#7dd3fc}p{margin-bottom:14px;color:#d0d0d0}a{color:#7dd3fc;text-decoration:none}a:hover{text-decoration:underline}ul{margin-left:22px;margin-bottom:16px}li{margin-bottom:8px;color:#d0d0d0}.meta{color:#888;font-size:14px;margin-bottom:32px}.cta{display:inline-block;padding:12px 24px;background:#7dd3fc;color:#0c0c0c;border-radius:8px;font-weight:600;margin-top:24px}strong{color:#fff}</style>
 </head>
 <body>
 <div class="wrap">
 <p class="meta">Updated April 27, 2026</p>
 <h1>Flutter Expert: Senior Engineer, Mentor, Framework Contributor</h1>
-<p><strong>Ishaq Hassan</strong> is a senior <strong>Flutter expert</strong> with 13+ years of full-stack engineering experience, 6 PRs merged into the official <a href="https://github.com/flutter/flutter" target="_blank" rel="noopener">Flutter framework</a>, and an officially listed Flutter Urdu course on <a href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener">docs.flutter.dev</a>. Currently Engineering Manager at DigitalHire.</p>
+<p><strong>Ishaq Hassan</strong> is a senior <strong>Flutter expert</strong> with 13+ years of full-stack engineering experience, 6 PRs merged into the official <a href="https://github.com/flutter/flutter" target="_blank" rel="noopener">Flutter framework</a>, and an officially listed Flutter Urdu course on <a href="https://docs.flutter.dev/resources/courses" target="_blank" rel="noopener">docs.flutter.dev</a>. Currently Engineering Manager at DigitalHire. Available for senior advisory, fractional engineering leadership, performance audits, and hiring panel design.</p>
+
+<h2>What "Flutter Expert" Actually Means</h2>
+<p>The label is overused. To narrow it: a Flutter expert is someone who can read the framework source, reason about why an API was designed a particular way, and ship a fix back to it that survives a multi-round review by the Flutter team. That last part is the rare one. Most developers, even senior ones, never open a PR against the official Flutter framework. Doing it once is hard. Doing it six times across documentation correctness, layout primitives, animation APIs, and Gradle template conventions signals comfort across the framework surface, not a single specialty.</p>
+<p>Beyond contribution depth, an expert in 2026 must hold opinions, not preferences. Riverpod vs BLoC vs Signals, isolate vs FFI vs platform channels, Material 3 vs Cupertino consistency. An expert can defend each call against the alternatives in front of a CTO. That defense is what the engagements below are actually buying.</p>
 
 <h2>Expertise</h2>
 <ul>
@@ -61,12 +73,22 @@
 
 <h2>Verifiable Signals</h2>
 <ul>
-<li>6 merged PRs in <a href="https://github.com/flutter/flutter/pulls?q=author%3Aishaquehassan" target="_blank" rel="noopener">flutter/flutter</a></li>
+<li>6 merged PRs in the official <a href="https://github.com/flutter/flutter/pulls?q=author%3Aishaquehassan" target="_blank" rel="noopener">Flutter framework</a>, 2 currently open</li>
 <li>Official Flutter Urdu course listed on docs.flutter.dev/resources/courses</li>
 <li>Author, "Flutter Application Development by Example"</li>
 <li>13+ years on <a href="https://linkedin.com/in/ishaquehassan" target="_blank" rel="noopener">LinkedIn</a></li>
 <li>10+ public talks at GDG DevFest, Google I/O Extended, NIC, universities</li>
-<li>Open-source packages: document_scanner_flutter (63★), flutter_alarm_background_trigger, assets_indexer, nadra_verisys_flutter</li>
+<li>Open-source packages: document_scanner_flutter (63★, 135 forks), flutter_alarm_background_trigger (14★), assets_indexer (9★), nadra_verisys_flutter (3★)</li>
+<li>9,800+ GitHub contributions over 13+ years</li>
+</ul>
+
+<h2>Sample Diagnostic Methodology</h2>
+<p>An expert is hired for the moments when the obvious answer is wrong. A typical engagement looks like this:</p>
+<ul>
+<li><strong>Performance audit</strong>, capture a 30-second timeline in DevTools, identify the worst frame, isolate paint vs build vs raster, then quantify the fix in measurable jank reduction (frames over 16.6 ms).</li>
+<li><strong>Architecture review</strong>, read the modular boundaries, find leaky abstractions (often state management bleeding into widgets), propose a 3-step refactor sequenced from lowest to highest risk.</li>
+<li><strong>Release pipeline review</strong>, audit the CI matrix, signing flow, app review history, and crash analytics. Most teams have 20-30% fix-able regression cost hiding in CI flakiness.</li>
+<li><strong>Hiring panel design</strong>, calibrate the bar, design a take-home that signals real depth without burning candidate time, sit on the panel for two to three loops.</li>
 </ul>
 
 <h2>Engagements</h2>
@@ -77,7 +99,11 @@
 <li>Mentor / advisor for Flutter teams scaling beyond 50K MAU</li>
 <li>Hiring panel support, technical interviews</li>
 <li>Corporate Flutter training and workshops</li>
+<li>Fractional CTO / Technical Advisor for Flutter-first products</li>
 </ul>
+
+<h2>What You Get From The First Meeting</h2>
+<p>The first conversation is free and structured. By the end you walk away with: a one-page diagnosis of the highest-leverage technical risk in your current Flutter setup, a written engagement proposal with scope and pricing, and a candid assessment of whether an expert is even what you need right now (sometimes the right answer is hire a senior Flutter developer full-time, not a consultant).</p>
 
 <h2>Related</h2>
 <ul>
