@@ -3037,8 +3037,48 @@ function windowIdFromCurrentUrl() {
     if (PATH_TO_WINDOW[path]) return PATH_TO_WINDOW[path];
     // Per-article deep link: /articles/<slug>/ maps to articles window.
     if (/^\/articles\/[a-z0-9-]+$/i.test(path)) return 'articles';
+    // SEO lander mode: /<slug>.html serves portfolio shell + embedded SEO content
+    // and tags <meta name="x-ihp-ref"> with the slug. Map to its window.
+    var refMeta = document.querySelector('meta[name="x-ihp-ref"]');
+    var refSlug = refMeta && refMeta.getAttribute('content');
+    if (refSlug && REF_TO_WINDOW[refSlug]) return REF_TO_WINDOW[refSlug];
     return null;
   } catch (e) { return null; }
+}
+
+// Lander mode: page is /<slug>.html (a clone of index.html shell) and contains
+// a <section id="x-lander-seo"> with the original SEO body content. After the
+// matching window opens we move that content into the window's body so humans
+// see it inside the auto-opened window. Bots see the same content either way
+// (initial HTML or rendered DOM), so there's no cloak signal.
+function __landerInjectSeoIntoWindow(windowId) {
+  try {
+    var seo = document.getElementById('x-lander-seo');
+    if (!seo) return;
+    if (seo.dataset.injected === '1') return;
+    var win = document.getElementById('win-' + windowId);
+    if (!win) return;
+    // Window body container: prefer .window-content, fallback to first non-titlebar child.
+    var target = win.querySelector('.window-content, .window-body, .win-body');
+    if (!target) {
+      var kids = win.children;
+      for (var i = 0; i < kids.length; i++) {
+        if (!kids[i].classList || !kids[i].classList.contains('window-titlebar')) { target = kids[i]; break; }
+      }
+    }
+    if (!target) return;
+    // Move SEO inner nodes to top of window body (preserves portfolio's existing window content below).
+    var wrap = document.createElement('div');
+    wrap.className = 'lander-seo-intro';
+    wrap.setAttribute('data-lander-slug', seo.getAttribute('data-slug') || '');
+    while (seo.firstChild) wrap.appendChild(seo.firstChild);
+    target.insertBefore(wrap, target.firstChild);
+    seo.dataset.injected = '1';
+    seo.style.display = 'none';
+  } catch (e) {}
+}
+function __isLanderMode() {
+  return !!document.querySelector('meta[name="x-ihp-ref"]');
 }
 
 function articleSlugFromCurrentUrl() {
@@ -3168,11 +3208,18 @@ function applyUrlRoute(shouldMaximize) {
     win.style.zIndex = ++activeZ;
     if (typeof updateMenuBarForWindow === 'function') updateMenuBarForWindow(id);
     var deepSlug = (id === 'articles') ? articleSlugFromCurrentUrl() : null;
-    if (/[?&](w|ref)=/.test(location.search)) {
+    // SEO lander mode: keep the .html URL in the bar (it IS the canonical for that lander)
+    // and move the embedded SEO content into the auto-opened window's body.
+    var landerMode = __isLanderMode();
+    if (!landerMode && /[?&](w|ref)=/.test(location.search)) {
       var pretty = WINDOW_PATHS[id] + (deepSlug ? '/' + deepSlug + '/' : '');
       try { history.replaceState({w: id, slug: deepSlug || null}, '', pretty); } catch(e) {}
     }
-    updateMetaForWindow(id);
+    if (landerMode) {
+      setTimeout(function(){ __landerInjectSeoIntoWindow(id); }, 80);
+    } else {
+      updateMetaForWindow(id);
+    }
     // Articles: switch detail/list view based on URL slug
     if (id === 'articles') {
       if (deepSlug && typeof window.renderArticleDetail === 'function') {
